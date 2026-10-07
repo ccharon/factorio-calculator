@@ -49,14 +49,21 @@ function warn(message: string, value: string): void {
     warnUrl(message, value)
 }
 
-// Parses a rational from the URL. Invalid values log a warning and return null.
+// Parses a non-negative rational from the URL. Invalid or negative values log a warning and return null.
 function parseRational(value: string, name: string): Rational | null {
+    let r: Rational
     try {
-        return Rational.from_string(value)
+        r = Rational.from_string(value)
     } catch {
         warn(`invalid ${name}`, value)
         return null
     }
+    // Rates, counts, bonuses and weights are never negative.
+    if (r.less(zero)) {
+        warn(`negative ${name}`, value)
+        return null
+    }
+    return r
 }
 
 // Parses a non-negative whole number from the URL, or returns fallback.

@@ -178,7 +178,7 @@ Branch `develop`, everything committed and pushed. Phases 0 to 5 are done (phase
 
 Next steps:
 
-1. Phase 6 (robustness and security), in progress. Done: CSP meta tag in the build (Vite plugin in `vite.config.js`), ignored URL settings shown on the page (`src/ui/warnings.ts`), custom code replaced by standard means (stable `Array.sort` in `sorted()`, native base64, `d3.zoom` for the visualizer, popover and CSS anchor positioning for tooltips; `@floating-ui/dom` removed). Open: icon dropdowns as popovers (`src/ui/dropdown.ts`), keyboard access with `<button>` instead of clickable `<div>`, review of numeric ranges in URL settings, the remaining custom code.
+1. Phase 6 (robustness and security), in progress. Done: CSP meta tag in the build (Vite plugin in `vite.config.js`), ignored URL settings shown on the page (`src/ui/warnings.ts`), custom code replaced by standard means (stable `Array.sort` in `sorted()`, native base64, `d3.zoom` for the visualizer, popover and CSS anchor positioning for tooltips; `@floating-ui/dom` removed). Negative numbers in URL settings are rejected with a visible warning. Open, in this order, one commit each: (a) keyboard access with `<button>` instead of clickable `<div>` (planet and recipe toggles, priority list); (b) icon dropdowns as popovers (`src/ui/dropdown.ts`, removes the clicker overlay and spacer; check target and module dropdown layout); (c) review of the remaining custom code (`src/state/align.ts` number formatting, `src/state/priority.ts`). Ask before adding any dependency.
 2. Later, from phase 5: quality per recipe, recycling loops for a target quality, reactor neighbour bonus.
 3. Phase 7: README and changelog.
 
