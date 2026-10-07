@@ -176,6 +176,21 @@ Also: modernize CSS (custom properties already partly used by `color.js`), keybo
 4. Done: `src/state/building-groups.ts`, `fuel-choice.ts` (`spec.fuel`), `energy.ts` (`EnergyContext`; `spec.getEnergyIngredients` and `getPowerUsage` delegate). `addTarget` and `removeTarget` are functions in `src/ui/target.ts`.
 5. Keep `Rational`: exact fractions keep the simplex free of tolerances and the snapshot tests exact.
 
+## Phase 8: Items with quality and recycling loops
+
+Goal: targets with a quality, such as 60 legendary processing units per minute, solved through quality modules and recycling. Without a quality target and without a positive quality effect, the solution stays exactly as before (snapshot tests).
+
+Mechanics from the 2.1 prototype docs: a machine with quality effect Q raises the product quality with probability Q × `next_probability` of the ingredient quality (1 for every quality in 2.1). After each raise, the reached quality raises once more with its `chain_probability` (0.1). Legendary has no next quality. Negative effects (speed modules) lower nothing, because `previous_probability` is 0. Fluids have no quality. Recycling returns the ingredients at the quality of the recycled item.
+
+1. Data: qualities get `next`, `next_probability`, `chain_probability`; recipes get `allow_quality`; module effects keep `quality`. Rebuild the dataset.
+2. Quality distribution as a pure function with unit tests: input quality and effect give the share of each output quality.
+3. Variants: every solid item has one item per quality (`item.variant(quality)`, key `<item>@<quality>`), every recipe that allows quality has one recipe per input quality. Variants stay out of `spec.items` and `spec.recipes`, so toggles, building groups and the priority list keep showing base recipes. A variant uses the building, disable state and planets of its base recipe, and has its own modules and qualities.
+4. Solver: `context.getProducts(recipe)` replaces `recipe.products` in the solver, totals and cycle detection, and spreads solid products over the qualities by the recipe's quality effect. The recipe graph adds the variants that can reach a requested quality.
+5. Targets: a quality choice next to the item, stored as `<item>@<quality>` in `items=`.
+6. Display: quality badge on item and recipe icons of variants.
+7. Recycling: recycling recipes have variants like other recipes. Loops come from enabling them in the recipe toggles.
+8. Snapshot scenarios for a legendary target with and without recycling; check solver time.
+
 ## Phase 7: Documentation
 
 Done: README, FAQ and About describe the current feature set and limitations. No changelog; the git history serves as one.
@@ -187,7 +202,7 @@ Branch `develop`, everything committed, not pushed. Phases 0 to 7 and 6a are don
 Next steps:
 
 1. Push `develop` when the user asks, then merge into `main` for a release.
-2. From phase 5: recycling loops for a target quality. Done: quality per recipe (`spec.recipeQuality`, `QualityContext.getQuality(recipe, kind)`, URL `rq=<recipe>:<machine>:<module>:<beacon>`, quality column in the factory table); reactor neighbour bonus (`reactors=<N>` for a 2×N block, `ReactorRecipe`, bonus enters `getProdEffect` with the depleted cell ignored by productivity).
+2. Phase 8 (items with quality and recycling loops), in progress. From phase 5 done: quality per recipe (`spec.recipeQuality`, `QualityContext.getQuality(recipe, kind)`, URL `rq=<recipe>:<machine>:<module>:<beacon>`, quality column in the factory table); reactor neighbour bonus (`reactors=<N>` for a 2×N block, `ReactorRecipe`, bonus enters `getProdEffect` with the depleted cell ignored by productivity).
 
 Notes on phase 6: drag and drop in the Resources tab cannot be tested automatically (neither the Chrome extension nor headless Chrome start a native drag); ask the user to try it. Number inputs go through `readRational()` in `src/ui/number-input.ts`. `align.ts` stays because Chrome has no CSS decimal alignment.
 
