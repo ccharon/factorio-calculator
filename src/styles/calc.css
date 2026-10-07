@@ -31,6 +31,16 @@ limitations under the License.*/
     /* slightly brighter than main foreground color */
     --bright: #f1fff2;
 }
+:root[data-color-scheme="printer"] {
+    --dark: #f0f0f0;
+    --dark-overlay: #ffffff;
+    --medium: #ffffff;
+    --main: #ffffff;
+    --light: #dddddd;
+    --foreground: #000000;
+    --accent: #222222;
+    --bright: #111111;
+}
 /* top-level/shared elements */
 body {
     font-family: sans-serif;
@@ -100,8 +110,6 @@ div.tooltip .frame {
     background-color: var(--dark-overlay);
     padding: 0.4em;
     text-align: left;
-    opacity: 1;
-    z-index: 20;
 }
 div.tooltip h3 {
     margin: 0;
@@ -181,9 +189,6 @@ tr.setting-row td:first-child {
 td.setting-label {
     text-align: right;
 }
-div#miner_settings, div#alt_recipe_settings {
-    padding-left: 3em;
-}
 .top, .top-icon {
     vertical-align: top;
 }
@@ -239,9 +244,6 @@ input.prec, input.mprod {
 .toggle-list .selected {
     border-color: var(--accent);
 }
-.toggle-list .selected:hover {
-    /*border-color: var(--accent);*/
-}
 #resource_settings {
     border: 2px solid var(--light);
     border-radius: 5px;
@@ -286,35 +288,15 @@ input.prec, input.mprod {
 #resource_settings.dragging .resource-tier > * {
     pointer-events: none;
 }
-table.resource {
-    border-collapse: collapse;
-}
-table.resource td {
-    text-align: right;
-}
-table.resource input[type="radio"] {
-    display: none;
-}
-table.resource input[type="radio"] + label {
-    cursor: pointer;
-    fill: var(--light);
-}
-table.resource input[type="radio"] + label:hover {
-    fill: var(--bright);
-}
-table.resource input[type="radio"]:checked + label {
-    fill: var(--accent);
-}
 /* tabs */
 div.tabs {
-    overflow: hidden;
+    display: flex;
 }
 div.tabs button.tab_button {
     color: var(--accent);
     background-color: inherit;
     border-top-left-radius: 0.25em;
     border-top-right-radius: 0.25em;
-    float: left;
     border: none;
     outline: none;
     cursor: pointer;
@@ -328,7 +310,7 @@ div.tabs button.active, div.tabs button.active:hover {
     background-color: var(--main);
 }
 button#debug_button {
-    float: right;
+    margin-left: auto;
 }
 div.tab {
     display: none;
@@ -336,9 +318,6 @@ div.tab {
     background-color: var(--main);
 }
 /* visualizer */
-div.graph {
-    /*min-width: max-content;*/
-}
 div.graph_setting {
     display: inline-block;
     vertical-align: middle;
@@ -358,7 +337,6 @@ div.graph_setting {
     color: var(--accent);
 }
 g.node rect {
-    /*stroke: var(--foreground);*/
     stroke-width: 1px;
 }
 g.overlay {
@@ -389,7 +367,6 @@ svg#graph {
 svg#graph text, svg.test text {
     stroke: none;
     fill: var(--foreground);
-    /*font: 12px sans-serif;*/
 }
 /* items tab */
 #totals {
@@ -435,8 +412,6 @@ span.beacon-container {
 }
 svg.popout {
     color: var(--accent);
-    width: 16;
-    height: 16;
 }
 /* breakdowns */
 .breakdown-open .breakdown-arrow {
@@ -452,12 +427,9 @@ svg.popout {
 }
 .breakdown {
     display: none;
-    height: 0;
 }
 .breakdown.breakdown-open {
     display: table-row;
-    height: auto;
-    transition: height 0.25s;
 }
 .breakdown table {
     border-collapse: collapse;
@@ -488,7 +460,6 @@ svg.popout {
     height: 400px;
     width: 380px;
     overflow-y: scroll;
-    transition: height 0.3s;
 }
 /* about */
 .about-content {
