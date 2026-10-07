@@ -17,7 +17,7 @@ import { sorted } from "../core/sort.ts"
 import type { IconSource } from "./icon-source.ts"
 import type { Building, BuildingContext } from "./building.ts"
 import type { Quality, QualityContext } from "./quality.ts"
-import type { Dataset } from "./dataset.ts"
+import type { Dataset, Effect } from "./dataset.ts"
 import type { Item } from "./item.ts"
 import { requireItem, type Recipe } from "./recipe.ts"
 
@@ -35,6 +35,9 @@ export class Module implements IconSource {
     /** Change of power consumption, such as -0.3 for -30%. */
     readonly power: Rational
 
+    /** Quality effect, such as 0.025 for +2.5%. */
+    readonly quality: Rational
+
     // Effects by quality key. Missing qualities use the normal effects.
     private readonly effectsByQuality: ReadonlyMap<string, ModuleEffect>
 
@@ -42,14 +45,15 @@ export class Module implements IconSource {
     readonly icon_row: number
     private short: string
 
-    constructor(item: Item, category: string, productivity: Rational, speed: Rational, power: Rational, effectsByQuality: ReadonlyMap<string, ModuleEffect> = new Map()) {
+    constructor(item: Item, category: string, effect: ModuleEffect, effectsByQuality: ReadonlyMap<string, ModuleEffect> = new Map()) {
         this.key = item.key
         this.name = item.name
         this.category = category
         this.order = item.order
-        this.productivity = productivity
-        this.speed = speed
-        this.power = power
+        this.productivity = effect.productivity
+        this.speed = effect.speed
+        this.power = effect.power
+        this.quality = effect.quality
         this.effectsByQuality = effectsByQuality
         this.icon_col = item.icon_col
         this.icon_row = item.icon_row
@@ -60,7 +64,7 @@ export class Module implements IconSource {
 
     /** Returns the effects of the module at quality. */
     effectAt(quality: Quality): ModuleEffect {
-        return this.effectsByQuality.get(quality.key) ?? { productivity: this.productivity, speed: this.speed, power: this.power }
+        return this.effectsByQuality.get(quality.key) ?? this
     }
 
     /** Returns the short name used in URLs. */
@@ -103,6 +107,9 @@ export interface ModuleEffect {
 
     /** Change of power consumption, such as -0.3 for -30%. */
     readonly power: Rational
+
+    /** Quality effect, such as 0.025 for +2.5%. */
+    readonly quality: Rational
 }
 
 /** The modules and beacons configured for one recipe. */
@@ -250,8 +257,9 @@ export function getModules(data: Dataset, items: ReadonlyMap<string, Item>): Map
     for (const d of data.modules) {
         const item = requireItem(items, d.item_key)
         const R = (x: number | undefined): Rational => Rational.from_float_approximate(x ?? 0)
-        const byQuality = new Map(Object.entries(d.effect_by_quality ?? {}).map(([q, e]) => [q, { productivity: R(e.productivity), speed: R(e.speed), power: R(e.consumption) }]))
-        modules.set(d.item_key, new Module(item, d.category, R(d.effect.productivity), R(d.effect.speed), R(d.effect.consumption), byQuality))
+        const effect = (e: Effect): ModuleEffect => ({ productivity: R(e.productivity), speed: R(e.speed), power: R(e.consumption), quality: R(e.quality) })
+        const byQuality = new Map(Object.entries(d.effect_by_quality ?? {}).map(([q, e]) => [q, effect(e)]))
+        modules.set(d.item_key, new Module(item, d.category, effect(d.effect), byQuality))
     }
 
     moduleRows.length = 0

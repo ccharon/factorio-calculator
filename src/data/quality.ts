@@ -14,6 +14,7 @@ limitations under the License.*/
 
 // Quality levels. Quality raises the crafting speed of machines, the positive effects of modules
 // and the distribution effectivity of beacons.
+import { Rational, zero } from "../core/rational.ts"
 import type { Dataset } from "./dataset.ts"
 import type { IconSource } from "./icon-source.ts"
 import type { Recipe } from "./recipe.ts"
@@ -25,13 +26,21 @@ export class Quality implements IconSource {
     readonly level: number
     readonly icon_col: number
     readonly icon_row: number
+    /** The quality a raise leads to, or null for the highest quality. */
+    next: Quality | null = null
+    /** Chance of a raise per 100% quality effect. */
+    readonly nextProbability: Rational
+    /** Chance of one more raise after a raise reached this quality. */
+    readonly chainProbability: Rational
 
-    constructor(key: string, name: string, level: number, col: number, row: number) {
+    constructor(key: string, name: string, level: number, col: number, row: number, nextProbability: Rational = zero, chainProbability: Rational = zero) {
         this.key = key
         this.name = name
         this.level = level
         this.icon_col = col
         this.icon_row = row
+        this.nextProbability = nextProbability
+        this.chainProbability = chainProbability
     }
 }
 
@@ -47,7 +56,15 @@ export interface QualityContext {
     getQuality(recipe: Recipe, kind: QualityKind): Quality
 }
 
-/** Creates the quality levels from lowest to highest. */
+/** Creates the quality levels from lowest to highest, linked to their next quality. */
 export function getQualities(data: Dataset): Quality[] {
-    return data.qualities.map(d => new Quality(d.key, d.localized_name.en, d.level, d.icon_col, d.icon_row))
+    const R = (x: number): Rational => Rational.from_float_approximate(x)
+    const qualities = data.qualities.map(d => new Quality(d.key, d.localized_name.en, d.level, d.icon_col, d.icon_row, R(d.next_probability), R(d.chain_probability)))
+    data.qualities.forEach((d, i) => {
+        const quality = qualities[i]
+        if (quality !== undefined && d.next !== undefined) {
+            quality.next = qualities.find(q => q.key === d.next) ?? null
+        }
+    })
+    return qualities
 }

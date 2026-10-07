@@ -130,6 +130,8 @@ export interface RecipeOptions {
     icon_col: number
     icon_row: number
     allowProductivity: boolean
+    /** Whether quality effects can raise the quality of the products. Defaults to false. */
+    allowQuality?: boolean
     categories: readonly string[]
 
     /** Crafting time in seconds at crafting speed 1. */
@@ -152,6 +154,8 @@ export class Recipe implements RecipeLike {
     readonly name: string
     readonly order: string | undefined
     readonly allow_productivity: boolean
+    /** Whether quality effects can raise the quality of the products. */
+    readonly allowQuality: boolean
     readonly categories: readonly string[]
     readonly time: Rational
     readonly ingredients: Ingredient[]
@@ -178,6 +182,7 @@ export class Recipe implements RecipeLike {
         this.name = options.name
         this.order = options.order
         this.allow_productivity = options.allowProductivity
+        this.allowQuality = options.allowQuality ?? false
         this.categories = options.categories
         this.time = options.time
         this.ingredients = options.ingredients
@@ -342,6 +347,7 @@ function makeRecipe(items: ReadonlyMap<string, Item>, d: DatasetRecipe): Recipe 
         icon_col: d.icon_col,
         icon_row: d.icon_row,
         allowProductivity: d.allow_productivity,
+        allowQuality: d.allow_quality,
         categories: d.categories,
         time: Rational.from_float_approximate(d.energy_required),
         ingredients,
@@ -438,7 +444,7 @@ export class MiningRecipe extends Recipe {
     readonly miningTime: Rational
 
     constructor(options: Omit<RecipeOptions, "allowProductivity" | "time">, miningTime: Rational) {
-        super({ ...options, allowProductivity: true, time: zero })
+        super({ ...options, allowProductivity: true, allowQuality: true, time: zero })
         this.miningTime = miningTime
         this.defaultPriority = 1
         this.defaultWeight = hundred

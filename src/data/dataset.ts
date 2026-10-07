@@ -102,6 +102,8 @@ export interface DatasetRecipe extends NamedPrototype {
     categories: string[]
     energy_required: number
     allow_productivity: boolean
+    /** Whether quality effects can raise the quality of the products. */
+    allow_quality: boolean
     maximum_productivity?: number
     ingredients: DatasetIngredient[]
     results: DatasetProduct[]
@@ -230,6 +232,12 @@ export interface DatasetModule {
 /** A quality level such as uncommon. */
 export interface DatasetQuality extends NamedPrototype {
     level: number
+    /** The quality a raise leads to. Missing for the highest quality. */
+    next?: string
+    /** Chance of a raise per 100% quality effect. */
+    next_probability: number
+    /** Chance of one more raise after a raise reached this quality. */
+    chain_probability: number
 }
 
 export interface DatasetAgriculturalTower extends DatasetMachine {

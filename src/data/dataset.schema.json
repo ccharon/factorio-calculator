@@ -95,13 +95,14 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["key", "localized_name", "categories", "energy_required", "allow_productivity", "ingredients", "results", "order", "subgroup", "icon_col", "icon_row"],
+        "required": ["key", "localized_name", "categories", "energy_required", "allow_productivity", "allow_quality", "ingredients", "results", "order", "subgroup", "icon_col", "icon_row"],
         "properties": {
           "key": { "$ref": "#/$defs/key" },
           "localized_name": { "$ref": "#/$defs/localizedName" },
           "categories": { "type": "array", "items": { "type": "string" }, "minItems": 1, "description": "Any machine with one of these crafting categories can make the recipe." },
           "energy_required": { "type": "number", "exclusiveMinimum": 0, "description": "Crafting time in seconds at crafting speed 1." },
           "allow_productivity": { "type": "boolean" },
+          "allow_quality": { "type": "boolean", "description": "Whether quality effects can raise the quality of the products." },
           "maximum_productivity": { "type": "number", "description": "Productivity cap. The game default is 3 (+300%)." },
           "ingredients": { "type": "array", "items": { "$ref": "#/$defs/ingredient" } },
           "results": { "type": "array", "items": { "$ref": "#/$defs/product" } },
@@ -340,11 +341,14 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["key", "localized_name", "level", "icon_col", "icon_row"],
+        "required": ["key", "localized_name", "level", "next_probability", "chain_probability", "icon_col", "icon_row"],
         "properties": {
           "key": { "$ref": "#/$defs/key" },
           "localized_name": { "$ref": "#/$defs/localizedName" },
           "level": { "type": "integer", "minimum": 0 },
+          "next": { "$ref": "#/$defs/key", "description": "The quality a raise leads to. Missing for the highest quality." },
+          "next_probability": { "type": "number", "minimum": 0, "description": "Chance of a raise per 100% quality effect." },
+          "chain_probability": { "type": "number", "minimum": 0, "maximum": 1, "description": "Chance of one more raise after a raise reached this quality." },
           "icon_col": { "$ref": "#/$defs/iconIndex" },
           "icon_row": { "$ref": "#/$defs/iconIndex" }
         }

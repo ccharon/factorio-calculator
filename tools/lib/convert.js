@@ -237,6 +237,7 @@ export function convert(raw, localeFiles, version, runtime) {
             categories: asArray(r.categories).length > 0 ? r.categories : ["crafting"],
             energy_required: r.energy_required ?? 0.5,
             allow_productivity: r.allow_productivity ?? false,
+            allow_quality: r.allow_quality ?? true,
             maximum_productivity: r.maximum_productivity,
             ingredients,
             results,
@@ -383,12 +384,20 @@ export function convert(raw, localeFiles, version, runtime) {
     }))
 
     // Quality levels, from lowest to highest. The runtime data gives the effects that quality changes.
-    const qualities = Object.entries(runtime.qualities ?? {}).map(([name, q]) => ({
-        key: name,
-        localized_name: locale.name("quality", name),
-        level: q.level,
-        icon_ref: `quality/${name}`,
-    })).sort((a, b) => a.level - b.level)
+    // next_probability and chain_probability have the defaults of the prototype docs.
+    const qualities = Object.entries(runtime.qualities ?? {}).map(([name, q]) => {
+        const proto = raw.quality?.[name] ?? {}
+        const nextProbability = proto.next ? proto.next_probability ?? 0 : 0
+        return compact({
+            key: name,
+            localized_name: locale.name("quality", name),
+            level: q.level,
+            next: proto.next,
+            next_probability: nextProbability,
+            chain_probability: proto.chain_probability ?? Math.min(Math.max(nextProbability * 0.1, 0), 1),
+            icon_ref: `quality/${name}`,
+        })
+    }).sort((a, b) => a.level - b.level)
 
     // The tower plants into a grid of growth_grid_tile_size cells (default 3) that reaches radius cells
     // beyond the cells its collision box covers. The tower's own cells hold no plants.
