@@ -136,6 +136,8 @@ export interface RecipeOptions {
     allowProductivity: boolean
     /** Whether quality effects can raise the quality of the products. Defaults to false. */
     allowQuality?: boolean
+    /** Whether the recipe has variants for ingredients of higher quality. Defaults to allowQuality. */
+    qualityVariants?: boolean
     categories: readonly string[]
 
     /** Crafting time in seconds at crafting speed 1. */
@@ -166,6 +168,8 @@ export class Recipe implements RecipeLike {
     readonly allow_productivity: boolean
     /** Whether quality effects can raise the quality of the products. */
     readonly allowQuality: boolean
+    /** Whether the recipe has variants for ingredients of higher quality. */
+    readonly qualityVariants: boolean
     readonly categories: readonly string[]
     readonly time: Rational
     readonly ingredients: Ingredient[]
@@ -202,6 +206,7 @@ export class Recipe implements RecipeLike {
         this.order = options.order
         this.allow_productivity = options.allowProductivity
         this.allowQuality = options.allowQuality ?? false
+        this.qualityVariants = options.qualityVariants ?? this.allowQuality
         this.categories = options.categories
         this.time = options.time
         this.ingredients = options.ingredients
@@ -458,6 +463,8 @@ class SpoilageRecipe extends Recipe {
             icon_col: toItem.icon_col,
             icon_row: toItem.icon_row,
             allowProductivity: false,
+            // Spoiling keeps the quality of the item.
+            qualityVariants: true,
             categories: [],
             time: zero,
             ingredients: [new Ingredient(fromItem, one)],

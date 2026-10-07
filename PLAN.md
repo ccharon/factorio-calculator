@@ -16,8 +16,7 @@ Goal: a calculator for Factorio 2.1 with Space Age only, with current game data,
 
 ## Open items
 
-1. Spoilage of items of higher quality.
-2. Rate labels of recipes with many products overlap in the visualizer.
+1. Rate labels of recipes with many products overlap in the visualizer.
 
 ## Working notes
 
