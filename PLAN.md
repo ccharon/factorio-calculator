@@ -50,7 +50,10 @@ Each phase ends in a working calculator and its own commits.
 | Topic | Decision |
 |-------|----------|
 | Data generation | New in-repo Node script using the local Factorio dump and `sharp` for the sprite sheet. Replaces `dump.lua` and `process_data.py`. |
-| Languages | JavaScript only. No Python in the repository. |
+| Languages | TypeScript for the app, JavaScript for Node tools. No Python in the repository. |
+| Build | TypeScript and Vite, no UI framework. All libraries come from npm. |
+| Branches | `main` for releases, `develop` for work. A GitHub Action builds `main` into an orphan `dist` branch, as in ccharon/website-sudoku. The deploy webhook is added after the migration. |
+| UI | The current look stays. |
 | Quality | Effects of machine, module and beacon quality first. Recycling loops later. |
 | URL compatibility | Clean break. Only URLs created by this version must stay stable. |
 | Node dev tooling | Approved. ESLint and `node --test`, dev only. |
@@ -74,7 +77,7 @@ Done. Lint passes. Chrome check on the 2.0.55 Space Age dataset shows no console
 
 ## Phase 2: Data pipeline
 
-Done. `npm run build-data` generates `data/space-age-2.1.21.json` and the sprite sheet. `data/schema.json` defines the format. Known limitations until phase 3: the loader uses only the first recipe category, and burner machines always burn the preferred chemical fuel.
+Done. `npm run build-data` generates `data/space-age-2.1.21.json` and the sprite sheet. `data/schema.json` defines the format. Known limitations until phase 4: the loader uses only the first recipe category, and burner machines always burn the preferred chemical fuel.
 
 1. New `tools/build-data.js`: runs Factorio `--dump-data` and `--dump-icon-sprites` against the local install, writes `data/space-age-<version>.json` and the sprite sheet. Uses `sharp` for scaling and compositing icons.
 2. Read localized names from `--dump-prototype-locale`.
@@ -82,7 +85,43 @@ Done. `npm run build-data` generates `data/space-age-2.1.21.json` and the sprite
 4. Export every field the new mechanics need (surface conditions of machines, quality, research productivity effects, asteroid and thruster data, heat and fusion entities).
 5. Document the command in README.
 
-## Phase 3: Core model for 2.1
+## Phase 3: TypeScript and Vite
+
+Comes before the model changes, so phases 4 to 6 are written once, in the new structure. The migration must not change any result.
+
+1. Golden tests: record building counts, rates and power for about 15 URL scenarios across all planets with the current code. They run against the old and the new build.
+2. Branches and CI: rename `master` to `main`, create `develop`. `check.yml` runs lint, type check, tests and build on `develop` and pull requests. `deploy.yml` builds `main` and force-pushes `dist/` as the root of an orphan `dist` branch. Dependabot keeps npm packages current.
+3. Project layout:
+
+   | Path | Content |
+   |------|---------|
+   | `index.html` | Vite entry, replaces `calc.html` and `index.html`. No inline scripts or handlers. |
+   | `src/main.ts` | Startup: load dataset, read URL settings, render. |
+   | `src/core/` | Rational numbers, matrix, simplex, solver, priority list, cycle detection. No DOM access. |
+   | `src/data/` | Dataset loaders: items, recipes, buildings, modules, belts, fuel, planets, groups. |
+   | `src/state/` | `FactorySpecification` and URL settings parsing and formatting. |
+   | `src/ui/` | Factory table, build targets, settings, resources, tooltips, dropdowns, icons, tabs. |
+   | `src/visualize/` | Sankey and box-and-line views, circle paths, the modified d3-sankey copy. |
+   | `src/styles/` | CSS. |
+   | `public/` | Dataset, sprite sheet, favicon, SVG icons. Copied unchanged into the build. |
+   | `tools/` | Node scripts: data build. |
+   | `tests/` | Vitest tests. |
+
+4. Dependencies from npm, `third_party/` is deleted:
+
+   | Library | Replacement |
+   |---------|-------------|
+   | `BigInteger.min.js` | Native `BigInt` in `src/core/rational.ts`. |
+   | `d3.min.js` 6.5 | `d3` 7.9, or only the used `d3-*` modules. |
+   | `dagre.min.js` 0.8 | `@dagrejs/dagre`, the maintained fork. |
+   | `popper.min.js` | `@floating-ui/dom`. |
+   | `pako.min.js` | Native `CompressionStream("deflate-raw")`. URL parsing becomes async. |
+
+5. Tooling: Vitest replaces `node --test`. `tsc --noEmit` in strict mode and typescript-eslint run in `npm run check`. `tools/serve.js` goes away, `npm start` runs the Vite dev server.
+6. Port order: `core` first with strict types and the existing unit tests, then `data`, `state`, `ui`, `visualize`. Each step keeps the golden tests green.
+7. Delete the root-level JS files, `calc.html`, `third_party/` and `d3-sankey/`. Update README and CLAUDE.md.
+
+## Phase 4: Core model for 2.1
 
 1. Replace category-based building groups with "set of machines that can craft this recipe", filtered by the selected planets' surface conditions. Settings store preferred machines per category set.
 2. Product amount handling: `ignored_by_productivity`, fractional results, productivity cap.
@@ -90,7 +129,7 @@ Done. `npm run build-data` generates `data/space-age-2.1.21.json` and the sprite
 4. Fuel per building fuel category (nutrients for biochamber, chemical for boilers and burners).
 5. Rocket launch and cargo for Space Age.
 
-## Phase 4: Space Age mechanics
+## Phase 5: Space Age mechanics
 
 Ordered by usefulness for planning:
 
@@ -100,7 +139,9 @@ Ordered by usefulness for planning:
 4. Power generation: steam engines, turbines, heat exchangers, solar with per-planet `solar-power`.
 5. Quality: quality level for machines, modules and beacons as effect multipliers. Recycling loops for target quality as a later step.
 
-## Phase 5: Robustness and security (OWASP Top 10 2021)
+## Phase 6: Robustness and security (OWASP Top 10 2021)
+
+Phase 3 covers the inline handlers, `BigInteger.js`, popper and the vendored libraries. The rest stays.
 
 | Category | Action |
 |----------|--------|
@@ -115,6 +156,6 @@ A01, A02, A07 and A10 do not apply: no server, no authentication, no secrets, no
 
 Also: modernize CSS (custom properties already partly used by `color.js`), keyboard access for dropdowns and toggles, `<button>` instead of clickable `<div>`.
 
-## Phase 6: Documentation
+## Phase 7: Documentation
 
 Rewrite README per the writing rules, update changelog, keep CLAUDE.md current.
