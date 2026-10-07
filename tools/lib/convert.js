@@ -1,8 +1,13 @@
 // Converts Factorio's data.raw dump and locale dump into the calculator's dataset format.
-// The format is defined in data/schema.json. Icons are emitted as `icon_ref` strings
+// The format is defined in src/data/dataset.schema.json. Icons are emitted as `icon_ref` strings
 // ("<prototype-dir>/<name>" or "file:<game path>"), which sprites.js replaces with sheet positions.
 
 import { parseEnergy, roundFloat } from "./units.js"
+
+// Sorts by UTF-16 code units, like Array.prototype.sort() without a compare function.
+function compareStrings(a, b) {
+    return a < b ? -1 : a > b ? 1 : 0
+}
 
 // Lua serializes empty tables as {}, so every list field goes through this.
 function asArray(x) {
@@ -104,7 +109,7 @@ function compact(obj) {
  * @param {Object} raw - Parsed data-raw-dump.json.
  * @param {Object} localeFiles - Parsed *-locale.json files keyed by kind.
  * @param {string} version - Game version string, such as "2.1.21".
- * @returns {Object} Dataset matching data/schema.json, with icon_ref placeholders.
+ * @returns {Object} Dataset matching src/data/dataset.schema.json, with icon_ref placeholders.
  */
 export function convert(raw, localeFiles, version) {
     const locale = new Locale(localeFiles)
@@ -303,7 +308,7 @@ export function convert(raw, localeFiles, version) {
         const controls = new Set(Object.keys(mgs.autoplace_controls ?? {}))
         const entities = Object.keys(mgs.autoplace_settings?.entity?.settings ?? {})
         const tiles = Object.keys(mgs.autoplace_settings?.tile?.settings ?? {})
-        const resource = entities.filter(e => raw.resource[e]).sort()
+        const resource = entities.filter(e => raw.resource[e]).sort(compareStrings)
         resource.forEach(r => planetResources.add(r))
         planets.push({
             key: p.name,
@@ -312,8 +317,8 @@ export function convert(raw, localeFiles, version) {
             surface_properties: p.surface_properties ?? {},
             resources: {
                 resource,
-                offshore: [...new Set(tiles.map(t => raw.tile[t]?.fluid).filter(Boolean))].sort(),
-                plants: Object.values(raw.plant).filter(pl => controls.has(pl.autoplace?.control)).map(pl => pl.name).sort(),
+                offshore: [...new Set(tiles.map(t => raw.tile[t]?.fluid).filter(Boolean))].sort(compareStrings),
+                plants: Object.values(raw.plant).filter(pl => controls.has(pl.autoplace?.control)).map(pl => pl.name).sort(compareStrings),
             },
             icon_ref: `space-location/${p.name}`,
         })

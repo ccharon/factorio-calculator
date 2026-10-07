@@ -71,7 +71,7 @@ function* iconHolders(node) {
  */
 export async function buildSpriteSheet(dataset, iconDir, gameDataDir) {
     const holders = [...iconHolders(dataset)]
-    const refs = [...new Set(holders.map(h => h.icon_ref))].sort()
+    const refs = [...new Set(holders.map(h => h.icon_ref))].sort((a, b) => (a < b ? -1 : a > b ? 1 : 0))
 
     const cellByPixels = new Map()
     const cellByRef = new Map()

@@ -1,24 +1,30 @@
-// Shared setup for browser checks: starts the dev server and a headless Chrome.
-import { spawn } from "node:child_process"
-import { fileURLToPath } from "node:url"
+// Shared setup for browser checks: starts Vite and a headless Chrome.
 import puppeteer from "puppeteer-core"
+import { createServer, preview } from "vite"
 
 const CHROME = process.env.CHROME || "/usr/bin/google-chrome-stable"
 
 /**
- * Starts tools/serve.js and headless Chrome.
+ * Starts a Vite server and headless Chrome.
  *
- * @param {string} [base] - Base URL of an already running server. If omitted, a server is started.
+ * @param {Object} [options]
+ * @param {string} [options.base] - Base URL of an already running server. No server is started then.
+ * @param {boolean} [options.dist] - Serve the production build in dist/ instead of the sources.
+ *     Run `npm run build` first.
  * @returns {Promise<{base: string, browser: import("puppeteer-core").Browser, close: () => Promise<void>}>}
  */
-export async function startBrowser(base) {
+export async function startBrowser({ base, dist = false } = {}) {
     let server = null
     if (!base) {
-        const port = process.env.PORT || "8123"
-        const serve = fileURLToPath(new URL("../../tools/serve.js", import.meta.url))
-        server = spawn(process.execPath, [serve], { env: { ...process.env, PORT: port }, stdio: ["ignore", "pipe", "inherit"] })
-        await new Promise(resolve => server.stdout.once("data", resolve))
-        base = `http://127.0.0.1:${port}`
+        const port = Number(process.env.PORT) || 8123
+        const config = { logLevel: "error", server: { port, strictPort: true }, preview: { port, strictPort: true } }
+        if (dist) {
+            server = await preview(config)
+        } else {
+            server = await createServer(config)
+            await server.listen()
+        }
+        base = server.resolvedUrls.local[0]
     }
     const browser = await puppeteer.launch({ executablePath: CHROME, headless: true })
     return {
@@ -26,7 +32,7 @@ export async function startBrowser(base) {
         browser,
         async close() {
             await browser.close()
-            server?.kill()
+            await server?.close()
         },
     }
 }
@@ -36,7 +42,7 @@ export async function startBrowser(base) {
  * JS errors and console errors are collected in the returned errors list.
  *
  * @param {import("puppeteer-core").Browser} browser
- * @param {string} base - Server base URL.
+ * @param {string} base - Server base URL ending in "/".
  * @param {string} fragment - URL fragment including "#", or "".
  * @returns {Promise<{page: import("puppeteer-core").Page, errors: string[]}>}
  */
@@ -49,7 +55,7 @@ export async function openCalculator(browser, base, fragment) {
             errors.push(`console: ${m.text()}`)
         }
     })
-    await page.goto(`${base}/calc.html${fragment}`)
+    await page.goto(`${base}${fragment}`)
     await page.waitForSelector("#totals tbody tr", { timeout: 20000 }).catch(() => errors.push("factory table did not render"))
     return { page, errors }
 }

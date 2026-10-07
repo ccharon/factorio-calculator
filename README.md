@@ -4,14 +4,22 @@ Web calculator for production ratios in Factorio 2.1 with the Space Age expansio
 
 ## Running
 
-Requires Node 20 or newer for the development server and tools.
+Requires Node 20 or newer.
 
 ```text
 npm install
 npm start
 ```
 
-Then open http://127.0.0.1:8000/calc.html. Any other static HTTP server works as well.
+Then open http://127.0.0.1:8000/.
+
+## Building
+
+```text
+npm run build
+```
+
+The static site is written to `dist/` and works from any directory on a web server.
 
 ## Updating game data
 
@@ -27,16 +35,18 @@ npm run build-data -- --factorio /path/to/factorio
 | `--dump` | path | none | Reuse an existing `script-output` directory instead of running the game. |
 | `--keep` | flag | off | Keep the temporary dump directory. |
 
-The script writes `data/space-age-<version>.json` and `images/sprite-sheet-<hash>.png`. The format is defined in `data/schema.json`. Set `DATASET` in `init.js` to the new file.
+The script writes `public/data/space-age-<version>.json` and `public/images/sprite-sheet-<hash>.png`. The format is defined in `src/data/dataset.schema.json`. Set `DATASET` in `src/main.js` to the new file.
 
 ## Checks
 
 | Command | Effect |
 |---------|--------|
-| `npm run lint` | ESLint. |
-| `npm test` | Unit tests and dataset validation. |
-| `npm run check` | Both of the above. |
+| `npm run lint` | Oxlint and a check for unsafe DOM APIs. |
+| `npm run typecheck` | TypeScript type check. |
+| `npm test` | Unit tests and dataset validation with Vitest. |
+| `npm run check` | All of the above plus the build. |
 | `npm run test:browser` | Loads the page in headless Chrome and fails on JS errors. |
+| `npm run snapshot:check` | Compares solver results for fixed scenarios with `tests/snapshots/factory.json`. |
 
 ## Known limitations
 

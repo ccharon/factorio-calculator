@@ -1,5 +1,5 @@
 import assert from "node:assert/strict"
-import { test } from "node:test"
+import { test } from "vitest"
 import { parseEnergy, roundFloat } from "../tools/lib/units.js"
 
 test("parses power and energy with SI prefixes", () => {

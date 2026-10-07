@@ -1,4 +1,4 @@
-// Generates data/space-age-<version>.json and the matching sprite sheet from a local Factorio install.
+// Generates public/data/space-age-<version>.json and the matching sprite sheet from a local Factorio install.
 //
 // Usage: node tools/build-data.js --factorio <dir> [--dump <script-output dir>] [--keep]
 //   --factorio  Factorio installation (or set FACTORIO_DIR).
@@ -41,8 +41,8 @@ try {
     const dataset = convert(raw, locale, version)
     const { png, hash } = await buildSpriteSheet(dataset, outputDir, join(args.factorio, "data"))
 
-    const sheetPath = join(ROOT, "images", `sprite-sheet-${hash}.png`)
-    const dataPath = join(ROOT, "data", `space-age-${version}.json`)
+    const sheetPath = join(ROOT, "public", "images", `sprite-sheet-${hash}.png`)
+    const dataPath = join(ROOT, "public", "data", `space-age-${version}.json`)
     writeFileSync(sheetPath, png)
     writeFileSync(dataPath, JSON.stringify(dataset, null, 2) + "\n")
     console.log(`wrote ${dataPath}`)

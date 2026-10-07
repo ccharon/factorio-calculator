@@ -1,5 +1,5 @@
 import assert from "node:assert/strict"
-import { test } from "node:test"
+import { test } from "vitest"
 import { convert, normalizeProduct } from "../tools/lib/convert.js"
 
 test("normalizeProduct folds probabilities into the expected amount", () => {

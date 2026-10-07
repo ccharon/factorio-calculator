@@ -1,9 +1,11 @@
 // Loads the calculator in headless Chrome and reports JS errors and the factory table.
-// Usage: node tests/browser/smoke.js [url-fragment] [base-url]
+// Usage: node tests/browser/smoke.js [--dist] [url-fragment]
 import { openCalculator, startBrowser } from "./browser.js"
 
-const fragment = process.argv[2] || ""
-const { base, browser, close } = await startBrowser(process.argv[3])
+const args = process.argv.slice(2)
+const dist = args.includes("--dist")
+const fragment = args.find(a => a !== "--dist") ?? ""
+const { base, browser, close } = await startBrowser({ dist })
 let errors
 try {
     const result = await openCalculator(browser, base, fragment)

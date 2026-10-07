@@ -12,29 +12,28 @@ Repository: https://github.com/ccharon/factorio-calculator (remote `origin`).
 
 ## Running
 
-No build step. Serve the repository root with any static HTTP server and open `calc.html`:
-
-```text
-npm start
-```
-
-ES modules require HTTP; opening the file via `file://` does not work.
-
-## Checks
-
-Node 20 or newer, dev only. Nothing from `node_modules` is shipped to the browser.
+Node 20 or newer.
 
 | Command | Effect |
 |---------|--------|
-| `npm install` | Installs the dev tools: ESLint, ajv, sharp, puppeteer-core. |
-| `npm run lint` | ESLint over all project JS. `third_party/`, `d3-sankey/` and `posts/` are excluded. |
-| `npm test` | Runs `tests/**/*.test.js` with `node --test`. |
-| `npm run check` | Lint and tests. Run before every commit. |
-| `npm run test:browser` | Loads the page in a separate headless Chrome (`/usr/bin/google-chrome-stable`, override with `CHROME`) via `puppeteer-core`, prints the factory table and fails on JS errors. Takes an optional URL fragment. |
-| `npm run snapshot:check` | Solves every scenario in `tests/snapshots/scenarios.js` in headless Chrome and compares the exact results with `tests/snapshots/factory.json`. Fails on any difference. |
+| `npm install` | Installs all dependencies. |
+| `npm start` | Vite dev server on http://127.0.0.1:8000/ with hot reload. |
+| `npm run build` | Production build into `dist/`. |
+| `npm run preview` | Serves `dist/`. |
+
+## Checks
+
+| Command | Effect |
+|---------|--------|
+| `npm run lint` | Oxlint with type-aware rules (`.oxlintrc.json`), then `tools/check-dom-sinks.js`, which fails on `innerHTML`, `.html()`, `eval` and similar in `src/`. |
+| `npm run typecheck` | `tsc` (TypeScript 7) with `tsconfig.json`. |
+| `npm test` | Vitest: `tests/**/*.test.{js,ts}`. Known defects are marked with `test.fails`. |
+| `npm run check` | Lint, type check, tests and build. Run before every commit. |
+| `npm run test:browser` | Loads the page in a separate headless Chrome (`/usr/bin/google-chrome-stable`, override with `CHROME`) via `puppeteer-core`, prints the factory table and fails on JS errors. Takes `--dist` and an optional URL fragment. |
+| `npm run snapshot:check` | Solves every scenario in `tests/snapshots/scenarios.js` in headless Chrome and compares the exact results with `tests/snapshots/factory.json`. Fails on any difference. `--dist` tests the production build. |
 | `npm run snapshot:record` | Rewrites `tests/snapshots/factory.json`. Only run it when a result change is intended, and review the diff. |
 
-`tests/helpers/browser-globals.js` loads the `<script>` tag libraries (`bigInt`, `pako`) as globals. Modules that touch the DOM or `window` at import time cannot be tested in Node yet.
+Oxlint JS plugins are alpha and are not used.
 
 ## Local Factorio install
 
@@ -54,7 +53,7 @@ Do not modify the game directory. `tools/build-data.js` only reads it.
 npm run build-data -- --factorio /home/christian/Spiele/factorio
 ```
 
-The script runs the game three times headless (`--dump-data`, `--dump-icon-sprites`, `--dump-prototype-locale`) with a temporary config and mod directory. It writes `data/space-age-<version>.json` and `images/sprite-sheet-<hash>.png`. Afterwards, point `DATASET` in `init.js` to the new file, delete the old dataset and sprite sheet, and run `npm run check`.
+The script runs the game three times headless (`--dump-data`, `--dump-icon-sprites`, `--dump-prototype-locale`) with a temporary config and mod directory. It writes `public/data/space-age-<version>.json` and `public/images/sprite-sheet-<hash>.png`. Afterwards, point `DATASET` in `src/main.js` to the new file, delete the old dataset and sprite sheet, and run `npm run check`.
 
 | Option | Effect |
 |--------|--------|
@@ -62,32 +61,34 @@ The script runs the game three times headless (`--dump-data`, `--dump-icon-sprit
 | `--dump <dir>` | Reuse an existing `script-output` directory instead of running the game. |
 | `--keep` | Keep the temporary dump and print its path. |
 
-The dataset format is defined in `data/schema.json`. `tests/dataset.test.js` validates every `data/space-age-*.json` against it and checks that all item references resolve. Change the schema, `tools/lib/convert.js` and the loaders together.
+The dataset format is defined in `src/data/dataset.schema.json`. `tests/dataset.test.js` validates every `public/data/space-age-*.json` against it and checks that all item references resolve. Change the schema, `tools/lib/convert.js` and the loaders together.
 
 ## Architecture
 
 | Area | Files |
 |------|-------|
-| Entry point | `calc.html`, `init.js` |
-| Game data loading | `item.js`, `recipe.js`, `building.js`, `module.js`, `belt.js`, `fuel.js`, `planet.js`, `group.js`, `icon.js` |
-| Solver | `factory.js` (`FactorySpecification`, global `spec`), `solve.js`, `simplex.js`, `matrix.js`, `priority.js`, `cycle.js`, `rational.js` |
-| Settings and URL state | `settings.js` (render from settings map), `fragment.js` (serialize/parse URL hash) |
-| UI | `display.js`, `target.js`, `totals.js`, `dropdown.js`, `tooltip.js`, `events.js`, `align.js`, `color.js` |
-| Visualizer | `visualize.js`, `sankey.js`, `boxline2.js`, `d3-sankey/` |
+| Entry point | `index.html`, `src/main.js` |
+| Core math and solver, no DOM | `src/core/`: `rational.js`, `matrix.js`, `simplex.js`, `solve.js`, `cycle.js`, `totals.js`, `sort.js` |
+| Game data loading | `src/data/`: `item.js`, `recipe.js`, `building.js`, `module.js`, `belt.js`, `fuel.js`, `planet.js`, `group.js`, `groups.js`, `dataset.schema.json` |
+| State and URL settings | `src/state/`: `factory.js` (`FactorySpecification`, global `spec`), `fragment.js` (URL hash), `priority.js`, `align.js` (number formatting) |
+| UI | `src/ui/`: `display.js`, `target.js`, `settings.js`, `dropdown.js`, `tooltip.js`, `events.js`, `icon.js`, `color.js`, `debug.js` |
+| Visualizer | `src/visualize/`: `visualize.js`, `sankey.js`, `boxline.js`, `graph.js`, `circlepath.js`, `d3-sankey/` (modified copy of d3-sankey) |
+| Styles | `src/styles/` |
+| Static files | `public/`: dataset, sprite sheet, SVG icons, favicon. Copied unchanged into `dist/`. |
 | Data generation | `tools/build-data.js` (CLI), `tools/lib/factorio.js` (runs the game), `tools/lib/convert.js` (data.raw to dataset), `tools/lib/sprites.js` (sprite sheet, uses `sharp`) |
-| Datasets | `data/space-age-<version>.json`, `data/schema.json`, matching `images/sprite-sheet-<hash>.png` |
 
 Key facts:
 
-- All math uses exact rationals (`rational.js` on top of `BigInteger.min.js`). Never use floats in solver code. Convert data values with `Rational.from_float_approximate`.
-- Every setting must be handled in three places: its `render*` function in `settings.js`, serialization in `fragment.js`, and the default constant. Shared URLs must keep working.
+- All math uses exact rationals (`src/core/rational.js`). Never use floats in solver code. Convert data values with `Rational.from_float_approximate`.
+- Every setting must be handled in three places: its `render*` function in `src/ui/settings.js`, serialization in `src/state/fragment.js`, and the default constant. Shared URLs must keep working.
 - `spec` is a module-level singleton, also exposed as `window.spec` for debugging.
-- Recipes in 2.1 have a `categories` list. The 2.0 `category` field and the combined `x-or-y` categories no longer exist. The loader uses only the first category until phase 3 of `PLAN.md`.
+- Recipes in 2.1 have a `categories` list. The 2.0 `category` field and the combined `x-or-y` categories no longer exist. The loader uses only the first category until phase 4 of `PLAN.md`.
 - Product amounts in the dataset are expected values with probabilities and `extra_count_fraction` applied. `ignored_by_productivity` marks the part that productivity does not multiply.
 
 ## Conventions
 
-- Plain ES modules, no bundler, no framework. Third-party code lives in `third_party/` and is loaded via `<script>` tags.
+- TypeScript and Vite, no UI framework. Every library comes from npm and is imported. No `<script>` tags for libraries, no inline scripts or event handler attributes in HTML.
+- Files in `src/` are JavaScript until their phase 3 port to TypeScript. Type-aware lint rules that need types are relaxed for `src/**/*.js` in `.oxlintrc.json`.
 - 4-space indentation, no semicolons, double quotes. Match the surrounding file.
 - Chrome is the only browser for testing: the Chrome extension for visual checks, `puppeteer-core` with the installed Chrome for automated checks.
 - Documentation comments in every new or edited file:

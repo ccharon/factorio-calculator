@@ -1,8 +1,6 @@
-import "./helpers/browser-globals.js"
 import assert from "node:assert/strict"
-import { test } from "node:test"
-
-const { Rational, zero, one, oneThird, twoThirds } = await import("../rational.js")
+import { test } from "vitest"
+import { Rational, zero, one, oneThird, twoThirds } from "../src/core/rational.js"
 
 const r = s => Rational.from_string(s)
 
@@ -47,11 +45,13 @@ test("from_float_approximate recognizes one third", () => {
     assert.ok(Rational.from_float_approximate(0.09375).equal(r("3/32")))
 })
 
-test("from_float_approximate recognizes two thirds", { todo: "_two_thirds constant is 0.66666, rounding gives 0.66667" }, () => {
+// Known defect: the _two_thirds constant is 0.66666, but rounding 2/3 gives 0.66667.
+test.fails("from_float_approximate recognizes two thirds", () => {
     assert.ok(Rational.from_float_approximate(2 / 3).equal(twoThirds))
 })
 
-test("from_string rejects invalid input", { todo: "phase 5: validate URL values" }, () => {
+// Known defect, fixed with URL validation in phase 6.
+test.fails("from_string rejects invalid input", () => {
     assert.throws(() => r("abc"))
     assert.throws(() => r("1/0"))
 })

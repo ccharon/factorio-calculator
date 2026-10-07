@@ -1,0 +1,63 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [
+    "typescript",
+    "unicorn",
+    "import"
+  ],
+  "options": {
+    "typeAware": true
+  },
+  "categories": {
+    "correctness": "error"
+  },
+  "env": {
+    "browser": true,
+    "es2022": true
+  },
+  "ignorePatterns": [
+    "dist/**",
+    "public/**",
+    "node_modules/**"
+  ],
+  "rules": {
+    "no-eval": "error",
+    "no-new-func": "error",
+    "no-undef": "error",
+    "no-unused-vars": [
+      "error",
+      {
+        "args": "none"
+      }
+    ],
+    "no-redeclare": "error"
+  },
+  "overrides": [
+    {
+      "files": [
+        "tests/**",
+        "tools/**",
+        "vite.config.js"
+      ],
+      "env": {
+        "node": true
+      }
+    },
+    {
+      "files": [
+        "src/visualize/d3-sankey/**"
+      ],
+      "rules": {
+        "unicorn/no-new-array": "off"
+      }
+    },
+    {
+      "files": [
+        "src/**/*.js"
+      ],
+      "rules": {
+        "typescript/restrict-template-expressions": "off"
+      }
+    }
+  ]
+}

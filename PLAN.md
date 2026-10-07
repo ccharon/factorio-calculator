@@ -56,7 +56,7 @@ Each phase ends in a working calculator and its own commits.
 | UI | The current look stays. |
 | Quality | Effects of machine, module and beacon quality first. Recycling loops later. |
 | URL compatibility | Clean break. Only URLs created by this version must stay stable. |
-| Node dev tooling | Approved. ESLint and `node --test`, dev only. |
+| Dev tooling | Oxlint with type-aware rules (no JS plugins, they are alpha), TypeScript 7, Vitest, puppeteer-core with Chrome. |
 
 ## Phase 0: Tooling
 
@@ -77,7 +77,7 @@ Done. Lint passes. Chrome check on the 2.0.55 Space Age dataset shows no console
 
 ## Phase 2: Data pipeline
 
-Done. `npm run build-data` generates `data/space-age-2.1.21.json` and the sprite sheet. `data/schema.json` defines the format. Known limitations until phase 4: the loader uses only the first recipe category, and burner machines always burn the preferred chemical fuel.
+Done. `npm run build-data` generates `public/data/space-age-2.1.21.json` and the sprite sheet. `src/data/dataset.schema.json` defines the format. Known limitations until phase 4: the loader uses only the first recipe category, and burner machines always burn the preferred chemical fuel.
 
 1. New `tools/build-data.js`: runs Factorio `--dump-data` and `--dump-icon-sprites` against the local install, writes `data/space-age-<version>.json` and the sprite sheet. Uses `sharp` for scaling and compositing icons.
 2. Read localized names from `--dump-prototype-locale`.
@@ -91,7 +91,7 @@ Comes before the model changes, so phases 4 to 6 are written once, in the new st
 
 1. Done. Snapshot tests: `tests/snapshots/factory.json` holds exact rates, building counts and power for 17 URL scenarios across all planets, recorded with the current code. The recorded output is the expected result for the new build.
 2. Branches and CI: rename `master` to `main`, create `develop`. `check.yml` runs lint, type check, tests and build on `develop` and pull requests. `deploy.yml` builds `main` and force-pushes `dist/` as the root of an orphan `dist` branch. Dependabot keeps npm packages current.
-3. Project layout:
+3. Done. Project layout:
 
    | Path | Content |
    |------|---------|
@@ -107,7 +107,7 @@ Comes before the model changes, so phases 4 to 6 are written once, in the new st
    | `tools/` | Node scripts: data build. |
    | `tests/` | Vitest tests. |
 
-4. Dependencies from npm, `third_party/` is deleted:
+4. Dependencies from npm, `third_party/` is deleted. Done except `BigInt` and `CompressionStream`: `big-integer` and `pako` come from npm until the `core` and `state` ports.
 
    | Library | Replacement |
    |---------|-------------|
@@ -117,9 +117,9 @@ Comes before the model changes, so phases 4 to 6 are written once, in the new st
    | `popper.min.js` | `@floating-ui/dom`. |
    | `pako.min.js` | Native `CompressionStream("deflate-raw")`. URL parsing becomes async. |
 
-5. Tooling: Vitest replaces `node --test`. `tsc --noEmit` in strict mode and typescript-eslint run in `npm run check`. `tools/serve.js` goes away, `npm start` runs the Vite dev server.
+5. Done. Tooling: Vitest replaces `node --test`. `tsc` in strict mode and Oxlint with type-aware rules run in `npm run check`. `tools/check-dom-sinks.js` replaces `eslint-plugin-no-unsanitized`. `npm start` runs the Vite dev server.
 6. Port order: `core` first with strict types and the existing unit tests, then `data`, `state`, `ui`, `visualize`. Each step keeps the snapshot tests green.
-7. Delete the root-level JS files, `calc.html`, `third_party/` and `d3-sankey/`. Update README and CLAUDE.md.
+7. Done. Delete the root-level JS files, `calc.html`, `third_party/` and `d3-sankey/`. Update README and CLAUDE.md. The inline event handlers in `index.html` are replaced by `addEventListener` in `src/main.js`.
 
 ## Phase 4: Core model for 2.1
 

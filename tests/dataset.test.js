@@ -1,10 +1,10 @@
 import assert from "node:assert/strict"
 import { existsSync, readFileSync, readdirSync } from "node:fs"
-import { test } from "node:test"
+import { test } from "vitest"
 import Ajv2020 from "ajv/dist/2020.js"
 
-const dataDir = new URL("../data/", import.meta.url)
-const schema = JSON.parse(readFileSync(new URL("schema.json", dataDir), "utf8"))
+const dataDir = new URL("../public/data/", import.meta.url)
+const schema = JSON.parse(readFileSync(new URL("../src/data/dataset.schema.json", import.meta.url), "utf8"))
 const validate = new Ajv2020({ allErrors: true }).compile(schema)
 const files = readdirSync(dataDir).filter(f => /^space-age-.*\.json$/.test(f))
 
@@ -12,7 +12,7 @@ for (const file of files) {
     const data = JSON.parse(readFileSync(new URL(file, dataDir), "utf8"))
     const itemKeys = new Set(data.items.map(i => i.key))
 
-    test(`${file} matches data/schema.json`, () => {
+    test(`${file} matches the dataset schema`, () => {
         assert.ok(validate(data), JSON.stringify(validate.errors?.slice(0, 5), null, 2))
     })
 
@@ -42,6 +42,6 @@ for (const file of files) {
     })
 
     test(`${file} has its sprite sheet`, () => {
-        assert.ok(existsSync(new URL(`../images/sprite-sheet-${data.sprites.hash}.png`, import.meta.url)))
+        assert.ok(existsSync(new URL(`../public/images/sprite-sheet-${data.sprites.hash}.png`, import.meta.url)))
     })
 }

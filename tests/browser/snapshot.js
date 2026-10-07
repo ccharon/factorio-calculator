@@ -2,7 +2,7 @@
 // tests/snapshots/scenarios.js, read from window.spec in headless Chrome.
 // All numbers are exact rationals as strings, so any change in a result shows up.
 //
-// Usage: node tests/browser/snapshot.js record|check [base-url]
+// Usage: node tests/browser/snapshot.js record|check [--dist]
 
 import { readFileSync, writeFileSync } from "node:fs"
 import { isDeepStrictEqual } from "node:util"
@@ -12,7 +12,7 @@ import { openCalculator, startBrowser } from "./browser.js"
 const SNAPSHOT = new URL("../snapshots/factory.json", import.meta.url)
 const mode = process.argv[2]
 if (mode !== "record" && mode !== "check") {
-    console.error("usage: snapshot.js record|check [base-url]")
+    console.error("usage: snapshot.js record|check [--dist]")
     process.exit(2)
 }
 
@@ -39,7 +39,7 @@ function readSolution() {
     return { recipes, items, surplus }
 }
 
-const { base, browser, close } = await startBrowser(process.argv[3])
+const { base, browser, close } = await startBrowser({ dist: process.argv.includes("--dist") })
 const results = {}
 const errors = []
 try {
