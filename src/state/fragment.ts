@@ -72,6 +72,10 @@ export function formatSettings(excludeTitle = false, overrideTab?: string, targe
     if (!spec.miningProd.isZero()) {
         add("mprod", spec.miningProd.mul(hundred).toString())
     }
+    const research = spec.research.filter(r => (spec.researchLevels.get(r) ?? 0) > 0).map(r => `${r.key}:${spec.researchLevels.get(r) ?? 0}`)
+    if (research.length > 0) {
+        add("rprod", research.join(","))
+    }
 
     const buildings: string[] = []
     for (const group of spec.buildings.values()) {

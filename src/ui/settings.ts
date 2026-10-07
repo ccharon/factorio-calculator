@@ -24,6 +24,7 @@ import type { Building } from "../data/building.ts"
 import { getRecipeGroups } from "../data/groups.ts"
 import { type Module, moduleRows, shortModules } from "../data/module.ts"
 import type { Planet } from "../data/planet.ts"
+import type { ProductivityResearch } from "../data/research.ts"
 import type { Recipe, RecipeLike } from "../data/recipe.ts"
 import {
     DEFAULT_RATE, DEFAULT_RATE_PRECISION, DEFAULT_COUNT_PRECISION, DEFAULT_FORMAT, type DisplayFormat, isRateName, longRateNames, type RateName,
@@ -280,6 +281,47 @@ function renderMiningProd(settings: Settings): void {
         input.value = value === null ? "0" : mprod
     }
     spec.miningProd = (value ?? zero).div(hundred)
+}
+
+// recipe productivity research
+
+// Returns the level for research from the URL value, or null if it is not a valid level.
+function parseLevel(research: ProductivityResearch, value: string): number | null {
+    const level = Number(value)
+    if (!Number.isInteger(level) || level < 0 || (research.maxLevel !== null && level > research.maxLevel)) {
+        return null
+    }
+    return level
+}
+
+function renderResearch(settings: Settings): void {
+    spec.researchLevels.clear()
+    // Each entry is a technology key and its level, separated by a colon.
+    for (const entry of splitList(settings.get("rprod"))) {
+        const [key = "", value = ""] = entry.split(":")
+        const research = spec.research.find(r => r.key === key)
+        const level = research === undefined ? null : parseLevel(research, value)
+        if (research === undefined || level === null) {
+            warn("invalid productivity research", entry)
+            continue
+        }
+        spec.researchLevels.set(research, level)
+    }
+
+    const div = d3.select("#research_selector")
+    div.selectAll("*").remove()
+    const entries = div.selectAll<HTMLSpanElement, ProductivityResearch>("span").data(sorted(spec.research, r => r.order)).join("span").classed("research", true)
+    entries.append(d => d.icon.make(32))
+    const input = entries.append("input").attr("type", "number").attr("min", 0).attr("step", 1).attr("max", d => d.maxLevel)
+    input.property("value", d => spec.researchLevels.get(d) ?? 0).on("change", function (_event: Event, d: ProductivityResearch) {
+        const level = parseLevel(d, this.value)
+        if (level === null) {
+            this.value = String(spec.researchLevels.get(d) ?? 0)
+            return
+        }
+        spec.researchLevels.set(d, level)
+        spec.updateSolution()
+    })
 }
 
 // color scheme
@@ -689,6 +731,7 @@ export function renderSettings(settings: Settings): void {
     renderPrecisions(settings)
     renderValueFormat(settings)
     renderMiningProd(settings)
+    renderResearch(settings)
     renderColorScheme(settings)
     renderBuildings(settings)
     renderBelts(settings)

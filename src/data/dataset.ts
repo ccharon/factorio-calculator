@@ -185,6 +185,20 @@ export interface DatasetResource extends NamedPrototype {
     order?: string
 }
 
+/** One recipe a productivity technology affects, with the bonus per level, such as 0.1 for +10%. */
+export interface RecipeProductivityEffect {
+    recipe: string
+    change: number
+}
+
+/** A technology that raises the productivity of recipes per level. */
+export interface DatasetRecipeProductivity extends NamedPrototype {
+    order: string
+    /** Highest level. Absent for infinite research. */
+    max_level?: number
+    effects: RecipeProductivityEffect[]
+}
+
 export interface DatasetPlant extends NamedPrototype {
     order: string
     seed: string
@@ -238,5 +252,6 @@ export interface Dataset {
     resources: DatasetResource[]
     plants: DatasetPlant[]
     surface_properties: DatasetSurfaceProperty[]
+    recipe_productivity: DatasetRecipeProductivity[]
     sprites: SpriteSheetData
 }

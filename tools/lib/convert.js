@@ -304,6 +304,24 @@ export function convert(raw, localeFiles, version) {
         radius: p.radius,
     }))
 
+    // Technologies that raise the productivity of recipes, one level at a time.
+    const recipe_productivity = []
+    for (const t of Object.values(raw.technology ?? {})) {
+        const effects = asArray(t.effects).filter(e => e.type === "change-recipe-productivity").map(e => ({ recipe: e.recipe, change: e.change }))
+        if (effects.length === 0 || t.hidden || isSkipped(t)) {
+            continue
+        }
+        recipe_productivity.push(compact({
+            key: t.name,
+            localized_name: locale.name("technology", t.name),
+            order: t.order ?? "",
+            max_level: t.max_level === "infinite" ? undefined : t.max_level,
+            effects,
+            icon_ref: `technology/${t.name}`,
+        }))
+    }
+    recipe_productivity.sort((a, b) => (a.key < b.key ? -1 : a.key > b.key ? 1 : 0))
+
     // Planets and their resources. Plants belong to a planet through their autoplace control.
     const planetResources = new Set()
     const planets = []
@@ -409,6 +427,7 @@ export function convert(raw, localeFiles, version) {
         resources,
         plants,
         surface_properties,
+        recipe_productivity,
         sprites,
     }
 }

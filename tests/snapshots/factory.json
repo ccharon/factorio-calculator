@@ -1031,6 +1031,307 @@
     ],
     "surplus": []
   },
+  "vulcanus-productivity-cap": {
+    "fragment": "#items=steel-plate:r:600&planet=vulcanus&rprod=steel-plate-productivity:25&modules=casting-steel:p3:p3:p3:p3",
+    "recipes": [
+      {
+        "key": "(output)",
+        "rate": "1",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "(surplus)",
+        "rate": "1",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "calcite",
+        "rate": "1/5",
+        "building": "electric-mining-drill",
+        "count": "2/5",
+        "fuel": "electric",
+        "power": "36000"
+      },
+      {
+        "key": "casting-steel",
+        "rate": "5/2",
+        "building": "foundry",
+        "count": "5",
+        "fuel": "electric",
+        "power": "158750000/3"
+      },
+      {
+        "key": "lava",
+        "rate": "100",
+        "building": "offshore-pump",
+        "count": "1/12",
+        "fuel": "electric",
+        "power": "0"
+      },
+      {
+        "key": "molten-iron-from-lava",
+        "rate": "1/5",
+        "building": "foundry",
+        "count": "4/5",
+        "fuel": "electric",
+        "power": "6250000/3"
+      }
+    ],
+    "items": [
+      {
+        "key": "calcite",
+        "rate": "1/5"
+      },
+      {
+        "key": "lava",
+        "rate": "100"
+      },
+      {
+        "key": "molten-iron",
+        "rate": "75"
+      },
+      {
+        "key": "steel-plate",
+        "rate": "10"
+      },
+      {
+        "key": "stone",
+        "rate": "3"
+      }
+    ],
+    "surplus": [
+      {
+        "key": "stone",
+        "rate": "3"
+      }
+    ]
+  },
+  "nauvis-research": {
+    "fragment": "#items=processing-unit:r:60&planet=nauvis&rprod=processing-unit-productivity:3",
+    "recipes": [
+      {
+        "key": "(output)",
+        "rate": "1",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "advanced-circuit",
+        "rate": "20/13",
+        "building": "assembling-machine-1",
+        "count": "240/13",
+        "fuel": "electric",
+        "power": "18617500/13"
+      },
+      {
+        "key": "advanced-oil-processing",
+        "rate": "190/507",
+        "building": "oil-refinery",
+        "count": "950/507",
+        "fuel": "electric",
+        "power": "137732000/169"
+      },
+      {
+        "key": "coal",
+        "rate": "20/13",
+        "building": "electric-mining-drill",
+        "count": "40/13",
+        "fuel": "electric",
+        "power": "3600000/13"
+      },
+      {
+        "key": "copper-cable",
+        "rate": "400/13",
+        "building": "assembling-machine-1",
+        "count": "400/13",
+        "fuel": "electric",
+        "power": "31007500/13"
+      },
+      {
+        "key": "copper-ore",
+        "rate": "400/13",
+        "building": "electric-mining-drill",
+        "count": "800/13",
+        "fuel": "electric",
+        "power": "72000000/13"
+      },
+      {
+        "key": "copper-plate",
+        "rate": "400/13",
+        "building": "electric-furnace",
+        "count": "640/13",
+        "fuel": "electric",
+        "power": "119100000/13"
+      },
+      {
+        "key": "crude-oil",
+        "rate": "19000/507",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "electronic-circuit",
+        "rate": "240/13",
+        "building": "assembling-machine-1",
+        "count": "240/13",
+        "fuel": "electric",
+        "power": "18617500/13"
+      },
+      {
+        "key": "heavy-oil-cracking",
+        "rate": "475/2028",
+        "building": "chemical-plant",
+        "count": "475/1014",
+        "fuel": "electric",
+        "power": "17808000/169"
+      },
+      {
+        "key": "iron-ore",
+        "rate": "241/13",
+        "building": "electric-mining-drill",
+        "count": "482/13",
+        "fuel": "electric",
+        "power": "43380000/13"
+      },
+      {
+        "key": "iron-plate",
+        "rate": "241/13",
+        "building": "electric-furnace",
+        "count": "1928/65",
+        "fuel": "electric",
+        "power": "71748000/13"
+      },
+      {
+        "key": "light-oil-cracking",
+        "rate": "1615/2028",
+        "building": "chemical-plant",
+        "count": "1615/1014",
+        "fuel": "electric",
+        "power": "58891000/169"
+      },
+      {
+        "key": "plastic-bar",
+        "rate": "20/13",
+        "building": "chemical-plant",
+        "count": "20/13",
+        "fuel": "electric",
+        "power": "4382000/13"
+      },
+      {
+        "key": "processing-unit",
+        "rate": "10/13",
+        "building": "assembling-machine-2",
+        "count": "400/39",
+        "fuel": "electric",
+        "power": "20715000/13"
+      },
+      {
+        "key": "sulfur",
+        "rate": "5/26",
+        "building": "chemical-plant",
+        "count": "5/26",
+        "fuel": "electric",
+        "power": "616000/13"
+      },
+      {
+        "key": "sulfuric-acid",
+        "rate": "1/13",
+        "building": "chemical-plant",
+        "count": "1/13",
+        "fuel": "electric",
+        "power": "301000/13"
+      },
+      {
+        "key": "water",
+        "rate": "32000/507",
+        "building": "offshore-pump",
+        "count": "80/1521",
+        "fuel": "electric",
+        "power": "0"
+      }
+    ],
+    "items": [
+      {
+        "key": "advanced-circuit",
+        "rate": "20/13"
+      },
+      {
+        "key": "coal",
+        "rate": "20/13"
+      },
+      {
+        "key": "copper-cable",
+        "rate": "800/13"
+      },
+      {
+        "key": "copper-ore",
+        "rate": "400/13"
+      },
+      {
+        "key": "copper-plate",
+        "rate": "400/13"
+      },
+      {
+        "key": "crude-oil",
+        "rate": "19000/507"
+      },
+      {
+        "key": "electronic-circuit",
+        "rate": "240/13"
+      },
+      {
+        "key": "heavy-oil",
+        "rate": "4750/507"
+      },
+      {
+        "key": "iron-ore",
+        "rate": "241/13"
+      },
+      {
+        "key": "iron-plate",
+        "rate": "241/13"
+      },
+      {
+        "key": "light-oil",
+        "rate": "8075/338"
+      },
+      {
+        "key": "petroleum-gas",
+        "rate": "475/13"
+      },
+      {
+        "key": "plastic-bar",
+        "rate": "40/13"
+      },
+      {
+        "key": "processing-unit",
+        "rate": "1"
+      },
+      {
+        "key": "sulfur",
+        "rate": "5/13"
+      },
+      {
+        "key": "sulfuric-acid",
+        "rate": "50/13"
+      },
+      {
+        "key": "water",
+        "rate": "32000/507"
+      }
+    ],
+    "surplus": []
+  },
   "nauvis-ignore": {
     "fragment": "#items=advanced-circuit:r:60&planet=nauvis&ignore=electronic-circuit",
     "recipes": [

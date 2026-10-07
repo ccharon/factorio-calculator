@@ -24,6 +24,7 @@ import { getItemGroups } from "./data/group.ts"
 import { getItems } from "./data/item.ts"
 import { getModules } from "./data/module.ts"
 import { getPlanets } from "./data/planet.ts"
+import { getProductivityResearch } from "./data/research.ts"
 import { getRecipes } from "./data/recipe.ts"
 import { spec } from "./state/factory.ts"
 import { type Settings, decodeFragment } from "./state/url-codec.ts"
@@ -50,7 +51,7 @@ function isDataset(value: unknown): value is Dataset {
     }
     const record = value as Record<string, unknown>
     return typeof record["version"] === "string"
-        && ["items", "recipes", "planets", "crafting_machines"].every(key => Array.isArray(record[key]))
+        && ["items", "recipes", "planets", "crafting_machines", "recipe_productivity"].every(key => Array.isArray(record[key]))
 }
 
 async function fetchDataset(): Promise<Dataset> {
@@ -77,7 +78,8 @@ function loadData(data: Dataset, settings: Settings): void {
     const fuel = getFuel(data, items)
     getSprites(data)
     const itemGroups = getItemGroups(items, data)
-    spec.setData(items, recipes, planets, modules, buildings, belts, fuel, itemGroups)
+    const research = getProductivityResearch(data, recipes)
+    spec.setData(items, recipes, planets, modules, buildings, belts, fuel, itemGroups, research)
     renderSettings(settings)
     spec.updateSolution()
 }

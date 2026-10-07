@@ -8,7 +8,7 @@
   "required": [
     "version", "groups", "items", "fluids", "fuel", "spoilage", "recipes", "crafting_machines",
     "rocket_silo", "mining_drills", "offshore_pumps", "boilers", "belts", "beacon", "modules",
-    "agricultural_tower", "planets", "resources", "plants", "surface_properties", "sprites"
+    "agricultural_tower", "planets", "resources", "plants", "surface_properties", "recipe_productivity", "sprites"
   ],
   "properties": {
     "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$", "description": "Game version the data was dumped from." },
@@ -239,6 +239,36 @@
         "allOf": [{ "$ref": "#/$defs/machine" }],
         "properties": { "radius": { "type": "number", "minimum": 0 } },
         "unevaluatedProperties": false
+      }
+    },
+    "recipe_productivity": {
+      "description": "Technologies that raise the productivity of recipes per level.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["key", "localized_name", "order", "effects", "icon_col", "icon_row"],
+        "properties": {
+          "key": { "$ref": "#/$defs/key" },
+          "localized_name": { "$ref": "#/$defs/localizedName" },
+          "order": { "type": "string" },
+          "max_level": { "type": "integer", "minimum": 1, "description": "Highest level. Absent for infinite research." },
+          "effects": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["recipe", "change"],
+              "properties": {
+                "recipe": { "$ref": "#/$defs/key" },
+                "change": { "type": "number", "description": "Productivity bonus per level, such as 0.1 for +10%." }
+              }
+            }
+          },
+          "icon_col": { "$ref": "#/$defs/iconIndex" },
+          "icon_row": { "$ref": "#/$defs/iconIndex" }
+        }
       }
     },
     "planets": {

@@ -30792,6 +30792,168 @@
       "default_value": 300
     }
   ],
+  "recipe_productivity": [
+    {
+      "key": "asteroid-productivity",
+      "localized_name": {
+        "en": "Asteroid productivity"
+      },
+      "order": "",
+      "effects": [
+        {
+          "recipe": "carbonic-asteroid-crushing",
+          "change": 0.1
+        },
+        {
+          "recipe": "oxide-asteroid-crushing",
+          "change": 0.1
+        },
+        {
+          "recipe": "metallic-asteroid-crushing",
+          "change": 0.1
+        },
+        {
+          "recipe": "advanced-carbonic-asteroid-crushing",
+          "change": 0.1
+        },
+        {
+          "recipe": "advanced-oxide-asteroid-crushing",
+          "change": 0.1
+        },
+        {
+          "recipe": "advanced-metallic-asteroid-crushing",
+          "change": 0.1
+        }
+      ],
+      "icon_col": 13,
+      "icon_row": 26
+    },
+    {
+      "key": "low-density-structure-productivity",
+      "localized_name": {
+        "en": "Low density structure productivity"
+      },
+      "order": "",
+      "effects": [
+        {
+          "recipe": "low-density-structure",
+          "change": 0.1
+        },
+        {
+          "recipe": "casting-low-density-structure",
+          "change": 0.1
+        }
+      ],
+      "icon_col": 14,
+      "icon_row": 26
+    },
+    {
+      "key": "plastic-bar-productivity",
+      "localized_name": {
+        "en": "Plastic bar productivity"
+      },
+      "order": "",
+      "effects": [
+        {
+          "recipe": "plastic-bar",
+          "change": 0.1
+        },
+        {
+          "recipe": "bioplastic",
+          "change": 0.1
+        }
+      ],
+      "icon_col": 15,
+      "icon_row": 26
+    },
+    {
+      "key": "processing-unit-productivity",
+      "localized_name": {
+        "en": "Processing unit productivity"
+      },
+      "order": "",
+      "effects": [
+        {
+          "recipe": "processing-unit",
+          "change": 0.1
+        }
+      ],
+      "icon_col": 16,
+      "icon_row": 26
+    },
+    {
+      "key": "rocket-fuel-productivity",
+      "localized_name": {
+        "en": "Rocket fuel productivity"
+      },
+      "order": "",
+      "effects": [
+        {
+          "recipe": "rocket-fuel",
+          "change": 0.1
+        },
+        {
+          "recipe": "rocket-fuel-from-jelly",
+          "change": 0.1
+        },
+        {
+          "recipe": "ammonia-rocket-fuel",
+          "change": 0.1
+        }
+      ],
+      "icon_col": 17,
+      "icon_row": 26
+    },
+    {
+      "key": "rocket-part-productivity",
+      "localized_name": {
+        "en": "Rocket part productivity"
+      },
+      "order": "",
+      "effects": [
+        {
+          "recipe": "rocket-part",
+          "change": 0.1
+        }
+      ],
+      "icon_col": 18,
+      "icon_row": 26
+    },
+    {
+      "key": "scrap-recycling-productivity",
+      "localized_name": {
+        "en": "Scrap recycling productivity"
+      },
+      "order": "",
+      "effects": [
+        {
+          "recipe": "scrap-recycling",
+          "change": 0.1
+        }
+      ],
+      "icon_col": 19,
+      "icon_row": 26
+    },
+    {
+      "key": "steel-plate-productivity",
+      "localized_name": {
+        "en": "Steel plate productivity"
+      },
+      "order": "",
+      "effects": [
+        {
+          "recipe": "steel-plate",
+          "change": 0.1
+        },
+        {
+          "recipe": "casting-steel",
+          "change": 0.1
+        }
+      ],
+      "icon_col": 20,
+      "icon_row": 26
+    }
+  ],
   "sprites": {
     "extra": {
       "clock": {
@@ -30805,7 +30967,7 @@
         "icon_row": 1
       }
     },
-    "hash": "7db1b85d5fa878cefb34f58dee5f426e",
+    "hash": "ef10e58de370f529721685fc463623f1",
     "width": 896,
     "height": 864
   }

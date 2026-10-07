@@ -461,3 +461,12 @@ svg.popout {
     padding-top: 2px;
     background-color: var(--medium);
 }
+#research_selector .research {
+    display: inline-flex;
+    align-items: center;
+    margin: 2px 8px 2px 0;
+}
+#research_selector .research input {
+    width: 4em;
+    margin-left: 2px;
+}

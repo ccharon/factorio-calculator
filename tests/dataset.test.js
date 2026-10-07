@@ -41,6 +41,13 @@ for (const file of files) {
         }
     })
 
+    test(`${file} productivity research names known recipes`, () => {
+        const recipes = new Set(data.recipes.map(r => r.key))
+        for (const t of data.recipe_productivity) {
+            t.effects.forEach(e => assert.ok(recipes.has(e.recipe), `${t.key}: ${e.recipe}`))
+        }
+    })
+
     test(`${file} has its sprite sheet`, () => {
         assert.ok(existsSync(new URL(`../public/images/sprite-sheet-${data.sprites.hash}.png`, import.meta.url)))
     })

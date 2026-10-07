@@ -22,6 +22,7 @@ import type { ItemGroups } from "../data/group.ts"
 import type { Item } from "../data/item.ts"
 import { type Module, type ModuleDefaults, ModuleSpec } from "../data/module.ts"
 import type { Planet } from "../data/planet.ts"
+import type { ProductivityResearch } from "../data/research.ts"
 import { DISABLED_RECIPE_PREFIX, Recipe, type RecipeLike, type RecipeNode } from "../data/recipe.ts"
 import { renderDebug } from "../ui/debug.ts"
 import { displayItems } from "../ui/display.ts"
@@ -192,6 +193,10 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults {
     defaultBeaconCount: Rational = zero
 
     miningProd: Rational = zero
+    /** Recipe productivity technologies, sorted by order. */
+    research: ProductivityResearch[] = []
+    /** Researched level of each technology. Missing entries are level 0. */
+    readonly researchLevels: Map<ProductivityResearch, number> = new Map()
 
     readonly ignore: Set<Item> = new Set()
     readonly disable: Set<Recipe> = new Set()
@@ -250,6 +255,7 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults {
         belts: Map<string, Belt>,
         fuels: Map<string, Fuel>,
         itemGroups: ItemGroups,
+        research: ProductivityResearch[],
     ): void {
         this.items = items
         this.recipes = recipes
@@ -268,6 +274,8 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults {
 
         this.miningProd = zero
         this.itemGroups = itemGroups
+        this.research = research
+        this.researchLevels.clear()
         this.defaultPriority = this.getDefaultPriorityArray()
         this.priorityValue = null
     }
@@ -584,8 +592,14 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults {
 
     /** Returns the productivity multiplier of recipe, such as 1.5 for +50%, limited by the recipe's productivity cap. */
     getProdEffect(recipe: RecipeNode): Rational {
-        const effect = this.getModuleSpec(recipe)?.prodEffect(this) ?? one
-        if (recipe instanceof Recipe && recipe.maximumProductivity !== null) {
+        let effect = this.getModuleSpec(recipe)?.prodEffect(this) ?? one
+        if (!(recipe instanceof Recipe)) {
+            return effect
+        }
+        for (const [research, level] of this.researchLevels) {
+            effect = effect.add(research.bonus(recipe, level))
+        }
+        if (recipe.maximumProductivity !== null) {
             const cap = one.add(recipe.maximumProductivity)
             return cap.less(effect) ? cap : effect
         }
