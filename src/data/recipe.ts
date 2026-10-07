@@ -49,6 +49,15 @@ export class SurfaceCondition {
         this.min = min
         this.max = max
     }
+
+    /** Returns whether a surface with these property values meets the condition. Throws for an unknown property. */
+    holds(properties: ReadonlyMap<string, number>): boolean {
+        const value = properties.get(this.property)
+        if (value === undefined) {
+            throw new Error(`unknown surface property: ${this.property}`)
+        }
+        return (this.min === undefined || value >= this.min) && (this.max === undefined || value <= this.max)
+    }
 }
 
 /** A node of the solution graph: a recipe, or the solver's output and surplus nodes. */
@@ -65,8 +74,8 @@ export interface RecipeNode {
 /** What the solver and the UI need from any recipe, including DisabledRecipe. */
 export interface RecipeLike extends RecipeNode, IconSource {
     readonly key: string
-    /** Crafting category that selects the building, or null for recipes without a building. */
-    readonly category: string | null
+    /** Crafting categories. Every building with one of them can craft the recipe. Empty for recipes without a building. */
+    readonly categories: readonly string[]
     readonly icon: Icon
     isResource(): boolean
     isDisable(): boolean
@@ -74,7 +83,7 @@ export interface RecipeLike extends RecipeNode, IconSource {
 
 /** Returns whether node is a recipe. The solver's output nodes are the only RecipeNodes without a key. */
 export function isRecipeLike(node: RecipeNode): node is RecipeLike {
-    return "key" in node && "category" in node
+    return "key" in node && "categories" in node
 }
 
 /** Constructor options of Recipe. */
@@ -86,7 +95,7 @@ export interface RecipeOptions {
     icon_col: number
     icon_row: number
     allowProductivity: boolean
-    category: string | null
+    categories: readonly string[]
     /** Crafting time in seconds at crafting speed 1. */
     time: Rational
     ingredients: Ingredient[]
@@ -102,7 +111,7 @@ export class Recipe implements RecipeLike {
     readonly name: string
     readonly order: string | undefined
     readonly allow_productivity: boolean
-    readonly category: string | null
+    readonly categories: readonly string[]
     readonly time: Rational
     readonly ingredients: Ingredient[]
     readonly products: Ingredient[]
@@ -120,7 +129,7 @@ export class Recipe implements RecipeLike {
         this.name = options.name
         this.order = options.order
         this.allow_productivity = options.allowProductivity
-        this.category = options.category
+        this.categories = options.categories
         this.time = options.time
 
         this.ingredients = options.ingredients
@@ -263,7 +272,7 @@ export const DISABLED_RECIPE_PREFIX = "D-"
 export class DisabledRecipe implements RecipeLike {
     readonly key: string
     readonly name: string
-    readonly category: null = null
+    readonly categories: readonly string[] = []
     readonly ingredients: Ingredient[] = []
     readonly products: Ingredient[]
     readonly icon_col: number
@@ -314,7 +323,8 @@ function productIngredients(items: ReadonlyMap<string, Item>, results: readonly 
     return results.map(({ name, amount }) => new Ingredient(requireItem(items, name), Rational.from_float_approximate(amount)))
 }
 
-function surfaceConditions(conditions: readonly SurfaceConditionData[] | undefined): SurfaceCondition[] {
+/** Converts the surface conditions of a dataset entry. */
+export function surfaceConditions(conditions: readonly SurfaceConditionData[] | undefined): SurfaceCondition[] {
     return (conditions ?? []).map(c => new SurfaceCondition(c))
 }
 
@@ -336,8 +346,7 @@ function makeRecipe(items: ReadonlyMap<string, Item>, d: DatasetRecipe): Recipe 
         icon_col: d.icon_col,
         icon_row: d.icon_row,
         allowProductivity: d.allow_productivity,
-        // Machine selection uses one category per recipe: the first in the list.
-        category: d.categories[0] ?? null,
+        categories: d.categories,
         time: Rational.from_float_approximate(d.energy_required),
         ingredients,
         products: productIngredients(items, d.results),
@@ -357,7 +366,7 @@ class ResourceRecipe extends Recipe {
             icon_col: item.icon_col,
             icon_row: item.icon_row,
             allowProductivity: false,
-            category: null,
+            categories: [],
             time: zero,
             ingredients: [],
             products: [new Ingredient(item, one)],
@@ -382,7 +391,7 @@ class SpoilageRecipe extends Recipe {
             icon_col: toItem.icon_col,
             icon_row: toItem.icon_row,
             allowProductivity: false,
-            category: null,
+            categories: [],
             time: zero,
             ingredients: [new Ingredient(fromItem, one)],
             products: [new Ingredient(toItem, one)],
@@ -392,8 +401,8 @@ class SpoilageRecipe extends Recipe {
 
 /** Pseudo-recipe for growing a plant from its seed. Plants without surface conditions count as resources. */
 class PlantRecipe extends Recipe {
-    constructor(options: Omit<RecipeOptions, "allowProductivity" | "category" | "time">) {
-        super({ ...options, allowProductivity: false, category: null, time: zero })
+    constructor(options: Omit<RecipeOptions, "allowProductivity" | "categories" | "time">) {
+        super({ ...options, allowProductivity: false, categories: [], time: zero })
         if (this.isResource()) {
             this.defaultPriority = 1
             this.defaultWeight = hundred
@@ -437,7 +446,7 @@ class PumpjackRecipe extends Recipe {
             icon_col: col,
             icon_row: row,
             allowProductivity: false,
-            category: null,
+            categories: [],
             time: zero,
             ingredients: [],
             products: [new Ingredient(product, one)],
@@ -462,7 +471,7 @@ class OffshorePumpRecipe extends Recipe {
             icon_col: product.icon_col,
             icon_row: product.icon_row,
             allowProductivity: false,
-            category: "offshore-pumping",
+            categories: ["offshore-pumping"],
             time: zero,
             ingredients: [],
             products: [new Ingredient(product, one)],
@@ -514,7 +523,7 @@ export function getRecipes(data: Dataset, items: Map<string, Item>): Map<string,
         icon_col: reactor.icon_col,
         icon_row: reactor.icon_row,
         allowProductivity: false,
-        category: "nuclear",
+        categories: ["nuclear"],
         time: Rational.from_float(200),
         ingredients: [new Ingredient(item("uranium-fuel-cell"), one)],
         products: [
@@ -532,7 +541,7 @@ export function getRecipes(data: Dataset, items: Map<string, Item>): Map<string,
         icon_col: steam.icon_col,
         icon_row: steam.icon_row,
         allowProductivity: false,
-        category: "boiler",
+        categories: ["boiler"],
         time: one,
         ingredients: [new Ingredient(item("water"), waterRate)],
         products: [new Ingredient(steam, steamRate)],
@@ -563,7 +572,7 @@ export function getRecipes(data: Dataset, items: Map<string, Item>): Map<string,
             order: d.order,
             icon_col: d.icon_col,
             icon_row: d.icon_row,
-            category: d.category,
+            categories: [d.category],
             ingredients,
             products: productIngredients(items, d.results),
         }, Rational.from_float_approximate(d.mining_time)))

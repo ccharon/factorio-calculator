@@ -445,6 +445,10 @@ export function displayItems(context: FactorySpecification, totals: Totals | nul
     rowGroup.classed("display-group", true).classed("multi", d => d.rows.length > 1)
     rowGroup.selectAll("tr.breakdown").remove()
     const row: RowSelection = rowGroup.selectAll<HTMLTableRowElement, DisplayRow>("tr").data(d => d.rows).join(createRow)
+    // Cells keep the data they were created with. A reused row passes its new data on.
+    row.each(function (d) {
+        d3.select(this).selectAll("*").datum(d)
+    })
     row.classed("nobuilding", d => d.building === null).classed("nomodule", d => d.moduleSpec === null).classed("noitem", d => d.item === null)
 
     const itemRow = row.filter(d => d.item !== null)

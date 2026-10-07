@@ -19,7 +19,7 @@ import { Icon, type IconSource } from "../ui/icon.ts"
 import type { Dataset, DatasetMachine } from "./dataset.ts"
 import type { Item } from "./item.ts"
 import type { ModuleSpec } from "./module.ts"
-import { MiningRecipe, type Recipe, type RecipeLike, requireItem } from "./recipe.ts"
+import { MiningRecipe, type Recipe, type RecipeLike, type SurfaceCondition, requireItem, surfaceConditions } from "./recipe.ts"
 
 const thirty = Rational.from_float(30)
 const sixty = Rational.from_float(60)
@@ -46,6 +46,8 @@ export interface BuildingOptions {
     power: Rational
     /** Fuel category of a burner machine, or null for electric and unpowered machines. */
     fuel: string | null
+    /** Surface properties the building needs to work, such as pressure for burner machines. */
+    conditions?: readonly SurfaceCondition[]
 }
 
 function header(obj: IconSource & { icon: Icon }): d3.Selection<HTMLDivElement, undefined, null, undefined> {
@@ -77,6 +79,7 @@ export class Building implements IconSource {
     readonly moduleSlots: number
     readonly power: Rational
     readonly fuel: string | null
+    readonly conditions: readonly SurfaceCondition[]
     readonly icon_col: number
     readonly icon_row: number
     readonly icon: Icon
@@ -90,9 +93,20 @@ export class Building implements IconSource {
         this.moduleSlots = options.moduleSlots
         this.power = options.power
         this.fuel = options.fuel
+        this.conditions = options.conditions ?? []
         this.icon_col = options.icon_col
         this.icon_row = options.icon_row
         this.icon = new Icon(this)
+    }
+
+    /** Returns whether the building has one of the crafting categories of recipe. */
+    canCraft(recipe: RecipeLike): boolean {
+        return recipe.categories.some(c => this.categories.has(c))
+    }
+
+    /** Returns whether the building works on a surface with these property values. */
+    worksOn(properties: ReadonlyMap<string, number>): boolean {
+        return this.conditions.every(c => c.holds(properties))
     }
 
     /** Orders buildings from slowest to fastest. Module slots break ties. */
@@ -267,7 +281,7 @@ function fuelCategory(d: DatasetMachine): string | null {
     return d.energy_source?.type === "burner" ? d.energy_source.fuel_category ?? "chemical" : null
 }
 
-function machineOptions(d: DatasetMachine): Pick<BuildingOptions, "key" | "name" | "icon_col" | "icon_row" | "moduleSlots" | "power" | "fuel"> {
+function machineOptions(d: DatasetMachine): Pick<BuildingOptions, "key" | "name" | "icon_col" | "icon_row" | "moduleSlots" | "power" | "fuel" | "conditions"> {
     return {
         key: d.key,
         name: d.localized_name.en,
@@ -276,6 +290,7 @@ function machineOptions(d: DatasetMachine): Pick<BuildingOptions, "key" | "name"
         moduleSlots: d.module_slots,
         power: Rational.from_float_approximate(d.energy_usage ?? 0),
         fuel: fuelCategory(d),
+        conditions: surfaceConditions(d.surface_conditions),
     }
 }
 

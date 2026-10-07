@@ -224,7 +224,7 @@ export class BuildTarget {
     getRate(): Rational {
         this.setRateLabel()
         const recipe = this.recipe
-        if ((recipe === null || recipe.category === null) && this.changedBuilding) {
+        if ((recipe === null || spec.getBuilding(recipe) === null) && this.changedBuilding) {
             this.rateChanged()
         }
 

@@ -712,7 +712,7 @@
     "surplus": []
   },
   "nauvis-buildings-fuel": {
-    "fragment": "#items=electronic-circuit:r:600&planet=nauvis&buildings=assembling-machine-3,steel-furnace,big-mining-drill&fuel=solid-fuel",
+    "fragment": "#items=electronic-circuit:r:600&planet=nauvis&buildings=assembling-machine-1+assembling-machine-2+assembling-machine-3:assembling-machine-3,assembling-machine-1+assembling-machine-2+assembling-machine-3+electromagnetic-plant:assembling-machine-3,stone-furnace+electric-furnace+steel-furnace:steel-furnace,electric-mining-drill+burner-mining-drill+big-mining-drill:big-mining-drill&fuel=solid-fuel",
     "recipes": [
       {
         "key": "(output)",
@@ -1839,28 +1839,28 @@
         "power": "0"
       },
       {
-        "key": "biter-egg",
-        "rate": "4/75",
-        "building": "captive-biter-spawner",
-        "count": "8/15",
-        "fuel": "food",
-        "power": "160000/3"
-      },
-      {
-        "key": "burnt-spoilage",
-        "rate": "4/3",
-        "building": "biochamber",
-        "count": "8",
-        "fuel": "nutrients",
-        "power": "4000000"
-      },
-      {
         "key": "calcite",
         "rate": "268/675",
         "building": "electric-mining-drill",
         "count": "536/675",
         "fuel": "electric",
         "power": "214400/3"
+      },
+      {
+        "key": "carbon",
+        "rate": "2",
+        "building": "chemical-plant",
+        "count": "2",
+        "fuel": "electric",
+        "power": "434000"
+      },
+      {
+        "key": "coal",
+        "rate": "4",
+        "building": "electric-mining-drill",
+        "count": "8",
+        "fuel": "electric",
+        "power": "720000"
       },
       {
         "key": "lava",
@@ -1895,24 +1895,8 @@
         "power": "13450000/27"
       },
       {
-        "key": "nutrients-from-biter-egg",
-        "rate": "4/15",
-        "building": "biochamber",
-        "count": "4/15",
-        "fuel": "nutrients",
-        "power": "400000/3"
-      },
-      {
-        "key": "nutrients-spoilage",
-        "rate": "8",
-        "building": null,
-        "count": "0",
-        "fuel": null,
-        "power": "0"
-      },
-      {
         "key": "sulfuric-acid-geyser",
-        "rate": "20",
+        "rate": "60",
         "building": null,
         "count": "0",
         "fuel": null,
@@ -1945,16 +1929,16 @@
     ],
     "items": [
       {
-        "key": "biter-egg",
-        "rate": "4/15"
-      },
-      {
         "key": "calcite",
         "rate": "268/675"
       },
       {
         "key": "carbon",
         "rate": "2"
+      },
+      {
+        "key": "coal",
+        "rate": "4"
       },
       {
         "key": "lava",
@@ -1973,20 +1957,12 @@
         "rate": "140/9"
       },
       {
-        "key": "nutrients",
-        "rate": "8"
-      },
-      {
-        "key": "spoilage",
-        "rate": "8"
-      },
-      {
         "key": "stone",
         "rate": "388/45"
       },
       {
         "key": "sulfuric-acid",
-        "rate": "20"
+        "rate": "60"
       },
       {
         "key": "tungsten-carbide",
@@ -2037,43 +2013,35 @@
       },
       {
         "key": "bioflux",
-        "rate": "1/9",
+        "rate": "8/27",
         "building": "biochamber",
-        "count": "1/3",
-        "fuel": "nutrients",
-        "power": "500000/3"
-      },
-      {
-        "key": "biter-egg",
-        "rate": "4/45",
-        "building": "captive-biter-spawner",
         "count": "8/9",
-        "fuel": "food",
-        "power": "800000/9"
+        "fuel": "nutrients",
+        "power": "4000000/9"
       },
       {
         "key": "jellynut-processing",
-        "rate": "2/9",
+        "rate": "16/27",
         "building": "biochamber",
-        "count": "1/9",
+        "count": "8/27",
         "fuel": "nutrients",
-        "power": "500000/9"
+        "power": "4000000/27"
       },
       {
         "key": "jellystem",
-        "rate": "1/225",
+        "rate": "8/675",
         "building": null,
         "count": "0",
         "fuel": null,
         "power": "0"
       },
       {
-        "key": "nutrients-from-biter-egg",
-        "rate": "4/9",
+        "key": "nutrients-from-bioflux",
+        "rate": "2/9",
         "building": "biochamber",
-        "count": "4/9",
+        "count": "2/9",
         "fuel": "nutrients",
-        "power": "2000000/9"
+        "power": "1000000/9"
       },
       {
         "key": "pentapod-egg",
@@ -2093,15 +2061,15 @@
       },
       {
         "key": "yumako-processing",
-        "rate": "5/9",
+        "rate": "40/27",
         "building": "biochamber",
-        "count": "5/18",
+        "count": "20/27",
         "fuel": "nutrients",
-        "power": "1250000/9"
+        "power": "10000000/27"
       },
       {
         "key": "yumako-tree",
-        "rate": "1/90",
+        "rate": "4/135",
         "building": null,
         "count": "0",
         "fuel": null,
@@ -2115,23 +2083,19 @@
       },
       {
         "key": "bioflux",
-        "rate": "2/3"
-      },
-      {
-        "key": "biter-egg",
-        "rate": "4/9"
+        "rate": "16/9"
       },
       {
         "key": "jelly",
-        "rate": "4/3"
+        "rate": "32/9"
       },
       {
         "key": "jellynut",
-        "rate": "2/9"
+        "rate": "16/27"
       },
       {
         "key": "jellynut-seed",
-        "rate": "1/150"
+        "rate": "4/225"
       },
       {
         "key": "nutrients",
@@ -2147,25 +2111,25 @@
       },
       {
         "key": "yumako",
-        "rate": "5/9"
+        "rate": "40/27"
       },
       {
         "key": "yumako-mash",
-        "rate": "5/3"
+        "rate": "40/9"
       },
       {
         "key": "yumako-seed",
-        "rate": "1/60"
+        "rate": "2/45"
       }
     ],
     "surplus": [
       {
         "key": "jellynut-seed",
-        "rate": "1/450"
+        "rate": "4/675"
       },
       {
         "key": "yumako-seed",
-        "rate": "1/180"
+        "rate": "2/135"
       }
     ]
   },
@@ -2490,6 +2454,14 @@
         "power": "0"
       },
       {
+        "key": "D-calcite",
+        "rate": "53/28125",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
         "key": "D-holmium-ore",
         "rate": "53/625",
         "building": null,
@@ -2506,36 +2478,20 @@
         "power": "0"
       },
       {
-        "key": "D-oxide-asteroid-chunk",
-        "rate": "53/62500",
-        "building": null,
-        "count": "0",
-        "fuel": null,
-        "power": "0"
-      },
-      {
-        "key": "advanced-oxide-asteroid-crushing",
-        "rate": "53/56250",
-        "building": "crusher",
-        "count": "53/11250",
-        "fuel": "electric",
-        "power": "20544"
-      },
-      {
         "key": "ammoniacal-solution",
-        "rate": "113189/3750",
+        "rate": "7553/250",
         "building": "offshore-pump",
-        "count": "113189/4500000",
+        "count": "7553/300000",
         "fuel": "electric",
         "power": "0"
       },
       {
         "key": "ammoniacal-solution-separation",
-        "rate": "113189/187500",
+        "rate": "7553/12500",
         "building": "chemical-plant",
-        "count": "113189/187500",
+        "count": "7553/12500",
         "fuel": "electric",
-        "power": "3344292/25"
+        "power": "669452/5"
       },
       {
         "key": "crude-oil",
@@ -2645,11 +2601,11 @@
     "items": [
       {
         "key": "ammonia",
-        "rate": "113189/3750"
+        "rate": "7553/250"
       },
       {
         "key": "ammoniacal-solution",
-        "rate": "113189/3750"
+        "rate": "7553/250"
       },
       {
         "key": "calcite",
@@ -2712,10 +2668,6 @@
         "rate": "53/75"
       },
       {
-        "key": "oxide-asteroid-chunk",
-        "rate": "53/56250"
-      },
-      {
         "key": "solid-fuel",
         "rate": "3/50"
       },
@@ -2731,7 +2683,7 @@
     "surplus": [
       {
         "key": "ammonia",
-        "rate": "29407/1875"
+        "rate": "1964/125"
       },
       {
         "key": "molten-copper",
@@ -2944,6 +2896,14 @@
         "power": "0"
       },
       {
+        "key": "D-biter-egg",
+        "rate": "2/75",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
         "key": "D-iron-bacteria",
         "rate": "2/5",
         "building": null,
@@ -2958,14 +2918,6 @@
         "count": "1/25",
         "fuel": "electric",
         "power": "15400"
-      },
-      {
-        "key": "biter-egg",
-        "rate": "2/375",
-        "building": "captive-biter-spawner",
-        "count": "4/75",
-        "fuel": "food",
-        "power": "16000/3"
       },
       {
         "key": "burnt-spoilage",

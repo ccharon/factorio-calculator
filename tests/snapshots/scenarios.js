@@ -6,7 +6,7 @@ export const SCENARIOS = [
     ["nauvis-processing-unit", "#items=processing-unit:r:60&planet=nauvis"],
     ["nauvis-modules-beacons", "#items=processing-unit:r:60&planet=nauvis&dm=p3&db=s3:s3&dbc=8"],
     ["nauvis-recipe-modules", "#items=iron-plate:r:600&planet=nauvis&modules=iron-plate:p3:p3;s3:s3:4"],
-    ["nauvis-buildings-fuel", "#items=electronic-circuit:r:600&planet=nauvis&buildings=assembling-machine-3,steel-furnace,big-mining-drill&fuel=solid-fuel"],
+    ["nauvis-buildings-fuel", "#items=electronic-circuit:r:600&planet=nauvis&buildings=assembling-machine-1+assembling-machine-2+assembling-machine-3:assembling-machine-3,assembling-machine-1+assembling-machine-2+assembling-machine-3+electromagnetic-plant:assembling-machine-3,stone-furnace+electric-furnace+steel-furnace:steel-furnace,electric-mining-drill+burner-mining-drill+big-mining-drill:big-mining-drill&fuel=solid-fuel"],
     ["nauvis-ignore", "#items=advanced-circuit:r:60&planet=nauvis&ignore=electronic-circuit"],
     ["nauvis-disable", "#items=plastic-bar:r:600&planet=nauvis&disable=advanced-oil-processing"],
     ["nauvis-mining-productivity", "#items=iron-gear-wheel:r:600&planet=nauvis&mprod=50"],

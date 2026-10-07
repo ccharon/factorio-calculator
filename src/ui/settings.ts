@@ -336,8 +336,9 @@ function radioSetting<G extends HTMLElement, T extends RadioChoice, D>(
     form: d3.Selection<G, D, d3.BaseType, unknown>,
     name: string | ((d: D) => string),
     data: (d: D) => readonly T[],
-    checked: (choice: T) => boolean,
-    onchange: (choice: T) => void,
+    checked: (choice: T, d: D) => boolean,
+    onchange: (choice: T, d: D) => void,
+    disabled: (choice: T) => boolean = () => false,
 ): void {
     form.each(function (d) {
         const groupName = typeof name === "string" ? name : name(d)
@@ -346,7 +347,7 @@ function radioSetting<G extends HTMLElement, T extends RadioChoice, D>(
             const id = `radio-input-${radioInput++}`
             const span = d3.select(this)
             const input = span.append("input").attr("id", id).attr("type", "radio").attr("name", groupName).attr("value", choice.key)
-            input.property("checked", checked(choice)).on("change", () => onchange(choice))
+            input.property("checked", checked(choice, d)).property("disabled", disabled(choice)).on("change", () => onchange(choice, d))
             span.append("label").attr("for", id).append(() => choice.icon.make(32))
         })
     })
@@ -355,28 +356,26 @@ function radioSetting<G extends HTMLElement, T extends RadioChoice, D>(
 // buildings
 
 function renderBuildings(settings: Settings): void {
-    const groupSet = new Set<BuildingGroup>()
     for (const group of spec.buildings.values()) {
-        if (group.buildings.length > 1) {
-            groupSet.add(group)
-        }
-    }
-
-    for (const group of groupSet) {
         group.building = group.getDefault()
     }
 
-    for (const key of splitList(settings.get("buildings"))) {
-        const building = spec.buildingKeys.get(key)
-        if (building === undefined) {
-            warn("unknown building", key)
+    // Each entry is a group key and the selected building, separated by a colon.
+    for (const entry of splitList(settings.get("buildings"))) {
+        const [groupKey = "", buildingKey = ""] = entry.split(":")
+        const group = spec.buildings.get(groupKey)
+        const building = group?.buildings.find(b => b.key === buildingKey)
+        if (group === undefined || building === undefined) {
+            warn("unknown building", entry)
             continue
         }
-        spec.setMinimumBuilding(building)
+        group.building = building
     }
+}
 
-    // Any stable order works. This one sorts by the default building's name.
-    const groups = sorted(groupSet, g => g.getDefault().name)
+// Renders one row per building group with a choice. Call it after the planets are selected. Buildings that work on no selected planet are disabled.
+function renderBuildingSelector(): void {
+    const groups = sorted(Array.from(spec.buildings.values()).filter(g => g.buildings.length > 1), g => `${g.getDefault().name} ${g.key}`)
     const div = d3.select("#building_selector")
     div.selectAll("*").remove()
     const set = div.selectAll<HTMLDivElement, BuildingGroup>("div").data(groups).join("div").classed("radio-setting", true)
@@ -384,11 +383,12 @@ function renderBuildings(settings: Settings): void {
         set,
         d => `building_selector_${groups.indexOf(d)}`,
         d => d.buildings,
-        building => building === spec.getBuildingGroup(building).building,
-        building => {
-            spec.setMinimumBuilding(building)
+        (building, group) => building === group.building,
+        (building, group) => {
+            spec.setGroupBuilding(group, building)
             spec.updateSolution()
         },
+        building => !spec.buildingWorks(building),
     )
 }
 
@@ -562,6 +562,7 @@ function clickPlanet(this: HTMLDivElement, event: MouseEvent, d: Planet): void {
     }
 
     d3.selectAll<HTMLDivElement, Recipe>("#recipe_toggles .toggle").classed("selected", r => !spec.disable.has(r))
+    renderBuildingSelector()
     spec.updateSolution()
 }
 
@@ -597,6 +598,8 @@ function renderRecipes(settings: Settings): void {
             }
         }
     }
+    // Which buildings work depends on the planets.
+    renderBuildingSelector()
 
     if (settings.has("disable") || settings.has("enable")) {
         for (const key of splitList(settings.get("disable"))) {

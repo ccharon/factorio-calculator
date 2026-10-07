@@ -186,6 +186,13 @@ input.prec, input.mprod {
 .radio-setting input[type="radio"]:checked + label {
     background: var(--accent);
 }
+.radio-setting input[type="radio"]:disabled + label {
+    cursor: not-allowed;
+    opacity: 0.35;
+}
+.radio-setting input[type="radio"]:disabled:not(:checked) + label:hover {
+    background: var(--light);
+}
 .toggle-list .toggle {
     cursor: pointer;
     display: inline-block;

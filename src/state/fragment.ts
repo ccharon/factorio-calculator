@@ -74,9 +74,9 @@ export function formatSettings(excludeTitle = false, overrideTab?: string, targe
     }
 
     const buildings: string[] = []
-    for (const group of new Set(spec.buildings.values())) {
+    for (const group of spec.buildings.values()) {
         if (group.building !== group.getDefault()) {
-            buildings.push(group.building.key)
+            buildings.push(`${group.key}:${group.building.key}`)
         }
     }
     if (buildings.length > 0) {

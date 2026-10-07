@@ -13,6 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 import { Icon, type IconSource } from "../ui/icon.ts"
 import type { Dataset } from "./dataset.ts"
+import type { Building } from "./building.ts"
 import type { Recipe } from "./recipe.ts"
 
 /** A planet or space surface with its resources and surface properties. */
@@ -41,24 +42,18 @@ export class Planet implements IconSource {
         this.icon = new Icon(this)
     }
 
-    /** Returns whether recipe can run on this planet: resources must exist here, and surface conditions must hold. */
-    allows(recipe: Recipe): boolean {
+    /**
+     * Returns whether recipe can run on this planet: resources must exist here, the surface
+     * conditions of the recipe must hold, and one of the buildings that craft it must work here.
+     */
+    allows(recipe: Recipe, buildings: readonly Building[]): boolean {
         if (recipe.isResource()) {
             return this.resources.has(recipe)
         }
-        for (const condition of recipe.conditions) {
-            const value = this.properties.get(condition.property)
-            if (value === undefined) {
-                throw new Error(`unknown surface property: ${condition.property}`)
-            }
-            if (condition.min !== undefined && value < condition.min) {
-                return false
-            }
-            if (condition.max !== undefined && value > condition.max) {
-                return false
-            }
+        if (!recipe.conditions.every(c => c.holds(this.properties))) {
+            return false
         }
-        return true
+        return recipe.categories.length === 0 || buildings.some(b => b.canCraft(recipe) && b.worksOn(this.properties))
     }
 }
 
@@ -82,7 +77,7 @@ function traverseRecycling(recipe: Recipe, found: Set<Recipe>): void {
 }
 
 /** Creates all planets and space surfaces by key, each with the set of recipes it disables. */
-export function getPlanets(data: Dataset, recipes: ReadonlyMap<string, Recipe>): Map<string, Planet> {
+export function getPlanets(data: Dataset, recipes: ReadonlyMap<string, Recipe>, buildings: readonly Building[]): Map<string, Planet> {
     const planets = new Map<string, Planet>()
     for (const d of data.planets) {
         const resources = new Set<Recipe>()
@@ -105,7 +100,7 @@ export function getPlanets(data: Dataset, recipes: ReadonlyMap<string, Recipe>):
 
         const planet = new Planet(d.key, d.localized_name.en, d.order, d.icon_col, d.icon_row, resources, properties)
         for (const recipe of recipes.values()) {
-            if (!planet.allows(recipe) || isRecycling(recipe)) {
+            if (!planet.allows(recipe, buildings) || isRecycling(recipe)) {
                 planet.disable.add(recipe)
             }
         }

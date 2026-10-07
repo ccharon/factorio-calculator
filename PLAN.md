@@ -124,7 +124,7 @@ Comes before the model changes, so phases 4 to 6 are written once, in the new st
 
 ## Phase 4: Core model for 2.1
 
-1. Replace category-based building groups with "set of machines that can craft this recipe", filtered by the selected planets' surface conditions. Settings store preferred machines per category set.
+1. Done. Building groups are the sets of machines that can craft a recipe, filtered by the selected planets' surface conditions. Settings store the selected machine per group.
 2. Product amount handling: `ignored_by_productivity`, fractional results, productivity cap.
 3. Recipe productivity research as settings (one input per technology).
 4. Fuel per building fuel category (nutrients for biochamber, chemical for boilers and burners).
@@ -163,11 +163,10 @@ Rewrite README per the writing rules, update changelog, keep CLAUDE.md current.
 
 ## Handoff (state at the end of the last session)
 
-Branch `develop`. Phase 3 is done and committed. Last pushed commit: `74fe6b4`. Later commits are local only.
+Branch `develop`. Phase 3 and phase 4 step 1 are done. Last pushed commit: `9f83958`. Later commits are local only.
 
 Next steps:
 
-1. Push `develop` and check CI.
-2. Phase 4.
+1. Phase 4, step 2.
 
 Helper scripts (ignored by git) in `.port/`: `port.cjs` writes a TS file with the old license header and rewrites imports; `blank2.cjs` inserts empty lines before anchor lines.

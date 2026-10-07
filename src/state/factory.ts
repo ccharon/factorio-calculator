@@ -22,7 +22,7 @@ import type { ItemGroups } from "../data/group.ts"
 import type { Item } from "../data/item.ts"
 import { type Module, type ModuleDefaults, ModuleSpec } from "../data/module.ts"
 import type { Planet } from "../data/planet.ts"
-import { DISABLED_RECIPE_PREFIX, Recipe, type RecipeLike, type RecipeNode, isRecipeLike } from "../data/recipe.ts"
+import { DISABLED_RECIPE_PREFIX, Recipe, type RecipeLike, type RecipeNode } from "../data/recipe.ts"
 import { renderDebug } from "../ui/debug.ts"
 import { displayItems } from "../ui/display.ts"
 import { currentTab } from "../ui/events.ts"
@@ -48,47 +48,34 @@ const DEFAULT_BUILDINGS = new Set([
 const hundred = Rational.from_float(100)
 const ten = Rational.from_float(10)
 
-// Buildings whose crafting categories overlap, collected while grouping.
-class BuildingSet {
-    readonly categories: Set<string>
-    readonly buildings: Set<Building>
-
-    constructor(building: Building) {
-        this.categories = new Set(building.categories)
-        this.buildings = new Set([building])
-    }
-
-    merge(other: BuildingSet): void {
-        other.categories.forEach(c => this.categories.add(c))
-        other.buildings.forEach(b => this.buildings.add(b))
-    }
-
-    overlap(other: BuildingSet): boolean {
-        return Array.from(this.categories).some(c => other.categories.has(c))
-    }
-}
-
 /** Sorts buildings in place from slowest to fastest. */
 export function buildingSort(buildings: Building[]): void {
     buildings.sort((a, b) => (a.less(b) ? -1 : b.less(a) ? 1 : 0))
 }
 
-/** Buildings that can replace each other, such as the three assemblers. The user picks the minimum building per group. */
+/** The buildings that can craft a recipe. Recipes with the same buildings share a group and its selected building. */
 export class BuildingGroup {
+    /** The building keys joined with "+", in the order of the dataset. Identifies the group in the URL. */
+    readonly key: string
     /** From slowest to fastest. */
     readonly buildings: Building[]
-    /** The selected minimum building. */
+    /** The category that most recipes of the group list first. The game lists the main category first. */
+    readonly primaryCategory: string
+    /** The selected building. */
     building: Building
 
-    constructor(buildings: Iterable<Building>) {
+    constructor(buildings: readonly Building[], primaryCategory: string) {
+        this.key = buildings.map(b => b.key).join("+")
         this.buildings = Array.from(buildings)
         buildingSort(this.buildings)
+        this.primaryCategory = primaryCategory
         this.building = this.getDefault()
     }
 
-    /** Returns the default minimum building: one of DEFAULT_BUILDINGS, or the fastest. */
+    /** Returns the default building among those with the primary category: one of DEFAULT_BUILDINGS, or the slowest. */
     getDefault(): Building {
-        const building = this.buildings.find(b => DEFAULT_BUILDINGS.has(b.key)) ?? this.buildings[this.buildings.length - 1]
+        const primary = this.buildings.filter(b => b.categories.has(this.primaryCategory))
+        const building = primary.find(b => DEFAULT_BUILDINGS.has(b.key)) ?? primary[0] ?? this.buildings[0]
         if (building === undefined) {
             throw new Error("empty building group")
         }
@@ -96,13 +83,13 @@ export class BuildingGroup {
     }
 
     /**
-     * Returns the building for recipe: the selected minimum building if it can craft the recipe,
-     * otherwise the next faster one that can, otherwise the fastest one that can.
+     * Returns the building to use where only some buildings work: the selected one if it works,
+     * otherwise the next faster one that works, otherwise the fastest one that works, or null.
      */
-    getBuilding(recipe: RecipeLike): Building | null {
+    getBuilding(works: (building: Building) => boolean): Building | null {
         let b: Building | null = null
         for (const building of this.buildings) {
-            if (recipe.category !== null && building.categories.has(recipe.category)) {
+            if (works(building)) {
                 b = building
                 if (building === this.building || this.building.less(building)) {
                     return building
@@ -113,27 +100,48 @@ export class BuildingGroup {
     }
 }
 
-// Groups buildings with overlapping categories and returns the group of each category.
-function getBuildingGroups(buildings: readonly Building[]): Map<string, BuildingGroup> {
-    const sets = new Set<BuildingSet>()
-    for (const building of buildings) {
-        const set = new BuildingSet(building)
-        for (const s of Array.from(sets)) {
-            if (set.overlap(s)) {
-                set.merge(s)
-                sets.delete(s)
+// Groups the recipes by the set of buildings that can craft them. Recipes without a building have no group.
+function getBuildingGroups(buildings: readonly Building[], recipes: Iterable<Recipe>): [Map<string, BuildingGroup>, Map<Recipe, BuildingGroup>] {
+    const members = new Map<string, Building[]>()
+    const firstCategories = new Map<string, Map<string, number>>()
+    const recipeKeys = new Map<Recipe, string>()
+    for (const recipe of recipes) {
+        const [first] = recipe.categories
+        if (first === undefined) {
+            continue
+        }
+        const craftable = buildings.filter(b => b.canCraft(recipe))
+        if (craftable.length === 0) {
+            throw new Error(`no building for recipe ${recipe.key}`)
+        }
+        const key = craftable.map(b => b.key).join("+")
+        members.set(key, craftable)
+        recipeKeys.set(recipe, key)
+        const counts = firstCategories.get(key) ?? new Map<string, number>()
+        counts.set(first, (counts.get(first) ?? 0) + 1)
+        firstCategories.set(key, counts)
+    }
+
+    const groups = new Map<string, BuildingGroup>()
+    for (const [key, craftable] of members) {
+        let primary = ""
+        let max = 0
+        for (const [category, count] of firstCategories.get(key) ?? []) {
+            if (count > max) {
+                primary = category
+                max = count
             }
         }
-        sets.add(set)
+        groups.set(key, new BuildingGroup(craftable, primary))
     }
-    const groups = new Map<string, BuildingGroup>()
-    for (const { categories, buildings: members } of sets) {
-        const group = new BuildingGroup(members)
-        for (const category of categories) {
-            groups.set(category, group)
+    const recipeGroups = new Map<Recipe, BuildingGroup>()
+    for (const [recipe, key] of recipeKeys) {
+        const group = groups.get(key)
+        if (group !== undefined) {
+            recipeGroups.set(recipe, group)
         }
     }
-    return groups
+    return [groups, recipeGroups]
 }
 
 /** Power use of a recipe: the fuel category of burner buildings, "electric", or null without building. */
@@ -165,8 +173,10 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults {
     recipes: Map<string, Recipe> = new Map()
     modules: Map<string, Module> = new Map()
     planets: Map<string, Planet> = new Map()
-    /** Building group of each crafting category. */
+    /** Building groups by key. */
     buildings: Map<string, BuildingGroup> = new Map()
+    /** Building group of each recipe that needs a building. */
+    recipeGroups: Map<Recipe, BuildingGroup> = new Map()
     buildingKeys: Map<string, Building> = new Map()
     belts: Map<string, Belt> = new Map()
     fuels: Map<string, Fuel> = new Map()
@@ -246,7 +256,9 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults {
         this.planets = planets
         this.modules = modules
 
-        this.buildings = getBuildingGroups(buildings)
+        const [groups, recipeGroups] = getBuildingGroups(buildings, recipes.values())
+        this.buildings = groups
+        this.recipeGroups = recipeGroups
         this.buildingKeys = new Map(buildings.map(b => [b.key, b]))
 
         this.belts = belts
@@ -361,6 +373,7 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults {
                 this.setDisable(r)
             }
         }
+        this.updateModuleBuildings()
     }
 
     /** Returns whether only the default planet is selected. */
@@ -508,38 +521,35 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults {
         return this.buildTargets.some(target => target.recipe === recipe && target.changedBuilding)
     }
 
+    /** Returns whether building works on at least one selected planet. Without a selection every building works. */
+    buildingWorks(building: Building): boolean {
+        return this.selectedPlanets.size === 0 || Array.from(this.selectedPlanets).some(p => building.worksOn(p.properties))
+    }
+
     /** Returns the building that crafts recipe, or null for recipes without a building. */
     getBuilding(recipe: RecipeNode): Building | null {
-        if (!isRecipeLike(recipe) || recipe.category === null) {
+        if (!(recipe instanceof Recipe)) {
             return null
         }
-        const group = this.buildings.get(recipe.category)
+        const group = this.recipeGroups.get(recipe)
         if (group === undefined) {
-            throw new Error(`no building for category ${recipe.category}`)
+            return null
         }
-        return group.getBuilding(recipe)
+        return group.getBuilding(b => this.buildingWorks(b))
     }
 
-    /** Returns the group of building. */
-    getBuildingGroup(building: Building): BuildingGroup {
-        const [category] = building.categories
-        const group = category === undefined ? undefined : this.buildings.get(category)
-        if (group === undefined) {
-            throw new Error(`building ${building.key} has no group`)
-        }
-        return group
-    }
-
-    /** Makes building the minimum building of its group and updates the module settings. */
-    setMinimumBuilding(building: Building): void {
-        const group = this.getBuildingGroup(building)
+    /** Selects building in group and updates the module settings. */
+    setGroupBuilding(group: BuildingGroup, building: Building): void {
         group.building = building
+        this.updateModuleBuildings()
+    }
+
+    /** Gives the module settings of every recipe the building that now crafts it. */
+    updateModuleBuildings(): void {
         for (const [recipe, moduleSpec] of this.spec) {
-            if (recipe.category !== null && this.buildings.get(recipe.category) === group) {
-                const b = this.getBuilding(recipe)
-                if (b !== null) {
-                    moduleSpec.setBuilding(b, this)
-                }
+            const b = this.getBuilding(recipe)
+            if (b !== null && b !== moduleSpec.building) {
+                moduleSpec.setBuilding(b, this)
             }
         }
     }
