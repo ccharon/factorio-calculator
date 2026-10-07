@@ -49,13 +49,11 @@ export class Fuel implements IconSource {
 
     /** Returns a tooltip element with the fuel value. */
     renderTooltip(): HTMLDivElement {
-        const t = d3.create("div")
-            .classed("frame", true)
+        const t = d3.create("div").classed("frame", true)
         const header = t.append("h3")
         header.append(() => this.icon.make(32, true))
         header.node()?.append(this.name)
-        t.append("b")
-            .text("Energy: ")
+        t.append("b").text("Energy: ")
         t.node()?.append(this.valueString())
         return t.node() as HTMLDivElement
     }
@@ -63,9 +61,8 @@ export class Fuel implements IconSource {
 
 /** Creates the chemical fuels by key, from lowest to highest fuel value. */
 export function getFuel(data: Dataset, items: ReadonlyMap<string, Item>): Map<string, Fuel> {
-    const fuels = data.fuel
-        .filter(d => d.category === "chemical")
-        .map(d => new Fuel(requireItem(items, d.item_key), d.category, Rational.from_float_approximate(d.value)))
+    const chemical = data.fuel.filter(d => d.category === "chemical")
+    const fuels = chemical.map(d => new Fuel(requireItem(items, d.item_key), d.category, Rational.from_float_approximate(d.value)))
     fuels.sort((a, b) => (a.value.less(b.value) ? -1 : b.value.less(a.value) ? 1 : 0))
     return new Map(fuels.map(f => [f.key, f]))
 }

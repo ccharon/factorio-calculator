@@ -78,7 +78,7 @@ export class Formatter {
         if (prec > 0) {
             toAdd += 1
         }
-        return s + " ".repeat(Math.max(0, toAdd))
+        return s + "\u00A0".repeat(Math.max(0, toAdd))
     }
 
     /** Formats a rate given per second in the displayed time unit. */

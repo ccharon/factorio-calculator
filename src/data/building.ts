@@ -49,8 +49,7 @@ export interface BuildingOptions {
 }
 
 function header(obj: IconSource & { icon: Icon }): d3.Selection<HTMLDivElement, undefined, null, undefined> {
-    const t = d3.create("div")
-        .classed("frame", true)
+    const t = d3.create("div").classed("frame", true)
     const h = t.append("h3")
     h.append(() => obj.icon.make(32, true))
     h.node()?.append(obj.name)
@@ -59,10 +58,8 @@ function header(obj: IconSource & { icon: Icon }): d3.Selection<HTMLDivElement, 
 
 function addLine(t: d3.Selection<HTMLDivElement, undefined, null, undefined>, label: string, value: string): void {
     const line = t.append("div")
-    line.append("b")
-        .text(label)
-    line.append("span")
-        .text(value)
+    line.append("b").text(label)
+    line.append("span").text(value)
 }
 
 function formatPower(power: Rational): string {

@@ -19,48 +19,37 @@ import type { TableauMetadata } from "../core/solve.ts"
 import { spec } from "../state/factory.ts"
 
 function renderMatrix(container: d3.Selection<HTMLElement, unknown, HTMLElement, unknown>, A: Matrix, m: TableauMetadata): void {
-    const table = container.append("table")
-        .attr("border", 1)
+    const table = container.append("table").attr("border", 1)
     const header = table.append("tr")
     header.append("th")
     for (const item of m.items) {
         const th = header.append("th")
         th.node()?.append("s")
-        th.append(() => item.icon.make(32))
-            .classed("item-icon", true)
+        th.append(() => item.icon.make(32)).classed("item-icon", true)
     }
     for (const t of m.targets) {
         const th = header.append("th")
         th.append(() => t.item.icon.make(32))
-        th.node()?.append("⇐")
+        th.node()?.append("\u21d0")
         th.append(() => t.recipe.icon.make(32))
     }
-    header.append("th")
-        .text("tax")
+    header.append("th").text("tax")
     for (const recipe of m.recipes) {
-        header.append("th")
-            .append(() => recipe.icon.make(32))
-                .classed("item-icon", true)
+        header.append("th").append(() => recipe.icon.make(32)).classed("item-icon", true)
     }
-    header.append("th")
-        .text("answer")
-    header.append("th")
-        .text("C")
+    header.append("th").text("answer")
+    header.append("th").text("C")
     for (let r = 0; r < A.rows; r++) {
         const row = table.append("tr")
         const label = row.append("td")
         const recipe = m.recipes[r]
         if (recipe !== undefined) {
-            label.append(() => recipe.icon.make(32))
-                .classed("item-icon", true)
+            label.append(() => recipe.icon.make(32)).classed("item-icon", true)
         } else {
             label.text(r === A.rows - 2 ? "tax" : "answer")
         }
         for (let c = 0; c < A.cols; c++) {
-            row.append("td")
-                .classed("right-align", true)
-                .append("tt")
-                    .text(A.index(r, c).toString())
+            row.append("td").classed("right-align", true).append("tt").text(A.index(r, c).toString())
         }
     }
 }

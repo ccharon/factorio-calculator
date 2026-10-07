@@ -75,8 +75,7 @@ export class Item implements IconSource {
         if (this.recipes.length === 1 && only !== undefined && only.name === this.name) {
             return only.renderTooltip(extra)
         }
-        const t = d3.create("div")
-            .classed("frame", true)
+        const t = d3.create("div").classed("frame", true)
         const header = t.append("h3")
         header.append(() => this.icon.make(32, true))
         header.node()?.append(this.name)

@@ -19,7 +19,7 @@ import type { Item } from "../data/item.ts"
 import type { DisplayFormat } from "../state/align.ts"
 import { spec } from "../state/factory.ts"
 import { renderTotals } from "../visualize/visualize.js"
-import { setTitle } from "./settings.js"
+import { setTitle } from "./settings.ts"
 
 export const TAB_NAMES = ["totals", "graph", "resources", "settings", "faq", "about", "debug"] as const
 export type TabName = typeof TAB_NAMES[number]
@@ -58,14 +58,10 @@ export let currentTab: TabName = DEFAULT_TAB
 /** Shows the named tab. Unknown names show the default tab. */
 export function clickTab(tabName: string): void {
     currentTab = oneOf(TAB_NAMES, tabName) ? tabName : DEFAULT_TAB
-    d3.selectAll(".tab")
-        .style("display", "none")
-    d3.selectAll(".tab_button")
-        .classed("active", false)
-    d3.select(`#${currentTab}_tab`)
-        .style("display", "block")
-    d3.select(`#${currentTab}_button`)
-        .classed("active", true)
+    d3.selectAll(".tab").style("display", "none")
+    d3.selectAll(".tab_button").classed("active", false)
+    d3.select(`#${currentTab}_tab`).style("display", "block")
+    d3.select(`#${currentTab}_button`).classed("active", true)
     spec.setHash()
 }
 

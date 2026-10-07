@@ -27,9 +27,7 @@ const SINKS = [
  * @returns {string[]}
  */
 export function sourceFiles(dir) {
-    return readdirSync(dir, { withFileTypes: true, recursive: true })
-        .filter(e => e.isFile() && /\.(js|ts)$/.test(e.name))
-        .map(e => join(e.parentPath, e.name))
+    return readdirSync(dir, { withFileTypes: true, recursive: true }).filter(e => e.isFile() && /\.(js|ts)$/.test(e.name)).map(e => join(e.parentPath, e.name))
 }
 
 /**

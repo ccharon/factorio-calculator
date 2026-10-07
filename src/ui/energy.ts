@@ -4,7 +4,7 @@ import { Rational } from "../core/rational.ts"
 
 const thousand = Rational.from_float(1000)
 
-const powerSuffixes = [" W", "kW", "MW", "GW", "TW", "PW"] as const
+const powerSuffixes = ["\u00A0W", "kW", "MW", "GW", "TW", "PW"] as const
 const energySuffixes = ["J", "kJ", "MJ", "GJ", "TJ", "PJ"] as const
 
 /** A value scaled to a unit with SI prefix. */

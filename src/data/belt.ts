@@ -41,13 +41,11 @@ export class Belt implements IconSource {
 
     /** Returns a tooltip element with the throughput. */
     renderTooltip(): HTMLDivElement {
-        const t = d3.create("div")
-            .classed("frame", true)
+        const t = d3.create("div").classed("frame", true)
         const header = t.append("h3")
         header.append(() => this.icon.make(32, true))
         header.node()?.append(this.name)
-        t.append("b")
-            .text("Max throughput: ")
+        t.append("b").text("Max throughput: ")
         t.node()?.append(`${spec.format.rate(this.rate)}/${spec.format.longRate}`)
         return t.node() as HTMLDivElement
     }

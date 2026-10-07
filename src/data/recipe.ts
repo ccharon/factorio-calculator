@@ -209,9 +209,7 @@ export class Recipe implements RecipeLike {
 
     /** Returns a tooltip element with products, crafting time and ingredients. */
     renderTooltip(extra?: Node): HTMLDivElement {
-        const t = d3.create("div")
-            .classed("frame recipe", true)
-            .datum(this)
+        const t = d3.create("div").classed("frame recipe", true).datum(this)
         const header = t.append("h3")
         header.append(() => this.icon.make(32, true))
         let name = this.name
@@ -229,34 +227,19 @@ export class Recipe implements RecipeLike {
         }
         if (this.products.length > 1 || first?.item.name !== this.name) {
             const productLine = t.append("div")
-            productLine.append("span")
-                .text("Products:")
-            const product = productLine.append("span").selectAll("span")
-                .data(this.products)
-                .join("span")
-            product.append("span")
-                .text("\u00A0")
-            const prodIcon = product.append("div")
-                .classed("product", true)
+            productLine.append("span").text("Products:")
+            const product = productLine.append("span").selectAll("span").data(this.products).join("span")
+            product.append("span").text("\u00A0")
+            const prodIcon = product.append("div").classed("product", true)
             prodIcon.append(d => d.item.icon.make(32, true))
-            prodIcon.append("span")
-                .classed("count", true)
-                .text(d => d.amount.toDecimal())
+            prodIcon.append("span").classed("count", true).text(d => d.amount.toDecimal())
         }
         const time = t.append("div")
-        time.append("div")
-            .classed("product", true)
-            .append(() => getSprite("clock").icon.make(32, true))
-        time.append("span")
-            .text("\u00A0" + this.time.toDecimal())
-        const ingredient = t.append("div").selectAll("div")
-            .data(this.ingredients)
-            .join("div")
-        ingredient.append("div")
-            .classed("product", true)
-            .append(d => d.item.icon.make(32, true))
-        ingredient.append("span")
-            .text(d => `\u00A0${d.amount.toDecimal()} \u00d7 ${d.item.name}`)
+        time.append("div").classed("product", true).append(() => getSprite("clock").icon.make(32, true))
+        time.append("span").text("\u00A0" + this.time.toDecimal())
+        const ingredient = t.append("div").selectAll("div").data(this.ingredients).join("div")
+        ingredient.append("div").classed("product", true).append(d => d.item.icon.make(32, true))
+        ingredient.append("span").text(d => `\u00A0${d.amount.toDecimal()} \u00d7 ${d.item.name}`)
         return node
     }
 }

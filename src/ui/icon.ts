@@ -55,9 +55,7 @@ export class Icon {
         const sheet = spriteSheet()
         let x = -this.obj.icon_col * PX_WIDTH
         let y = -this.obj.icon_row * PX_HEIGHT
-        const img = d3.select(makeEmptyIcon(size))
-            .classed("icon", true)
-            .style("background", `url(images/sprite-sheet-${sheet.hash}.png)`)
+        const img = d3.select(makeEmptyIcon(size)).classed("icon", true).style("background", `url(images/sprite-sheet-${sheet.hash}.png)`)
         if (size !== PX_WIDTH) {
             const ratio = size / PX_WIDTH
             x *= ratio

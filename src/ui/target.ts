@@ -50,10 +50,9 @@ function searchTargets(event: KeyboardEvent): void {
     }
     const dropdown = d3.select(container)
     if (event.key === "Enter") {
-        const visible = dropdown.selectAll<HTMLLabelElement, Item>("label")
-            .filter(function () {
-                return this.style.display !== "none"
-            })
+        const visible = dropdown.selectAll<HTMLLabelElement, Item>("label").filter(function () {
+            return this.style.display !== "none"
+        })
         if (visible.size() === 1) {
             const input = document.getElementById(visible.attr("for"))
             if (input instanceof HTMLInputElement) {
@@ -118,16 +117,11 @@ export class BuildTarget {
         this.itemKey = itemKey
         this.item = item
 
-        const element = d3.create("li")
-            .classed("target", true)
-        element.append("button")
-            .classed("targetButton ui", true)
-            .text("x")
-            .attr("title", "Remove this item.")
-            .on("click", () => {
-                spec.removeTarget(this)
-                spec.updateSolution()
-            })
+        const element = d3.create("li").classed("target", true)
+        element.append("button").classed("targetButton ui", true).text("x").attr("title", "Remove this item.").on("click", () => {
+            spec.removeTarget(this)
+            spec.updateSolution()
+        })
         this.element = element.node() as HTMLLIElement
 
         const dropdown = makeDropdown(
@@ -141,21 +135,10 @@ export class BuildTarget {
             },
         )
         dropdown.classed("itemDropdown", true)
-        dropdown.append("input")
-            .classed("search", true)
-            .attr("placeholder", "Search")
-            .on("keyup", searchTargets)
-        const group = dropdown.selectAll<HTMLDivElement, Item[][]>("div")
-            .data(itemGroups)
-            .join("div")
-        group.filter((_d, i) => i > 0)
-            .append("hr")
-        const items = group.selectAll<HTMLDivElement, Item[]>("div")
-            .data(d => d)
-            .join("div")
-                .selectAll<HTMLSpanElement, Item>("span")
-                .data(d => d)
-                .join("span")
+        dropdown.append("input").classed("search", true).attr("placeholder", "Search").on("keyup", searchTargets)
+        const group = dropdown.selectAll<HTMLDivElement, Item[][]>("div").data(itemGroups).join("div")
+        group.filter((_d, i) => i > 0).append("hr")
+        const items = group.selectAll<HTMLDivElement, Item[]>("div").data(d => d).join("div").selectAll<HTMLSpanElement, Item>("span").data(d => d).join("span")
         const itemLabel = addInputs(items, `target-${targetCount}`, d => d === item, chosen => {
             this.itemKey = chosen.key
             this.item = chosen
@@ -166,38 +149,30 @@ export class BuildTarget {
         itemLabel.append(d => d.icon.make(32, false, dropdownNode))
         targetCount++
 
-        this.buildingLabel = element.append("label")
-            .classed(SELECTED_INPUT, true)
-            .text(" Buildings: ")
-            .node() as HTMLLabelElement
+        this.buildingLabel = element.append("label").classed(SELECTED_INPUT, true).text(" Buildings: ").node() as HTMLLabelElement
 
         this.recipeSelector = element.append("span")
 
-        this.buildingInput = element.append("input")
-            .on("change", () => {
-                this.buildingsChanged()
-                spec.updateSolution()
-            })
-            .attr("type", "text")
-            .attr("value", 1)
-            .attr("size", 3)
-            .attr("title", "Enter a value to specify the number of buildings. The rate will be determined based on the number of items a single building can make.")
-            .node() as HTMLInputElement
+        const buildingTitle = "Enter a value to specify the number of buildings. "
+            + "The rate will be determined based on the number of items a single building can make."
+        const buildingInput = element.append("input").attr("type", "text").attr("value", 1).attr("size", 3).attr("title", buildingTitle)
+        buildingInput.on("change", () => {
+            this.buildingsChanged()
+            spec.updateSolution()
+        })
+        this.buildingInput = buildingInput.node() as HTMLInputElement
 
-        this.rateLabel = element.append("label")
-            .node() as HTMLLabelElement
+        this.rateLabel = element.append("label").node() as HTMLLabelElement
         this.setRateLabel()
 
-        this.rateInput = element.append("input")
-            .on("change", () => {
-                this.rateChanged()
-                spec.updateSolution()
-            })
-            .attr("type", "text")
-            .attr("value", "")
-            .attr("size", 5)
-            .attr("title", "Enter a value to specify the rate. The number of buildings will be determined based on the rate.")
-            .node() as HTMLInputElement
+        const rateTitle = "Enter a value to specify the rate. The number of buildings will be determined based on the rate."
+        const rateInput = element.append("input").attr("type", "text").attr("value", "").attr("size", 5).attr("title", rateTitle)
+        rateInput.on("change", () => {
+            this.rateChanged()
+            spec.updateSolution()
+        })
+        this.rateInput = rateInput.node() as HTMLInputElement
+
         this.displayRecipes()
     }
 
@@ -226,9 +201,7 @@ export class BuildTarget {
         }
         this.recipe ??= first
         const dropdown = makeDropdown(this.recipeSelector)
-        const inputs = dropdown.selectAll<HTMLDivElement, Recipe>("div")
-            .data(recipes)
-            .join("div")
+        const inputs = dropdown.selectAll<HTMLDivElement, Recipe>("div").data(recipes).join("div")
         const labels = addInputs(inputs, `target-recipe-${recipeSelectorCount}`, d => this.recipe === d, d => {
             this.recipe = d
             spec.updateSolution()
@@ -236,8 +209,7 @@ export class BuildTarget {
         const dropdownNode = dropdown.node() ?? undefined
         labels.append(d => d.icon.make(32, false, dropdownNode))
         recipeSelectorCount++
-        this.recipeSelector.append("span")
-            .text(" × ")
+        this.recipeSelector.append("span").text(" \u00d7 ")
     }
 
     /** Returns the target rate in items per second and updates the computed input field. */

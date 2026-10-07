@@ -85,8 +85,7 @@ export class Module implements IconSource {
 
     /** Returns a tooltip element with the module effects. */
     renderTooltip(): HTMLDivElement {
-        const t = d3.create("div")
-            .classed("frame", true)
+        const t = d3.create("div").classed("frame", true)
         const header = t.append("h3")
         header.append(() => this.icon.make(32, true))
         header.node()?.append(this.name)
@@ -100,10 +99,8 @@ export class Module implements IconSource {
                 continue
             }
             const line = t.append("div")
-            line.append("b")
-                .text(label)
-            line.append("span")
-                .text(percent(value))
+            line.append("b").text(label)
+            line.append("span").text(percent(value))
         }
         return t.node() as HTMLDivElement
     }

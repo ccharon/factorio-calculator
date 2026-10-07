@@ -106,6 +106,9 @@ Key facts:
   - Compiler options are strict, including `noUncheckedIndexedAccess`. A missing map or array entry is handled explicitly, usually by throwing an `Error` with the missing key.
 - Files in `src/` are JavaScript until their phase 3 port to TypeScript. Type-aware lint rules that need types are relaxed for `src/**/*.js` in `.oxlintrc.json`.
 - 4-space indentation, no semicolons, double quotes. Match the surrounding file.
+- Lines may be up to 160 characters. Do not wrap for an 80-column limit.
+- Method chains (d3 selections, array pipelines) stay on one line as long as they fit in 160 characters. Break a chain only when it is longer, and then one call per line.
+- Separate the steps of a function with an empty line: for example after the data is collected and before it is used for a calculation, or before the result is rendered.
 - Chrome is the only browser for testing: the Chrome extension for visual checks, `puppeteer-core` with the installed Chrome for automated checks.
 - Documentation comments in every new or edited file:
   - Every class gets a comment above it that says what it represents.

@@ -52,7 +52,9 @@ function minimalRaw() {
         "offshore-pump": {},
         boiler: {},
         "transport-belt": {},
-        beacon: { beacon: { name: "beacon", energy_usage: "480kW", distribution_effectivity: 1.5, module_slots: 2, allowed_effects: ["speed"], profile: [1, 0.5] } },
+        beacon: {
+            beacon: { name: "beacon", energy_usage: "480kW", distribution_effectivity: 1.5, module_slots: 2, allowed_effects: ["speed"], profile: [1, 0.5] },
+        },
         module: {},
         "agricultural-tower": {},
         planet: {
@@ -70,9 +72,18 @@ function minimalRaw() {
         surface: {},
         tile: { deepwater: { name: "deepwater", fluid: "water" } },
         resource: { "iron-ore": { name: "iron-ore", minable: { mining_time: 1, result: "iron-ore" } } },
-        plant: { bush: { name: "bush", growth_ticks: 600, autoplace: { control: "home-plants" }, minable: { results: [{ type: "item", name: "iron-ore", amount: 5 }] } } },
+        plant: {
+            bush: {
+                name: "bush",
+                growth_ticks: 600,
+                autoplace: { control: "home-plants" },
+                minable: { results: [{ type: "item", name: "iron-ore", amount: 5 }] },
+            },
+        },
         "surface-property": { pressure: { name: "pressure", default_value: 1000 } },
-        "utility-sprites": { default: { clock: { filename: "__core__/clock.png" }, empty_module_slot: { filename: "__core__/slot.png" } } },
+        "utility-sprites": {
+            default: { clock: { filename: "__core__/clock.png" }, empty_module_slot: { filename: "__core__/slot.png" } },
+        },
     }
 }
 

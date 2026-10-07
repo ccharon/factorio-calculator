@@ -34,27 +34,20 @@ class Resource {
     constructor(recipe: RecipeLike, weight: Rational) {
         this.recipe = recipe
         this.weight = weight
-        this.div = d3.create("div")
-            .classed("resource", true)
-            .on("dragstart", () => {
-                if (this.level) {
-                    this.level.list.div.classed("dragging", true)
-                    this.level.list.dragItem = this
-                }
-            })
-            .on("dragend", () => {
-                this.level?.list.div.classed("dragging", false)
-            })
+        this.div = d3.create("div").classed("resource", true).on("dragstart", () => {
+            if (this.level) {
+                this.level.list.div.classed("dragging", true)
+                this.level.list.dragItem = this
+            }
+        }).on("dragend", () => {
+            this.level?.list.div.classed("dragging", false)
+        })
         this.div.append(() => this.recipe.icon.make(48))
-        this.div.append("input")
-            .attr("type", "text")
-            .attr("size", 4)
-            .attr("value", this.weight.toString())
-            .on("change", (event: Event) => {
-                this.weight = Rational.from_string((event.target as HTMLInputElement).value)
-                this.level?.insertSorted(this)
-                spec.updateSolution()
-            })
+        this.div.append("input").attr("type", "text").attr("size", 4).attr("value", this.weight.toString()).on("change", (event: Event) => {
+            this.weight = Rational.from_string((event.target as HTMLInputElement).value)
+            this.level?.insertSorted(this)
+            spec.updateSolution()
+        })
     }
 
     /** Removes this resource from its level. An empty level is removed too. */
@@ -85,9 +78,7 @@ class PriorityLevel {
 
     constructor(list: PriorityList) {
         this.list = list
-        this.div = d3.create("div")
-            .datum<PriorityLevel>(this)
-            .classed("resource-tier", true)
+        this.div = d3.create("div").datum<PriorityLevel>(this).classed("resource-tier", true)
         list.dropTarget(this.div, () => {
             if (list.dragItem && list.dragItem.level !== this) {
                 this.insertSorted(list.dragItem)
@@ -264,24 +255,20 @@ export class PriorityList {
     /** Removes all levels and renders the two end markers. */
     renderEmpty(): void {
         this.div.selectAll("*").remove()
-        const less = this.div.append("div")
-            .classed("resource-tier bookend", true)
+        const less = this.div.append("div").classed("resource-tier bookend", true)
         this.dropTarget(less, () => {
             if (this.dragItem) {
                 this.addPriorityBefore(this.priorities[0] ?? null).insertSorted(this.dragItem)
             }
         })
-        less.append("span")
-            .text("less valuable")
-        const more = this.div.append("div")
-            .classed("resource-tier bookend", true)
+        less.append("span").text("less valuable")
+        const more = this.div.append("div").classed("resource-tier bookend", true)
         this.dropTarget(more, () => {
             if (this.dragItem) {
                 this.addPriorityBefore(null).insertSorted(this.dragItem)
             }
         })
-        more.append("span")
-            .text("more valuable")
+        more.append("span").text("more valuable")
     }
 
     /** Drops empty levels and removes the divider before the new first level. */
@@ -297,35 +284,29 @@ export class PriorityList {
 
     /** Makes selection accept dropped resources. drop runs on a drop, then the solution updates. */
     dropTarget<T>(selection: d3.Selection<HTMLDivElement, T, HTMLElement | null, unknown>, drop: () => void): void {
-        selection
-            .on("dragover", (event: DragEvent) => {
-                event.preventDefault()
-            })
-            .on("dragenter", (event: DragEvent) => {
-                (event.currentTarget as HTMLElement).classList.add("highlight")
-            })
-            .on("dragleave", (event: DragEvent) => {
-                if (event.target === event.currentTarget) {
-                    (event.currentTarget as HTMLElement).classList.remove("highlight")
-                }
-            })
-            .on("drop", (event: DragEvent) => {
-                if (this.dragItem === null) {
-                    return
-                }
-                event.preventDefault()
-                ;(event.currentTarget as HTMLElement).classList.remove("highlight")
-                drop()
-                this.dragItem = null
-                spec.updateSolution()
-            })
+        selection.on("dragover", (event: DragEvent) => {
+            event.preventDefault()
+        }).on("dragenter", (event: DragEvent) => {
+            (event.currentTarget as HTMLElement).classList.add("highlight")
+        }).on("dragleave", (event: DragEvent) => {
+            if (event.target === event.currentTarget) {
+                (event.currentTarget as HTMLElement).classList.remove("highlight")
+            }
+        }).on("drop", (event: DragEvent) => {
+            if (this.dragItem === null) {
+                return
+            }
+            event.preventDefault()
+            ;(event.currentTarget as HTMLElement).classList.remove("highlight")
+            drop()
+            this.dragItem = null
+            spec.updateSolution()
+        })
     }
 
     // Creates the divider placed before level.
     private makeMiddle(level: PriorityLevel): Div<PriorityLevel> {
-        const middle = d3.create("div")
-            .datum(level)
-            .classed("middle", true)
+        const middle = d3.create("div").datum(level).classed("middle", true)
         this.dropTarget(middle, () => {
             if (this.dragItem) {
                 this.addPriorityBefore(level).insertSorted(this.dragItem)

@@ -41,9 +41,7 @@ function toggleDropdown(element: Element): void {
     } else {
         // The spacer keeps the closed dropdown's size while the open one floats above it.
         const selected = dropdown.select<HTMLLabelElement>("input:checked + label")
-        dropdown.select(".spacer")
-            .style("width", selected.style("width"))
-            .style("height", selected.style("height"))
+        dropdown.select(".spacer").style("width", selected.style("width")).style("height", selected.style("height"))
         classes.add("open")
         state.onOpen?.(dropdown)
     }
@@ -58,23 +56,16 @@ export function makeDropdown<GElement extends HTMLElement, Datum, PElement exten
     onOpen?: DropdownCallback,
     onClose?: DropdownCallback,
 ): d3.Selection<HTMLDivElement, Datum, PElement, PDatum> {
-    const wrapper = selector.append("div")
-        .classed("dropdownWrapper", true)
-        .each(function () {
-            dropdownLocal.set(this, { dropdownNode: this, onOpen, onClose })
-        })
-    wrapper.append("div")
-        .classed("clicker", true)
-        .on("click", function () {
-            toggleDropdown(this)
-        })
-    const inner = wrapper.append("div")
-        .classed("dropdown", true)
-        .on("click", function () {
-            toggleDropdown(this)
-        })
-    wrapper.append("div")
-        .classed("spacer", true)
+    const wrapper = selector.append("div").classed("dropdownWrapper", true).each(function () {
+        dropdownLocal.set(this, { dropdownNode: this, onOpen, onClose })
+    })
+    wrapper.append("div").classed("clicker", true).on("click", function () {
+        toggleDropdown(this)
+    })
+    const inner = wrapper.append("div").classed("dropdown", true).on("click", function () {
+        toggleDropdown(this)
+    })
+    wrapper.append("div").classed("spacer", true)
     return inner
 }
 
@@ -98,19 +89,13 @@ export function addInputs<GElement extends HTMLElement, Datum, PElement extends 
     selector.each(function () {
         ids.set(this, `input-${inputId++}`)
     })
-    selector.append("input")
-        .on("change", function (_event: Event, d: Datum) {
-            toggleDropdown(this)
-            callback(d)
-        })
-        .attr("id", function () {
-            return this.parentElement === null ? "" : ids.get(this.parentElement) ?? ""
-        })
-        .attr("name", typeof name === "string" ? name : d => name(d))
-        .attr("type", "radio")
-        .property("checked", checked)
-    return selector.append("label")
-        .attr("for", function () {
-            return this.parentElement === null ? "" : ids.get(this.parentElement) ?? ""
-        })
+    selector.append("input").on("change", function (_event: Event, d: Datum) {
+        toggleDropdown(this)
+        callback(d)
+    }).attr("id", function () {
+        return this.parentElement === null ? "" : ids.get(this.parentElement) ?? ""
+    }).attr("name", typeof name === "string" ? name : d => name(d)).attr("type", "radio").property("checked", checked)
+    return selector.append("label").attr("for", function () {
+        return this.parentElement === null ? "" : ids.get(this.parentElement) ?? ""
+    })
 }

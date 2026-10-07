@@ -36,11 +36,7 @@ async function loadIcon(path) {
     if (width > height) {
         image.extract({ left: 0, top: 0, width: height, height })
     }
-    return image
-        .resize(ICON_SIZE, ICON_SIZE, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
-        .ensureAlpha()
-        .raw()
-        .toBuffer()
+    return image.resize(ICON_SIZE, ICON_SIZE, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } }).ensureAlpha().raw().toBuffer()
 }
 
 // Yields every object in the dataset that carries an icon_ref.
@@ -92,15 +88,12 @@ export async function buildSpriteSheet(dataset, iconDir, gameDataDir) {
     const rows = Math.ceil(cells.length / columns)
     const width = columns * ICON_SIZE
     const height = rows * ICON_SIZE
-    const png = await sharp({ create: { width, height, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
-        .composite(cells.map((pixels, i) => ({
-            input: pixels,
-            raw: { width: ICON_SIZE, height: ICON_SIZE, channels: 4 },
-            left: (i % columns) * ICON_SIZE,
-            top: Math.floor(i / columns) * ICON_SIZE,
-        })))
-        .png({ compressionLevel: 9 })
-        .toBuffer()
+    const png = await sharp({ create: { width, height, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } }).composite(cells.map((pixels, i) => ({
+        input: pixels,
+        raw: { width: ICON_SIZE, height: ICON_SIZE, channels: 4 },
+        left: (i % columns) * ICON_SIZE,
+        top: Math.floor(i / columns) * ICON_SIZE,
+    }))).png({ compressionLevel: 9 }).toBuffer()
     const hash = createHash("md5").update(png).digest("hex")
 
     for (const holder of holders) {

@@ -44,39 +44,29 @@ export function moduleDropdown<GElement extends HTMLElement, Datum, PElement ext
     selector: d3.Selection<GElement, Datum, PElement, PDatum>,
     data: readonly ModuleCell[] | ((d: Datum) => readonly ModuleCell[]),
 ): void {
-    const wrappers = selector.selectAll<HTMLSpanElement, ModuleCell>("span.module-wrapper")
-        .data(typeof data === "function" ? (d: Datum) => data(d) : data)
-        .join(enter => {
-            const s = enter.append("span")
-                .classed("module-wrapper", true)
-            makeDropdown(s)
-            return s
+    const cells = typeof data === "function" ? (d: Datum): readonly ModuleCell[] => data(d) : data
+    const wrappers = selector.selectAll<HTMLSpanElement, ModuleCell>("span.module-wrapper").data(cells).join(enter => {
+        const s = enter.append("span").classed("module-wrapper", true)
+        makeDropdown(s)
+        return s
+    })
+
+    const dropdowns = wrappers.selectAll<HTMLDivElement, ModuleCell>("div.dropdown")
+    const rows = dropdowns.selectAll<HTMLDivElement, readonly ModuleInput[]>("div.moduleRow").data(d => d.inputRows).join("div").classed("moduleRow", true)
+    rows.selectAll<HTMLSpanElement, ModuleInput>("span.input").data(d => d).join(enter => {
+        const s = enter.append("span").classed("input", true)
+        const label = addInputs(s, d => d.cell.name, d => d.checked(), d => d.choose())
+        label.append(function (d) {
+            if (d.module === null) {
+                return getSprite("slot_icon_module").icon.make(32)
+            }
+            // The tooltip goes next to the whole dropdown, not the icon.
+            const dropdownNode = this.parentElement?.parentElement?.parentElement ?? undefined
+            return d.module.icon.make(32, false, dropdownNode)
         })
-    wrappers.selectAll<HTMLDivElement, ModuleCell>("div.dropdown")
-        .selectAll<HTMLDivElement, readonly ModuleInput[]>("div.moduleRow")
-        .data(d => d.inputRows)
-        .join("div")
-            .classed("moduleRow", true)
-            .selectAll<HTMLSpanElement, ModuleInput>("span.input")
-            .data(d => d)
-            .join(
-                enter => {
-                    const s = enter.append("span")
-                        .classed("input", true)
-                    const label = addInputs(s, d => d.cell.name, d => d.checked(), d => d.choose())
-                    label.append(function (d) {
-                        if (d.module === null) {
-                            return getSprite("slot_icon_module").icon.make(32)
-                        }
-                        // The tooltip goes next to the whole dropdown, not the icon.
-                        const dropdownNode = this.parentElement?.parentElement?.parentElement ?? undefined
-                        return d.module.icon.make(32, false, dropdownNode)
-                    })
-                    return s
-                },
-                update => {
-                    update.selectAll<HTMLInputElement, ModuleInput>("input").property("checked", d => d.checked())
-                    return update
-                },
-            )
+        return s
+    }, update => {
+        update.selectAll<HTMLInputElement, ModuleInput>("input").property("checked", d => d.checked())
+        return update
+    })
 }
