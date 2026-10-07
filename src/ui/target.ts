@@ -43,11 +43,13 @@ function searchTargets(event: KeyboardEvent): void {
     if (container === null) {
         return
     }
+
     const searchText = normalize(search.value)
     if (!searchText) {
         resetSearch(container)
         return
     }
+
     const dropdown = d3.select(container)
     if (event.key === "Enter") {
         const visible = dropdown.selectAll<HTMLLabelElement, Item>("label").filter(function () {
@@ -62,6 +64,7 @@ function searchTargets(event: KeyboardEvent): void {
         }
         return
     }
+
     // Hides non-matching items, and dividers of groups without visible items.
     let currentHrHasContent = false
     let lastHrWithContent: HTMLElement | null = null
@@ -79,6 +82,7 @@ function searchTargets(event: KeyboardEvent): void {
             currentHrHasContent ||= matches
         }
     }
+
     if (!currentHrHasContent && lastHrWithContent !== null) {
         lastHrWithContent.style.display = "none"
     }
@@ -184,12 +188,14 @@ export class BuildTarget {
     /** Offers the enabled recipes that produce the item on net. A dropdown appears only for more than one. */
     displayRecipes(): void {
         this.recipeSelector.selectAll("*").remove()
+
         const recipes = spec.ignore.has(this.item)
             ? []
             : this.item.recipes.filter(recipe => !spec.disable.has(recipe) && recipe.isNetProducer(this.item))
         if (this.recipe === null || !recipes.includes(this.recipe)) {
             this.recipe = null
         }
+
         const first = recipes[0]
         this.defaultRecipe = first ?? null
         if (first === undefined) {
@@ -199,6 +205,7 @@ export class BuildTarget {
             this.recipe = first
             return
         }
+
         this.recipe ??= first
         const dropdown = makeDropdown(this.recipeSelector)
         const inputs = dropdown.selectAll<HTMLDivElement, Recipe>("div").data(recipes).join("div")
@@ -206,6 +213,7 @@ export class BuildTarget {
             this.recipe = d
             spec.updateSolution()
         })
+
         const dropdownNode = dropdown.node() ?? undefined
         labels.append(d => d.icon.make(32, false, dropdownNode))
         recipeSelectorCount++
@@ -219,15 +227,18 @@ export class BuildTarget {
         if ((recipe === null || recipe.category === null) && this.changedBuilding) {
             this.rateChanged()
         }
+
         let baseRate: Rational | null = null
         if (recipe !== null) {
             baseRate = spec.getRecipeRate(recipe)?.mul(recipe.gives(this.item)) ?? null
         }
+
         if (this.changedBuilding && baseRate !== null) {
             const rate = baseRate.mul(this.buildings)
             this.rateInput.value = spec.format.rate(rate)
             return rate
         }
+
         this.buildingInput.value = baseRate === null ? "N/A" : spec.format.count(this.rate.div(baseRate))
         this.rateInput.value = spec.format.rate(this.rate)
         return this.rate

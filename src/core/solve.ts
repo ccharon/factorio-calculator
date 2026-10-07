@@ -164,11 +164,14 @@ function traverse(context: SolverContext, cyclic: ReadonlySet<RecipeLike>, item:
         result.targets.push({ item, rate, recipe })
         return result
     }
+
     const recipeRate = rate.div(recipe.gives(item))
     result.add(recipe, recipeRate)
+
     if (context.ignore.has(item)) {
         return result
     }
+
     for (const ing of recipe.getIngredients()) {
         result.combine(traverse(context, cyclic, ing.item, recipeRate.mul(ing.amount), null))
     }
@@ -192,12 +195,15 @@ export function solve(context: SolverContext, fullOutputs: readonly Output[]): S
     for (const { item, rate } of fullOutputs) {
         outputs.set(item, rate.add(outputs.get(item) ?? zero))
     }
+
     let recipes = context.getRecipeGraph(outputs)
     const cyclic = getCycleRecipes(context, recipes)
+
     const partial = new PartialSolution()
     for (const { item, rate, recipe } of fullOutputs) {
         partial.combine(traverse(context, cyclic, item, rate, recipe))
     }
+
     const solution = partial.recipeRates
 
     if (partial.remaining.size === 0) {
@@ -244,6 +250,7 @@ export function solve(context: SolverContext, fullOutputs: readonly Output[]): S
             }
         }
     }
+
     for (const recipe of maxPriorityRecipes.values()) {
         recipes.add(recipe)
     }
@@ -262,6 +269,7 @@ export function solve(context: SolverContext, fullOutputs: readonly Output[]): S
             }
         }
     }
+
     const column = (item: Item): number => {
         const j = itemColumns.get(item)
         if (j === undefined) {
@@ -279,6 +287,7 @@ export function solve(context: SolverContext, fullOutputs: readonly Output[]): S
 
     // Building-count targets for recipes in a cycle or with several products become pseudo-item
     // columns that copy the production of the real item.
+
     const columns = items.length + partial.targets.length + recipeArray.length + 3
     const rows = recipeArray.length + 2
     const A = new Matrix(rows, columns)
@@ -292,6 +301,7 @@ export function solve(context: SolverContext, fullOutputs: readonly Output[]): S
         for (const ing of recipe.getIngredients()) {
             A.addIndex(i, column(ing.item), zero.sub(ing.amount))
         }
+
         const prodEffect = context.getProdEffect(recipe)
         if (one.less(prodEffect)) {
             for (const ing of recipe.products) {
@@ -302,15 +312,18 @@ export function solve(context: SolverContext, fullOutputs: readonly Output[]): S
                 }
             }
         }
+
         A.setIndex(i, tax, minusOne)
         A.setIndex(i, tax + i + 1, one)
     })
+
     partial.targets.forEach(({ recipe, item, rate }, i) => {
         const r = row(recipe)
         const col = items.length + i
         A.setIndex(r, col, A.index(r, column(item)))
         A.setIndex(rows - 1, col, zero.sub(rate))
     })
+
     A.setIndex(rows - 2, tax, one)
     A.setIndex(rows - 1, columns - 2, one)
 
@@ -333,12 +346,14 @@ export function solve(context: SolverContext, fullOutputs: readonly Output[]): S
             max = x
         }
     }
+
     const two = Rational.from_float(2)
     let costRatio = min === null ? two : max.div(min).mul(two)
     // The cost ratio must be greater than 1.
     if (costRatio.less(two)) {
         costRatio = two
     }
+
     A.setIndex(rows - 2, columns - 1, one)
     let P = costRatio
     for (const level of context.priority) {
@@ -349,6 +364,7 @@ export function solve(context: SolverContext, fullOutputs: readonly Output[]): S
                 minWeight = weight
             }
         }
+
         let N = zero
         for (const { recipe, weight } of entries) {
             const r = recipeRows.get(recipe)
@@ -358,10 +374,12 @@ export function solve(context: SolverContext, fullOutputs: readonly Output[]): S
                 A.setIndex(r, columns - 1, P.mul(normalizedWeight))
             }
         }
+
         if (!N.isZero()) {
             P = P.mul(costRatio).mul(N)
         }
     }
+
     for (const recipe of maxPriorityRecipes.values()) {
         A.setIndex(row(recipe), columns - 1, P)
     }
@@ -377,7 +395,9 @@ export function solve(context: SolverContext, fullOutputs: readonly Output[]): S
             solution.set(recipe, (solution.get(recipe) ?? zero).add(rate))
         }
     })
+
     solution.set(new OutputRecipe(outputs), one)
+
     const surplus = new Map<Item, Rational>()
     items.forEach((item, i) => {
         const rate = A.index(A.rows - 1, i)
@@ -388,6 +408,7 @@ export function solve(context: SolverContext, fullOutputs: readonly Output[]): S
     if (surplus.size > 0) {
         solution.set(new SurplusRecipe(surplus), one)
     }
+
     return {
         totals: new Totals(context, outputs, solution, surplus, maxPriorityRecipes),
         debug: { partial, tableau, metadata, solution: A },

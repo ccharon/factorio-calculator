@@ -33,8 +33,10 @@ function toggleDropdown(element: Element): void {
     if (state === undefined) {
         return
     }
+
     const dropdown = d3.select<HTMLDivElement, unknown>(state.dropdownNode)
     const classes = state.dropdownNode.classList
+
     if (classes.contains("open")) {
         classes.remove("open")
         state.onClose?.(dropdown)
@@ -59,6 +61,7 @@ export function makeDropdown<GElement extends HTMLElement, Datum, PElement exten
     const wrapper = selector.append("div").classed("dropdownWrapper", true).each(function () {
         dropdownLocal.set(this, { dropdownNode: this, onOpen, onClose })
     })
+
     wrapper.append("div").classed("clicker", true).on("click", function () {
         toggleDropdown(this)
     })
@@ -66,6 +69,7 @@ export function makeDropdown<GElement extends HTMLElement, Datum, PElement exten
         toggleDropdown(this)
     })
     wrapper.append("div").classed("spacer", true)
+
     return inner
 }
 
@@ -89,12 +93,14 @@ export function addInputs<GElement extends HTMLElement, Datum, PElement extends 
     selector.each(function () {
         ids.set(this, `input-${inputId++}`)
     })
+
     selector.append("input").on("change", function (_event: Event, d: Datum) {
         toggleDropdown(this)
         callback(d)
     }).attr("id", function () {
         return this.parentElement === null ? "" : ids.get(this.parentElement) ?? ""
     }).attr("name", typeof name === "string" ? name : d => name(d)).attr("type", "radio").property("checked", checked)
+
     return selector.append("label").attr("for", function () {
         return this.parentElement === null ? "" : ids.get(this.parentElement) ?? ""
     })

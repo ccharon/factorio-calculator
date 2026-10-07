@@ -93,6 +93,7 @@ export function getItems(data: Dataset): Map<string, Item> {
         const phase: Phase = d.type === "fluid" ? "fluid" : "solid"
         items.set(d.key, new Item(d.key, d.localized_name.en, d.icon_col, d.icon_row, phase, d.group, d.subgroup, d.order))
     }
+
     const reactor = items.get("nuclear-reactor")
     if (reactor === undefined) {
         throw new Error("dataset lacks the nuclear reactor")
@@ -108,5 +109,6 @@ export function getItems(data: Dataset): Map<string, Item> {
         "energy",
         "f[nuclear-energy]-d[reactor-cycle]",
     ))
+
     return items
 }

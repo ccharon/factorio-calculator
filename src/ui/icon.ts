@@ -53,9 +53,11 @@ export class Icon {
      */
     make(size: number, suppressTooltip = false, target?: Element): HTMLImageElement {
         const sheet = spriteSheet()
+
         let x = -this.obj.icon_col * PX_WIDTH
         let y = -this.obj.icon_row * PX_HEIGHT
         const img = d3.select(makeEmptyIcon(size)).classed("icon", true).style("background", `url(images/sprite-sheet-${sheet.hash}.png)`)
+
         if (size !== PX_WIDTH) {
             const ratio = size / PX_WIDTH
             x *= ratio
@@ -63,12 +65,14 @@ export class Icon {
             img.style("background-size", `${sheet.width * ratio}px ${sheet.height * ratio}px`)
         }
         img.style("background-position", `${x}px ${y}px`)
+
         const obj = this.obj
         if (!suppressTooltip && obj.renderTooltip) {
             new Tooltip(img.node() as HTMLImageElement, () => obj.renderTooltip?.() ?? new Text(obj.name), target)
         } else {
             img.attr("title", obj.name)
         }
+
         img.attr("alt", this.name)
         return img.node() as HTMLImageElement
     }

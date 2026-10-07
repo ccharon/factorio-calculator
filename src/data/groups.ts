@@ -58,11 +58,13 @@ export function topoSort(groups: Iterable<RecipeGroup>): RecipeGroup[] {
             groupMap.set(recipe, group)
         }
     }
+
     const result = new Set<RecipeGroup>()
     const seen = new Set<RecipeGroup>()
     for (const group of groupList) {
         visit(groupMap, group, result, seen)
     }
+
     return Array.from(result).reverse()
 }
 
@@ -78,6 +80,7 @@ export function getRecipeGroups(recipes: ReadonlySet<RecipeLike>): Set<RecipeGro
             }
         }
     }
+
     for (const item of items) {
         const itemRecipes = item.allRecipes().filter(r => recipes.has(r))
         if (itemRecipes.length > 1) {
@@ -92,5 +95,6 @@ export function getRecipeGroups(recipes: ReadonlySet<RecipeLike>): Set<RecipeGro
             }
         }
     }
+
     return new Set(groups.values())
 }

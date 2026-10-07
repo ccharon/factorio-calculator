@@ -48,6 +48,7 @@ function pivotCol(A: Matrix, col: number): number | null {
             bestRow = row
         }
     }
+
     if (bestRow !== null) {
         pivot(A, bestRow, col)
     }
@@ -64,6 +65,7 @@ export function simplex(A: Matrix): void {
         let minCol = 0
         for (let col = 0; col < A.cols - 1; col++) {
             const x = A.index(A.rows - 1, col)
+
             if (min === null || x.less(min)) {
                 min = x
                 minCol = col

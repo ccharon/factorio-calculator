@@ -133,6 +133,7 @@ export function convert(raw, localeFiles, version) {
             }
         }
     }
+
     const items = []
     const fluids = []
     const fuel = []
@@ -156,6 +157,7 @@ export function convert(raw, localeFiles, version) {
             spoilage.push({ from_item: p.name, to_item: p.spoil_result, time: p.spoil_ticks })
         }
     }
+
     for (const f of Object.values(raw.fluid)) {
         if (isSkipped(f)) {
             continue
@@ -178,6 +180,7 @@ export function convert(raw, localeFiles, version) {
             fuel_value: f.fuel_value === undefined ? undefined : parseEnergy(f.fuel_value, "J"),
         }))
     }
+
     const itemKeys = new Set(items.map(i => i.key))
     const itemByKey = new Map(items.map(i => [i.key, i]))
 
@@ -323,6 +326,7 @@ export function convert(raw, localeFiles, version) {
             icon_ref: `space-location/${p.name}`,
         })
     }
+
     for (const s of Object.values(raw.surface)) {
         planets.push({
             key: s.name,
@@ -357,6 +361,7 @@ export function convert(raw, localeFiles, version) {
             seeds.set(p.plant_result, p.name)
         }
     }
+
     const plants = Object.values(raw.plant).map(p => compact({
         key: p.name,
         localized_name: locale.name("entity", p.name),

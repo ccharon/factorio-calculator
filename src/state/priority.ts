@@ -34,6 +34,7 @@ class Resource {
     constructor(recipe: RecipeLike, weight: Rational) {
         this.recipe = recipe
         this.weight = weight
+
         this.div = d3.create("div").classed("resource", true).on("dragstart", () => {
             if (this.level) {
                 this.level.list.div.classed("dragging", true)
@@ -42,6 +43,7 @@ class Resource {
         }).on("dragend", () => {
             this.level?.list.div.classed("dragging", false)
         })
+
         this.div.append(() => this.recipe.icon.make(48))
         this.div.append("input").attr("type", "text").attr("size", 4).attr("value", this.weight.toString()).on("change", (event: Event) => {
             this.weight = Rational.from_string((event.target as HTMLInputElement).value)
@@ -119,6 +121,7 @@ class PriorityLevel {
         if (resource.level === this && this.resources.length === 1) {
             return
         }
+
         resource.remove()
         resource.level = this
         const node = this.div.node() as HTMLDivElement
@@ -131,6 +134,7 @@ class PriorityLevel {
                 return
             }
         }
+
         this.resources.push(resource)
         node.appendChild(resourceNode)
     }
@@ -208,6 +212,7 @@ export class PriorityList {
                 successorNode = isFirst ? level.div.node() : level.middle?.node() ?? null
             }
         }
+
         if (!isFirst) {
             newLevel.middle = this.makeMiddle(newLevel)
             listNode.insertBefore(newLevel.middle.node() as HTMLDivElement, successorNode)
@@ -217,6 +222,7 @@ export class PriorityList {
             level.middle = this.makeMiddle(level)
             listNode.insertBefore(level.middle.node() as HTMLDivElement, successorNode)
         }
+
         return newLevel
     }
 
@@ -255,6 +261,7 @@ export class PriorityList {
     /** Removes all levels and renders the two end markers. */
     renderEmpty(): void {
         this.div.selectAll("*").remove()
+
         const less = this.div.append("div").classed("resource-tier bookend", true)
         this.dropTarget(less, () => {
             if (this.dragItem) {
@@ -262,6 +269,7 @@ export class PriorityList {
             }
         })
         less.append("span").text("less valuable")
+
         const more = this.div.append("div").classed("resource-tier bookend", true)
         this.dropTarget(more, () => {
             if (this.dragItem) {

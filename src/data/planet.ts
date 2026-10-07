@@ -97,16 +97,19 @@ export function getPlanets(data: Dataset, recipes: ReadonlyMap<string, Recipe>):
                 recyclingRoots.push(r)
             }
         }
+
         const properties = new Map<string, number>()
         for (const { name, default_value } of data.surface_properties) {
             properties.set(name, d.surface_properties[name] ?? default_value)
         }
+
         const planet = new Planet(d.key, d.localized_name.en, d.order, d.icon_col, d.icon_row, resources, properties)
         for (const recipe of recipes.values()) {
             if (!planet.allows(recipe) || isRecycling(recipe)) {
                 planet.disable.add(recipe)
             }
         }
+
         const allowedRecycling = new Set<Recipe>()
         for (const root of recyclingRoots) {
             traverseRecycling(root, allowedRecycling)
@@ -114,7 +117,9 @@ export function getPlanets(data: Dataset, recipes: ReadonlyMap<string, Recipe>):
         for (const recipe of allowedRecycling) {
             planet.disable.delete(recipe)
         }
+
         planets.set(planet.key, planet)
     }
+
     return planets
 }

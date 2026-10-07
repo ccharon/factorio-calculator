@@ -89,6 +89,7 @@ export class Module implements IconSource {
         const header = t.append("h3")
         header.append(() => this.icon.make(32, true))
         header.node()?.append(this.name)
+
         const effects: [string, Rational][] = [
             ["Energy consumption: ", this.power],
             ["Speed: ", this.speed],
@@ -102,6 +103,7 @@ export class Module implements IconSource {
             line.append("b").text(label)
             line.append("span").text(percent(value))
         }
+
         return t.node() as HTMLDivElement
     }
 }
@@ -189,6 +191,7 @@ export class ModuleSpec {
                 total = total.add(effect(module))
             }
         }
+
         if (this.modules.length > 0) {
             for (const module of this.beaconModules) {
                 if (module) {
@@ -196,6 +199,7 @@ export class ModuleSpec {
                 }
             }
         }
+
         return total
     }
 
@@ -242,6 +246,7 @@ export function getModules(data: Dataset, items: ReadonlyMap<string, Item>): Map
         const R = (x: number | undefined): Rational => Rational.from_float_approximate(x ?? 0)
         modules.set(d.item_key, new Module(item, d.category, R(d.effect.productivity), R(d.effect.speed), R(d.effect.consumption)))
     }
+
     moduleRows.length = 0
     moduleRows.push([null])
     shortModules.clear()
@@ -259,7 +264,9 @@ export function getModules(data: Dataset, items: ReadonlyMap<string, Item>): Map
         }
         shortModules.set(module.shortName(), module)
     }
+
     beaconEffect = Rational.from_float_approximate(data.beacon.distribution_effectivity)
     beaconProfile = data.beacon.profile.map(x => Rational.from_float_approximate(x))
+
     return modules
 }

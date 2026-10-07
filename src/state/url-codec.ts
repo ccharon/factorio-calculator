@@ -10,6 +10,7 @@ export const MAX_SETTINGS_BYTES = 1 << 20
 async function readStream(stream: ReadableStream<Uint8Array>, maxBytes: number): Promise<Uint8Array> {
     const chunks: Uint8Array[] = []
     let total = 0
+
     const reader = stream.getReader()
     for (;;) {
         const { done, value } = await reader.read()
@@ -23,6 +24,7 @@ async function readStream(stream: ReadableStream<Uint8Array>, maxBytes: number):
         }
         chunks.push(value)
     }
+
     const result = new Uint8Array(total)
     let offset = 0
     for (const chunk of chunks) {

@@ -238,11 +238,13 @@ function launchRate(context: BuildingContext): LaunchRate {
     if (!partRecipe || !(partFactory instanceof RocketSilo) || !partItem) {
         throw new Error("rocket parts need the rocket-part recipe and a rocket silo")
     }
+
     const gives = partRecipe.gives(partItem)
     // Rocket part rate of the silo without the launch pauses.
     const rate = Building.prototype.getRecipeRate.call(partFactory, context, partRecipe)
     const perLaunch = partFactory.partsRequired.div(gives)
     const time = perLaunch.div(rate).add(rocketLaunchDuration)
+
     return { part: perLaunch.div(time), launch: time.reciprocate() }
 }
 
@@ -285,6 +287,7 @@ export function getBuildings(data: Dataset, items: ReadonlyMap<string, Item>): B
         key: "nuclear-reactor", name: reactor.name, icon_col: reactor.icon_col, icon_row: reactor.icon_row,
         categories: ["nuclear"], speed: one, prodBonus: zero, moduleSlots: 0, power: zero, fuel: null,
     }))
+
     const boilerItem = requireItem(items, "boiler")
     const boilerDef = data.boilers.find(d => d.key === "boiler")
     if (boilerDef === undefined) {
@@ -295,6 +298,7 @@ export function getBuildings(data: Dataset, items: ReadonlyMap<string, Item>): B
         categories: ["boiler"], speed: one, prodBonus: zero, moduleSlots: 0,
         power: Rational.from_float(boilerDef.energy_consumption), fuel: "chemical",
     }))
+
     for (const d of data.crafting_machines) {
         buildings.push(new Building({
             ...machineOptions(d),
@@ -303,6 +307,7 @@ export function getBuildings(data: Dataset, items: ReadonlyMap<string, Item>): B
             prodBonus: d.prod_bonus ? Rational.from_float_approximate(d.prod_bonus) : zero,
         }))
     }
+
     for (const d of data.rocket_silo) {
         buildings.push(new RocketSilo({
             ...machineOptions(d),
@@ -312,11 +317,13 @@ export function getBuildings(data: Dataset, items: ReadonlyMap<string, Item>): B
             fuel: null,
         }, Rational.from_float(d.rocket_parts_required)))
     }
+
     for (const d of data.offshore_pumps) {
         // The dataset gives units per tick.
         const speed = Rational.from_float_approximate(d.pumping_speed).mul(sixty)
         buildings.push(new OffshorePump(d.key, d.localized_name.en, d.icon_col, d.icon_row, speed))
     }
+
     for (const d of data.mining_drills) {
         // Fluid resources have no building.
         if (d.key === "pumpjack") {
@@ -324,5 +331,6 @@ export function getBuildings(data: Dataset, items: ReadonlyMap<string, Item>): B
         }
         buildings.push(new Miner({ ...machineOptions(d), categories: d.resource_categories }, Rational.from_float_approximate(d.mining_speed)))
     }
+
     return buildings
 }

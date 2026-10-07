@@ -81,6 +81,7 @@ export class Totals {
         this.rates = rates
         this.surplus = surplus
         this.extra = extraRecipes
+
         for (const [recipe, rate] of rates) {
             for (const ing of recipe.getIngredients()) {
                 const itemRate = rate.mul(ing.amount)
@@ -91,6 +92,7 @@ export class Totals {
                 set(this.producers, ing.item, recipe, rate.mul(recipe.gives(ing.item)))
             }
         }
+
         for (const [recipe, recipeRate] of rates) {
             const ingredients = recipe.getIngredients()
             ingredients.forEach((ing, i) => {
@@ -98,14 +100,17 @@ export class Totals {
                 if (totalRate === undefined) {
                     return
                 }
+
                 const ratio = recipeRate.mul(ing.amount).div(totalRate)
                 // Ingredients after the recipe's own list are fuel.
                 const fuel = i >= recipe.ingredients.length
+
                 const subRecipes: RecipeLike[] = context.getRecipes(ing.item)
                 const extra = extraRecipes.get(ing.item)
                 if (extra !== undefined) {
                     subRecipes.push(extra)
                 }
+
                 for (const subRecipe of subRecipes) {
                     const subRecipeRate = rates.get(subRecipe)
                     if (subRecipeRate === undefined) {

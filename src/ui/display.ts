@@ -84,6 +84,7 @@ function getBreakdown(item: Item, totals: Totals): BreakdownRow[] {
             found = true
         }
     }
+
     const producers = totals.producers.get(item)
     const [singleRecipe] = producers?.size === 1 ? producers.keys() : []
     const building = singleRecipe === undefined ? null : spec.getBuilding(singleRecipe)
@@ -97,6 +98,7 @@ function getBreakdown(item: Item, totals: Totals): BreakdownRow[] {
         rows.push({ item, recipe, rate, building, count, percent: percentStr, divider: found })
         found = false
     }
+
     return rows
 }
 
@@ -136,10 +138,12 @@ class ModuleInput implements DropdownInput {
                 }
             }
         }
+
         let anyRecalc = false
         for (const i of toUpdate) {
             anyRecalc = this.cell.moduleSpec.setModule(i, this.module) || anyRecalc
         }
+
         moduleChanged(this.cell.moduleSpec.recipe, anyRecalc)
     }
 }

@@ -34,6 +34,7 @@ export function getItemGroups(items: ReadonlyMap<string, Item>, data: Dataset): 
         }
         subgroup.push(item)
     }
+
     const groupOrder = (name: string): string => data.groups[name]?.order ?? ""
     const result: ItemGroups = []
     for (const groupName of sorted(groupMap.keys(), groupOrder)) {
@@ -41,5 +42,6 @@ export function getItemGroups(items: ReadonlyMap<string, Item>, data: Dataset): 
         const subgroupOrder = (name: string): string => data.groups[groupName]?.subgroups[name] ?? ""
         result.push(sorted(subgroups.keys(), subgroupOrder).map(name => sorted(subgroups.get(name) ?? [], item => item.order)))
     }
+
     return result
 }

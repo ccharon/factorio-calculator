@@ -245,12 +245,15 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults {
         this.recipes = recipes
         this.planets = planets
         this.modules = modules
+
         this.buildings = getBuildingGroups(buildings)
         this.buildingKeys = new Map(buildings.map(b => [b.key, b]))
+
         this.belts = belts
         this.beltValue = belts.get(DEFAULT_BELT) ?? null
         this.fuels = fuels
         this.fuelValue = fuels.get(DEFAULT_FUEL) ?? null
+
         this.miningProd = zero
         this.itemGroups = itemGroups
         this.defaultPriority = this.getDefaultPriorityArray()
@@ -289,6 +292,7 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults {
         if (this.disable.has(recipe)) {
             return
         }
+
         const candidates = new Set<Item>()
         const items = new Set<Item>()
         for (const { item } of recipe.products) {
@@ -297,12 +301,14 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults {
                 candidates.add(item)
             }
         }
+
         this.disable.add(recipe)
         for (const item of candidates) {
             if (this.isItemDisabled(item)) {
                 this.addItemToMaxPriority(item)
             }
         }
+
         this.redisplayTargets(items)
     }
 
@@ -314,6 +320,7 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults {
         if (!this.disable.has(recipe)) {
             return
         }
+
         const candidates = new Set<Item>()
         const items = new Set<Item>()
         for (const { item } of recipe.products) {
@@ -322,12 +329,14 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults {
                 candidates.add(item)
             }
         }
+
         this.disable.delete(recipe)
         for (const item of candidates) {
             if (!this.isItemDisabled(item)) {
                 this.priority.removeRecipe(item.disableRecipe)
             }
         }
+
         this.redisplayTargets(items)
     }
 
@@ -342,6 +351,7 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults {
                 allDisable = new Set(Array.from(p.disable).filter(r => allDisable.has(r)))
             }
         }
+
         this.planetaryBaseline = allDisable
         for (const r of Array.from(this.disable).filter(r => !allDisable.has(r))) {
             this.setEnable(r)
@@ -663,10 +673,12 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults {
         if (building === null) {
             return { fuel: null, power: zero }
         }
+
         const count = this.getCount(recipe, rate)
         if (building.fuel !== null) {
             return { fuel: building.fuel, power: building.power.mul(count) }
         }
+
         const powerEffect = this.getModuleSpec(recipe)?.powerEffect() ?? one
         const power = building.power.mul(count).mul(powerEffect).add(building.drain().mul(count.ceil()))
         return { fuel: "electric", power }
@@ -713,6 +725,7 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults {
                 updateTargets = true
             }
         }
+
         if (updateTargets) {
             for (const target of this.buildTargets) {
                 if (target.item === item) {
@@ -737,6 +750,7 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults {
                 outputs.push({ item, rate, recipe })
             }
         }
+
         const { totals, debug } = solve(this, outputs)
         this.lastPartial = debug.partial
         this.lastTableau = debug.tableau

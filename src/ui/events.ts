@@ -181,6 +181,7 @@ export function installSVGEvents(svg: d3.Selection<SVGSVGElement, unknown, HTMLE
     if (node === null) {
         return
     }
+
     // The graph tab must be visible to measure the bounding box.
     const tab = d3.select<HTMLElement, unknown>("#graph_tab")
     const style = tab.style("display")
@@ -189,7 +190,9 @@ export function installSVGEvents(svg: d3.Selection<SVGSVGElement, unknown, HTMLE
     let { x, y, width, height } = node.getBBox()
     svg.selectAll("image").style("display", null)
     tab.style("display", style)
+
     const [diagramX, diagramY, diagramWidth, diagramHeight] = [x, y, width, height]
+
     if (width / height < ASPECT_RATIO) {
         const newWidth = height * ASPECT_RATIO
         x -= (newWidth - width) / 2
@@ -199,6 +202,7 @@ export function installSVGEvents(svg: d3.Selection<SVGSVGElement, unknown, HTMLE
         y -= (newHeight - height) / 2
         height = newHeight
     }
+
     // Viewport size with the diagram centered and zoomed all the way out.
     const [origWidth, origHeight] = [width, height]
     // Start at the top of the diagram. clamp() corrects the position.
@@ -220,16 +224,20 @@ export function installSVGEvents(svg: d3.Selection<SVGSVGElement, unknown, HTMLE
             y = diagramY + diagramHeight - height / 2
         }
     }
+
     function setViewBox(): void {
         clamp()
         svg.attr("viewBox", `${x} ${y} ${width} ${height}`)
     }
+
     function point(event: MouseEvent, svgNode: SVGSVGElement): DOMPoint {
         const ctm = svgNode.getScreenCTM()
         const clientPoint = new DOMPoint(event.clientX, event.clientY)
         return ctm ? clientPoint.matrixTransform(ctm.inverse()) : clientPoint
     }
+
     let clickPt: DOMPoint | null = null
+
     svg.on("wheel", (event: WheelEvent) => {
         event.preventDefault()
         const origScale = scale
@@ -244,6 +252,7 @@ export function installSVGEvents(svg: d3.Selection<SVGSVGElement, unknown, HTMLE
             }
             scale += 1
         }
+
         const pt = point(event, node)
         x = pt.x - (pt.x - x) / origScale * scale
         y = pt.y - (pt.y - y) / origScale * scale
@@ -251,10 +260,12 @@ export function installSVGEvents(svg: d3.Selection<SVGSVGElement, unknown, HTMLE
         height = origHeight * (scale / MAX_SCALE)
         setViewBox()
     })
+
     svg.on("mousedown", (event: MouseEvent) => {
         clickPt = point(event, node)
         event.preventDefault()
     })
+
     svg.on("mousemove", (event: MouseEvent) => {
         if (clickPt === null) {
             return
@@ -265,10 +276,12 @@ export function installSVGEvents(svg: d3.Selection<SVGSVGElement, unknown, HTMLE
         setViewBox()
         event.preventDefault()
     })
+
     svg.on("mouseup", (event: MouseEvent) => {
         clickPt = null
         event.preventDefault()
     })
+
     setViewBox()
 }
 

@@ -85,6 +85,7 @@ export function getCycleRecipes(context: CycleContext, recipes: ReadonlySet<Reci
     for (const recipe of recipes) {
         order.push(...visit(context, recipes, recipe, seen, false))
     }
+
     const result = new Set<RecipeLike>()
     seen = new Set()
     for (const root of order.reverse()) {
@@ -98,5 +99,6 @@ export function getCycleRecipes(context: CycleContext, recipes: ReadonlySet<Reci
             }
         }
     }
+
     return result
 }

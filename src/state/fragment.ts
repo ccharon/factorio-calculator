@@ -47,6 +47,7 @@ export function formatSettings(excludeTitle = false, overrideTab?: string, targe
     if (!excludeTitle && document.title !== DEFAULT_TITLE) {
         add("title", encodeURIComponent(document.title))
     }
+
     const tab = overrideTab ?? currentTab
     if (tab !== DEFAULT_TAB) {
         add("tab", tab)
@@ -54,6 +55,7 @@ export function formatSettings(excludeTitle = false, overrideTab?: string, targe
     if (colorScheme.key !== DEFAULT_COLOR_SCHEME) {
         add("c", colorScheme.key)
     }
+
     const format = spec.format
     if (format.rateName !== DEFAULT_RATE) {
         add("rate", format.rateName)
@@ -70,6 +72,7 @@ export function formatSettings(excludeTitle = false, overrideTab?: string, targe
     if (!spec.miningProd.isZero()) {
         add("mprod", spec.miningProd.mul(hundred).toString())
     }
+
     const buildings: string[] = []
     for (const group of new Set(spec.buildings.values())) {
         if (group.building !== group.getDefault()) {
@@ -79,12 +82,14 @@ export function formatSettings(excludeTitle = false, overrideTab?: string, targe
     if (buildings.length > 0) {
         add("buildings", buildings.join(","))
     }
+
     if (spec.belt.key !== DEFAULT_BELT) {
         add("belt", spec.belt.key)
     }
     if (spec.fuel.key !== DEFAULT_FUEL) {
         add("fuel", spec.fuel.key)
     }
+
     if (spec.defaultModule !== null) {
         add("dm", spec.defaultModule.shortName())
     }
@@ -97,6 +102,7 @@ export function formatSettings(excludeTitle = false, overrideTab?: string, targe
     if (!spec.defaultBeaconCount.isZero()) {
         add("dbc", spec.defaultBeaconCount.toDecimal(0))
     }
+
     if (visualizerType !== DEFAULT_VISUALIZER) {
         add("vt", visualizerType)
     }

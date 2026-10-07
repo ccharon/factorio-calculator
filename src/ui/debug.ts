@@ -20,6 +20,7 @@ import { spec } from "../state/factory.ts"
 
 function renderMatrix(container: d3.Selection<HTMLElement, unknown, HTMLElement, unknown>, A: Matrix, m: TableauMetadata): void {
     const table = container.append("table").attr("border", 1)
+
     const header = table.append("tr")
     header.append("th")
     for (const item of m.items) {
@@ -27,18 +28,21 @@ function renderMatrix(container: d3.Selection<HTMLElement, unknown, HTMLElement,
         th.node()?.append("s")
         th.append(() => item.icon.make(32)).classed("item-icon", true)
     }
+
     for (const t of m.targets) {
         const th = header.append("th")
         th.append(() => t.item.icon.make(32))
         th.node()?.append("\u21d0")
         th.append(() => t.recipe.icon.make(32))
     }
+
     header.append("th").text("tax")
     for (const recipe of m.recipes) {
         header.append("th").append(() => recipe.icon.make(32)).classed("item-icon", true)
     }
     header.append("th").text("answer")
     header.append("th").text("C")
+
     for (let r = 0; r < A.rows; r++) {
         const row = table.append("tr")
         const label = row.append("td")

@@ -82,17 +82,20 @@ function renderTab(settings: Settings): void {
 function renderTargets(settings: Settings): void {
     spec.buildTargets = []
     d3.selectAll("#targets li.target").remove()
+
     const targets = splitList(settings.get("items"))
     if (targets.length === 0) {
         spec.addTarget()
         return
     }
+
     for (const targetString of targets) {
         const [itemKey = "", type, value = "", recipeKey] = targetString.split(":")
         if (!spec.items.has(itemKey)) {
             warn("unknown item", itemKey)
             continue
         }
+
         if (type === "f") {
             let recipe: Recipe | null = null
             if (recipeKey !== undefined) {
@@ -117,6 +120,7 @@ function renderTargets(settings: Settings): void {
             warn("unknown target type", targetString)
         }
     }
+
     if (spec.buildTargets.length === 0) {
         spec.addTarget()
     }
@@ -146,17 +150,20 @@ function renderModules(settings: Settings): void {
             warn("unknown recipe", recipeKey)
             continue
         }
+
         const moduleSpec = spec.getModuleSpec(recipe)
         if (moduleSpec === undefined) {
             warn("modules for recipe without module slots", recipeKey)
             continue
         }
+
         moduleKeyList.forEach((moduleKey, i) => {
             const module = moduleKey === "" ? undefined : getModule(moduleKey)
             if (module !== undefined) {
                 moduleSpec.setModule(i, module)
             }
         })
+
         if (beaconSettings !== undefined) {
             const [key1 = "null", key2 = "null", countStr = "0"] = beaconSettings.split(":")
             const count = parseRational(countStr, "beacon count")
@@ -222,6 +229,7 @@ function renderRateOptions(settings: Settings): void {
             warn("unknown rate", requested)
         }
     }
+
     spec.format.setDisplayRate(rateName)
     const rates = Array.from(longRateNames, ([name, longName]) => ({ name, longName }))
     const form = d3.select("#display_rate")
@@ -232,6 +240,7 @@ function renderRateOptions(settings: Settings): void {
         spec.format.setDisplayRate(d.name)
         spec.display()
     })
+
     option.append("label").attr("for", d => `${d.name}_rate`).text(d => `items/${d.longName}`)
     option.append("br")
 }
@@ -352,9 +361,11 @@ function renderBuildings(settings: Settings): void {
             groupSet.add(group)
         }
     }
+
     for (const group of groupSet) {
         group.building = group.getDefault()
     }
+
     for (const key of splitList(settings.get("buildings"))) {
         const building = spec.buildingKeys.get(key)
         if (building === undefined) {
@@ -363,6 +374,7 @@ function renderBuildings(settings: Settings): void {
         }
         spec.setMinimumBuilding(building)
     }
+
     // Any stable order works. This one sorts by the default building's name.
     const groups = sorted(groupSet, g => g.getDefault().name)
     const div = d3.select("#building_selector")
@@ -393,9 +405,11 @@ function renderBelts(settings: Settings): void {
             belt = b
         }
     }
+
     if (belt !== undefined) {
         spec.belt = belt
     }
+
     const form = d3.select<HTMLElement, unknown>("#belt_selector")
     form.selectAll("*").remove()
     radioSetting(form, "belt", () => Array.from(spec.belts.values()), d => d === spec.belt, d => {
@@ -417,9 +431,11 @@ function renderFuel(settings: Settings): void {
             fuel = f
         }
     }
+
     if (fuel !== undefined) {
         spec.fuel = fuel
     }
+
     const form = d3.select<HTMLElement, unknown>("#fuel_selector")
     form.selectAll("*").remove()
     radioSetting(form, "fuel", () => Array.from(spec.fuels.values()), d => d === spec.fuel, d => {
@@ -475,6 +491,7 @@ function renderDefaultModule(settings: Settings): void {
         spec.setDefaultModule(module)
         spec.updateSolution()
     })])
+
     const secondary = d3.select<HTMLElement, unknown>("#secondary_module")
     secondary.selectAll("*").remove()
     moduleDropdown(secondary, [new SettingCell("secondary_module_dropdown", all, () => spec.secondaryDefaultModule, module => {
@@ -501,6 +518,7 @@ function renderDefaultBeacon(settings: Settings): void {
     const beaconModules: [Module | null, Module | null] = [getModule(keys[0] ?? "null") ?? null, getModule(keys[1] ?? "null") ?? null]
     const countStr = settings.get("dbc")
     const defaultCount = (countStr === undefined ? null : parseRational(countStr, "beacon count")) ?? zero
+
     spec.setDefaultBeacon(beaconModules[0], 0)
     spec.setDefaultBeacon(beaconModules[1], 1)
     spec.setDefaultBeaconCount(defaultCount)
@@ -512,6 +530,7 @@ function renderDefaultBeacon(settings: Settings): void {
         () => spec.defaultBeacon[index],
         module => chooseDefaultBeacon(module, index),
     ))
+
     const select = d3.select<HTMLElement, unknown>("#default_beacon")
     select.selectAll("*").remove()
     moduleDropdown(select, cells)
@@ -578,6 +597,7 @@ function renderRecipes(settings: Settings): void {
             }
         }
     }
+
     if (settings.has("disable") || settings.has("enable")) {
         for (const key of splitList(settings.get("disable"))) {
             const recipe = spec.recipes.get(key)
@@ -611,6 +631,7 @@ function renderRecipes(settings: Settings): void {
             groups.push(sorted(recipes, d => d.order ?? ""))
         }
     }
+
     const div = d3.select("#recipe_toggles").classed("toggle-list", true)
     div.selectAll("*").remove()
     const toggleRows = div.selectAll<HTMLDivElement, Recipe[]>("div").data(groups).join("div").classed("toggle-row", true)
@@ -627,6 +648,7 @@ function renderResourcePriorities(settings: Settings): void {
     if (priority === undefined) {
         return
     }
+
     const tiers: [string, Rational][][] = []
     for (const tierStr of priority.split(";")) {
         const tier: [string, Rational][] = []
@@ -645,6 +667,7 @@ function renderResourcePriorities(settings: Settings): void {
         }
         tiers.push(tier)
     }
+
     spec.setPriorities(tiers)
 }
 

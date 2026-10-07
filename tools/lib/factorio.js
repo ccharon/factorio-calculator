@@ -47,17 +47,20 @@ export function dumpGameData(factorioDir, workDir) {
     const writeDir = join(workDir, "write")
     mkdirSync(modDir, { recursive: true })
     mkdirSync(writeDir, { recursive: true })
+
     const config = join(workDir, "config.ini")
     writeFileSync(config, `[path]\nread-data=${join(factorioDir, "data")}\nwrite-data=${writeDir}\n`)
     writeFileSync(join(modDir, "mod-list.json"), JSON.stringify({
         mods: SPACE_AGE_MODS.map(name => ({ name, enabled: true })),
     }))
+
     const exe = findExecutable(factorioDir)
     // The dump flags cannot be combined in one run.
     for (const flag of ["--dump-data", "--dump-icon-sprites", "--dump-prototype-locale"]) {
         console.log(`factorio ${flag}`)
         execFileSync(exe, ["-c", config, "--mod-directory", modDir, flag], { stdio: ["ignore", "ignore", "inherit"] })
     }
+
     return join(writeDir, "script-output")
 }
 

@@ -88,6 +88,7 @@ export class Rational {
         const sign = negative ? "-" : ""
         const x = (negative ? zero.sub(this) : this).add(roundingFactor)
         const integerPart = (x.p / x.q).toString()
+
         let decimalPart = ""
         let fraction = new Rational(x.p % x.q, x.q)
         const ten = new Rational(10n, 1n)
@@ -98,9 +99,11 @@ export class Rational {
             fraction = new Rational(fraction.p % fraction.q, fraction.q)
             maxDigits--
         }
+
         if (fraction.equal(roundingFactor)) {
             decimalPart = decimalPart.replace(/0+$/, "")
         }
+
         if (decimalPart !== "") {
             return `${sign}${integerPart}.${decimalPart}`
         }
@@ -269,6 +272,7 @@ export class Rational {
         if (Number.isInteger(arg)) {
             return Rational.from_integer(arg)
         }
+
         const x = Math.abs(arg)
         let exp = Math.max(-1023, Math.floor(Math.log2(x)) + 1)
         let floatPart = x * Math.pow(2, -exp)
@@ -276,6 +280,7 @@ export class Rational {
             floatPart *= 2
             exp--
         }
+
         let numerator = BigInt(floatPart)
         let denominator = 1n
         if (exp > 0) {
@@ -283,6 +288,7 @@ export class Rational {
         } else {
             denominator <<= BigInt(-exp)
         }
+
         return new Rational(numerator, denominator)
     }
 

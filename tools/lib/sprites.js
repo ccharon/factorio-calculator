@@ -94,6 +94,7 @@ export async function buildSpriteSheet(dataset, iconDir, gameDataDir) {
         left: (i % columns) * ICON_SIZE,
         top: Math.floor(i / columns) * ICON_SIZE,
     }))).png({ compressionLevel: 9 }).toBuffer()
+
     const hash = createHash("md5").update(png).digest("hex")
 
     for (const holder of holders) {
@@ -102,6 +103,7 @@ export async function buildSpriteSheet(dataset, iconDir, gameDataDir) {
         holder.icon_row = Math.floor(cell / columns)
         delete holder.icon_ref
     }
+
     Object.assign(dataset.sprites, { hash, width, height })
     return { png, hash }
 }

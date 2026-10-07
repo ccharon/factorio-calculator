@@ -122,6 +122,7 @@ export class Recipe implements RecipeLike {
         this.allow_productivity = options.allowProductivity
         this.category = options.category
         this.time = options.time
+
         this.ingredients = options.ingredients
         for (const ing of this.ingredients) {
             ing.item.addUse(this)
@@ -130,6 +131,7 @@ export class Recipe implements RecipeLike {
         for (const ing of this.products) {
             ing.item.addRecipe(this)
         }
+
         this.conditions = options.conditions ?? []
         this.icon_col = options.icon_col
         this.icon_row = options.icon_row
@@ -142,6 +144,7 @@ export class Recipe implements RecipeLike {
         if (building === null || building.fuel !== "chemical") {
             return []
         }
+
         // craft/s and J/s give J/craft. Divided by J/item, that is items per craft.
         const baseRate = spec.getRecipeRate(this)
         if (baseRate === null) {
@@ -212,19 +215,23 @@ export class Recipe implements RecipeLike {
         const t = d3.create("div").classed("frame recipe", true).datum(this)
         const header = t.append("h3")
         header.append(() => this.icon.make(32, true))
+
         let name = this.name
         const first = this.products[0]
         if (this.products.length === 1 && first !== undefined && first.item.name === this.name && one.less(first.amount)) {
             name = `${first.amount.toDecimal()} \u00d7 ${name}`
         }
         header.node()?.append("\u00A0" + name)
+
         if (extra) {
             t.node()?.append(extra)
         }
+
         const node = t.node() as HTMLDivElement
         if (this.ingredients.length === 0) {
             return node
         }
+
         if (this.products.length > 1 || first?.item.name !== this.name) {
             const productLine = t.append("div")
             productLine.append("span").text("Products:")
@@ -234,12 +241,15 @@ export class Recipe implements RecipeLike {
             prodIcon.append(d => d.item.icon.make(32, true))
             prodIcon.append("span").classed("count", true).text(d => d.amount.toDecimal())
         }
+
         const time = t.append("div")
         time.append("div").classed("product", true).append(() => getSprite("clock").icon.make(32, true))
         time.append("span").text("\u00A0" + this.time.toDecimal())
+
         const ingredient = t.append("div").selectAll("div").data(this.ingredients).join("div")
         ingredient.append("div").classed("product", true).append(d => d.item.icon.make(32, true))
         ingredient.append("span").text(d => `\u00A0${d.amount.toDecimal()} \u00d7 ${d.item.name}`)
+
         return node
     }
 }
@@ -318,6 +328,7 @@ function makeRecipe(items: ReadonlyMap<string, Item>, d: DatasetRecipe): Recipe 
         }
         ingredients.push(new Ingredient(item, Rational.from_float_approximate(amount)))
     }
+
     return new Recipe({
         key: d.key,
         name: d.localized_name.en,
@@ -475,11 +486,13 @@ function getSteam(data: Dataset): [Rational, Rational] {
     if (!boiler || !water || !steam) {
         throw new Error("dataset lacks the boiler, water or steam")
     }
+
     const power = R(boiler.energy_consumption)
     const tempDelta = R(boiler.target_temperature).sub(R(water.default_temperature))
     // heat_capacity is in J per degree per unit.
     const waterRate = power.div(tempDelta.mul(R(water.heat_capacity)))
     const steamRate = power.div(tempDelta.mul(R(steam.heat_capacity)))
+
     return [waterRate, steamRate]
 }
 
@@ -492,6 +505,7 @@ function getSteam(data: Dataset): [Rational, Rational] {
 export function getRecipes(data: Dataset, items: Map<string, Item>): Map<string, Recipe> {
     const recipes = new Map<string, Recipe>()
     const item = (key: string): Item => requireItem(items, key)
+
     const reactor = item("nuclear-reactor")
     recipes.set("nuclear-reactor-cycle", new Recipe({
         key: "nuclear-reactor-cycle",
@@ -508,6 +522,7 @@ export function getRecipes(data: Dataset, items: Map<string, Item>): Map<string,
             new Ingredient(item("nuclear-reactor-cycle"), one),
         ],
     }))
+
     const steam = item("steam")
     const [waterRate, steamRate] = getSteam(data)
     recipes.set("steam", new Recipe({
@@ -522,22 +537,26 @@ export function getRecipes(data: Dataset, items: Map<string, Item>): Map<string,
         ingredients: [new Ingredient(item("water"), waterRate)],
         products: [new Ingredient(steam, steamRate)],
     }))
+
     for (const d of data.recipes) {
         const r = makeRecipe(items, d)
         if (r) {
             recipes.set(d.key, r)
         }
     }
+
     for (const d of data.resources) {
         const first = d.results[0]
         if (d.category === "basic-fluid" && first !== undefined) {
             recipes.set(d.key, new PumpjackRecipe(d.key, d.localized_name.en, d.icon_col, d.icon_row, item(first.name)))
             continue
         }
+
         const ingredients: Ingredient[] = []
         if (d.required_fluid !== undefined && d.fluid_amount !== undefined) {
             ingredients.push(new Ingredient(item(d.required_fluid), Rational.from_float_approximate(d.fluid_amount / 10)))
         }
+
         recipes.set(d.key, new MiningRecipe({
             key: d.key,
             name: d.localized_name.en,
@@ -549,6 +568,7 @@ export function getRecipes(data: Dataset, items: Map<string, Item>): Map<string,
             products: productIngredients(items, d.results),
         }, Rational.from_float_approximate(d.mining_time)))
     }
+
     const offshoreItems = new Set(data.planets.flatMap(p => p.resources.offshore))
     for (const key of offshoreItems) {
         if (recipes.has(key)) {
@@ -556,6 +576,7 @@ export function getRecipes(data: Dataset, items: Map<string, Item>): Map<string,
         }
         recipes.set(key, new OffshorePumpRecipe(item(key)))
     }
+
     for (const plant of data.plants) {
         recipes.set(plant.key, new PlantRecipe({
             key: plant.key,
@@ -568,10 +589,12 @@ export function getRecipes(data: Dataset, items: Map<string, Item>): Map<string,
             conditions: surfaceConditions(plant.surface_conditions),
         }))
     }
+
     for (const spoil of data.spoilage) {
         const r = new SpoilageRecipe(item(spoil.from_item), item(spoil.to_item))
         recipes.set(r.key, r)
     }
+
     // Items that nothing produces become resources. Items that nothing produces or uses are removed.
     for (const [itemKey, it] of Array.from(items)) {
         if (it.recipes.length === 0 && it.uses.length === 0) {
@@ -580,5 +603,6 @@ export function getRecipes(data: Dataset, items: Map<string, Item>): Map<string,
             recipes.set(itemKey, new ResourceRecipe(it, 2, hundred))
         }
     }
+
     return recipes
 }

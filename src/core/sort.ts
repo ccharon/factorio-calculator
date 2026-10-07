@@ -27,6 +27,7 @@ export function sorted<T>(collection: Iterable<T>, key: (value: T) => SortKey): 
     const values = Array.from(collection)
     const keys = values.map(key)
     const indexes = values.map((_, i) => i)
+
     indexes.sort((a, b) => {
         const x = keys[a] as SortKey
         const y = keys[b] as SortKey
@@ -37,5 +38,6 @@ export function sorted<T>(collection: Iterable<T>, key: (value: T) => SortKey): 
         }
         return a - b
     })
+
     return indexes.map(i => values[i] as T)
 }
