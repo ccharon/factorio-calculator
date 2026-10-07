@@ -17,11 +17,10 @@ import * as d3 from "d3"
 import type { Item } from "../data/item.ts"
 import { one } from "../core/rational.ts"
 import { spec } from "../state/factory.ts"
-import { spriteSheet } from "../ui/icon.ts"
 import type { Direction } from "../ui/events.ts"
 import { CirclePath, makeCurve } from "./circlepath.ts"
 import {
-    colorOf, iconSize, getColorMaps, renderNodes, imageViewBox, spriteSheetURL, graphClickHandler, graphMouseOverHandler, graphMouseLeaveHandler,
+    appendSpriteIcon, colorOf, iconSize, getColorMaps, renderNodes, graphClickHandler, graphMouseOverHandler, graphMouseLeaveHandler,
     type BeltLine, type Graph, type GraphEdge, type GraphNode,
 } from "./graph.ts"
 import { layoutSankey } from "./sankey-layout.ts"
@@ -77,7 +76,7 @@ function backwardPath(d: GraphEdge): CirclePath {
         endy = y3b
     }
 
-    const curve = makeCurve(-1, 0, x0, starty, x3, endy)
+    const curve = makeCurve(-1, 0, x0, starty, x3, endy, d.width)
     const points = [{ x: x0, y: y0 }, ...curve.points.map(({ x, y }) => ({ x, y })), { x: x3, y: y3 }]
     return new CirclePath(1, 0, points)
 }
@@ -96,6 +95,30 @@ function curveOf(d: GraphEdge): CirclePath {
         throw new Error(`link without curve: ${d.source.name} -> ${d.target.name}`)
     }
     return d.curve
+}
+
+// Height of a link label, a line of 12px text.
+const LABEL_HEIGHT = 14
+
+// Places the rate labels of the links that leave each node, along the node edge. A label that would
+// overlap the one before moves on by up to one line; a label that needs more is hidden, and the link's
+// tooltip still shows its rate. Returns the label position per link, or null for hidden labels.
+function placeLabels(links: readonly GraphEdge[]): Map<GraphEdge, number | null> {
+    const positions = new Map<GraphEdge, number | null>()
+    const bySource = d3.group(links, link => link.source)
+    for (const outgoing of bySource.values()) {
+        let last = -Infinity
+        for (const link of [...outgoing].sort((a, b) => a.y0 - b.y0)) {
+            const y = Math.max(link.y0, last + LABEL_HEIGHT)
+            if (y - link.y0 > LABEL_HEIGHT) {
+                positions.set(link, null)
+            } else {
+                positions.set(link, y)
+                last = y
+            }
+        }
+    }
+    return positions
 }
 
 /** Lays out data as a Sankey diagram and renders it into svg#graph. Items in ignore are greyed out. */
@@ -196,27 +219,17 @@ export function renderSankey(data: Graph, direction: Direction, ignore: Readonly
 
     link.append("title").text(d => `${d.source.name} → ${d.target.name}\n${spec.format.rate(d.rate)}`)
 
-    const linkIcon = link.filter(d => d.extra)
-        .append("svg")
-        .attr("viewBox", d => imageViewBox(d.item))
-        .attr("x", d => d.source.x1 + 2.25)
-        .attr("y", d => d.y0 - iconSize / 4 + 0.25)
-        .attr("width", iconSize / 2)
-        .attr("height", iconSize / 2)
-    linkIcon.append("image")
-        .attr("xlink:href", spriteSheetURL())
-        .attr("width", spriteSheet().width)
-        .attr("height", spriteSheet().height)
+    const labelAt = placeLabels(links)
+    const labelY = (d: GraphEdge): number => labelAt.get(d) ?? d.y0
 
-    if (across) {
-        linkIcon
-            .attr("x", d => d.y0 - iconSize / 4 + 0.25)
-            .attr("y", d => d.source.y1 + 2.25)
-    }
+    // The item icon of links from nodes with several products.
+    const along = (d: GraphEdge): number => labelY(d) - iconSize / 4 - 0.25
+    const away = (d: GraphEdge): number => (across ? d.source.y1 : d.source.x1) + 1.75
+    const linkIcon = appendSpriteIcon(link.filter(d => d.extra), d => d.item, across ? along : away, across ? away : along, iconSize / 2)
 
     const linkLabel = link.append("text")
         .attr("x", d => d.source.x1 + 2 + (d.extra ? iconSize / 2 : 0))
-        .attr("y", d => d.y0)
+        .attr("y", labelY)
         .attr("dy", "0.35em")
         .attr("text-anchor", "start")
         .text(d => (d.extra ? "× " : "") + spec.format.rate(d.rate) + "/" + spec.format.rateName)
@@ -224,8 +237,10 @@ export function renderSankey(data: Graph, direction: Direction, ignore: Readonly
         linkLabel
             .attr("x", null)
             .attr("y", null)
-            .attr("transform", d => `translate(${d.y0},${d.source.y1 + 2 + (d.extra ? 16 : 0)}) rotate(90)`)
+            .attr("transform", d => `translate(${labelY(d)},${d.source.y1 + 2 + (d.extra ? 16 : 0)}) rotate(90)`)
     }
+    linkLabel.filter(d => labelAt.get(d) === null).style("display", "none")
+    linkIcon.filter(d => labelAt.get(d) === null).style("display", "none")
 
     // Overlay a transparent rect on each node for the mouse events. The graph tab is shown
     // briefly so that the bounding boxes are not empty.
