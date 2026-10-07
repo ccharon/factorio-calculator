@@ -384,6 +384,10 @@ svg#graph text, svg.test text {
 #totals {
     border-collapse: collapse;
 }
+#totals.solving {
+    opacity: 0.5;
+    transition: opacity 0.2s 0.3s;
+}
 #totals.nosurplus .surplus {
     display: none;
 }

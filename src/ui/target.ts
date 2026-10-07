@@ -16,11 +16,11 @@ import * as d3 from "d3"
 import { type Rational, zero, one } from "../core/rational.ts"
 import type { ItemGroups } from "../data/group.ts"
 import type { Item } from "../data/item.ts"
-import type { Quality } from "../data/quality.ts"
 import type { Recipe } from "../data/recipe.ts"
 import { spec } from "../state/factory.ts"
 import { addInputs, makeDropdown } from "./dropdown.ts"
 import { readRational } from "./number-input.ts"
+import { appendQualityChoices } from "./quality-dropdown.ts"
 import { iconOf } from "./icons.ts"
 
 const SELECTED_INPUT = "selected"
@@ -225,13 +225,16 @@ export class BuildTarget {
         }
 
         const normal = spec.qualities[0]
-        const dropdown = makeDropdown(this.qualitySelector)
-        const choices = dropdown.selectAll<HTMLSpanElement, Quality>("span").data(spec.qualities).join("span")
-        const labels = addInputs(choices, `target-quality-${qualitySelectorCount++}`, quality => (this.item.quality ?? normal) === quality, quality => {
-            this.setItem(base.variant(quality))
-            spec.updateSolution()
+        const name = `target-quality-${qualitySelectorCount++}`
+        appendQualityChoices(makeDropdown(this.qualitySelector), 24, {
+            name: () => name,
+            checked: (_d, quality) => (this.item.quality ?? normal) === quality,
+            choose: (_d, quality) => {
+                this.setItem(base.variant(quality))
+                spec.updateSolution()
+            },
+            title: (_d, quality) => quality.name,
         })
-        labels.attr("title", quality => quality.name).append(quality => iconOf(quality).make(24, true))
     }
 
     // The switch is on for items in orbit and disabled for items that cannot be launched.
@@ -362,7 +365,7 @@ export function addTarget(itemKey: string = DEFAULT_ITEM_KEY): BuildTarget {
 }
 
 /** Removes a build target from spec and from the page. */
-export function removeTarget(target: BuildTarget): void {
+function removeTarget(target: BuildTarget): void {
     spec.buildTargets.splice(target.index, 1)
     for (const later of spec.buildTargets.slice(target.index)) {
         later.index--

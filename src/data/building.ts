@@ -241,7 +241,7 @@ function launchRate(context: BuildingContext): LaunchRate {
 }
 
 /** The rocket silo building rocket parts. Its rate includes the pause for each launch. */
-export class RocketSilo extends Building {
+class RocketSilo extends Building {
     readonly partsRequired: Rational
 
     constructor(options: BuildingOptions, partsRequired: Rational) {
@@ -256,7 +256,7 @@ export class RocketSilo extends Building {
 }
 
 /** An agricultural tower. It harvests each of its plots once per growth time of the plant. */
-export class AgriculturalTower extends Building {
+class AgriculturalTower extends Building {
     /** Number of plants one tower tends. */
     readonly plots: Rational
 

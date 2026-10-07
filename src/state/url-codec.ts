@@ -19,7 +19,7 @@ limitations under the License.*/
 export type Settings = Map<string, string>
 
 /** Largest decompressed settings string that is accepted, in bytes. */
-export const MAX_SETTINGS_BYTES = 1 << 20
+const MAX_SETTINGS_BYTES = 1 << 20
 
 async function readStream(stream: ReadableStream<Uint8Array>, maxBytes: number): Promise<Uint8Array> {
     const chunks: Uint8Array[] = []

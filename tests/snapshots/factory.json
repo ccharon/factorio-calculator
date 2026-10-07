@@ -3609,6 +3609,375 @@
     ],
     "surplus": []
   },
+  "gleba-quality-spoilage": {
+    "fragment": "#items=spoilage@rare:r:60&planet=gleba&dm=q3",
+    "recipes": [
+      {
+        "key": "(output)",
+        "rate": "1",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "(surplus)",
+        "rate": "1",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "bioflux",
+        "rate": "51711875/200022104",
+        "building": "biochamber",
+        "count": "775678125/800088416",
+        "fuel": "nutrients",
+        "power": "12119970703125/25002763"
+      },
+      {
+        "key": "bioflux@rare",
+        "rate": "2068475/800088416",
+        "building": "biochamber",
+        "count": "31027125/3200353664",
+        "fuel": "nutrients",
+        "power": "484798828125/100011052"
+      },
+      {
+        "key": "bioflux@uncommon",
+        "rate": "10342375/400044208",
+        "building": "biochamber",
+        "count": "155135625/1600176832",
+        "fuel": "nutrients",
+        "power": "2423994140625/50005526"
+      },
+      {
+        "key": "electricity",
+        "rate": "2244295375/86409548928",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "jellynut-processing",
+        "rate": "258559375/450049734",
+        "building": "biochamber",
+        "count": "1292796875/3600397872",
+        "fuel": "nutrients",
+        "power": "40399902343750/225024867"
+      },
+      {
+        "key": "jellystem",
+        "rate": "10342375/900099468",
+        "building": "agricultural-tower",
+        "count": "258559375/3600397872",
+        "fuel": "electric",
+        "power": "2366078983750/225024867"
+      },
+      {
+        "key": "nutrients-from-bioflux",
+        "rate": "55848825/200022104",
+        "building": "biochamber",
+        "count": "279244125/800088416",
+        "fuel": "nutrients",
+        "power": "4363189453125/25002763"
+      },
+      {
+        "key": "nutrients-from-bioflux@rare",
+        "rate": "6701859/800088416",
+        "building": "biochamber",
+        "count": "33509295/3200353664",
+        "fuel": "nutrients",
+        "power": "523582734375/100011052"
+      },
+      {
+        "key": "nutrients-from-bioflux@uncommon",
+        "rate": "11169765/200022104",
+        "building": "biochamber",
+        "count": "55848825/800088416",
+        "fuel": "nutrients",
+        "power": "872637890625/25002763"
+      },
+      {
+        "key": "nutrients-from-spoilage",
+        "rate": "8566129975/5400596808",
+        "building": "biochamber",
+        "count": "42830649875/21602387232",
+        "fuel": "nutrients",
+        "power": "669228904296875/675074601"
+      },
+      {
+        "key": "nutrients-from-spoilage@uncommon",
+        "rate": "219094015/400044208",
+        "building": "biochamber",
+        "count": "1095470075/1600176832",
+        "fuel": "nutrients",
+        "power": "17116719921875/50005526"
+      },
+      {
+        "key": "nutrients-spoilage",
+        "rate": "42830649875/2700298404",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "nutrients-spoilage@rare",
+        "rate": "1",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "nutrients-spoilage@uncommon",
+        "rate": "1095470075/200022104",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "yumako-processing",
+        "rate": "1292796875/900099468",
+        "building": "biochamber",
+        "count": "6463984375/7200795744",
+        "fuel": "nutrients",
+        "power": "100999755859375/225024867"
+      },
+      {
+        "key": "yumako-tree",
+        "rate": "51711875/1800198936",
+        "building": "agricultural-tower",
+        "count": "1292796875/7200795744",
+        "fuel": "electric",
+        "power": "4790073124375/225024867"
+      }
+    ],
+    "items": [
+      {
+        "key": "bioflux",
+        "rate": "279244125/200022104"
+      },
+      {
+        "key": "bioflux@epic",
+        "rate": "6701859/1600176832"
+      },
+      {
+        "key": "bioflux@legendary",
+        "rate": "744651/1600176832"
+      },
+      {
+        "key": "bioflux@rare",
+        "rate": "33509295/800088416"
+      },
+      {
+        "key": "bioflux@uncommon",
+        "rate": "55848825/200022104"
+      },
+      {
+        "key": "electricity",
+        "rate": "2244295375/86409548928"
+      },
+      {
+        "key": "jelly",
+        "rate": "155135625/50005526"
+      },
+      {
+        "key": "jelly@epic",
+        "rate": "1241085/400044208"
+      },
+      {
+        "key": "jelly@legendary",
+        "rate": "413695/1200132624"
+      },
+      {
+        "key": "jelly@rare",
+        "rate": "6205425/200022104"
+      },
+      {
+        "key": "jelly@uncommon",
+        "rate": "31027125/100011052"
+      },
+      {
+        "key": "jellynut",
+        "rate": "258559375/450049734"
+      },
+      {
+        "key": "jellynut-seed",
+        "rate": "6205425/400044208"
+      },
+      {
+        "key": "jellynut-seed@epic",
+        "rate": "248217/16001768320"
+      },
+      {
+        "key": "jellynut-seed@legendary",
+        "rate": "82739/48005304960"
+      },
+      {
+        "key": "jellynut-seed@rare",
+        "rate": "248217/1600176832"
+      },
+      {
+        "key": "jellynut-seed@uncommon",
+        "rate": "1241085/800088416"
+      },
+      {
+        "key": "nutrients",
+        "rate": "13776572195/800088416"
+      },
+      {
+        "key": "nutrients@epic",
+        "rate": "1/10"
+      },
+      {
+        "key": "nutrients@legendary",
+        "rate": "1/90"
+      },
+      {
+        "key": "nutrients@rare",
+        "rate": "1"
+      },
+      {
+        "key": "nutrients@uncommon",
+        "rate": "1095470075/200022104"
+      },
+      {
+        "key": "spoilage",
+        "rate": "42830649875/2700298404"
+      },
+      {
+        "key": "spoilage@rare",
+        "rate": "1"
+      },
+      {
+        "key": "spoilage@uncommon",
+        "rate": "1095470075/200022104"
+      },
+      {
+        "key": "yumako",
+        "rate": "1292796875/900099468"
+      },
+      {
+        "key": "yumako-mash",
+        "rate": "775678125/200022104"
+      },
+      {
+        "key": "yumako-mash@epic",
+        "rate": "6205425/1600176832"
+      },
+      {
+        "key": "yumako-mash@legendary",
+        "rate": "2068475/4800530496"
+      },
+      {
+        "key": "yumako-mash@rare",
+        "rate": "31027125/800088416"
+      },
+      {
+        "key": "yumako-mash@uncommon",
+        "rate": "155135625/400044208"
+      },
+      {
+        "key": "yumako-seed",
+        "rate": "31027125/800088416"
+      },
+      {
+        "key": "yumako-seed@epic",
+        "rate": "248217/6400707328"
+      },
+      {
+        "key": "yumako-seed@legendary",
+        "rate": "82739/19202121984"
+      },
+      {
+        "key": "yumako-seed@rare",
+        "rate": "1241085/3200353664"
+      },
+      {
+        "key": "yumako-seed@uncommon",
+        "rate": "6205425/1600176832"
+      }
+    ],
+    "surplus": [
+      {
+        "key": "bioflux@epic",
+        "rate": "6701859/1600176832"
+      },
+      {
+        "key": "bioflux@legendary",
+        "rate": "744651/1600176832"
+      },
+      {
+        "key": "jelly@epic",
+        "rate": "1241085/400044208"
+      },
+      {
+        "key": "jelly@legendary",
+        "rate": "413695/1200132624"
+      },
+      {
+        "key": "jellynut-seed",
+        "rate": "14479325/3600397872"
+      },
+      {
+        "key": "jellynut-seed@epic",
+        "rate": "248217/16001768320"
+      },
+      {
+        "key": "jellynut-seed@legendary",
+        "rate": "82739/48005304960"
+      },
+      {
+        "key": "jellynut-seed@rare",
+        "rate": "248217/1600176832"
+      },
+      {
+        "key": "jellynut-seed@uncommon",
+        "rate": "1241085/800088416"
+      },
+      {
+        "key": "nutrients@epic",
+        "rate": "1/10"
+      },
+      {
+        "key": "nutrients@legendary",
+        "rate": "1/90"
+      },
+      {
+        "key": "yumako-mash@epic",
+        "rate": "6205425/1600176832"
+      },
+      {
+        "key": "yumako-mash@legendary",
+        "rate": "2068475/4800530496"
+      },
+      {
+        "key": "yumako-seed",
+        "rate": "72396625/7200795744"
+      },
+      {
+        "key": "yumako-seed@epic",
+        "rate": "248217/6400707328"
+      },
+      {
+        "key": "yumako-seed@legendary",
+        "rate": "82739/19202121984"
+      },
+      {
+        "key": "yumako-seed@rare",
+        "rate": "1241085/3200353664"
+      },
+      {
+        "key": "yumako-seed@uncommon",
+        "rate": "6205425/1600176832"
+      }
+    ]
+  },
   "nauvis-ignore": {
     "fragment": "#items=advanced-circuit:r:60&planet=nauvis&ignore=electronic-circuit",
     "recipes": [

@@ -35,6 +35,13 @@ Node 25 or newer (the tests use `Uint8Array.toBase64`).
 
 Oxlint JS plugins are alpha and are not used.
 
+## Working notes
+
+- A converter change must leave `public/data/space-age-<version>.json` byte-identical unless the change is intended. `npm run build-data -- --factorio <dir> --keep` keeps the dump; later runs can use `--dump <dir>`.
+- After an intended result change: `npm run snapshot:record`, then compare the old and new `tests/snapshots/factory.json` per scenario before committing. `snapshot:check` names the differing entries.
+- Browser checks use JS queries; screenshots only when the layout changed. Keyboard tests run with puppeteer through `tests/browser/browser.ts`. Neither puppeteer nor the Chrome extension starts a native drag, so drag and drop needs a manual test by the user.
+- Stop the dev server with `pkill -u $(id -u) -f "node.*[v]ite"` in a Bash call of its own; the pattern also matches a calling shell whose command contains `node` and `vite`.
+
 ## CI and deployment
 
 | Workflow | Trigger | Steps |
@@ -79,8 +86,9 @@ The dataset format is defined in `src/data/dataset.schema.json`. `tests/dataset.
 | Entry point | `index.html`, `src/main.ts` |
 | Core math and solver, no DOM | `src/core/`: `rational.ts`, `simplex.ts` (with the `Matrix` tableau), `solve.ts` (with the `SolverContext` interface), `cycle.ts`, `totals.ts`, `sort.ts` |
 | Game data loading | `src/data/`: `dataset.ts` (types of the dataset JSON), `dataset.schema.json`, `item.ts`, `recipe.ts`, `building.ts`, `module.ts`, `belt.ts`, `fuel.ts`, `planet.ts`, `research.ts` (recipe productivity technologies), `cargo.ts` (items in orbit and launch recipes), `power.ts` (generator, solar and heat exchanger recipes), `quality.ts`, `icon-source.ts`, `group.ts`, `groups.ts` |
-| State and URL settings | `src/state/`: `factory.ts` (`FactorySpecification`, global `spec`), `building-groups.ts`, `energy.ts` (fuel, electricity and heat per craft, power use), `fuel-choice.ts`, `fragment.ts` (writes the settings string), `url-codec.ts` (parses and compresses the URL fragment), `priority.ts` (resource priority levels, no DOM), `align.ts` (number formatting) |
+| State and URL settings | `src/state/`: `factory.ts` (`FactorySpecification`, global `spec`), `building-groups.ts`, `energy.ts` (fuel, electricity and heat per craft, power use), `fuel-choice.ts`, `fragment.ts` (writes the settings string), `url-codec.ts` (parses and compresses the URL fragment), `priority.ts` (resource priority levels, no DOM), `solver-thread.ts` (runs the simplex in a Web Worker and cancels outdated runs), `align.ts` (number formatting) |
 | UI | `src/ui/`: `display.ts`, `target.ts`, `settings.ts`, `priority-view.ts` (Resources tab), `dropdown.ts`, `module-dropdown.ts`, `tooltip.ts`, `events.ts`, `number-input.ts` (validated number fields), `quality-dropdown.ts` (quality column of the factory table), `warnings.ts` (ignored URL settings), `icon.ts`, `icons.ts` (`iconOf()` and the tooltips of game objects), `energy.ts`, `color.ts`, `debug.ts` |
+| Web Worker | `src/worker/simplex.ts`: runs `simplex()` on a tableau sent by `src/state/solver-thread.ts`. `solve()` is async; `spec.updateSolution()` shows only the solution of the latest call, and `spec.solved` settles when it is shown. |
 | Visualizer | `src/visualize/`: `visualize.ts` (builds the graph), `graph.ts` (graph types, colors, node rendering), `sankey.ts`, `sankey-layout.ts` (adapted d3-sankey layout, BSD-3), `boxline.ts` (dagre), `circlepath.ts` |
 | Styles | `src/styles/` |
 | Static files | `public/`: dataset, sprite sheet, SVG icons, favicon. Copied unchanged into `dist/`. |

@@ -91,7 +91,7 @@ function spriteImage(obj: IconSource, size: number): HTMLImageElement {
  *
  * @param size - Width and height in pixels. If 0 or omitted, the size comes from the style sheet.
  */
-export function makeEmptyIcon(size?: number): HTMLImageElement {
+function makeEmptyIcon(size?: number): HTMLImageElement {
     const img = document.createElement("img")
     img.classList.add("icon")
     // Chrome draws a border around an <img> without src, so it gets a transparent pixel.

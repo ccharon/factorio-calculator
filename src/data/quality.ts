@@ -93,7 +93,7 @@ export function getQualities(data: Dataset): Quality[] {
 
 /**
  * Creates the variants of higher qualities: of every solid item that is not in orbit, and of every
- * recipe that allows quality and has a solid ingredient.
+ * recipe with quality variants and a solid ingredient.
  */
 export function addQualityVariants(items: Iterable<Item>, recipes: Iterable<Recipe>, qualities: readonly Quality[]): void {
     const higher = qualities.slice(1)
@@ -105,7 +105,7 @@ export function addQualityVariants(items: Iterable<Item>, recipes: Iterable<Reci
         }
     }
     for (const recipe of recipes) {
-        if (recipe.allowQuality && recipe.ingredients.some(ing => ing.item.variants.size > 0)) {
+        if (recipe.qualityVariants && recipe.ingredients.some(ing => ing.item.variants.size > 0)) {
             for (const quality of higher) {
                 recipe.addVariant(quality)
             }
