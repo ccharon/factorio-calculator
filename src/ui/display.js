@@ -12,13 +12,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
 import * as d3 from "d3"
-import { toggleIgnoreHandler } from "./events.js"
+import { toggleIgnoreHandler } from "./events.ts"
 import { spec } from "../state/factory.ts"
 import { formatSettings } from "../state/fragment.ts"
 import { getRecipeGroups, topoSort } from "../data/groups.ts"
 import { Icon } from "./icon.ts"
 import { moduleRows } from "../data/module.ts"
-import { moduleDropdown } from "./module-dropdown.js"
+import { moduleDropdown } from "./module-dropdown.ts"
 import { powerRepr } from "./energy.ts"
 import { Rational, zero, one } from "../core/rational.ts"
 

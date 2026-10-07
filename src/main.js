@@ -16,7 +16,7 @@ import * as d3 from "d3"
 // from the URL settings.
 import "./styles/calc.css"
 import "./styles/dropdown.css"
-import { plusHandler, clickTab, clickVisualize, changeTitle, changeRatePrecision, changeCountPrecision, changeFormat, changeMprod, changeVisType, changeVisRender, changeVisDir, toggleDebug } from "./ui/events.js"
+import { plusHandler, clickTab, clickVisualize, changeTitle, changeRatePrecision, changeCountPrecision, changeFormat, changeMprod, changeVisType, changeVisRender, changeVisDir, toggleDebug } from "./ui/events.ts"
 import { getBelts } from "./data/belt.ts"
 import { getBuildings } from "./data/building.ts"
 import { spec } from "./state/factory.ts"

@@ -13,12 +13,12 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 import * as d3 from "d3"
 import { DEFAULT_RATE, DEFAULT_RATE_PRECISION, DEFAULT_COUNT_PRECISION, DEFAULT_FORMAT, longRateNames } from "../state/align.ts"
-import { colorSchemes } from "./color.js"
-import { DEFAULT_TAB, clickTab, DEFAULT_VISUALIZER, visualizerType, setVisualizerType, DEFAULT_RENDER, visualizerRender, setVisualizerRender, visualizerDirection, getDefaultVisDirection, setVisualizerDirection } from "./events.js"
+import { colorSchemes } from "./color.ts"
+import { DEFAULT_TAB, clickTab, DEFAULT_VISUALIZER, visualizerType, setVisualizerType, DEFAULT_RENDER, visualizerRender, setVisualizerRender, visualizerDirection, getDefaultVisDirection, setVisualizerDirection } from "./events.ts"
 import { spec, DEFAULT_PLANET, DEFAULT_BELT, DEFAULT_FUEL } from "../state/factory.ts"
 import { getRecipeGroups } from "../data/groups.ts"
 import { shortModules, moduleRows } from "../data/module.ts"
-import { moduleDropdown } from "./module-dropdown.js"
+import { moduleDropdown } from "./module-dropdown.ts"
 import { Rational, zero } from "../core/rational.ts"
 import { sorted } from "../core/sort.ts"
 

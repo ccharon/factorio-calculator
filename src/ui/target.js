@@ -12,7 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
 import * as d3 from "d3"
-import { makeDropdown, addInputs } from "./dropdown.js"
+import { makeDropdown, addInputs } from "./dropdown.ts"
 import { spec } from "../state/factory.ts"
 import { Rational, zero, one } from "../core/rational.ts"
 
