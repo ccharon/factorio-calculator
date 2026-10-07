@@ -4,7 +4,8 @@
     "lib": [
       "es2022",
       "dom",
-      "dom.iterable"
+      "dom.iterable",
+      "esnext.typedarrays"
     ],
     "module": "esnext",
     "moduleResolution": "bundler",

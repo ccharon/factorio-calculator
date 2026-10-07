@@ -11,10 +11,11 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
-// Hover tooltips for icons. Positioning uses Floating UI.
-import { autoUpdate, computePosition, flip, offset, shift } from "@floating-ui/dom"
+// Hover tooltips for icons. They open as popovers, placed next to their target with CSS anchor
+// positioning (see div.tooltip in calc.css).
 
 let currentTooltip: Tooltip | null = null
+let anchorCount = 0
 
 const tooltipRegistry: Set<Tooltip> = new Set()
 
@@ -28,7 +29,8 @@ export class Tooltip {
     private readonly callback: () => Node
     private isOpen = false
     private node: HTMLDivElement | null = null
-    private stopUpdates: (() => void) | null = null
+    // CSS anchor name that ties the popover to its target.
+    private readonly anchorName = `--tooltip-${anchorCount++}`
 
     /**
      * @param reference - Element that opens the tooltip on hover.
@@ -54,10 +56,11 @@ export class Tooltip {
             document.getElementById("tooltip_container")?.appendChild(this.node)
             tooltipRegistry.add(this)
         }
-        const node = this.node
-        node.style.display = "block"
-        // Keeps the position current while open, for example when the page scrolls.
-        this.stopUpdates = autoUpdate(this.target, node, () => this.updatePosition(node))
+        // Several tooltips can share a target, so the target gets the anchor name of the open one.
+        if (this.target instanceof HTMLElement || this.target instanceof SVGElement) {
+            this.target.style.setProperty("anchor-name", this.anchorName)
+        }
+        this.node.showPopover()
         // oxlint-disable-next-line typescript/no-this-alias -- records the open tooltip, no closure
         currentTooltip = this
     }
@@ -68,11 +71,9 @@ export class Tooltip {
             return
         }
         this.isOpen = false
-        if (this.node !== null) {
-            this.node.style.display = "none"
+        if (this.node?.isConnected) {
+            this.node.hidePopover()
         }
-        this.stopUpdates?.()
-        this.stopUpdates = null
         if (currentTooltip === this) {
             currentTooltip = null
         }
@@ -85,21 +86,11 @@ export class Tooltip {
         this.node = null
     }
 
-    // Places the tooltip right of the target, or wherever it fits.
-    private updatePosition(node: HTMLDivElement): void {
-        void computePosition(this.target, node, {
-            placement: "right",
-            middleware: [offset(20), flip(), shift({ padding: 4 })],
-        }).then(({ x, y }) => {
-            node.style.left = `${x}px`
-            node.style.top = `${y}px`
-        })
-    }
-
     private create(): HTMLDivElement {
         const node = document.createElement("div")
         node.classList.add("tooltip")
-        node.style.position = "absolute"
+        node.popover = "manual"
+        node.style.setProperty("position-anchor", this.anchorName)
         node.appendChild(this.callback())
         return node
     }

@@ -178,7 +178,7 @@ Branch `develop`, everything committed and pushed. Phases 0 to 5 are done (phase
 
 Next steps:
 
-1. Phase 6 (robustness and security). Check first which rows of its table earlier phases already covered (CSP, inline handlers, vendored libraries, URL parsing with try/catch), then do the rest.
+1. Phase 6 (robustness and security), in progress. Done: CSP meta tag in the build (Vite plugin in `vite.config.js`), ignored URL settings shown on the page (`src/ui/warnings.ts`), custom code replaced by standard means (stable `Array.sort` in `sorted()`, native base64, `d3.zoom` for the visualizer, popover and CSS anchor positioning for tooltips; `@floating-ui/dom` removed). Open: icon dropdowns as popovers (`src/ui/dropdown.ts`), keyboard access with `<button>` instead of clickable `<div>`, review of numeric ranges in URL settings, the remaining custom code.
 2. Later, from phase 5: quality per recipe, recycling loops for a target quality, reactor neighbour bonus.
 3. Phase 7: README and changelog.
 
@@ -187,4 +187,4 @@ Working notes:
 - Game data: `npm run build-data -- --factorio /home/christian/Spiele/factorio --keep` keeps the dump; later runs can use `--dump <dir>`. Runtime values (item weights, daytime, quality speeds and module effects) come from the helper mod in `tools/lib/factorio.js`.
 - After every result change: `npm run snapshot:record`, then compare old and new `tests/snapshots/factory.json` per scenario before committing.
 - Browser checks with JS queries, screenshots only when the layout changed.
-- Stop the dev server with `pkill -u $(id -u) -f "node.*[v]ite"`; a plain `node.*vite` pattern also matches the calling shell.
+- Stop the dev server with `pkill -u $(id -u) -f "node.*[v]ite"` in a Bash call of its own; the pattern also matches a calling shell whose command contains `node` and `vite`.

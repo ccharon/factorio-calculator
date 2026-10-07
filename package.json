@@ -33,7 +33,6 @@
   },
   "dependencies": {
     "@dagrejs/dagre": "^3.1.1",
-    "@floating-ui/dom": "^1.8.0",
     "d3": "^7.9.0"
   }
 }

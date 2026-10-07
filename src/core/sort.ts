@@ -24,20 +24,8 @@ export type SortKey = string | number
  * @param key - Returns the sort key of an element.
  */
 export function sorted<T>(collection: Iterable<T>, key: (value: T) => SortKey): T[] {
-    const values = Array.from(collection)
-    const keys = values.map(key)
-    const indexes = values.map((_, i) => i)
-
-    indexes.sort((a, b) => {
-        const x = keys[a] as SortKey
-        const y = keys[b] as SortKey
-        if (x < y) {
-            return -1
-        } else if (x > y) {
-            return 1
-        }
-        return a - b
-    })
-
-    return indexes.map(i => values[i] as T)
+    // Array.prototype.sort is stable, so equal keys keep their order.
+    const entries = Array.from(collection, value => ({ value, key: key(value) }))
+    entries.sort((a, b) => (a.key < b.key ? -1 : a.key > b.key ? 1 : 0))
+    return entries.map(e => e.value)
 }

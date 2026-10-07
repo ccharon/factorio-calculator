@@ -184,12 +184,13 @@ export function changeVisElectricity(event: Event): void {
     spec.display()
 }
 
-// Number of distinct zoom steps.
-const MAX_SCALE = 10
+// Zoom range relative to the whole diagram: from ten times larger to slightly smaller.
+const MAX_ZOOM = 10
+const MIN_ZOOM = 10 / 12
 // Aspect ratio of the visualizer viewport.
 const ASPECT_RATIO = 16 / 9
 
-/** Adds zoom with the mouse wheel and panning by dragging to the visualizer SVG. */
+/** Adds zoom with the mouse wheel and panning by dragging to the visualizer SVG. The view starts at the top of the diagram. */
 export function installSVGEvents(svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, unknown>): void {
     const node = svg.node()
     if (node === null) {
@@ -201,102 +202,27 @@ export function installSVGEvents(svg: d3.Selection<SVGSVGElement, unknown, HTMLE
     const style = tab.style("display")
     tab.style("display", "block")
     svg.selectAll("image").style("display", "none")
-    let { x, y, width, height } = node.getBBox()
+    const box = node.getBBox()
     svg.selectAll("image").style("display", null)
     tab.style("display", style)
 
-    const [diagramX, diagramY, diagramWidth, diagramHeight] = [x, y, width, height]
-
+    // Widen the viewport to the aspect ratio, centered on the diagram.
+    let { x, y, width, height } = box
     if (width / height < ASPECT_RATIO) {
-        const newWidth = height * ASPECT_RATIO
-        x -= (newWidth - width) / 2
-        width = newWidth
-    } else if (width / height > ASPECT_RATIO) {
-        const newHeight = width / ASPECT_RATIO
-        y -= (newHeight - height) / 2
-        height = newHeight
+        x -= (height * ASPECT_RATIO - width) / 2
+        width = height * ASPECT_RATIO
+    } else {
+        y -= (width / ASPECT_RATIO - height) / 2
+        height = width / ASPECT_RATIO
     }
 
-    // Viewport size with the diagram centered and zoomed all the way out.
-    const [origWidth, origHeight] = [width, height]
-    // Start at the top of the diagram. clamp() corrects the position.
-    y = diagramY
-    let scale = MAX_SCALE
-
-    // Keeps the viewport center within the diagram.
-    function clamp(): void {
-        const midX = x + width / 2
-        const midY = y + height / 2
-        if (diagramX > midX) {
-            x = diagramX - width / 2
-        } else if (diagramX + diagramWidth < midX) {
-            x = diagramX + diagramWidth - width / 2
-        }
-        if (diagramY > midY) {
-            y = diagramY - height / 2
-        } else if (diagramY + diagramHeight < midY) {
-            y = diagramY + diagramHeight - height / 2
-        }
-    }
-
-    function setViewBox(): void {
-        clamp()
-        svg.attr("viewBox", `${x} ${y} ${width} ${height}`)
-    }
-
-    function point(event: MouseEvent, svgNode: SVGSVGElement): DOMPoint {
-        const ctm = svgNode.getScreenCTM()
-        const clientPoint = new DOMPoint(event.clientX, event.clientY)
-        return ctm ? clientPoint.matrixTransform(ctm.inverse()) : clientPoint
-    }
-
-    let clickPt: DOMPoint | null = null
-
-    svg.on("wheel", (event: WheelEvent) => {
-        event.preventDefault()
-        const origScale = scale
-        if (event.deltaY < 0) {
-            if (scale === 1) {
-                return
-            }
-            scale -= 1
-        } else if (event.deltaY > 0) {
-            if (scale === MAX_SCALE + 2) {
-                return
-            }
-            scale += 1
-        }
-
-        const pt = point(event, node)
-        x = pt.x - (pt.x - x) / origScale * scale
-        y = pt.y - (pt.y - y) / origScale * scale
-        width = origWidth * (scale / MAX_SCALE)
-        height = origHeight * (scale / MAX_SCALE)
-        setViewBox()
-    })
-
-    svg.on("mousedown", (event: MouseEvent) => {
-        clickPt = point(event, node)
-        event.preventDefault()
-    })
-
-    svg.on("mousemove", (event: MouseEvent) => {
-        if (clickPt === null) {
-            return
-        }
-        const pt = point(event, node)
-        x -= pt.x - clickPt.x
-        y -= pt.y - clickPt.y
-        setViewBox()
-        event.preventDefault()
-    })
-
-    svg.on("mouseup", (event: MouseEvent) => {
-        clickPt = null
-        event.preventDefault()
-    })
-
-    setViewBox()
+    svg.attr("viewBox", `${x} ${box.y} ${width} ${height}`)
+    const layers = svg.selectAll<SVGGElement, unknown>(":scope > g")
+    const zoom = d3.zoom<SVGSVGElement, unknown>()
+        .scaleExtent([MIN_ZOOM, MAX_ZOOM])
+        .translateExtent([[x, Math.min(y, box.y)], [x + width, Math.max(y, box.y) + height]])
+        .on("zoom", (event: d3.D3ZoomEvent<SVGSVGElement, unknown>) => layers.attr("transform", event.transform.toString()))
+    svg.call(zoom)
 }
 
 // debug events

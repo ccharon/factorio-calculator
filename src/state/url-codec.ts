@@ -34,27 +34,15 @@ async function readStream(stream: ReadableStream<Uint8Array>, maxBytes: number):
     return result
 }
 
-function toBase64(bytes: Uint8Array): string {
-    let binary = ""
-    for (const byte of bytes) {
-        binary += String.fromCharCode(byte)
-    }
-    return btoa(binary)
-}
-
-function fromBase64(s: string): Uint8Array {
-    return Uint8Array.from(atob(s), c => c.charCodeAt(0))
-}
-
 /** Compresses a string with raw deflate and returns it as base64. */
 export async function compress(plain: string): Promise<string> {
     const input = new Blob([plain]).stream().pipeThrough(new CompressionStream("deflate-raw"))
-    return toBase64(await readStream(input, Number.MAX_SAFE_INTEGER))
+    return new Uint8Array(await new Response(input).arrayBuffer()).toBase64()
 }
 
 /** Reverses compress(). Throws on invalid input or if the result exceeds maxBytes. */
 export async function decompress(base64: string, maxBytes: number = MAX_SETTINGS_BYTES): Promise<string> {
-    const input = new Blob([fromBase64(base64) as BlobPart]).stream().pipeThrough(new DecompressionStream("deflate-raw"))
+    const input = new Blob([Uint8Array.fromBase64(base64) as BlobPart]).stream().pipeThrough(new DecompressionStream("deflate-raw"))
     return new TextDecoder().decode(await readStream(input, maxBytes))
 }
 

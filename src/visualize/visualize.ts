@@ -124,10 +124,8 @@ function fitSVG(): void {
         .attr("width", width)
         .attr("height", height)
         .style("border", null)
-    svg.on("wheel", null)
-    svg.on("mousedown", null)
-    svg.on("mousemove", null)
-    svg.on("mouseup", null)
+    svg.on(".zoom", null)
+    svg.selectAll(":scope > g").attr("transform", null)
 }
 
 /** Renders totals in the visualizer tab, or nothing before the first solution. Items in ignore are greyed out. */

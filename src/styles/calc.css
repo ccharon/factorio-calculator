@@ -65,9 +65,17 @@ img.icon {
     opacity: 0.3;
 }
 /* tooltips */
+/* The popover sits right of its anchor, or flips to the other side where it does not fit. */
 div.tooltip {
-    opacity: 1;
-    z-index: 20;
+    position-area: right;
+    position-try-fallbacks: flip-inline, flip-block;
+    inset: auto;
+    margin: 0 0 0 20px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: inherit;
+    overflow: visible;
 }
 div.tooltip .frame {
     border: 2px solid var(--bright);
