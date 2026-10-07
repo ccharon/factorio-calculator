@@ -364,7 +364,7 @@ export class Rational {
 
 // Five-digit decimal approximations of 1/3 and 2/3.
 const approximateOneThird = new Rational(33333n, 100000n)
-const approximateTwoThirds = new Rational(33333n, 50000n)
+const approximateTwoThirds = new Rational(66667n, 100000n)
 
 export const minusOne = new Rational(-1n, 1n)
 export const zero = new Rational(0n, 1n)

@@ -59,8 +59,7 @@ test("from_float_approximate recognizes one third", () => {
     assert.ok(Rational.from_float_approximate(0.09375).equal(r("3/32")))
 })
 
-// Known defect: the _two_thirds constant is 0.66666, but rounding 2/3 gives 0.66667.
-test.fails("from_float_approximate recognizes two thirds", () => {
+test("from_float_approximate recognizes two thirds", () => {
     assert.ok(Rational.from_float_approximate(2 / 3).equal(twoThirds))
 })
 
