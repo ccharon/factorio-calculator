@@ -14,7 +14,7 @@ limitations under the License.*/
 import * as d3 from "d3"
 import { renderBoxGraph } from "./boxline.js"
 import { visualizerType, visualizerRender, visualizerDirection, installSVGEvents } from "../ui/events.js"
-import { spec } from "../state/factory.js"
+import { spec } from "../state/factory.ts"
 import { iconSize, colonWidth } from "./graph.js"
 import { zero } from "../core/rational.ts"
 import { renderSankey } from "./sankey.js"

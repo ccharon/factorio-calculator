@@ -13,8 +13,8 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 import * as d3 from "d3"
 import { toggleIgnoreHandler } from "./events.js"
-import { spec } from "../state/factory.js"
-import { formatSettings } from "../state/fragment.js"
+import { spec } from "../state/factory.ts"
+import { formatSettings } from "../state/fragment.ts"
 import { getRecipeGroups, topoSort } from "../data/groups.ts"
 import { Icon } from "./icon.ts"
 import { moduleRows } from "../data/module.ts"

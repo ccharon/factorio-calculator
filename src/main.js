@@ -19,8 +19,8 @@ import "./styles/dropdown.css"
 import { plusHandler, clickTab, clickVisualize, changeTitle, changeRatePrecision, changeCountPrecision, changeFormat, changeMprod, changeVisType, changeVisRender, changeVisDir, toggleDebug } from "./ui/events.js"
 import { getBelts } from "./data/belt.ts"
 import { getBuildings } from "./data/building.ts"
-import { spec } from "./state/factory.js"
-import { loadSettings } from "./state/fragment.js"
+import { spec } from "./state/factory.ts"
+import { decodeFragment } from "./state/url-codec.ts"
 import { getFuel } from "./data/fuel.ts"
 import { getItemGroups } from "./data/group.ts"
 import { getSprites } from "./ui/icon.ts"
@@ -81,4 +81,4 @@ function bindControls() {
 }
 
 bindControls()
-loadData(loadSettings(window.location.hash))
+void decodeFragment(window.location.hash).then(loadData)

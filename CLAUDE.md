@@ -77,10 +77,10 @@ The dataset format is defined in `src/data/dataset.schema.json`. `tests/dataset.
 | Area | Files |
 |------|-------|
 | Entry point | `index.html`, `src/main.js` |
-| Core math and solver, no DOM | `src/core/`: `rational.js`, `matrix.js`, `simplex.js`, `solve.js`, `cycle.js`, `totals.js`, `sort.js` |
-| Game data loading | `src/data/`: `item.js`, `recipe.js`, `building.js`, `module.js`, `belt.js`, `fuel.js`, `planet.js`, `group.js`, `groups.js`, `dataset.schema.json` |
-| State and URL settings | `src/state/`: `factory.js` (`FactorySpecification`, global `spec`), `fragment.js` (URL hash), `priority.js`, `align.js` (number formatting) |
-| UI | `src/ui/`: `display.js`, `target.js`, `settings.js`, `dropdown.js`, `tooltip.js`, `events.js`, `icon.js`, `color.js`, `debug.js` |
+| Core math and solver, no DOM | `src/core/`: `rational.ts`, `matrix.ts`, `simplex.ts`, `solve.ts` (with the `SolverContext` interface), `cycle.ts`, `totals.ts`, `sort.ts` |
+| Game data loading | `src/data/`: `dataset.ts` (types of the dataset JSON), `dataset.schema.json`, `item.ts`, `recipe.ts`, `building.ts`, `module.ts`, `belt.ts`, `fuel.ts`, `planet.ts`, `group.ts`, `groups.ts` |
+| State and URL settings | `src/state/`: `factory.ts` (`FactorySpecification`, global `spec`), `fragment.ts` (writes the settings string), `url-codec.ts` (parses and compresses the URL fragment), `priority.ts`, `align.ts` (number formatting) |
+| UI | `src/ui/`: `display.js`, `target.js`, `settings.js`, `dropdown.js`, `module-dropdown.js`, `tooltip.ts`, `events.js`, `icon.ts`, `energy.ts`, `color.js`, `debug.js` |
 | Visualizer | `src/visualize/`: `visualize.js`, `sankey.js`, `boxline.js`, `graph.js`, `circlepath.js`, `d3-sankey/` (modified copy of d3-sankey) |
 | Styles | `src/styles/` |
 | Static files | `public/`: dataset, sprite sheet, SVG icons, favicon. Copied unchanged into `dist/`. |

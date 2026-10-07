@@ -14,7 +14,7 @@ limitations under the License.*/
 import * as d3 from "d3"
 import dagre from "@dagrejs/dagre"
 
-import { spec } from "../state/factory.js"
+import { spec } from "../state/factory.ts"
 import { colorList, iconSize, getColorMaps, renderNode, imageViewBox } from "./graph.js"
 import { spriteSheet } from "../ui/icon.ts"
 import { graphClickHandler, graphMouseOverHandler, graphMouseLeaveHandler } from "./visualize.js"

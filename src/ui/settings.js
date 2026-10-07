@@ -12,10 +12,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
 import * as d3 from "d3"
-import { DEFAULT_RATE, DEFAULT_RATE_PRECISION, DEFAULT_COUNT_PRECISION, DEFAULT_FORMAT, longRateNames } from "../state/align.js"
+import { DEFAULT_RATE, DEFAULT_RATE_PRECISION, DEFAULT_COUNT_PRECISION, DEFAULT_FORMAT, longRateNames } from "../state/align.ts"
 import { colorSchemes } from "./color.js"
 import { DEFAULT_TAB, clickTab, DEFAULT_VISUALIZER, visualizerType, setVisualizerType, DEFAULT_RENDER, visualizerRender, setVisualizerRender, visualizerDirection, getDefaultVisDirection, setVisualizerDirection } from "./events.js"
-import { spec, DEFAULT_PLANET, DEFAULT_BELT, DEFAULT_FUEL } from "../state/factory.js"
+import { spec, DEFAULT_PLANET, DEFAULT_BELT, DEFAULT_FUEL } from "../state/factory.ts"
 import { getRecipeGroups } from "../data/groups.ts"
 import { shortModules, moduleRows } from "../data/module.ts"
 import { moduleDropdown } from "./module-dropdown.js"

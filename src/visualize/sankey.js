@@ -14,7 +14,7 @@ limitations under the License.*/
 import * as d3 from "d3"
 
 import { CirclePath, makeCurve } from "./circlepath.js"
-import { spec } from "../state/factory.js"
+import { spec } from "../state/factory.ts"
 import { colorList, iconSize, getColorMaps, renderNode, imageViewBox } from "./graph.js"
 import { spriteSheet } from "../ui/icon.ts"
 import { one } from "../core/rational.ts"

@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 import * as d3 from "d3"
 import { Rational, zero, one } from "../core/rational.ts"
-import { spec } from "../state/factory.js"
+import { spec } from "../state/factory.ts"
 import { Icon, type IconSource, getSprite } from "../ui/icon.ts"
 import type { Dataset, DatasetProduct, DatasetRecipe, SurfaceConditionData } from "./dataset.ts"
 import type { Item } from "./item.ts"
@@ -139,6 +139,9 @@ export class Recipe implements RecipeLike {
         }
         // craft/s and J/s give J/craft. Divided by J/item, that is items per craft.
         const baseRate = spec.getRecipeRate(this)
+        if (baseRate === null) {
+            return []
+        }
         const basePower = spec.getPowerUsage(this, baseRate).power
         const perCraftEnergy = basePower.div(baseRate)
         const fuelAmount = perCraftEnergy.div(spec.fuel.value)

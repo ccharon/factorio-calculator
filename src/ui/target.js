@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 import * as d3 from "d3"
 import { makeDropdown, addInputs } from "./dropdown.js"
-import { spec } from "../state/factory.js"
+import { spec } from "../state/factory.ts"
 import { Rational, zero, one } from "../core/rational.ts"
 
 const SELECTED_INPUT = "selected"
