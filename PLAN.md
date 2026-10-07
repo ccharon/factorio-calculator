@@ -16,9 +16,8 @@ Goal: a calculator for Factorio 2.1 with Space Age only, with current game data,
 
 ## Open items
 
-1. Solve in a Web Worker, so that large quality targets with recycling (about 3 s for 60 legendary processing units per minute) do not block the page.
-2. Spoilage of items of higher quality.
-3. Rate labels of recipes with many products overlap in the visualizer.
+1. Spoilage of items of higher quality.
+2. Rate labels of recipes with many products overlap in the visualizer.
 
 ## Working notes
 

@@ -30,6 +30,10 @@ export default defineConfig({
         outDir: "dist",
         target: "es2022",
     },
+    // The simplex worker is a module worker.
+    worker: {
+        format: "es",
+    },
     server: {
         host: "127.0.0.1",
         port: 8000,

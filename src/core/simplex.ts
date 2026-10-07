@@ -14,7 +14,18 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 // Simplex method on a tableau whose last row is the objective and last column the right-hand side.
 
-import { type Rational, zero } from "./rational.ts"
+import { Rational, zero } from "./rational.ts"
+
+/** A matrix as plain data that postMessage can copy: numerators and denominators row by row. */
+export interface TransferMatrix {
+    readonly rows: number
+    readonly cols: number
+    readonly p: readonly bigint[]
+    readonly q: readonly bigint[]
+}
+
+/** Runs the simplex method on a tableau and returns the solved tableau, possibly in another thread. */
+export type SimplexRunner = (A: Matrix) => Promise<Matrix>
 
 /** A rows x cols matrix of rationals, stored row by row. */
 export class Matrix {
@@ -29,6 +40,16 @@ export class Matrix {
         this.rows = rows
         this.cols = cols
         this.mat = mat ?? Array.from({ length: rows * cols }, () => zero)
+    }
+
+    /** Returns the values as plain data for postMessage. */
+    toTransfer(): TransferMatrix {
+        return { rows: this.rows, cols: this.cols, p: this.mat.map(x => x.p), q: this.mat.map(x => x.q) }
+    }
+
+    /** Rebuilds a matrix from toTransfer() data. The fractions are already reduced. */
+    static fromTransfer(t: TransferMatrix): Matrix {
+        return new Matrix(t.rows, t.cols, t.p.map((p, i) => new Rational(p, t.q[i] ?? 1n, true)))
     }
 
     /** Returns an independent copy. */
@@ -132,4 +153,10 @@ export function simplex(A: Matrix): void {
             throw new Error("failed to pivot")
         }
     }
+}
+
+/** Runs the simplex method in this thread. */
+export function runSimplexHere(A: Matrix): Promise<Matrix> {
+    simplex(A)
+    return Promise.resolve(A)
 }

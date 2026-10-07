@@ -19,7 +19,7 @@ import type { Item } from "../data/item.ts"
 import { Ingredient, type RecipeLike, type RecipeNode } from "../data/recipe.ts"
 import { type CycleContext, getCycleRecipes } from "./cycle.ts"
 import { Rational, minusOne, zero, one } from "./rational.ts"
-import { Matrix, simplex } from "./simplex.ts"
+import { Matrix, type SimplexRunner, runSimplexHere } from "./simplex.ts"
 import { Totals, type TotalsContext } from "./totals.ts"
 
 /** A requested output: an item rate, optionally forced through one recipe. */
@@ -189,8 +189,12 @@ Rows:
 [result]
 */
 
-/** Solves the factory for the requested outputs. */
-export function solve(context: SolverContext, fullOutputs: readonly Output[]): SolveResult {
+/**
+ * Solves the factory for the requested outputs.
+ *
+ * @param runSimplex - Solves the linear program, by default in this thread.
+ */
+export async function solve(context: SolverContext, fullOutputs: readonly Output[], runSimplex: SimplexRunner = runSimplexHere): Promise<SolveResult> {
     const outputs = new Map<Item, Rational>()
     for (const { item, rate } of fullOutputs) {
         outputs.set(item, rate.add(outputs.get(item) ?? zero))
@@ -383,10 +387,10 @@ export function solve(context: SolverContext, fullOutputs: readonly Output[]): S
     const tableau = A.copy()
     const metadata: TableauMetadata = { items, recipes: recipeArray, targets: partial.targets }
 
-    simplex(A)
+    const solved = await runSimplex(A)
 
     recipeArray.forEach((recipe, i) => {
-        const rate = A.index(A.rows - 1, tax + i + 1)
+        const rate = solved.index(solved.rows - 1, tax + i + 1)
         if (zero.less(rate)) {
             solution.set(recipe, (solution.get(recipe) ?? zero).add(rate))
         }
@@ -396,7 +400,7 @@ export function solve(context: SolverContext, fullOutputs: readonly Output[]): S
 
     const surplus = new Map<Item, Rational>()
     items.forEach((item, i) => {
-        const rate = A.index(A.rows - 1, i)
+        const rate = solved.index(solved.rows - 1, i)
         if (zero.less(rate)) {
             surplus.set(item, rate)
         }
@@ -407,6 +411,6 @@ export function solve(context: SolverContext, fullOutputs: readonly Output[]): S
 
     return {
         totals: new Totals(context, outputs, solution, surplus, maxPriorityRecipes),
-        debug: { partial, tableau, metadata, solution: A },
+        debug: { partial, tableau, metadata, solution: solved },
     }
 }

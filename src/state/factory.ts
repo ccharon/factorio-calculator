@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
 import { Rational, zero, one } from "../core/rational.ts"
-import { type Output, type SolverDebug, solve } from "../core/solve.ts"
+import { type Output, type SolveResult, type SolverDebug, solve } from "../core/solve.ts"
 import type { Totals } from "../core/totals.ts"
 import type { Belt } from "../data/belt.ts"
 import type { Building, BuildingContext } from "../data/building.ts"
@@ -26,7 +26,7 @@ import type { ProductivityResearch } from "../data/research.ts"
 import { QUALITY_KINDS, Quality, type QualityKind, qualityDistribution } from "../data/quality.ts"
 import { DISABLED_RECIPE_PREFIX, ELECTRICITY, HEAT, Ingredient, ReactorRecipe, Recipe, type RecipeContext, type RecipeLike, type RecipeNode } from "../data/recipe.ts"
 import { renderDebug } from "../ui/debug.ts"
-import { displayItems } from "../ui/display.ts"
+import { displayItems, setSolving } from "../ui/display.ts"
 import { currentTab } from "../ui/events.ts"
 import { renderPriorities } from "../ui/priority-view.ts"
 import type { BuildTarget } from "../ui/target.ts"
@@ -38,6 +38,7 @@ import { type PowerUsage, getEnergyIngredients, getPowerUsage, reactorNeighbours
 import { FuelChoice } from "./fuel-choice.ts"
 import { formatSettings } from "./fragment.ts"
 import { PriorityList, type PriorityLevelMap } from "./priority.ts"
+import { SolveCancelled, runSimplexInWorker } from "./solver-thread.ts"
 import { encodeSettings } from "./url-codec.ts"
 
 export const DEFAULT_PLANET = "nauvis"
@@ -120,6 +121,10 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
     lastTableau: SolverDebug["tableau"] = null
     lastMetadata: SolverDebug["metadata"] = null
     lastSolution: SolverDebug["solution"] = null
+    /** Settles when the solution of the latest updateSolution() call is shown. Browser tests wait for it. */
+    solved: Promise<void> = Promise.resolve()
+    // Counts updateSolution() calls, so that a slower older run cannot replace a newer solution.
+    private solveRuns = 0
 
     debug = false
 
@@ -754,7 +759,8 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
     }
 
     /** Solves for the current build targets. Targets with the same item and recipe are merged. */
-    solve(): Totals {
+    // Solves for the build targets. The linear program runs in a Web Worker.
+    private solve(): Promise<SolveResult> {
         const outputs: Output[] = []
         for (const target of this.buildTargets) {
             const item: Item = target.item
@@ -768,12 +774,7 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
             }
         }
 
-        const { totals, debug } = solve(this, outputs)
-        this.lastPartial = debug.partial
-        this.lastTableau = debug.tableau
-        this.lastMetadata = debug.metadata
-        this.lastSolution = debug.solution
-        return totals
+        return solve(this, outputs, runSimplexInWorker)
     }
 
     /** Writes the current settings into the URL fragment. Compression runs asynchronously. */
@@ -787,10 +788,32 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
     }
 
     /** Solves again and redisplays. Call this when a change affects recipe rates. */
+    /**
+     * Solves again and shows the solution when it is ready. A newer call cancels or discards an
+     * older one, so only the solution of the latest settings is shown.
+     */
     updateSolution(): void {
-        this.lastTotals = this.solve()
-        this.populateModuleSpec(this.lastTotals)
-        this.display()
+        const run = ++this.solveRuns
+        setSolving(true)
+        this.solved = this.solve().then(({ totals, debug }) => {
+            if (run !== this.solveRuns) {
+                return
+            }
+            this.lastTotals = totals
+            this.lastPartial = debug.partial
+            this.lastTableau = debug.tableau
+            this.lastMetadata = debug.metadata
+            this.lastSolution = debug.solution
+            this.populateModuleSpec(totals)
+            this.display()
+            setSolving(false)
+        }, (error: unknown) => {
+            if (error instanceof SolveCancelled) {
+                return
+            }
+            setSolving(false)
+            console.error(error)
+        })
     }
 
     /** Redisplays the last solution without solving. Enough for changes that only affect building counts or formatting. */

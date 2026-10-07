@@ -75,7 +75,7 @@ export async function startBrowser({ base, dist = false }: BrowserOptions = {}):
 }
 
 /**
- * Opens the calculator with a URL fragment and waits until the factory table is rendered.
+ * Opens the calculator with a URL fragment and waits until the solution for it is shown.
  * JS errors and console errors are collected in the returned errors list.
  *
  * @param base - Server base URL ending in "/".
@@ -92,5 +92,7 @@ export async function openCalculator(browser: Browser, base: string, fragment: s
     })
     await page.goto(`${base}${fragment}`)
     await page.waitForSelector("#totals tbody tr", { timeout: 20000 }).catch(() => errors.push("factory table did not render"))
+    // The first table can come from an earlier solve than the one for the full settings.
+    await page.evaluate(() => window.spec.solved)
     return { page, errors }
 }

@@ -549,3 +549,8 @@ export function displayItems(context: FactorySpecification, totals: Totals | nul
     footerRow.select("tt").text(alignPower(totalPower))
     table.select("tfoot").raise()
 }
+
+/** Dims the factory table while a solution is computed. The style sheet delays the dimming, so quick solves do not flicker. */
+export function setSolving(solving: boolean): void {
+    d3.select("table#totals").classed("solving", solving)
+}
