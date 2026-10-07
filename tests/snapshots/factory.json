@@ -3585,84 +3585,76 @@
         "power": "0"
       },
       {
-        "key": "(surplus)",
-        "rate": "1",
+        "key": "advanced-oxide-asteroid-crushing",
+        "rate": "2/1125",
+        "building": "crusher",
+        "count": "2/225",
+        "fuel": "electric",
+        "power": "22800"
+      },
+      {
+        "key": "carbonic-asteroid-chunk",
+        "rate": "7/500",
         "building": null,
         "count": "0",
         "fuel": null,
         "power": "0"
       },
       {
-        "key": "D-ammoniacal-solution",
-        "rate": "2",
-        "building": null,
-        "count": "0",
-        "fuel": null,
-        "power": "0"
-      },
-      {
-        "key": "D-biter-egg",
-        "rate": "4/119",
-        "building": null,
-        "count": "0",
-        "fuel": null,
-        "power": "0"
-      },
-      {
-        "key": "D-iron-bacteria",
-        "rate": "2/5",
-        "building": null,
-        "count": "0",
-        "fuel": null,
-        "power": "0"
-      },
-      {
-        "key": "ammoniacal-solution-separation",
-        "rate": "1/25",
-        "building": "chemical-plant",
+        "key": "carbonic-asteroid-crushing",
+        "rate": "1/50",
+        "building": "crusher",
         "count": "1/25",
         "fuel": "electric",
-        "power": "15400"
+        "power": "39600"
       },
       {
-        "key": "burnt-spoilage",
+        "key": "casting-iron",
         "rate": "2/15",
-        "building": "biochamber",
-        "count": "4/5",
-        "fuel": "nutrients",
-        "power": "400000"
-      },
-      {
-        "key": "iron-bacteria-spoilage",
-        "rate": "2/5",
-        "building": null,
-        "count": "0",
-        "fuel": null,
-        "power": "0"
-      },
-      {
-        "key": "iron-plate",
-        "rate": "2/5",
-        "building": "electric-furnace",
-        "count": "16/25",
+        "building": "foundry",
+        "count": "8/75",
         "fuel": "electric",
-        "power": "121200"
+        "power": "350000"
       },
       {
-        "key": "nutrients-from-biter-egg",
-        "rate": "4/119",
-        "building": "biochamber",
-        "count": "4/119",
-        "fuel": "nutrients",
-        "power": "2000000/119"
+        "key": "iron-ore-melting",
+        "rate": "4/1125",
+        "building": "foundry",
+        "count": "32/1125",
+        "fuel": "electric",
+        "power": "1390000/9"
       },
       {
-        "key": "nutrients-spoilage",
-        "rate": "4/5",
+        "key": "metallic-asteroid-chunk",
+        "rate": "7/1125",
         "building": null,
         "count": "0",
         "fuel": null,
         "power": "0"
+      },
+      {
+        "key": "metallic-asteroid-crushing",
+        "rate": "2/225",
+        "building": "crusher",
+        "count": "4/225",
+        "fuel": "electric",
+        "power": "27600"
+      },
+      {
+        "key": "oxide-asteroid-chunk",
+        "rate": "541/18750",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "oxide-asteroid-crushing",
+        "rate": "73/1875",
+        "building": "crusher",
+        "count": "146/1875",
+        "fuel": "electric",
+        "power": "60048"
       },
       {
         "key": "space-science-pack",
@@ -3675,54 +3667,814 @@
     ],
     "items": [
       {
-        "key": "ammonia",
-        "rate": "2"
-      },
-      {
-        "key": "ammoniacal-solution",
-        "rate": "2"
-      },
-      {
-        "key": "biter-egg",
-        "rate": "4/119"
+        "key": "calcite",
+        "rate": "4/1125"
       },
       {
         "key": "carbon",
         "rate": "1/5"
       },
       {
+        "key": "carbonic-asteroid-chunk",
+        "rate": "1/50"
+      },
+      {
         "key": "ice",
         "rate": "1/5"
       },
       {
-        "key": "iron-bacteria",
-        "rate": "2/5"
-      },
-      {
         "key": "iron-ore",
-        "rate": "2/5"
+        "rate": "8/45"
       },
       {
         "key": "iron-plate",
         "rate": "2/5"
       },
       {
-        "key": "nutrients",
-        "rate": "120/119"
+        "key": "metallic-asteroid-chunk",
+        "rate": "2/225"
+      },
+      {
+        "key": "molten-iron",
+        "rate": "8/3"
+      },
+      {
+        "key": "oxide-asteroid-chunk",
+        "rate": "229/5625"
       },
       {
         "key": "space-science-pack",
         "rate": "1"
+      }
+    ],
+    "surplus": []
+  },
+  "space-platform-thrusters": {
+    "fragment": "#items=thruster-fuel:r:6000,thruster-oxidizer:r:6000&planet=space-platform",
+    "recipes": [
+      {
+        "key": "(output)",
+        "rate": "1",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
       },
       {
-        "key": "spoilage",
-        "rate": "4/5"
+        "key": "advanced-oxide-asteroid-crushing",
+        "rate": "1/15",
+        "building": "crusher",
+        "count": "1/3",
+        "fuel": "electric",
+        "power": "198000"
+      },
+      {
+        "key": "advanced-thruster-fuel",
+        "rate": "1/15",
+        "building": "chemical-plant",
+        "count": "2/3",
+        "fuel": "electric",
+        "power": "147000"
+      },
+      {
+        "key": "advanced-thruster-oxidizer",
+        "rate": "1/15",
+        "building": "chemical-plant",
+        "count": "2/3",
+        "fuel": "electric",
+        "power": "147000"
+      },
+      {
+        "key": "carbonic-asteroid-chunk",
+        "rate": "7/750",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "carbonic-asteroid-crushing",
+        "rate": "1/75",
+        "building": "crusher",
+        "count": "2/75",
+        "fuel": "electric",
+        "power": "32400"
+      },
+      {
+        "key": "ice-melting",
+        "rate": "2/3",
+        "building": "chemical-plant",
+        "count": "2/3",
+        "fuel": "electric",
+        "power": "147000"
+      },
+      {
+        "key": "metallic-asteroid-chunk",
+        "rate": "7/1500",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "metallic-asteroid-crushing",
+        "rate": "1/150",
+        "building": "crusher",
+        "count": "1/75",
+        "fuel": "electric",
+        "power": "25200"
+      },
+      {
+        "key": "oxide-asteroid-chunk",
+        "rate": "47/375",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "oxide-asteroid-crushing",
+        "rate": "7/75",
+        "building": "crusher",
+        "count": "14/75",
+        "fuel": "electric",
+        "power": "118800"
+      }
+    ],
+    "items": [
+      {
+        "key": "calcite",
+        "rate": "2/15"
+      },
+      {
+        "key": "carbon",
+        "rate": "2/15"
+      },
+      {
+        "key": "carbonic-asteroid-chunk",
+        "rate": "1/75"
+      },
+      {
+        "key": "ice",
+        "rate": "2/3"
+      },
+      {
+        "key": "iron-ore",
+        "rate": "2/15"
+      },
+      {
+        "key": "metallic-asteroid-chunk",
+        "rate": "1/150"
+      },
+      {
+        "key": "oxide-asteroid-chunk",
+        "rate": "4/25"
+      },
+      {
+        "key": "thruster-fuel",
+        "rate": "100"
+      },
+      {
+        "key": "thruster-oxidizer",
+        "rate": "100"
+      },
+      {
+        "key": "water",
+        "rate": "40/3"
+      }
+    ],
+    "surplus": []
+  },
+  "space-platform-promethium": {
+    "fragment": "#items=promethium-science-pack:r:60&planet=space-platform",
+    "recipes": [
+      {
+        "key": "(output)",
+        "rate": "1",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "(surplus)",
+        "rate": "1",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "D-ammoniacal-solution",
+        "rate": "26/15",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "D-biter-egg",
+        "rate": "3218/3213",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "D-fluorine",
+        "rate": "1/3",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "D-holmium-ore",
+        "rate": "113/5625",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "D-lava",
+        "rate": "452/2025",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "D-lithium-brine",
+        "rate": "7/5",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "D-tungsten-ore",
+        "rate": "2/15",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "D-yumako",
+        "rate": "4/27",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "advanced-carbonic-asteroid-crushing",
+        "rate": "2691/6700",
+        "building": "crusher",
+        "count": "2691/1340",
+        "fuel": "electric",
+        "power": "76275000/67"
+      },
+      {
+        "key": "advanced-circuit",
+        "rate": "2/15",
+        "building": "assembling-machine-1",
+        "count": "8/5",
+        "fuel": "electric",
+        "power": "125000"
+      },
+      {
+        "key": "advanced-metallic-asteroid-crushing",
+        "rate": "5987/40500",
+        "building": "crusher",
+        "count": "5987/8100",
+        "fuel": "electric",
+        "power": "1251400/3"
+      },
+      {
+        "key": "advanced-oxide-asteroid-crushing",
+        "rate": "7361/1012500",
+        "building": "crusher",
+        "count": "7361/202500",
+        "fuel": "electric",
+        "power": "112888/3"
+      },
+      {
+        "key": "ammoniacal-solution-separation",
+        "rate": "13/375",
+        "building": "chemical-plant",
+        "count": "13/375",
+        "fuel": "electric",
+        "power": "14280"
+      },
+      {
+        "key": "carbon-fiber",
+        "rate": "2/45",
+        "building": "biochamber",
+        "count": "1/9",
+        "fuel": "nutrients",
+        "power": "500000/9"
+      },
+      {
+        "key": "carbonic-asteroid-chunk",
+        "rate": "114529/241200",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "carbonic-asteroid-crushing",
+        "rate": "19529/120600",
+        "building": "crusher",
+        "count": "19529/60300",
+        "fuel": "electric",
+        "power": "12923400/67"
+      },
+      {
+        "key": "casting-copper",
+        "rate": "1/135",
+        "building": "foundry",
+        "count": "4/675",
+        "fuel": "electric",
+        "power": "2650000/27"
+      },
+      {
+        "key": "casting-copper-cable",
+        "rate": "16/9",
+        "building": "foundry",
+        "count": "4/9",
+        "fuel": "electric",
+        "power": "10750000/9"
+      },
+      {
+        "key": "casting-iron",
+        "rate": "287/3375",
+        "building": "foundry",
+        "count": "1148/16875",
+        "fuel": "electric",
+        "power": "6842000/27"
+      },
+      {
+        "key": "coal-liquefaction",
+        "rate": "812/15075",
+        "building": "oil-refinery",
+        "count": "812/3015",
+        "fuel": "electric",
+        "power": "25550000/201"
+      },
+      {
+        "key": "coal-synthesis",
+        "rate": "1178/1675",
+        "building": "chemical-plant",
+        "count": "2356/1675",
+        "fuel": "electric",
+        "power": "20728400/67"
+      },
+      {
+        "key": "copper-ore-melting",
+        "rate": "5987/506250",
+        "building": "foundry",
+        "count": "23948/253125",
+        "fuel": "electric",
+        "power": "25908400/81"
+      },
+      {
+        "key": "electronic-circuit",
+        "rate": "8/5",
+        "building": "assembling-machine-1",
+        "count": "8/5",
+        "fuel": "electric",
+        "power": "125000"
+      },
+      {
+        "key": "fluoroketone",
+        "rate": "1/150",
+        "building": "cryogenic-plant",
+        "count": "1/30",
+        "fuel": "electric",
+        "power": "100000"
+      },
+      {
+        "key": "fluoroketone-cooling",
+        "rate": "1/15",
+        "building": "cryogenic-plant",
+        "count": "1/6",
+        "fuel": "electric",
+        "power": "300000"
+      },
+      {
+        "key": "heavy-oil-cracking",
+        "rate": "2639/30150",
+        "building": "chemical-plant",
+        "count": "2639/15075",
+        "fuel": "electric",
+        "power": "8796200/201"
+      },
+      {
+        "key": "holmium-plate",
+        "rate": "113/2250",
+        "building": "assembling-machine-2",
+        "count": "226/3375",
+        "fuel": "electric",
+        "power": "135400/9"
+      },
+      {
+        "key": "holmium-solution",
+        "rate": "113/11250",
+        "building": "chemical-plant",
+        "count": "113/1125",
+        "fuel": "electric",
+        "power": "84280/3"
+      },
+      {
+        "key": "ice-melting",
+        "rate": "1172371/1507500",
+        "building": "chemical-plant",
+        "count": "1172371/1507500",
+        "fuel": "electric",
+        "power": "34233388/201"
+      },
+      {
+        "key": "iron-ore-melting",
+        "rate": "574/253125",
+        "building": "foundry",
+        "count": "4592/253125",
+        "fuel": "electric",
+        "power": "10423600/81"
+      },
+      {
+        "key": "iron-plate",
+        "rate": "3071/2250",
+        "building": "electric-furnace",
+        "count": "12284/5625",
+        "fuel": "electric",
+        "power": "411088"
+      },
+      {
+        "key": "light-oil-cracking",
+        "rate": "1181/10050",
+        "building": "chemical-plant",
+        "count": "1181/5025",
+        "fuel": "electric",
+        "power": "3775800/67"
+      },
+      {
+        "key": "lithium",
+        "rate": "7/250",
+        "building": "chemical-plant",
+        "count": "14/25",
+        "fuel": "electric",
+        "power": "124600"
+      },
+      {
+        "key": "lithium-plate",
+        "rate": "2/15",
+        "building": "electric-furnace",
+        "count": "32/75",
+        "fuel": "electric",
+        "power": "82800"
+      },
+      {
+        "key": "metallic-asteroid-chunk",
+        "rate": "5987/45000",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "molten-copper-from-lava",
+        "rate": "113/253125",
+        "building": "foundry",
+        "count": "452/253125",
+        "fuel": "electric",
+        "power": "7111600/81"
+      },
+      {
+        "key": "nutrients-from-biter-egg",
+        "rate": "5/3213",
+        "building": "biochamber",
+        "count": "5/3213",
+        "fuel": "nutrients",
+        "power": "2500000/3213"
+      },
+      {
+        "key": "oxide-asteroid-chunk",
+        "rate": "99607951/1130625000",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "oxide-asteroid-crushing",
+        "rate": "6586439/56531250",
+        "building": "crusher",
+        "count": "6586439/28265625",
+        "fuel": "electric",
+        "power": "240916048/1675"
+      },
+      {
+        "key": "plastic-bar",
+        "rate": "13/90",
+        "building": "chemical-plant",
+        "count": "13/90",
+        "fuel": "electric",
+        "power": "112000/3"
+      },
+      {
+        "key": "processing-unit",
+        "rate": "1/15",
+        "building": "assembling-machine-2",
+        "count": "8/9",
+        "fuel": "electric",
+        "power": "415000/3"
+      },
+      {
+        "key": "promethium-asteroid-chunk",
+        "rate": "5/2",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "promethium-science-pack",
+        "rate": "1/10",
+        "building": "cryogenic-plant",
+        "count": "1/4",
+        "fuel": "electric",
+        "power": "425000"
+      },
+      {
+        "key": "quantum-processor",
+        "rate": "1/15",
+        "building": "electromagnetic-plant",
+        "count": "1",
+        "fuel": "electric",
+        "power": "6200000/3"
+      },
+      {
+        "key": "solid-fuel-from-light-oil",
+        "rate": "1/150",
+        "building": "chemical-plant",
+        "count": "1/150",
+        "fuel": "electric",
+        "power": "8400"
+      },
+      {
+        "key": "steam",
+        "rate": "406/9045",
+        "building": "boiler",
+        "count": "406/9045",
+        "fuel": "chemical",
+        "power": "16240000/201"
+      },
+      {
+        "key": "sulfuric-acid",
+        "rate": "1/50",
+        "building": "chemical-plant",
+        "count": "1/50",
+        "fuel": "electric",
+        "power": "11200"
+      },
+      {
+        "key": "superconductor",
+        "rate": "1/45",
+        "building": "electromagnetic-plant",
+        "count": "1/18",
+        "fuel": "electric",
+        "power": "1600000/9"
+      },
+      {
+        "key": "tungsten-carbide",
+        "rate": "1/15",
+        "building": "assembling-machine-2",
+        "count": "4/45",
+        "fuel": "electric",
+        "power": "55000/3"
+      },
+      {
+        "key": "yumako-processing",
+        "rate": "4/27",
+        "building": "biochamber",
+        "count": "2/27",
+        "fuel": "nutrients",
+        "power": "1000000/27"
+      }
+    ],
+    "items": [
+      {
+        "key": "advanced-circuit",
+        "rate": "2/15"
+      },
+      {
+        "key": "ammonia",
+        "rate": "26/15"
+      },
+      {
+        "key": "ammoniacal-solution",
+        "rate": "26/15"
+      },
+      {
+        "key": "biter-egg",
+        "rate": "3218/3213"
+      },
+      {
+        "key": "calcite",
+        "rate": "7361/506250"
+      },
+      {
+        "key": "carbon",
+        "rate": "10937/3015"
+      },
+      {
+        "key": "carbon-fiber",
+        "rate": "1/15"
+      },
+      {
+        "key": "carbonic-asteroid-chunk",
+        "rate": "67967/120600"
+      },
+      {
+        "key": "coal",
+        "rate": "1178/1675"
+      },
+      {
+        "key": "copper-cable",
+        "rate": "16/3"
+      },
+      {
+        "key": "copper-ore",
+        "rate": "5987/10125"
+      },
+      {
+        "key": "copper-plate",
+        "rate": "1/45"
+      },
+      {
+        "key": "electronic-circuit",
+        "rate": "8/5"
+      },
+      {
+        "key": "fluorine",
+        "rate": "1/3"
+      },
+      {
+        "key": "fluoroketone-cold",
+        "rate": "2/3"
+      },
+      {
+        "key": "fluoroketone-hot",
+        "rate": "2/3"
+      },
+      {
+        "key": "heavy-oil",
+        "rate": "1624/335"
+      },
+      {
+        "key": "holmium-ore",
+        "rate": "113/5625"
+      },
+      {
+        "key": "holmium-plate",
+        "rate": "113/2250"
+      },
+      {
+        "key": "holmium-solution",
+        "rate": "226/225"
+      },
+      {
+        "key": "ice",
+        "rate": "1172371/1507500"
+      },
+      {
+        "key": "iron-ore",
+        "rate": "5987/4050"
+      },
+      {
+        "key": "iron-plate",
+        "rate": "81/50"
+      },
+      {
+        "key": "lava",
+        "rate": "452/2025"
+      },
+      {
+        "key": "light-oil",
+        "rate": "2233/603"
+      },
+      {
+        "key": "lithium",
+        "rate": "7/50"
+      },
+      {
+        "key": "lithium-brine",
+        "rate": "7/5"
+      },
+      {
+        "key": "lithium-plate",
+        "rate": "2/15"
+      },
+      {
+        "key": "metallic-asteroid-chunk",
+        "rate": "5987/40500"
+      },
+      {
+        "key": "molten-copper",
+        "rate": "244/27"
+      },
+      {
+        "key": "molten-iron",
+        "rate": "1148/675"
+      },
+      {
+        "key": "nutrients",
+        "rate": "50/1071"
+      },
+      {
+        "key": "oxide-asteroid-chunk",
+        "rate": "41984569/339187500"
+      },
+      {
+        "key": "petroleum-gas",
+        "rate": "26/9"
+      },
+      {
+        "key": "plastic-bar",
+        "rate": "13/45"
+      },
+      {
+        "key": "processing-unit",
+        "rate": "1/15"
+      },
+      {
+        "key": "promethium-asteroid-chunk",
+        "rate": "5/2"
+      },
+      {
+        "key": "promethium-science-pack",
+        "rate": "1"
+      },
+      {
+        "key": "quantum-processor",
+        "rate": "1/10"
+      },
+      {
+        "key": "solid-fuel",
+        "rate": "1/150"
+      },
+      {
+        "key": "steam",
+        "rate": "1624/603"
+      },
+      {
+        "key": "stone",
+        "rate": "113/11250"
+      },
+      {
+        "key": "sulfur",
+        "rate": "2691/3350"
+      },
+      {
+        "key": "sulfuric-acid",
+        "rate": "1"
+      },
+      {
+        "key": "superconductor",
+        "rate": "1/15"
+      },
+      {
+        "key": "tungsten-carbide",
+        "rate": "1/15"
+      },
+      {
+        "key": "tungsten-ore",
+        "rate": "2/15"
+      },
+      {
+        "key": "water",
+        "rate": "1172371/75375"
+      },
+      {
+        "key": "yumako",
+        "rate": "4/27"
+      },
+      {
+        "key": "yumako-mash",
+        "rate": "4/9"
+      },
+      {
+        "key": "yumako-seed",
+        "rate": "1/225"
       }
     ],
     "surplus": [
       {
-        "key": "ammonia",
-        "rate": "2"
+        "key": "yumako-seed",
+        "rate": "1/225"
       }
     ]
   }

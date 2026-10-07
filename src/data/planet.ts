@@ -80,7 +80,7 @@ export function getPlanets(data: Dataset, recipes: ReadonlyMap<string, Recipe>, 
     for (const d of data.planets) {
         const resources = new Set<Recipe>()
         const recyclingRoots: Recipe[] = []
-        for (const key of [...d.resources.resource, ...d.resources.offshore, ...d.resources.plants]) {
+        for (const key of [...d.resources.resource, ...d.resources.offshore, ...d.resources.plants, ...d.resources.asteroid]) {
             const r = recipes.get(key)
             if (r === undefined) {
                 throw new Error(`planet ${d.key} has unknown resource ${key}`)

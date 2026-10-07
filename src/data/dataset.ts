@@ -168,6 +168,8 @@ export interface PlanetResources {
     resource: string[]
     offshore: string[]
     plants: string[]
+    /** Asteroid chunks that a space platform collects here. */
+    asteroid: string[]
 }
 
 export interface DatasetPlanet extends NamedPrototype {

@@ -288,11 +288,12 @@
           "resources": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["resource", "offshore", "plants"],
+            "required": ["resource", "offshore", "plants", "asteroid"],
             "properties": {
               "resource": { "$ref": "#/$defs/keyList" },
               "offshore": { "$ref": "#/$defs/keyList" },
-              "plants": { "$ref": "#/$defs/keyList" }
+              "plants": { "$ref": "#/$defs/keyList" },
+              "asteroid": { "$ref": "#/$defs/keyList", "description": "Asteroid chunks that a space platform collects here." }
             }
           },
           "icon_col": { "$ref": "#/$defs/iconIndex" },

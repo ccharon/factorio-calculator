@@ -38,6 +38,7 @@ for (const file of files) {
         for (const p of data.planets) {
             p.resources.resource.forEach(r => assert.ok(resources.has(r), `${p.key}: ${r}`))
             p.resources.plants.forEach(r => assert.ok(plants.has(r), `${p.key}: ${r}`))
+            p.resources.asteroid.forEach(r => assert.ok(itemKeys.has(r), `${p.key}: ${r}`))
         }
     })
 

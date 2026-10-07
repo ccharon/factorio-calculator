@@ -325,6 +325,29 @@ export function convert(raw, localeFiles, version, runtime) {
     }
     recipe_productivity.sort((a, b) => (a.key < b.key ? -1 : a.key > b.key ? 1 : 0))
 
+    // Asteroid chunks a space platform can collect: chunks that spawn anywhere, and chunks that
+    // spawning asteroids break into when they are destroyed.
+    const chunksOf = (asteroid, seen = new Set()) => {
+        if (seen.has(asteroid)) {
+            return []
+        }
+        seen.add(asteroid)
+        // A trigger effect is a single effect or a list of them.
+        const effect = raw.asteroid?.[asteroid]?.dying_trigger_effect
+        return (Array.isArray(effect) ? effect : effect ? [effect] : []).flatMap(e => {
+            if (e.type === "create-asteroid-chunk") {
+                return [e.asteroid_name]
+            }
+            return e.type === "create-entity" ? chunksOf(e.entity_name, seen) : []
+        })
+    }
+    const asteroidChunks = new Set()
+    const spawners = [...Object.values(raw.planet), ...Object.values(raw["space-location"] ?? {}), ...Object.values(raw["space-connection"] ?? {})]
+    for (const def of spawners.flatMap(s => asArray(s.asteroid_spawn_definitions))) {
+        const chunks = def.type === "asteroid-chunk" ? [def.asteroid] : chunksOf(def.asteroid)
+        chunks.filter(c => raw["asteroid-chunk"]?.[c] && !isSkipped(raw["asteroid-chunk"][c])).forEach(c => asteroidChunks.add(c))
+    }
+
     // Planets and their resources. Plants belong to a planet through their autoplace control.
     const planetResources = new Set()
     const planets = []
@@ -344,6 +367,7 @@ export function convert(raw, localeFiles, version, runtime) {
                 resource,
                 offshore: [...new Set(tiles.map(t => raw.tile[t]?.fluid).filter(Boolean))].sort(compareStrings),
                 plants: Object.values(raw.plant).filter(pl => controls.has(pl.autoplace?.control)).map(pl => pl.name).sort(compareStrings),
+                asteroid: [],
             },
             icon_ref: `space-location/${p.name}`,
         })
@@ -355,7 +379,7 @@ export function convert(raw, localeFiles, version, runtime) {
             localized_name: locale.name("surface", s.name),
             order: s.order ?? "",
             surface_properties: s.surface_properties ?? {},
-            resources: { resource: [], offshore: [], plants: [] },
+            resources: { resource: [], offshore: [], plants: [], asteroid: [...asteroidChunks].sort(compareStrings) },
             icon_ref: `surface/${s.name}`,
         })
     }

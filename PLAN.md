@@ -142,7 +142,7 @@ Comes before the model changes, so phases 4 to 6 are written once, in the new st
 
 Ordered by usefulness for planning:
 
-1. Space platform as a selectable location: asteroid collection as resource, crushing and reprocessing, thruster fuel and oxidizer.
+1. Done. The space platform surface has every asteroid chunk that spawns in the solar system as a resource without building (`resources.asteroid`; the collector rate depends on the asteroid density). Crushing, reprocessing and thruster fuel are ordinary recipes. Thruster consumption per performance level is not modelled; targets set fuel and oxidizer rates directly.
 2. Gleba: agricultural tower and plant yield per minute, spoilage chain, captive spawner.
 3. Aquilo and Vulcanus: heating tower, fusion power, foundry and melting recipes.
 4. Power generation: steam engines, turbines, heat exchangers, solar with per-planet `solar-power`.
@@ -175,6 +175,6 @@ Branch `develop`. Phase 3 and phases 4 and 4a are done. Last pushed commit: `9f8
 
 Next steps:
 
-1. Phase 5, step 1.
+1. Phase 5, step 2.
 
 Helper scripts (ignored by git) in `.port/`: `port.cjs` writes a TS file with the old license header and rewrites imports; `blank2.cjs` inserts empty lines before anchor lines.

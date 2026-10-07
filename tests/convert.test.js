@@ -72,9 +72,15 @@ function minimalRaw() {
                         tile: { settings: { deepwater: {} } },
                     },
                 },
+                asteroid_spawn_definitions: [{ type: "asteroid-chunk", asteroid: "rock-chunk" }, { asteroid: "big-ice" }],
             },
         },
-        surface: {},
+        asteroid: {
+            "big-ice": { name: "big-ice", dying_trigger_effect: [{ type: "create-entity", entity_name: "small-ice" }] },
+            "small-ice": { name: "small-ice", dying_trigger_effect: { type: "create-asteroid-chunk", asteroid_name: "ice-chunk" } },
+        },
+        "asteroid-chunk": { "rock-chunk": { name: "rock-chunk" }, "ice-chunk": { name: "ice-chunk" } },
+        surface: { "space-platform": { name: "space-platform", order: "z", surface_properties: { pressure: 0 } } },
         tile: { deepwater: { name: "deepwater", fluid: "water" } },
         resource: { "iron-ore": { name: "iron-ore", minable: { mining_time: 1, result: "iron-ore" } } },
         plant: {
@@ -107,7 +113,8 @@ test("convert builds every dataset section", () => {
     assert.equal(d.fluids[0].heat_capacity, 2000)
     assert.equal(d.crafting_machines[0].energy_usage, 90000)
     assert.equal(d.crafting_machines[0].energy_source.fuel_category, "chemical")
-    assert.deepEqual(d.planets[0].resources, { resource: ["iron-ore"], offshore: ["water"], plants: ["bush"] })
+    assert.deepEqual(d.planets[0].resources, { resource: ["iron-ore"], offshore: ["water"], plants: ["bush"], asteroid: [] })
+    assert.deepEqual(d.planets[1].resources.asteroid, ["ice-chunk", "rock-chunk"])
     assert.deepEqual(d.resources[0].results, [{ type: "item", name: "iron-ore", amount: 1 }])
     assert.equal(d.plants[0].seed, "seed")
     assert.equal(d.sprites.extra.clock.icon_ref, "file:__core__/clock.png")

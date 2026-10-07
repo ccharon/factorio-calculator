@@ -421,6 +421,34 @@ class PumpjackRecipe extends Recipe {
     }
 }
 
+/**
+ * Pseudo-recipe for asteroid chunks that asteroid collectors catch on a space platform. It has no
+ * building, because the collection rate depends on the asteroid density along the route.
+ */
+class AsteroidRecipe extends Recipe {
+    constructor(chunk: Item) {
+        super({
+            key: chunk.key,
+            name: chunk.name,
+            order: chunk.order,
+            icon_col: chunk.icon_col,
+            icon_row: chunk.icon_row,
+            allowProductivity: false,
+            categories: [],
+            time: zero,
+            ingredients: [],
+            products: [new Ingredient(chunk, one)],
+        })
+        this.defaultPriority = 1
+        this.defaultWeight = hundred
+    }
+
+    /** Asteroid chunks appear in the Resources tab. */
+    override isResource(): boolean {
+        return true
+    }
+}
+
 /** Pseudo-recipe for pumping a fluid from a lake or ocean. */
 class OffshorePumpRecipe extends Recipe {
     constructor(product: Item) {
@@ -512,6 +540,10 @@ export function getRecipes(data: Dataset, items: Map<string, Item>): Map<string,
         if (r) {
             recipes.set(d.key, r)
         }
+    }
+
+    for (const key of new Set(data.planets.flatMap(p => p.resources.asteroid))) {
+        recipes.set(key, new AsteroidRecipe(item(key)))
     }
 
     for (const d of data.resources) {

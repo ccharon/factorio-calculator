@@ -30716,7 +30716,8 @@
         "offshore": [
           "water"
         ],
-        "plants": []
+        "plants": [],
+        "asteroid": []
       },
       "icon_col": 10,
       "icon_row": 26
@@ -30744,7 +30745,8 @@
         "offshore": [
           "lava"
         ],
-        "plants": []
+        "plants": [],
+        "asteroid": []
       },
       "icon_col": 11,
       "icon_row": 26
@@ -30772,7 +30774,8 @@
         "plants": [
           "jellystem",
           "yumako-tree"
-        ]
+        ],
+        "asteroid": []
       },
       "icon_col": 9,
       "icon_row": 26
@@ -30797,7 +30800,8 @@
         "offshore": [
           "heavy-oil"
         ],
-        "plants": []
+        "plants": [],
+        "asteroid": []
       },
       "icon_col": 8,
       "icon_row": 26
@@ -30825,7 +30829,8 @@
         "offshore": [
           "ammoniacal-solution"
         ],
-        "plants": []
+        "plants": [],
+        "asteroid": []
       },
       "icon_col": 7,
       "icon_row": 26
@@ -30845,7 +30850,13 @@
       "resources": {
         "resource": [],
         "offshore": [],
-        "plants": []
+        "plants": [],
+        "asteroid": [
+          "carbonic-asteroid-chunk",
+          "metallic-asteroid-chunk",
+          "oxide-asteroid-chunk",
+          "promethium-asteroid-chunk"
+        ]
       },
       "icon_col": 12,
       "icon_row": 26
