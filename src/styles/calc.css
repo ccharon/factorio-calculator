@@ -91,6 +91,18 @@ img.icon {
 .ignore {
     opacity: 0.3;
 }
+/* An item or recipe of higher quality: the quality icon sits in the lower left corner. */
+.quality-icon {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 0;
+}
+.quality-icon .quality-badge {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+}
 /* tooltips */
 /* The popover sits right of its anchor, or flips to the other side where it does not fit. */
 div.tooltip {

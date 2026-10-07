@@ -128,7 +128,7 @@ function createResources(enter: d3.Selection<d3.EnterElement, Resource, HTMLDivE
     icon.on("keydown", function (event: KeyboardEvent, resource: Resource) {
         if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
             event.preventDefault()
-            const icons = container().selectAll<HTMLImageElement, unknown>("img[tabindex]").nodes()
+            const icons = container().selectAll<HTMLElement, unknown>("[tabindex]").nodes()
             icons[icons.indexOf(this) + (event.key === "ArrowLeft" ? -1 : 1)]?.focus()
         } else if (event.key === "ArrowUp" || event.key === "ArrowDown") {
             event.preventDefault()

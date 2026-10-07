@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 // Icons from the sprite sheet, rendered as <img> elements with a background offset.
 
-import * as d3 from "d3"
 import type { SpriteSheetData } from "../data/dataset.ts"
 import type { IconSource } from "../data/icon-source.ts"
 import { Tooltip } from "./tooltip.ts"
@@ -29,48 +28,62 @@ export class Icon {
     readonly name: string
     readonly obj: IconSource
     private readonly tooltip: (() => Node) | null
+    private readonly quality: IconSource | null
 
     /**
      * @param obj - The object the icon represents.
      * @param tooltip - Returns the tooltip content. Without it, the image gets a title attribute.
+     * @param quality - The quality of an item or recipe variant, shown as a badge.
      */
-    constructor(obj: IconSource, tooltip: (() => Node) | null = null) {
+    constructor(obj: IconSource, tooltip: (() => Node) | null = null, quality: IconSource | null = null) {
         this.name = obj.iconName ?? obj.name
         this.obj = obj
         this.tooltip = tooltip
+        this.quality = quality
     }
 
     /**
-     * Creates a new <img> element for this icon.
+     * Creates a new element for this icon: an <img>, or for a variant of higher quality a <span>
+     * with the <img> and the quality badge.
      *
      * @param size - Width and height in pixels.
      * @param suppressTooltip - If true, the image gets a title attribute instead of a tooltip.
-     * @param target - Element the tooltip is placed next to. Defaults to the image.
+     * @param target - Element the tooltip is placed next to. Defaults to the icon.
      */
-    make(size: number, suppressTooltip = false, target?: Element): HTMLImageElement {
-        const sheet = spriteSheet()
-
-        let x = -this.obj.icon_col * PX_WIDTH
-        let y = -this.obj.icon_row * PX_HEIGHT
-        const img = d3.select(makeEmptyIcon(size)).classed("icon", true).style("background", `url(images/sprite-sheet-${sheet.hash}.png)`)
-
-        if (size !== PX_WIDTH) {
-            const ratio = size / PX_WIDTH
-            x *= ratio
-            y *= ratio
-            img.style("background-size", `${sheet.width * ratio}px ${sheet.height * ratio}px`)
+    make(size: number, suppressTooltip = false, target?: Element): HTMLElement {
+        const img = spriteImage(this.obj, size)
+        img.alt = this.name
+        const quality = this.quality
+        let icon: HTMLElement = img
+        if (quality !== null) {
+            icon = document.createElement("span")
+            icon.classList.add("quality-icon")
+            const badge = spriteImage(quality, Math.round(size * 0.45))
+            badge.classList.add("quality-badge")
+            badge.alt = quality.name
+            icon.append(img, badge)
         }
-        img.style("background-position", `${x}px ${y}px`)
 
         if (!suppressTooltip && this.tooltip !== null) {
-            new Tooltip(img.node() as HTMLImageElement, this.tooltip, target)
+            new Tooltip(icon, this.tooltip, target)
         } else {
-            img.attr("title", this.obj.name)
+            icon.title = quality === null ? this.obj.name : `${this.obj.name} (${quality.name})`
         }
-
-        img.attr("alt", this.name)
-        return img.node() as HTMLImageElement
+        return icon
     }
+}
+
+// Creates an <img> that shows the sprite of obj at size pixels.
+function spriteImage(obj: IconSource, size: number): HTMLImageElement {
+    const sheet = spriteSheet()
+    const ratio = size / PX_WIDTH
+    const img = makeEmptyIcon(size)
+    img.style.background = `url(images/sprite-sheet-${sheet.hash}.png)`
+    if (size !== PX_WIDTH) {
+        img.style.backgroundSize = `${sheet.width * ratio}px ${sheet.height * ratio}px`
+    }
+    img.style.backgroundPosition = `${-obj.icon_col * PX_WIDTH * ratio}px ${-obj.icon_row * PX_HEIGHT * ratio}px`
+    return img
 }
 
 /**

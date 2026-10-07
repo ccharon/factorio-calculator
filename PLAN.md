@@ -187,7 +187,7 @@ Mechanics from the 2.1 prototype docs: a machine with quality effect Q raises th
 3. Done: `addQualityVariants()` creates `item.variant(q)` (key `<item>@<quality>`) for solid items not in orbit, and `recipe.variant(q)` for recipes that allow quality and have a solid ingredient. Variants are not in `spec.items` or `spec.recipes`; `spec` maps them to `recipe.base` for building, disable state and research. The graph takes variant recipes only as producers of variant items. A DisabledRecipe outside the priority list costs the maximum in the solver.
 4. Done: `RecipeContext.getProducts(recipe)` spreads solid products by `ModuleSpec.qualityEffect()` (zero where the building's `allowed_effects` or the recipe exclude quality); solver, totals and cycle detection use it. `spec.producersOf(item)` adds lower-quality recipes that reach a variant. The legendary processing unit test with recycling solves in about 3 s (exact simplex on 236×412); moving the solver into a Web Worker would keep the page responsive.
 5. Done: targets have a quality dropdown next to the item, stored as `<item>@<quality>` in `items=`. `spec.findItem()` and `spec.findRecipe()` resolve variant keys in URLs (targets, `modules=`, `rq=`).
-6. Display: quality badge on item and recipe icons of variants.
+6. Done: `iconOf()` gives variants a quality badge (`Icon.make()` returns a `span.quality-icon` with the image and the badge).
 7. Recycling: recycling recipes have variants like other recipes. Loops come from enabling them in the recipe toggles.
 8. Snapshot scenarios for a legendary target with and without recycling; check solver time.
 

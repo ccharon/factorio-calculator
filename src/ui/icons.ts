@@ -36,7 +36,8 @@ export function iconOf(obj: IconSource): Icon {
     let icon = icons.get(obj)
     if (icon === undefined) {
         const tooltip = hasTooltip(obj) ? (): Node => renderTooltip(obj) : null
-        icon = new Icon(obj, tooltip)
+        const quality = obj instanceof Item || obj instanceof Recipe ? obj.quality : null
+        icon = new Icon(obj, tooltip, quality)
         icons.set(obj, icon)
     }
     return icon

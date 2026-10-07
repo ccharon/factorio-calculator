@@ -288,11 +288,11 @@ function toggleBreakdownHandler(event: Event): void {
 }
 
 // Returns the icon of a table row item. Its tooltip adds a hint about ignoring the item.
-function itemRowIcon(item: Item, hint: string): HTMLImageElement {
-    return new Icon(item, () => renderItemTooltip(item, d3.create("span").text(hint).node() ?? undefined)).make(32)
+function itemRowIcon(item: Item, hint: string): HTMLElement {
+    return new Icon(item, () => renderItemTooltip(item, d3.create("span").text(hint).node() ?? undefined), item.quality).make(32)
 }
 
-function pipeIcon(): HTMLImageElement {
+function pipeIcon(): HTMLElement {
     const pipe = spec.items.get("pipe")
     if (pipe === undefined) {
         throw new Error("dataset lacks the pipe")
