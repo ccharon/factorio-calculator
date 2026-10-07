@@ -187,18 +187,19 @@ export class ModuleSpec {
 
     // Sums one effect over the building's modules and, if the building has module slots, the beacons.
     private sumEffect(context: QualityContext, effect: (e: ModuleEffect) => Rational): Rational {
+        const moduleQuality = context.getQuality(this.recipe, "module")
         let total = one
         for (const module of this.modules) {
             if (module) {
-                total = total.add(effect(module.effectAt(context.moduleQuality)))
+                total = total.add(effect(module.effectAt(moduleQuality)))
             }
         }
 
         if (this.modules.length > 0) {
-            const multiplier = this.beaconMultiplier(context.beaconQuality)
+            const multiplier = this.beaconMultiplier(context.getQuality(this.recipe, "beacon"))
             for (const module of this.beaconModules) {
                 if (module) {
-                    total = total.add(effect(module.effectAt(context.moduleQuality)).mul(multiplier))
+                    total = total.add(effect(module.effectAt(moduleQuality)).mul(multiplier))
                 }
             }
         }
@@ -216,7 +217,7 @@ export class ModuleSpec {
         let prod = one
         for (const module of this.modules) {
             if (module) {
-                prod = prod.add(module.effectAt(context.moduleQuality).productivity)
+                prod = prod.add(module.effectAt(context.getQuality(this.recipe, "module")).productivity)
             }
         }
         if (this.building) {

@@ -22,7 +22,8 @@ import type { Module } from "../data/module.ts"
 import {
     DEFAULT_TAB, currentTab, DEFAULT_VISUALIZER, visualizerType, DEFAULT_RENDER, visualizerRender, visualizerElectricity, isDefaultVisDirection, visualizerDirection,
 } from "../ui/events.ts"
-import { DEFAULT_TITLE, DEFAULT_COLOR_SCHEME, colorScheme } from "../ui/settings.ts"
+import { QUALITY_KINDS } from "../data/quality.ts"
+import { DEFAULT_TITLE, DEFAULT_COLOR_SCHEME, QUALITY_SETTINGS, colorScheme } from "../ui/settings.ts"
 import { DEFAULT_RATE, DEFAULT_RATE_PRECISION, DEFAULT_COUNT_PRECISION, DEFAULT_FORMAT } from "./align.ts"
 import { spec, DEFAULT_BELT, DEFAULT_REACTOR_BLOCK } from "./factory.ts"
 
@@ -92,10 +93,15 @@ export function formatSettings(excludeTitle = false, overrideTab?: string, targe
     }
 
     const normal = spec.qualities[0]
-    for (const [key, quality] of [["qm", spec.machineQuality], ["qd", spec.moduleQuality], ["qb", spec.beaconQuality]] as const) {
-        if (quality !== normal) {
+    for (const { kind, key } of QUALITY_SETTINGS) {
+        const quality = spec.globalQuality.get(kind)
+        if (quality !== undefined && quality !== normal) {
             add(key, quality.key)
         }
+    }
+    const recipeQualities = Array.from(spec.recipeQuality, ([recipe, qualities]) => [recipe.key, ...QUALITY_KINDS.map(kind => qualities.get(kind)?.key ?? "")].join(":"))
+    if (recipeQualities.length > 0) {
+        add("rq", recipeQualities.join(","))
     }
 
     if (spec.belt.key !== DEFAULT_BELT) {

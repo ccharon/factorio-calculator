@@ -23,7 +23,8 @@ import type { Fuel } from "../data/fuel.ts"
 import { getRecipeGroups, topoSort } from "../data/groups.ts"
 import type { Item } from "../data/item.ts"
 import { type Module, type ModuleSpec, moduleRows } from "../data/module.ts"
-import { ELECTRICITY, ELECTRICITY_UNIT, HEAT, type RecipeLike, type RecipeNode, isRecipeLike } from "../data/recipe.ts"
+import type { QualityKind } from "../data/quality.ts"
+import { ELECTRICITY, ELECTRICITY_UNIT, HEAT, Recipe, type RecipeLike, type RecipeNode, isRecipeLike } from "../data/recipe.ts"
 import type { FactorySpecification } from "../state/factory.ts"
 import { spec } from "../state/factory.ts"
 import { formatSettings } from "../state/fragment.ts"
@@ -34,6 +35,7 @@ import { Icon } from "./icon.ts"
 import { type ModuleCell, type ModuleInput as DropdownInput, moduleDropdown } from "./module-dropdown.ts"
 import { iconOf, renderItemTooltip } from "./icons.ts"
 import { readRational } from "./number-input.ts"
+import { qualityDropdown } from "./quality-dropdown.ts"
 
 const hundred = Rational.from_float(100)
 
@@ -330,6 +332,20 @@ function fuelOf(d: DisplayRow): Fuel {
     return spec.fuel.get(category)
 }
 
+// The quality kinds that change the results of a building: machine quality only where it changes the speed.
+function qualityKinds(building: Building): QualityKind[] {
+    const kinds: QualityKind[] = building.hasQualitySpeed() ? ["machine"] : []
+    return building.canBeacon() ? [...kinds, "module", "beacon"] : kinds
+}
+
+function craftRecipeOf(d: DisplayRow): Recipe {
+    const recipe = recipeOf(d)
+    if (!(recipe instanceof Recipe)) {
+        throw new Error("row without crafting recipe")
+    }
+    return recipe
+}
+
 function buildingOf(d: { readonly building: Building | null }): Building {
     if (d.building === null) {
         throw new Error("row without building")
@@ -350,6 +366,7 @@ function createRow(enter: d3.Selection<d3.EnterElement, DisplayRow, HTMLTableSec
     row.append("td").classed("item right-align belt-count-cell pad-right", true).append("tt").classed("belt-count", true)
     row.append("td").classed("pad building building-icon leftmost right-align", true)
     row.append("td").classed("right-align building", true).append("tt").classed("building-count", true)
+    row.append("td").classed("pad building quality-cell", true)
     row.append("td").classed("pad building module module-cell", true)
 
     const beaconCell = row.append("td").classed("pad building module beacon", true)
@@ -428,7 +445,7 @@ export function displayItems(context: FactorySpecification, totals: Totals | nul
         { text: `items/${rateName}`, colspan: 2, surplus: false },
         { text: `surplus/${rateName}`, colspan: 1, surplus: true },
         { text: "belts", colspan: 2, surplus: false },
-        { text: "buildings", colspan: 2, surplus: false },
+        { text: "buildings", colspan: 3, surplus: false },
         { text: "modules", colspan: 1, surplus: false },
         { text: "beacons", colspan: 1, surplus: false },
         { text: "power", colspan: 2, surplus: false },
@@ -492,6 +509,9 @@ export function displayItems(context: FactorySpecification, totals: Totals | nul
     buildingCount.text(d => spec.format.alignCount(spec.getCount(recipeOf(d), rateOf(totals.rates, recipeOf(d)))))
 
     // The dropdowns are rebuilt on every update, because their contents depend on the row.
+    const qualityCell = buildingRow.selectAll<HTMLTableCellElement, DisplayRow>("td.quality-cell")
+    qualityCell.selectAll("*").remove()
+    qualityDropdown(qualityCell.filter(d => recipeOf(d) instanceof Recipe && qualityKinds(buildingOf(d)).length > 0), craftRecipeOf, d => qualityKinds(buildingOf(d)), () => spec.updateSolution())
     const moduleRow = row.filter(d => d.moduleSpec !== null)
     const moduleCell = moduleRow.selectAll<HTMLTableCellElement, DisplayRow>("td.module-cell")
     moduleCell.selectAll("*").remove()

@@ -52,7 +52,7 @@ The browser checks use `/usr/bin/google-chrome-stable`. Set `CHROME` to use anot
 
 ## Known limitations
 
-- Quality is one global setting each for machines, modules and beacons. Quality per recipe and recycling loops for a target quality are not modelled.
+- Quality of machines, modules and beacons is set per recipe, not per building or module slot. Recycling loops for a target quality are not modelled.
 - The nuclear reactor neighbour bonus assumes one block of two rows. Other layouts can only be approximated by a block with the same average number of neighbours.
 - Thruster fuel use does not depend on the thruster performance level. Targets set the fuel and oxidizer rates directly.
 - Spoilage during transport is not modelled.

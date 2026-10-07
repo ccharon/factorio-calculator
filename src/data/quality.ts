@@ -16,6 +16,7 @@ limitations under the License.*/
 // and the distribution effectivity of beacons.
 import type { Dataset } from "./dataset.ts"
 import type { IconSource } from "./icon-source.ts"
+import type { Recipe } from "./recipe.ts"
 
 /** A quality level such as uncommon. */
 export class Quality implements IconSource {
@@ -34,11 +35,16 @@ export class Quality implements IconSource {
     }
 }
 
-/** The quality of machines, of modules and of beacons in the factory. */
+/** What a quality setting applies to: the machines of a recipe, their modules, or the beacons around them. */
+export type QualityKind = "machine" | "module" | "beacon"
+
+/** The quality kinds in the order the settings show them. */
+export const QUALITY_KINDS: readonly QualityKind[] = ["machine", "module", "beacon"]
+
+/** Provides the quality of machines, modules and beacons per recipe. */
 export interface QualityContext {
-    readonly machineQuality: Quality
-    readonly moduleQuality: Quality
-    readonly beaconQuality: Quality
+    /** Returns the quality of the given kind for recipe. */
+    getQuality(recipe: Recipe, kind: QualityKind): Quality
 }
 
 /** Creates the quality levels from lowest to highest. */

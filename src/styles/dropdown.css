@@ -88,3 +88,17 @@ limitations under the License.*/
 .dropdownWrapper .dropdown:popover-open input[type="radio"]:focus-visible + label {
     outline: 2px solid var(--accent);
 }
+/* The quality dropdown shows one line per kind when open, and the selected qualities side by side when closed. */
+.quality-dropdown .quality-group {
+    display: inline-block;
+}
+.quality-dropdown:popover-open .quality-group {
+    display: block;
+}
+.quality-dropdown .quality-kind {
+    display: none;
+}
+.quality-dropdown:popover-open .quality-kind {
+    display: inline-block;
+    width: 5em;
+}

@@ -23,7 +23,7 @@ import type { Item } from "../data/item.ts"
 import { type Module, type ModuleDefaults, ModuleSpec } from "../data/module.ts"
 import type { Planet } from "../data/planet.ts"
 import type { ProductivityResearch } from "../data/research.ts"
-import { Quality } from "../data/quality.ts"
+import { QUALITY_KINDS, Quality, type QualityKind } from "../data/quality.ts"
 import { DISABLED_RECIPE_PREFIX, ELECTRICITY, HEAT, type Ingredient, ReactorRecipe, Recipe, type RecipeContext, type RecipeLike, type RecipeNode } from "../data/recipe.ts"
 import { renderDebug } from "../ui/debug.ts"
 import { displayItems } from "../ui/display.ts"
@@ -95,9 +95,10 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
     /** Quality levels from lowest to highest. */
     qualities: Quality[] = []
     // Before the dataset is loaded, every quality setting is the normal quality.
-    machineQuality: Quality = NORMAL_QUALITY
-    moduleQuality: Quality = NORMAL_QUALITY
-    beaconQuality: Quality = NORMAL_QUALITY
+    /** Global qualities. Recipes without their own setting use them. */
+    readonly globalQuality: Map<QualityKind, Quality> = new Map(QUALITY_KINDS.map(kind => [kind, NORMAL_QUALITY]))
+    /** Qualities that differ from the global ones, per recipe. */
+    readonly recipeQuality: Map<Recipe, Map<QualityKind, Quality>> = new Map()
 
     /** Recipe productivity technologies, sorted by order. */
     research: ProductivityResearch[] = []
@@ -197,9 +198,10 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
         this.research = research
         this.qualities = qualities
         const normal = qualities[0] ?? NORMAL_QUALITY
-        this.machineQuality = normal
-        this.moduleQuality = normal
-        this.beaconQuality = normal
+        for (const kind of QUALITY_KINDS) {
+            this.globalQuality.set(kind, normal)
+        }
+        this.recipeQuality.clear()
         this.researchLevels.clear()
         this.defaultPriority = this.getDefaultPriorityArray()
         this.priorityValue = null
@@ -523,6 +525,26 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
             }
         }
         return this.initModuleSpec(recipe, this.getBuilding(recipe))
+    }
+
+    /** Returns the quality of the given kind for recipe: its own setting, or the global one. */
+    getQuality(recipe: Recipe, kind: QualityKind): Quality {
+        return this.recipeQuality.get(recipe)?.get(kind) ?? this.globalQuality.get(kind) ?? NORMAL_QUALITY
+    }
+
+    /** Sets the quality of the given kind for recipe. The global quality removes the recipe's own setting. */
+    setRecipeQuality(recipe: Recipe, kind: QualityKind, quality: Quality): void {
+        const qualities = this.recipeQuality.get(recipe) ?? new Map<QualityKind, Quality>()
+        if (quality === this.globalQuality.get(kind)) {
+            qualities.delete(kind)
+        } else {
+            qualities.set(kind, quality)
+        }
+        if (qualities.size === 0) {
+            this.recipeQuality.delete(recipe)
+        } else {
+            this.recipeQuality.set(recipe, qualities)
+        }
     }
 
     /** Returns the productivity multiplier of recipe, such as 1.5 for +50%, limited by the recipe's productivity cap. */

@@ -96,14 +96,14 @@ export function makeDropdown<GElement extends HTMLElement, Datum, PElement exten
 }
 
 let inputId = 0
-// The choice made with arrow keys in an open dropdown, applied when it closes.
-const pendingChoice = new WeakMap<Element, () => void>()
+// The choices made with arrow keys in an open dropdown, by radio group name, applied when it closes.
+const pendingChoices = new WeakMap<Element, Map<string, () => void>>()
 
 /**
  * Appends a radio input and its label to each element of selector. Returns the labels, which
  * take the icon.
  *
- * @param name - Radio group name. Must be unique to the dropdown.
+ * @param name - Radio group name, unique on the page. A dropdown may hold several groups.
  * @param checked - Returns whether an input is the selected one.
  * @param callback - Called with the datum when an input is selected.
  */
@@ -126,13 +126,19 @@ export function addInputs<GElement extends HTMLElement, Datum, PElement extends 
     }).on("change", function (_event: Event, d: Datum) {
         const dropdown = this.closest(".dropdown")
         if (fromKeyboard && dropdown !== null) {
-            if (!pendingChoice.has(dropdown)) {
+            let pending = pendingChoices.get(dropdown)
+            if (pending === undefined) {
+                const choices = new Map<string, () => void>()
+                pending = choices
+                pendingChoices.set(dropdown, choices)
                 dropdown.addEventListener("toggle", () => {
-                    pendingChoice.get(dropdown)?.()
-                    pendingChoice.delete(dropdown)
+                    pendingChoices.delete(dropdown)
+                    for (const choose of choices.values()) {
+                        choose()
+                    }
                 }, { once: true })
             }
-            pendingChoice.set(dropdown, () => callback(d))
+            pending.set(this.name, () => callback(d))
         } else {
             closeDropdown(this)
             callback(d)

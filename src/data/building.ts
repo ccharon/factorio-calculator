@@ -97,6 +97,11 @@ export class Building implements IconSource {
         return this.conditions.every(c => c.holds(properties))
     }
 
+    /** Returns whether the crafting speed depends on the building's quality. */
+    hasQualitySpeed(): boolean {
+        return this.speedByQuality.size > 0
+    }
+
     /** Returns the crafting speed of the building at quality. */
     speedAt(quality: Quality): Rational {
         return this.speedByQuality.get(quality.key) ?? this.speed
@@ -118,7 +123,7 @@ export class Building implements IconSource {
     /** Returns crafts per second of one building, including module and beacon speed effects. */
     getRecipeRate(context: BuildingContext, recipe: Recipe): Rational {
         const speedEffect = context.getModuleSpec(recipe)?.speedEffect(context) ?? one
-        return recipe.time.reciprocate().mul(this.speedAt(context.machineQuality)).mul(speedEffect)
+        return recipe.time.reciprocate().mul(this.speedAt(context.getQuality(recipe, "machine"))).mul(speedEffect)
     }
 
     /** Returns whether modules and beacons can affect this building. */

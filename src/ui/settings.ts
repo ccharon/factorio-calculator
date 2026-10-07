@@ -27,7 +27,7 @@ import type { Fuel } from "../data/fuel.ts"
 import { getRecipeGroups } from "../data/groups.ts"
 import { type Module, moduleRows, shortModules } from "../data/module.ts"
 import type { Planet } from "../data/planet.ts"
-import type { Quality } from "../data/quality.ts"
+import { QUALITY_KINDS, type Quality, type QualityKind } from "../data/quality.ts"
 import type { ProductivityResearch } from "../data/research.ts"
 import { ReactorRecipe, type Recipe, type RecipeLike } from "../data/recipe.ts"
 import {
@@ -474,25 +474,51 @@ function renderBuildingSelector(): void {
 
 // quality
 
-// The three quality settings with their URL keys and labels.
-const QUALITY_SETTINGS = [
-    { key: "qm", label: "Machines", get: (): Quality => spec.machineQuality, set: (q: Quality): void => { spec.machineQuality = q } },
-    { key: "qd", label: "Modules", get: (): Quality => spec.moduleQuality, set: (q: Quality): void => { spec.moduleQuality = q } },
-    { key: "qb", label: "Beacons", get: (): Quality => spec.beaconQuality, set: (q: Quality): void => { spec.beaconQuality = q } },
-] as const
+/** A global quality setting: its kind, URL key and label. */
+export interface QualitySetting {
+    readonly kind: QualityKind
+    readonly key: string
+    readonly label: string
+}
 
-type QualitySetting = typeof QUALITY_SETTINGS[number]
+/** The global quality settings in the order of QUALITY_KINDS. */
+export const QUALITY_SETTINGS: readonly QualitySetting[] = [
+    { kind: "machine", key: "qm", label: "Machines" },
+    { kind: "module", key: "qd", label: "Modules" },
+    { kind: "beacon", key: "qb", label: "Beacons" },
+]
+
+// Returns the quality with key, or undefined with a warning. An empty key is no quality and no warning.
+function findQuality(key: string): Quality | undefined {
+    const quality = spec.qualities.find(q => q.key === key)
+    if (key !== "" && quality === undefined) {
+        warn("unknown quality", key)
+    }
+    return quality
+}
 
 function renderQuality(settings: Settings): void {
     for (const setting of QUALITY_SETTINGS) {
-        const requested = settings.get(setting.key)
-        const quality = requested === undefined ? undefined : spec.qualities.find(q => q.key === requested)
-        if (requested !== undefined && quality === undefined) {
-            warn("unknown quality", requested)
-        }
+        const quality = findQuality(settings.get(setting.key) ?? "")
         if (quality !== undefined) {
-            setting.set(quality)
+            spec.globalQuality.set(setting.kind, quality)
         }
+    }
+
+    // Recipe qualities as recipe:machine:module:beacon, with empty fields for the global quality.
+    for (const entry of splitList(settings.get("rq"))) {
+        const [key = "", ...qualityKeys] = entry.split(":")
+        const recipe = spec.recipes.get(key)
+        if (recipe === undefined) {
+            warn("unknown recipe", key)
+            continue
+        }
+        QUALITY_KINDS.forEach((kind, i) => {
+            const quality = findQuality(qualityKeys[i] ?? "")
+            if (quality !== undefined) {
+                spec.setRecipeQuality(recipe, kind, quality)
+            }
+        })
     }
 
     const div = d3.select("#quality_selector")
@@ -503,9 +529,9 @@ function renderQuality(settings: Settings): void {
         rows,
         d => `quality_${d.key}`,
         () => spec.qualities,
-        (quality, d) => quality === d.get(),
+        (quality, d) => quality === spec.globalQuality.get(d.kind),
         (quality, d) => {
-            d.set(quality)
+            spec.globalQuality.set(d.kind, quality)
             spec.updateSolution()
         },
     )
