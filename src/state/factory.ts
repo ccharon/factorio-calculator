@@ -440,6 +440,7 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
     private syncPlanetDisable(): void {
         let allDisable = new Set<Recipe>()
         const planets = Array.from(this.selectedPlanets)
+
         const first = planets[0]
         if (first !== undefined) {
             allDisable = new Set(first.disable)
@@ -452,11 +453,13 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
         for (const r of Array.from(this.disable).filter(r => !allDisable.has(r))) {
             this.setEnable(r)
         }
+
         for (const r of allDisable) {
             if (!this.disable.has(r)) {
                 this.setDisable(r)
             }
         }
+
         this.updateModuleBuildings()
     }
 
@@ -505,12 +508,15 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
         for (const recipe of this.recipes.values()) {
             const pri = recipe.defaultPriority
             const product = recipe.products[0]
+
             if (pri === undefined || recipe.defaultWeight === undefined || product === undefined) {
                 continue
             }
+
             while (levels.length < pri + 1) {
                 levels.push(new Map())
             }
+
             // Fluids come in ten times larger amounts than items.
             const weight = product.item.phase === "fluid" ? recipe.defaultWeight.div(ten) : recipe.defaultWeight
             levels[pri]?.set(recipe, weight)

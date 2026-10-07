@@ -5,6 +5,7 @@ export interface IconSource {
     readonly name: string
     readonly icon_col: number
     readonly icon_row: number
+
     /** Alt text of the icon, if it differs from name. */
     readonly iconName?: string
 }

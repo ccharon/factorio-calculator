@@ -22,14 +22,19 @@ export class Planet implements IconSource {
     readonly key: string
     readonly name: string
     readonly order: string
+
     /** Recipes that extract this planet's resources: mining, pumping and plants. */
     readonly resources: ReadonlySet<Recipe>
+
     /** Surface property values, including defaults for properties the planet does not set. */
     readonly properties: ReadonlyMap<string, number>
+
     /** True if buildings freeze here without heat. */
     readonly requiresHeating: boolean
+
     /** Recipes that are disabled while only this planet is selected. Generators are always among them until the user enables them. */
     readonly disable: Set<Recipe> = new Set()
+
     readonly icon_col: number
     readonly icon_row: number
 
@@ -53,12 +58,15 @@ export class Planet implements IconSource {
             // Electricity comes from outside the factory on every surface.
             return this.resources.has(recipe) || recipe.key === ELECTRICITY || recipe.key === HEAT
         }
+
         if (recipe instanceof SolarRecipe && recipe.planet !== this.key) {
             return false
         }
+
         if (!recipe.conditions.every(c => c.holds(this.properties))) {
             return false
         }
+
         return recipe.categories.length === 0 || buildings.some(b => b.canCraft(recipe) && b.worksOn(this.properties))
     }
 }
@@ -91,6 +99,7 @@ function isEnergySource(recipe: Recipe): boolean {
 /** Creates all planets and space surfaces by key, each with the set of recipes it disables. */
 export function getPlanets(data: Dataset, recipes: ReadonlyMap<string, Recipe>, buildings: readonly Building[]): Map<string, Planet> {
     const planets = new Map<string, Planet>()
+
     for (const d of data.planets) {
         const resources = new Set<Recipe>()
         const recyclingRoots: Recipe[] = []
@@ -121,6 +130,7 @@ export function getPlanets(data: Dataset, recipes: ReadonlyMap<string, Recipe>, 
         for (const root of recyclingRoots) {
             traverseRecycling(root, allowedRecycling)
         }
+
         for (const recipe of allowedRecycling) {
             planet.disable.delete(recipe)
         }

@@ -46,10 +46,13 @@ export function isRateName(s: string): s is RateName {
 /** Formats rates and counts according to the display settings. */
 export class Formatter {
     rateName: RateName = DEFAULT_RATE
+
     /** "second", "minute" or "hour". */
     longRate = "minute"
+
     /** Seconds per displayed time unit. */
     rateFactor: Rational = one
+
     displayFormat: DisplayFormat = DEFAULT_FORMAT
     ratePrecision: number = DEFAULT_RATE_PRECISION
     countPrecision: number = DEFAULT_COUNT_PRECISION

@@ -23,21 +23,28 @@ export class Item implements IconSource {
     readonly key: string
     readonly name: string
     readonly phase: Phase
+
     /** Recipes that produce this item. Filled by the Recipe constructor. */
     readonly recipes: Recipe[] = []
+
     /** Recipes that use this item. Filled by the Recipe constructor. */
     readonly uses: Recipe[] = []
+
     readonly icon_col: number
     readonly icon_row: number
     readonly group: string
     readonly subgroup: string
     readonly order: string
+
     /** Produces the item from nothing when its recipes are disabled or it is ignored. */
     readonly disableRecipe: DisabledRecipe
+
     /** Weight in grams, or null for fluids and abstract items. */
     readonly weight: number | null
+
     /** The pseudo item for this item launched into orbit, or null if it cannot be launched. Set by addRocketCargo(). */
     orbit: Item | null = null
+
     /** For an item in orbit, the item that was launched. Null for all other items. */
     ground: Item | null = null
 
@@ -73,6 +80,7 @@ export class Item implements IconSource {
 /** Creates all items and fluids of the dataset by key, plus the abstract items for electricity and heat. */
 export function getItems(data: Dataset): Map<string, Item> {
     const items = new Map<string, Item>()
+
     for (const d of data.items) {
         const phase: Phase = d.type === "fluid" ? "fluid" : "solid"
         items.set(d.key, new Item(d.key, d.localized_name.en, d.icon_col, d.icon_row, phase, d.group, d.subgroup, d.order, d.weight ?? null))
@@ -82,16 +90,19 @@ export function getItems(data: Dataset): Map<string, Item> {
     if (reactor === undefined) {
         throw new Error("dataset lacks the nuclear reactor")
     }
+
     const electricity = data.sprites.extra["electricity"]
     if (electricity === undefined) {
         throw new Error("dataset lacks the electricity sprite")
     }
+
     items.set(ELECTRICITY, new Item(ELECTRICITY, electricity.name, electricity.icon_col, electricity.icon_row, "abstract", "production", "energy", "a[electricity]"))
 
     const heat = data.sprites.extra["heat"]
     if (heat === undefined) {
         throw new Error("dataset lacks the heat sprite")
     }
+
     items.set(HEAT, new Item(HEAT, heat.name, heat.icon_col, heat.icon_row, "abstract", "production", "energy", "f[nuclear-energy]-d[heat]"))
 
     return items

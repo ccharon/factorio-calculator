@@ -30,10 +30,13 @@ export class Module implements IconSource {
     readonly order: string
     readonly productivity: Rational
     readonly speed: Rational
+
     /** Change of power consumption, such as -0.3 for -30%. */
     readonly power: Rational
+
     // Effects by quality key. Missing qualities use the normal effects.
     private readonly effectsByQuality: ReadonlyMap<string, ModuleEffect>
+
     readonly icon_col: number
     readonly icon_row: number
     private short: string
@@ -49,6 +52,7 @@ export class Module implements IconSource {
         this.effectsByQuality = effectsByQuality
         this.icon_col = item.icon_col
         this.icon_row = item.icon_row
+
         // First and last letter of the key, such as "s3" for speed-module-3.
         this.short = this.key.charAt(0) + this.key.charAt(this.key.length - 1)
     }
@@ -95,6 +99,7 @@ export interface ModuleDefaults {
 export interface ModuleEffect {
     readonly productivity: Rational
     readonly speed: Rational
+
     /** Change of power consumption, such as -0.3 for -30%. */
     readonly power: Rational
 }
@@ -103,10 +108,13 @@ export interface ModuleEffect {
 export class ModuleSpec {
     readonly recipe: Recipe
     building: Building | null = null
+
     /** One entry per module slot of the building. null is an empty slot. */
     readonly modules: (Module | null)[] = []
+
     /** The modules in the two slots of each beacon. */
     readonly beaconModules: [Module | null, Module | null]
+
     /** Number of beacons affecting each building. May be fractional. */
     beaconCount: Rational
 
@@ -119,10 +127,13 @@ export class ModuleSpec {
     /** Sets the building and resizes the module list to its slot count, filling new slots with the default module. */
     setBuilding(building: Building, defaults: ModuleDefaults): void {
         this.building = building
+
         if (this.modules.length > building.moduleSlots) {
             this.modules.length = building.moduleSlots
         }
+
         const toAdd = defaults.getDefaultModule(this.recipe)
+
         while (this.modules.length < building.moduleSlots) {
             this.modules.push(toAdd)
         }
@@ -138,9 +149,11 @@ export class ModuleSpec {
         if (index >= this.modules.length) {
             return false
         }
+
         const oldModule = this.modules[index]
         const needRecalc = (oldModule?.hasProdEffect() ?? false) || (module?.hasProdEffect() ?? false)
         this.modules[index] = module
+
         return needRecalc
     }
 
@@ -159,11 +172,14 @@ export class ModuleSpec {
         if (this.beaconCount.isZero()) {
             return zero
         }
+
         const i = Math.min(this.beaconCount.ceil().toFloat(), beaconProfile.length) - 1
         const profile = beaconProfile[i]
+
         if (profile === undefined) {
             throw new Error("beacon profile not loaded")
         }
+
         const effectivity = beaconEffect.add(beaconBonusPerLevel.mul(Rational.from_float(beaconQuality.level)))
         return this.beaconCount.mul(effectivity).mul(profile)
     }
@@ -228,6 +244,7 @@ let beaconBonusPerLevel: Rational = zero
 /** Creates all modules by item key, and fills moduleRows, shortModules and the beacon settings. */
 export function getModules(data: Dataset, items: ReadonlyMap<string, Item>): Map<string, Module> {
     const modules = new Map<string, Module>()
+
     for (const d of data.modules) {
         const item = requireItem(items, d.item_key)
         const R = (x: number | undefined): Rational => Rational.from_float_approximate(x ?? 0)
@@ -238,6 +255,7 @@ export function getModules(data: Dataset, items: ReadonlyMap<string, Item>): Map
     moduleRows.length = 0
     moduleRows.push([null])
     shortModules.clear()
+
     let category: string | null = null
     let row: (Module | null)[] = []
     for (const module of sorted(modules.values(), m => m.order)) {

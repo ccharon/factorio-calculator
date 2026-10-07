@@ -49,9 +49,11 @@ export class SolarRecipe extends GeneratorRecipe {
 // Joules per unit of a fluid heated from its default temperature.
 function fluidEnergy(data: Dataset, key: string, temperature: number): Rational {
     const fluid = data.fluids.find(f => f.item_key === key)
+
     if (fluid === undefined) {
         throw new Error(`dataset lacks the fluid ${key}`)
     }
+
     return Rational.from_float_approximate((temperature - fluid.default_temperature) * fluid.heat_capacity)
 }
 
@@ -148,6 +150,7 @@ export function addPowerRecipes(data: Dataset, items: Map<string, Item>, recipes
             const solarPower = planet.surface_properties["solar-power"] ?? defaults.get("solar-power") ?? 100
             const watts = Rational.from_float_approximate(panel.production * solarPower / 100 * planet.solar_factor)
             const key = `${panel.key}-${planet.key}`
+
             recipes.set(key, new SolarRecipe(
                 planet.key, key, `${panel.localized_name.en} (${planet.localized_name.en})`, panel, powerCategory(panel.key), one,
                 [], [new Ingredient(electricity, watts.div(ELECTRICITY_UNIT))],

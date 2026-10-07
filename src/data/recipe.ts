@@ -19,9 +19,11 @@ import type { Item } from "./item.ts"
 /** Returns the item with this key. Throws if the dataset has no such item. */
 export function requireItem(items: ReadonlyMap<string, Item>, key: string): Item {
     const item = items.get(key)
+
     if (item === undefined) {
         throw new Error(`unknown item: ${key}`)
     }
+
     return item
 }
 
@@ -29,6 +31,7 @@ export function requireItem(items: ReadonlyMap<string, Item>, key: string): Item
 export class Ingredient {
     readonly item: Item
     readonly amount: Rational
+
     /** For products: the part of amount that productivity does not multiply. */
     readonly ignoredByProductivity: Rational
 
@@ -41,9 +44,11 @@ export class Ingredient {
     /** Returns the produced amount per craft with the productivity multiplier prodEffect, such as 1.5 for +50%. */
     productAmount(prodEffect: Rational): Rational {
         const affected = this.amount.sub(this.ignoredByProductivity)
+
         if (!zero.less(affected)) {
             return this.amount
         }
+
         return this.amount.add(affected.mul(prodEffect.sub(one)))
     }
 }
@@ -63,9 +68,11 @@ export class SurfaceCondition {
     /** Returns whether a surface with these property values meets the condition. Throws for an unknown property. */
     holds(properties: ReadonlyMap<string, number>): boolean {
         const value = properties.get(this.property)
+
         if (value === undefined) {
             throw new Error(`unknown surface property: ${this.property}`)
         }
+
         return (this.min === undefined || value >= this.min) && (this.max === undefined || value <= this.max)
     }
 }
@@ -74,6 +81,7 @@ export class SurfaceCondition {
 export interface RecipeContext {
     /** Returns the fuel or electricity the building of recipe uses per craft, or an empty list. */
     getEnergyIngredients(recipe: Recipe): Ingredient[]
+
     /** Returns the productivity multiplier of recipe, such as 1.5 for +50%. */
     getProdEffect(recipe: RecipeNode): Rational
 }
@@ -83,10 +91,13 @@ export interface RecipeNode {
     readonly name: string
     readonly ingredients: readonly Ingredient[]
     readonly products: readonly Ingredient[]
+
     /** Returns the ingredients per craft, including fuel. */
     getIngredients(context: RecipeContext): Ingredient[]
+
     /** Returns the amount of item produced per craft, including productivity. */
     gives(item: Item, context: RecipeContext): Rational
+
     /** Returns true for game recipes and false for the solver's output and surplus nodes. */
     isReal(): boolean
 }
@@ -94,8 +105,10 @@ export interface RecipeNode {
 /** What the solver and the UI need from any recipe, including DisabledRecipe. */
 export interface RecipeLike extends RecipeNode, IconSource {
     readonly key: string
+
     /** Crafting categories. Every building with one of them can craft the recipe. Empty for recipes without a building. */
     readonly categories: readonly string[]
+
     isResource(): boolean
     isDisable(): boolean
 }
@@ -109,19 +122,25 @@ export function isRecipeLike(node: RecipeNode): node is RecipeLike {
 export interface RecipeOptions {
     key: string
     name: string
+
     /** Sort order. Undefined sorts like an equal key. */
     order: string | undefined
+
     icon_col: number
     icon_row: number
     allowProductivity: boolean
     categories: readonly string[]
+
     /** Crafting time in seconds at crafting speed 1. */
     time: Rational
+
     ingredients: Ingredient[]
     products: Ingredient[]
     conditions?: SurfaceCondition[]
+
     /** Cap of the productivity bonus, such as 3 for +300%. Null for no cap. */
     maximumProductivity?: Rational | null
+
     /** Alt text of the icon. Defaults to the name of the first product. */
     iconName?: string
 }
@@ -137,14 +156,19 @@ export class Recipe implements RecipeLike {
     readonly ingredients: Ingredient[]
     readonly products: Ingredient[]
     readonly conditions: SurfaceCondition[]
+
     /** Cap of the productivity bonus, such as 3 for +300%, or null for no cap. */
     readonly maximumProductivity: Rational | null
+
     readonly icon_col: number
     readonly icon_row: number
+
     /** Alt text of the icon: the name of the first product unless the options set one. */
     readonly iconName: string
+
     /** Priority level in the Resources tab, for recipes that extract resources. */
     defaultPriority: number | undefined
+
     /** Weight within its priority level, for recipes that extract resources. */
     defaultWeight: Rational | undefined
 
@@ -155,11 +179,12 @@ export class Recipe implements RecipeLike {
         this.allow_productivity = options.allowProductivity
         this.categories = options.categories
         this.time = options.time
-
         this.ingredients = options.ingredients
+
         for (const ing of this.ingredients) {
             ing.item.addUse(this)
         }
+
         this.products = options.products
         for (const ing of this.products) {
             ing.item.addRecipe(this)
@@ -299,11 +324,13 @@ const DEFAULT_MAXIMUM_PRODUCTIVITY = 3
 // Creates a Recipe from a dataset entry. Returns null if an ingredient is not a known item.
 function makeRecipe(items: ReadonlyMap<string, Item>, d: DatasetRecipe): Recipe | null {
     const ingredients: Ingredient[] = []
+
     for (const { name, amount } of d.ingredients) {
         const item = items.get(name)
         if (item === undefined) {
             return null
         }
+
         ingredients.push(new Ingredient(item, Rational.from_float_approximate(amount)))
     }
 
@@ -454,6 +481,7 @@ class AsteroidRecipe extends Recipe {
             ingredients: [],
             products: [new Ingredient(chunk, one)],
         })
+
         this.defaultPriority = 1
         this.defaultWeight = hundred
     }
@@ -479,6 +507,7 @@ class OffshorePumpRecipe extends Recipe {
             ingredients: [],
             products: [new Ingredient(product, one)],
         })
+
         this.defaultPriority = 0
         this.defaultWeight = hundred
     }
@@ -495,12 +524,14 @@ function getSteam(data: Dataset): [Rational, Rational] {
     const boiler = data.boilers.find(d => d.key === "boiler")
     const water = data.fluids.find(f => f.item_key === "water")
     const steam = data.fluids.find(f => f.item_key === "steam")
+
     if (!boiler || !water || !steam) {
         throw new Error("dataset lacks the boiler, water or steam")
     }
 
     const power = R(boiler.energy_consumption)
     const tempDelta = R(boiler.target_temperature).sub(R(water.default_temperature))
+
     // heat_capacity is in J per degree per unit.
     const waterRate = power.div(tempDelta.mul(R(water.heat_capacity)))
     const steamRate = power.div(tempDelta.mul(R(steam.heat_capacity)))
@@ -521,9 +552,11 @@ export function getRecipes(data: Dataset, items: Map<string, Item>): Map<string,
     const reactor = item("nuclear-reactor")
     const reactorDef = data.reactors.find(r => r.key === "nuclear-reactor")
     const cellValue = data.fuel.find(f => f.item_key === "uranium-fuel-cell")?.value
+
     if (reactorDef === undefined || cellValue === undefined) {
         throw new Error("dataset lacks the nuclear reactor or the uranium fuel cell")
     }
+
     recipes.set("nuclear-reactor-cycle", new Recipe({
         key: "nuclear-reactor-cycle",
         name: "Nuclear reactor cycle",
@@ -543,6 +576,7 @@ export function getRecipes(data: Dataset, items: Map<string, Item>): Map<string,
 
     const steam = item("steam")
     const [waterRate, steamRate] = getSteam(data)
+
     recipes.set("steam", new Recipe({
         key: "steam",
         name: "Steam",

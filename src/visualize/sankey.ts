@@ -171,12 +171,14 @@ export function renderSankey(data: Graph, direction: Direction, ignore: Readonly
         .each(function (d) {
             d.elements.push(this)
         })
+
     link.append("path")
         .attr("fill", "none")
         .attr("stroke-opacity", 0.3)
         .attr("d", d => curveOf(d).path())
         .attr("stroke", d => colorOf(itemColors, d.item))
         .attr("stroke-width", d => Math.max(1, d.width))
+
     link.append("g")
         .selectAll("path")
         .data(d => [curveOf(d).offset(-d.width / 2), curveOf(d).offset(d.width / 2)])
@@ -186,6 +188,7 @@ export function renderSankey(data: Graph, direction: Direction, ignore: Readonly
         .attr("d", d => d.path())
         .attr("stroke", "none")
         .attr("stroke-width", 1)
+
     link.append("g")
         .classed("belts", true)
         .selectAll("path")
@@ -197,7 +200,9 @@ export function renderSankey(data: Graph, direction: Direction, ignore: Readonly
         .attr("d", d => d.curve.path())
         .attr("stroke", d => colorOf(itemColors, d.item))
         .attr("stroke-width", 1)
+
     link.append("title").text(d => `${d.source.name} → ${d.target.name}\n${spec.format.rate(d.rate)}`)
+
     const linkIcon = link.filter(d => d.extra)
         .append("svg")
         .attr("viewBox", d => imageViewBox(d.item))
@@ -209,11 +214,13 @@ export function renderSankey(data: Graph, direction: Direction, ignore: Readonly
         .attr("xlink:href", spriteSheetURL())
         .attr("width", spriteSheet().width)
         .attr("height", spriteSheet().height)
+
     if (across) {
         linkIcon
             .attr("x", d => d.y0 - iconSize / 4 + 0.25)
             .attr("y", d => d.source.y1 + 2.25)
     }
+
     const linkLabel = link.append("text")
         .attr("x", d => d.source.x1 + 2 + (d.extra ? iconSize / 2 : 0))
         .attr("y", d => d.y0)
@@ -232,14 +239,18 @@ export function renderSankey(data: Graph, direction: Direction, ignore: Readonly
     const rectElements = svg.selectAll<SVGRectElement, GraphNode>("g.node rect").nodes()
     const graphTab = d3.select<HTMLElement, unknown>("#graph_tab")
     const origDisplay = graphTab.style("display")
+
     graphTab.style("display", "block")
+
     const overlayData = nodes.map((node, i) => {
         const element = rectElements[i]
         if (element === undefined) {
             throw new Error(`missing rect of node ${node.name}`)
         }
+
         return { rect: element.getBBox(), node }
     })
+
     graphTab.style("display", origDisplay)
 
     svg.append("g")

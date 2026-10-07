@@ -564,6 +564,7 @@ class SettingCell implements ModuleCell {
     readonly inputRows: ModuleInput[][]
 
     /**
+     * @param name
      * @param filter - Which modules to offer.
      * @param get - Returns the current module of the setting.
      * @param set - Stores a chosen module.

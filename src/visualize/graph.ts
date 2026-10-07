@@ -63,17 +63,23 @@ export interface EdgeLabel {
 export class GraphEdge {
     readonly source: GraphNode
     readonly target: GraphNode
+
     /** Size of the flow for the Sankey layout. */
     readonly value: number
+
     readonly item: Item
     readonly rate: Rational
     readonly fuel: boolean
+
     /** Number of belts the flow fills, or null for fluids. */
     readonly beltCount: Rational | null
+
     /** True if the source has several products, so the link shows its item icon. */
     readonly extra: boolean
+
     /** SVG elements that are highlighted together with the edge. */
     readonly elements: Element[] = []
+
     private readonly nodeHighlighters: Set<GraphNode> = new Set()
 
     // Layout fields, set by the Sankey and boxline layouts.
@@ -129,10 +135,13 @@ export class GraphNode {
     readonly recipe: RecipeNode
     readonly building: Building | null
     readonly count: Rational
+
     /** Crafts per second, or null for the output and surplus nodes. */
     readonly rate: Rational | null
+
     /** Incoming and outgoing edges. A self-loop appears twice. */
     readonly links: GraphEdge[] = []
+
     /** The main rect of the node, set when it is rendered. */
     element: SVGRectElement | null = null
 

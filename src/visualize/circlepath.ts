@@ -225,6 +225,12 @@ function doubleArcAdjustPath(tx: number, ty: number, x1: number, y1: number, x2:
 /**
  * Returns a smooth path from (x1, y1) to (x2, y2) that starts in direction (tx, ty).
  *
+ * @param tx - direction
+ * @param ty - direction
+ * @param x1 - from
+ * @param y1 - from
+ * @param x2 - to
+ * @param y2 - to
  * @param width - Stroke width, which sets the minimum radius of steep curves. Without a width, the
  *     radius is NaN and path() draws the adjustment arcs as straight lines.
  */

@@ -94,6 +94,7 @@ function percent(x: Rational): string {
 /**
  * Returns the tooltip of item. Items with a single recipe of the same name show the recipe.
  *
+ * @param item
  * @param extra - Optional content appended below the header.
  */
 export function renderItemTooltip(item: Item, extra?: Node): HTMLDivElement {
