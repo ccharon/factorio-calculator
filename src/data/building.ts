@@ -14,6 +14,7 @@ limitations under the License.*/
 import { Rational, zero, one } from "../core/rational.ts"
 import type { IconSource } from "./icon-source.ts"
 import type { Dataset, DatasetMachine } from "./dataset.ts"
+import { HEAT_EXCHANGE_CATEGORY, powerCategory } from "./power.ts"
 import type { Item } from "./item.ts"
 import type { ModuleSpec } from "./module.ts"
 import { AGRICULTURE_CATEGORY, MiningRecipe, type Recipe, type RecipeContext, type RecipeLike, type SurfaceCondition, requireItem, surfaceConditions } from "./recipe.ts"
@@ -240,6 +241,10 @@ export class AgriculturalTower extends Building {
     }
 }
 
+function iconOptions(d: { key: string, localized_name: { en: string }, icon_col: number, icon_row: number }): Pick<BuildingOptions, "key" | "name" | "icon_col" | "icon_row"> {
+    return { key: d.key, name: d.localized_name.en, icon_col: d.icon_col, icon_row: d.icon_row }
+}
+
 function fuelCategory(d: DatasetMachine): string | null {
     return d.energy_source?.type === "burner" ? d.energy_source.fuel_category ?? "chemical" : null
 }
@@ -284,6 +289,16 @@ export function getBuildings(data: Dataset, items: ReadonlyMap<string, Item>): B
             speed: Rational.from_float_approximate(d.crafting_speed),
             prodBonus: d.prod_bonus ? Rational.from_float_approximate(d.prod_bonus) : zero,
         }))
+    }
+
+    for (const d of data.generators) {
+        buildings.push(new PseudoBuilding({ ...iconOptions(d), categories: [powerCategory(d.key)], speed: one, prodBonus: zero, moduleSlots: 0, power: zero, fuel: null }))
+    }
+    for (const d of data.solar_panels) {
+        buildings.push(new PseudoBuilding({ ...iconOptions(d), categories: [powerCategory(d.key)], speed: one, prodBonus: zero, moduleSlots: 0, power: zero, fuel: null }))
+    }
+    for (const d of data.boilers.filter(b => b.energy_source.type === "heat")) {
+        buildings.push(new PseudoBuilding({ ...iconOptions(d), categories: [HEAT_EXCHANGE_CATEGORY], speed: one, prodBonus: zero, moduleSlots: 0, power: zero, fuel: null }))
     }
 
     for (const d of data.agricultural_tower) {

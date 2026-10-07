@@ -131,6 +131,28 @@ export interface DatasetOffshorePump extends NamedPrototype {
     pumping_speed: number
 }
 
+/** A generator that turns hot fluid into electricity. */
+export interface DatasetGenerator extends NamedPrototype {
+    fluid: string
+    /** Fluid units per second at full output. */
+    fluid_usage: number
+    maximum_temperature: number
+    effectivity: number
+}
+
+export interface DatasetSolarPanel extends NamedPrototype {
+    /** Peak output in W. */
+    production: number
+    surface_conditions?: SurfaceConditionData[]
+}
+
+/** A reactor that burns fuel into heat, such as the nuclear reactor or the heating tower. */
+export interface DatasetReactor extends NamedPrototype {
+    /** Heat output in W. */
+    consumption: number
+    energy_source: EnergySource
+}
+
 export interface DatasetBoiler extends NamedPrototype {
     energy_consumption: number
     energy_source: EnergySource
@@ -178,6 +200,8 @@ export interface DatasetPlanet extends NamedPrototype {
     order: string
     /** Values that differ from the surface property defaults. */
     surface_properties: Record<string, number>
+    /** Average light level over a day, between 0 and 1. Solar panels produce this share of their peak. */
+    solar_factor: number
     resources: PlanetResources
 }
 
@@ -251,6 +275,9 @@ export interface Dataset {
     mining_drills: DatasetMiningDrill[]
     offshore_pumps: DatasetOffshorePump[]
     boilers: DatasetBoiler[]
+    generators: DatasetGenerator[]
+    solar_panels: DatasetSolarPanel[]
+    reactors: DatasetReactor[]
     belts: DatasetBelt[]
     beacon: DatasetBeacon
     modules: DatasetModule[]

@@ -100,6 +100,21 @@ function surfaceConditions(proto) {
 }
 
 // Copies only defined values, so optional fields stay absent instead of null.
+/**
+ * Returns the average light level over a day: full light between dawn and dusk, none between
+ * evening and morning, and a linear change in between. Surfaces without daytime data are always lit.
+ *
+ * @param {{dusk: number, evening: number, morning: number, dawn: number} | undefined} daytime
+ * @returns {number}
+ */
+export function solarFactor(daytime) {
+    if (daytime === undefined) {
+        return 1
+    }
+    const { dusk, evening, morning, dawn } = daytime
+    return roundFloat(1 - (dawn - dusk) + (evening - dusk) / 2 + (dawn - morning) / 2)
+}
+
 function compact(obj) {
     return Object.fromEntries(Object.entries(obj).filter(([, v]) => v !== undefined))
 }
@@ -277,6 +292,31 @@ export function convert(raw, localeFiles, version, runtime) {
         icon_ref: `entity/${p.name}`,
     }))
 
+    // Power generation: generators burn steam, solar panels and reactors.
+    const generators = Object.values(raw.generator ?? {}).filter(p => !isSkipped(p)).map(p => ({
+        key: p.name,
+        localized_name: locale.name("entity", p.name),
+        fluid: p.fluid_box?.filter ?? "steam",
+        fluid_usage: p.fluid_usage_per_tick * 60,
+        maximum_temperature: p.maximum_temperature,
+        effectivity: p.effectivity ?? 1,
+        icon_ref: `entity/${p.name}`,
+    }))
+    const solar_panels = Object.values(raw["solar-panel"] ?? {}).filter(p => !isSkipped(p)).map(p => compact({
+        key: p.name,
+        localized_name: locale.name("entity", p.name),
+        production: parseEnergy(p.production, "W"),
+        surface_conditions: surfaceConditions(p),
+        icon_ref: `entity/${p.name}`,
+    }))
+    const reactors = Object.values(raw.reactor ?? {}).filter(p => !isSkipped(p)).map(p => ({
+        key: p.name,
+        localized_name: locale.name("entity", p.name),
+        consumption: parseEnergy(p.consumption, "W"),
+        energy_source: normalizeEnergySource(p.energy_source),
+        icon_ref: `entity/${p.name}`,
+    }))
+
     const belts = Object.values(raw["transport-belt"]).map(p => ({
         key: p.name,
         localized_name: locale.name("entity", p.name),
@@ -371,6 +411,7 @@ export function convert(raw, localeFiles, version, runtime) {
             localized_name: locale.name("space-location", p.name),
             order: p.order ?? "",
             surface_properties: p.surface_properties ?? {},
+            solar_factor: solarFactor(runtime.daytime?.[p.name]),
             resources: {
                 resource,
                 offshore: [...new Set(tiles.map(t => raw.tile[t]?.fluid).filter(Boolean))].sort(compareStrings),
@@ -387,6 +428,7 @@ export function convert(raw, localeFiles, version, runtime) {
             localized_name: locale.name("surface", s.name),
             order: s.order ?? "",
             surface_properties: s.surface_properties ?? {},
+            solar_factor: solarFactor(undefined),
             resources: { resource: [], offshore: [], plants: [], asteroid: [...asteroidChunks].sort(compareStrings) },
             icon_ref: `surface/${s.name}`,
         })
@@ -456,6 +498,9 @@ export function convert(raw, localeFiles, version, runtime) {
         mining_drills,
         offshore_pumps,
         boilers,
+        generators,
+        solar_panels,
+        reactors,
         belts,
         beacon,
         modules,

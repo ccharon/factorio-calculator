@@ -14,6 +14,7 @@ limitations under the License.*/
 import type { IconSource } from "./icon-source.ts"
 import type { Dataset } from "./dataset.ts"
 import type { Building } from "./building.ts"
+import { GeneratorRecipe, SolarRecipe } from "./power.ts"
 import { ELECTRICITY, type Recipe } from "./recipe.ts"
 
 /** A planet or space surface with its resources and surface properties. */
@@ -25,7 +26,7 @@ export class Planet implements IconSource {
     readonly resources: ReadonlySet<Recipe>
     /** Surface property values, including defaults for properties the planet does not set. */
     readonly properties: ReadonlyMap<string, number>
-    /** Recipes that are disabled while only this planet is selected. */
+    /** Recipes that are disabled while only this planet is selected. Generators are always among them until the user enables them. */
     readonly disable: Set<Recipe> = new Set()
     readonly icon_col: number
     readonly icon_row: number
@@ -48,6 +49,9 @@ export class Planet implements IconSource {
         if (recipe.isResource()) {
             // Electricity comes from outside the factory on every surface.
             return this.resources.has(recipe) || recipe.key === ELECTRICITY
+        }
+        if (recipe instanceof SolarRecipe && recipe.planet !== this.key) {
+            return false
         }
         if (!recipe.conditions.every(c => c.holds(this.properties))) {
             return false
@@ -99,7 +103,7 @@ export function getPlanets(data: Dataset, recipes: ReadonlyMap<string, Recipe>, 
 
         const planet = new Planet(d.key, d.localized_name.en, d.order, d.icon_col, d.icon_row, resources, properties)
         for (const recipe of recipes.values()) {
-            if (!planet.allows(recipe, buildings) || isRecycling(recipe)) {
+            if (!planet.allows(recipe, buildings) || isRecycling(recipe) || recipe instanceof GeneratorRecipe) {
                 planet.disable.add(recipe)
             }
         }

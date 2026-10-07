@@ -7,7 +7,7 @@
   "additionalProperties": false,
   "required": [
     "version", "groups", "items", "fluids", "fuel", "spoilage", "recipes", "crafting_machines",
-    "rocket_silo", "mining_drills", "offshore_pumps", "boilers", "belts", "beacon", "modules",
+    "rocket_silo", "mining_drills", "offshore_pumps", "boilers", "generators", "solar_panels", "reactors", "belts", "beacon", "modules",
     "agricultural_tower", "planets", "resources", "plants", "surface_properties", "recipe_productivity", "rocket_lift_weight", "sprites"
   ],
   "properties": {
@@ -190,6 +190,56 @@
         }
       }
     },
+    "generators": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["key", "localized_name", "fluid", "fluid_usage", "maximum_temperature", "effectivity", "icon_col", "icon_row"],
+        "properties": {
+          "key": { "$ref": "#/$defs/key" },
+          "localized_name": { "$ref": "#/$defs/localizedName" },
+          "fluid": { "$ref": "#/$defs/key" },
+          "fluid_usage": { "type": "number", "exclusiveMinimum": 0, "description": "Fluid units per second at full output." },
+          "maximum_temperature": { "type": "number" },
+          "effectivity": { "type": "number", "exclusiveMinimum": 0 },
+          "icon_col": { "$ref": "#/$defs/iconIndex" },
+          "icon_row": { "$ref": "#/$defs/iconIndex" }
+        }
+      }
+    },
+    "solar_panels": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["key", "localized_name", "production", "icon_col", "icon_row"],
+        "properties": {
+          "key": { "$ref": "#/$defs/key" },
+          "localized_name": { "$ref": "#/$defs/localizedName" },
+          "production": { "type": "number", "exclusiveMinimum": 0, "description": "Peak output in W." },
+          "surface_conditions": { "$ref": "#/$defs/surfaceConditions" },
+          "icon_col": { "$ref": "#/$defs/iconIndex" },
+          "icon_row": { "$ref": "#/$defs/iconIndex" }
+        }
+      }
+    },
+    "reactors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["key", "localized_name", "consumption", "energy_source", "icon_col", "icon_row"],
+        "properties": {
+          "key": { "$ref": "#/$defs/key" },
+          "localized_name": { "$ref": "#/$defs/localizedName" },
+          "consumption": { "type": "number", "exclusiveMinimum": 0, "description": "Heat output in W." },
+          "energy_source": { "$ref": "#/$defs/energySource" },
+          "icon_col": { "$ref": "#/$defs/iconIndex" },
+          "icon_row": { "$ref": "#/$defs/iconIndex" }
+        }
+      }
+    },
     "belts": {
       "type": "array",
       "items": {
@@ -280,12 +330,13 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["key", "localized_name", "order", "surface_properties", "resources", "icon_col", "icon_row"],
+        "required": ["key", "localized_name", "order", "surface_properties", "solar_factor", "resources", "icon_col", "icon_row"],
         "properties": {
           "key": { "$ref": "#/$defs/key" },
           "localized_name": { "$ref": "#/$defs/localizedName" },
           "order": { "type": "string" },
           "surface_properties": { "type": "object", "additionalProperties": { "type": "number" }, "description": "Values that differ from the surface property defaults." },
+          "solar_factor": { "type": "number", "minimum": 0, "maximum": 1, "description": "Average light level over a day. Solar panels produce this share of their peak." },
           "resources": {
             "type": "object",
             "additionalProperties": false,

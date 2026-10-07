@@ -25,6 +25,7 @@ import { getItemGroups } from "./data/group.ts"
 import { getItems } from "./data/item.ts"
 import { getModules } from "./data/module.ts"
 import { getPlanets } from "./data/planet.ts"
+import { addPowerRecipes } from "./data/power.ts"
 import { getProductivityResearch } from "./data/research.ts"
 import { getRecipes } from "./data/recipe.ts"
 import { spec } from "./state/factory.ts"
@@ -73,6 +74,7 @@ function loadData(data: Dataset, settings: Settings): void {
     const items = getItems(data)
     const recipes = getRecipes(data, items)
     addRocketCargo(data, items, recipes)
+    addPowerRecipes(data, items, recipes)
     const buildings = getBuildings(data, items)
     const planets = getPlanets(data, recipes, buildings)
     const modules = getModules(data, items)

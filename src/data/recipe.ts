@@ -224,7 +224,10 @@ export const DISABLED_RECIPE_PREFIX = "D-"
 /** Key of the abstract item for electric energy. One unit is one megajoule, so a rate in units per second is in MW. */
 export const ELECTRICITY = "electricity"
 
-/** Joules per unit of electricity. */
+/** Key of the abstract item for heat from reactors. One unit is one megajoule. */
+export const HEAT = "heat"
+
+/** Joules per unit of electricity and heat. */
 export const ELECTRICITY_UNIT: Rational = Rational.from_float(1000000)
 
 /**
@@ -516,6 +519,11 @@ export function getRecipes(data: Dataset, items: Map<string, Item>): Map<string,
     const item = (key: string): Item => requireItem(items, key)
 
     const reactor = item("nuclear-reactor")
+    const reactorDef = data.reactors.find(r => r.key === "nuclear-reactor")
+    const cellValue = data.fuel.find(f => f.item_key === "uranium-fuel-cell")?.value
+    if (reactorDef === undefined || cellValue === undefined) {
+        throw new Error("dataset lacks the nuclear reactor or the uranium fuel cell")
+    }
     recipes.set("nuclear-reactor-cycle", new Recipe({
         key: "nuclear-reactor-cycle",
         name: "Nuclear reactor cycle",
@@ -524,11 +532,12 @@ export function getRecipes(data: Dataset, items: Map<string, Item>): Map<string,
         icon_row: reactor.icon_row,
         allowProductivity: false,
         categories: ["nuclear"],
-        time: Rational.from_float(200),
+        // One fuel cell lasts its fuel value at the reactor's heat output.
+        time: Rational.from_float(cellValue).div(Rational.from_float(reactorDef.consumption)),
         ingredients: [new Ingredient(item("uranium-fuel-cell"), one)],
         products: [
             new Ingredient(item("depleted-uranium-fuel-cell"), one),
-            new Ingredient(item("nuclear-reactor-cycle"), one),
+            new Ingredient(item(HEAT), Rational.from_float(cellValue).div(ELECTRICITY_UNIT)),
         ],
     }))
 

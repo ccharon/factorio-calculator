@@ -542,7 +542,11 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
 
     /** Returns the enabled recipes for item, plus its DisabledRecipe if the item is disabled or ignored. */
     getRecipes(item: Item): RecipeLike[] {
-        const recipes = item.recipes.filter(recipe => !this.disable.has(recipe))
+        let recipes = item.recipes.filter(recipe => !this.disable.has(recipe))
+        // Electricity comes from outside only while no generator is enabled.
+        if (item.key === ELECTRICITY && recipes.some(r => !r.isResource())) {
+            recipes = recipes.filter(r => !r.isResource())
+        }
         if (this.isItemDisabled(item) || this.ignore.has(item)) {
             // Recipes that also produce other, not ignored items stay in.
             const shared = recipes.filter(r => r.products.some(ing => !this.ignore.has(ing.item)))

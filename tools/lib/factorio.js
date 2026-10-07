@@ -43,7 +43,12 @@ const DUMP_MOD_FILES = {
     for name, item in pairs(prototypes.item) do
         weights[name] = item.weight
     end
-    helpers.write_file("${DUMP_FILE}", helpers.table_to_json({ item_weights = weights }))
+    local daytime = {}
+    for name, planet in pairs(game.planets) do
+        local surface = planet.surface or planet.create_surface()
+        daytime[name] = { dusk = surface.dusk, evening = surface.evening, morning = surface.morning, dawn = surface.dawn }
+    end
+    helpers.write_file("${DUMP_FILE}", helpers.table_to_json({ item_weights = weights, daytime = daytime }))
 end)
 `,
 }
@@ -97,7 +102,7 @@ export function dumpGameData(factorioDir, workDir) {
  * Reads data.raw and all locale files from a script-output directory.
  *
  * @param {string} outputDir - Directory produced by dumpGameData().
- * @returns {{raw: Object, locale: Object<string, Object>, runtime: {item_weights: Object<string, number>}}}
+ * @returns {{raw: Object, locale: Object<string, Object>, runtime: {item_weights: Object<string, number>, daytime: Object<string, Object<string, number>>}}}
  */
 export function readDump(outputDir) {
     const raw = JSON.parse(readFileSync(join(outputDir, "data-raw-dump.json"), "utf8"))
