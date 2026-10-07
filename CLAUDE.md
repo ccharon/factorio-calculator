@@ -12,7 +12,7 @@ Repository: https://github.com/ccharon/factorio-calculator (remote `origin`).
 
 ## Running
 
-Node 20 or newer.
+Node 25 or newer (the tests use `Uint8Array.toBase64`).
 
 | Command | Effect |
 |---------|--------|
