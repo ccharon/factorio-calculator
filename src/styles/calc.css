@@ -223,6 +223,12 @@ input.prec, input.mprod {
     margin: 2px;
     padding: 2px;
     background-color: var(--dark);
+    font: inherit;
+    line-height: 0;
+}
+.toggle-list .toggle:focus-visible {
+    outline: 2px solid var(--bright);
+    outline-offset: 1px;
 }
 .toggle-list .toggle:hover {
     border-color: var(--bright);
@@ -266,6 +272,13 @@ input.prec, input.mprod {
 }
 #resource_settings img.icon {
     display: block;
+    cursor: grab;
+}
+#resource_settings img.icon:focus {
+    outline: 2px solid var(--accent);
+}
+#resource_settings .resource.dragged {
+    opacity: 0.4;
 }
 #resource_settings.dragging .resource-tier > * {
     pointer-events: none;

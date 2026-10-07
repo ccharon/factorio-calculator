@@ -233,3 +233,14 @@ export function toggleDebug(event: Event): void {
     spec.debug = (event.target as HTMLInputElement).checked
     spec.display()
 }
+
+/** Selects the first resource when an arrow key is pressed in the Resources tab while nothing or a tab button has the focus. */
+export function resourceKeyHandler(event: KeyboardEvent): void {
+    const arrow = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)
+    const resourcesVisible = document.getElementById("resources_tab")?.style.display === "block"
+    const focus = document.activeElement
+    if (arrow && resourcesVisible && (focus === null || focus === document.body || focus.matches("div.tabs button"))) {
+        event.preventDefault()
+        spec.priority.focusFirst()
+    }
+}

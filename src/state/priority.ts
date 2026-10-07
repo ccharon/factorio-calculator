@@ -37,16 +37,46 @@ class Resource {
         this.recipe = recipe
         this.weight = weight
 
-        this.div = d3.create("div").classed("resource", true).on("dragstart", () => {
+        this.div = d3.create("div").classed("resource", true).on("dragstart", (event: DragEvent) => {
             if (this.level) {
-                this.level.list.div.classed("dragging", true)
-                this.level.list.dragItem = this
+                // The icon is a transparent image with the sprite as background, so the browser's own drag image is empty.
+                event.dataTransfer?.setDragImage(this.div.node() as HTMLDivElement, 24, 24)
+                const list = this.level.list
+                list.dragItem = this
+                // Chrome cancels the drag if the source loses its pointer events during dragstart.
+                setTimeout(() => {
+                    this.div.classed("dragged", true)
+                    list.div.classed("dragging", true)
+                })
             }
         }).on("dragend", () => {
-            this.level?.list.div.classed("dragging", false)
+            this.div.classed("dragged", false)
+            if (this.level) {
+                this.level.list.div.classed("dragging", false)
+                this.level.list.dragItem = null
+            }
         })
 
-        this.div.append(() => iconOf(this.recipe).make(48))
+        // The icon takes the keyboard focus: left and right select another resource, up and down move this one.
+        // It is no <button>, because Chrome does not drag an image inside a button.
+        const icon = this.div.append(() => iconOf(this.recipe).make(48))
+        icon.attr("tabindex", 0).attr("role", "button").attr("aria-keyshortcuts", "ArrowLeft ArrowRight ArrowUp ArrowDown")
+        icon.on("keydown", (event: KeyboardEvent) => {
+            const list = this.level?.list
+            const node = icon.node() as HTMLImageElement
+            if (list === undefined) {
+                return
+            }
+            if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+                event.preventDefault()
+                list.focusNeighbour(node, event.key === "ArrowLeft" ? -1 : 1)
+            } else if (event.key === "ArrowUp" || event.key === "ArrowDown") {
+                event.preventDefault()
+                list.moveStep(this, event.key === "ArrowUp" ? -1 : 1)
+                node.focus()
+                spec.updateSolution()
+            }
+        })
         this.div.append("input").attr("type", "text").attr("size", 4).attr("value", this.weight.toString()).on("change", (event: Event) => {
             this.weight = Rational.from_string((event.target as HTMLInputElement).value)
             this.level?.insertSorted(this)
@@ -258,6 +288,36 @@ export class PriorityList {
     /** Removes recipe from the list. */
     removeRecipe(recipe: RecipeLike): void {
         this.getResource(recipe)?.remove()
+    }
+
+    /**
+     * Moves resource one step towards the less valuable end (direction -1) or the more valuable end (1).
+     * A resource that shares its level first gets a level of its own, the next step joins the neighbouring level.
+     */
+    moveStep(resource: Resource, direction: -1 | 1): void {
+        const level = resource.level
+        if (level === null) {
+            return
+        }
+
+        const i = this.priorities.indexOf(level)
+        if (level.resources.length > 1) {
+            const successor = direction === -1 ? level : this.priorities[i + 1] ?? null
+            this.addPriorityBefore(successor).insertSorted(resource)
+        } else {
+            this.priorities[i + direction]?.insertSorted(resource)
+        }
+    }
+
+    /** Focuses the resource icon before (direction -1) or after (1) icon in the list. */
+    focusNeighbour(icon: Element, direction: -1 | 1): void {
+        const icons = this.div.selectAll<HTMLImageElement, unknown>("img[tabindex]").nodes()
+        icons[icons.indexOf(icon as HTMLImageElement) + direction]?.focus()
+    }
+
+    /** Focuses the first resource icon in the list. */
+    focusFirst(): void {
+        this.div.select<HTMLImageElement>("img[tabindex]").node()?.focus()
     }
 
     /** Removes all levels and renders the two end markers. */

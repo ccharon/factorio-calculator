@@ -649,11 +649,10 @@ function renderDefaultBeacon(settings: Settings): void {
 // planets and recipe toggles
 
 // Click selects one planet. Shift-click adds or removes a planet.
-function clickPlanet(this: HTMLDivElement, event: MouseEvent, d: Planet): void {
+function clickPlanet(this: HTMLButtonElement, event: MouseEvent, d: Planet): void {
     if (event.shiftKey) {
         event.preventDefault()
         const selected = spec.selectedPlanets.has(d)
-        d3.select(this).classed("selected", !selected)
         if (selected) {
             spec.unselectPlanet(d)
         } else {
@@ -661,18 +660,23 @@ function clickPlanet(this: HTMLDivElement, event: MouseEvent, d: Planet): void {
         }
     } else {
         spec.selectOnePlanet(d)
-        d3.selectAll<HTMLDivElement, Planet>("#planet_selector .toggle").classed("selected", p => spec.selectedPlanets.has(p))
     }
 
-    d3.selectAll<HTMLDivElement, Recipe>("#recipe_toggles .toggle").classed("selected", r => !spec.disable.has(r))
+    setPressed(d3.selectAll<HTMLButtonElement, Planet>("#planet_selector .toggle"), p => spec.selectedPlanets.has(p))
+    setPressed(d3.selectAll<HTMLButtonElement, Recipe>("#recipe_toggles .toggle"), r => !spec.disable.has(r))
     renderBuildingSelector()
     spec.updateSolution()
 }
 
+// Marks toggle buttons as selected, for the style sheet and for screen readers.
+function setPressed<T>(toggles: d3.Selection<HTMLButtonElement, T, d3.BaseType, unknown>, pressed: (d: T) => boolean): void {
+    toggles.classed("selected", pressed).attr("aria-pressed", d => String(pressed(d)))
+}
+
 // Enables or disables the clicked recipe.
-function clickRecipeToggle(this: HTMLDivElement, _event: MouseEvent, d: Recipe): void {
+function clickRecipeToggle(this: HTMLButtonElement, _event: MouseEvent, d: Recipe): void {
     const disabled = spec.disable.has(d)
-    d3.select(this).classed("selected", disabled)
+    setPressed(d3.select<HTMLButtonElement, Recipe>(this), () => disabled)
     if (disabled) {
         spec.setEnable(d)
     } else {
@@ -724,8 +728,9 @@ function renderRecipes(settings: Settings): void {
     const planetDiv = d3.select("#planet_selector").classed("toggle-list", true)
     planetDiv.selectAll("*").remove()
     if (havePlanets) {
-        const planetToggles = planetDiv.selectAll<HTMLDivElement, Planet>("div").data(sorted(spec.planets.values(), p => p.order)).join("div")
-        planetToggles.classed("toggle", true).classed("selected", d => spec.selectedPlanets.has(d)).on("click", clickPlanet)
+        const planetToggles = planetDiv.selectAll<HTMLButtonElement, Planet>("button").data(sorted(spec.planets.values(), p => p.order)).join("button")
+        planetToggles.attr("type", "button").classed("toggle", true).on("click", clickPlanet)
+        setPressed(planetToggles, d => spec.selectedPlanets.has(d))
         planetToggles.append(d => iconOf(d).make(32))
     }
 
@@ -741,8 +746,9 @@ function renderRecipes(settings: Settings): void {
     const div = d3.select("#recipe_toggles").classed("toggle-list", true)
     div.selectAll("*").remove()
     const toggleRows = div.selectAll<HTMLDivElement, Recipe[]>("div").data(groups).join("div").classed("toggle-row", true)
-    const toggles = toggleRows.selectAll<HTMLDivElement, Recipe>("div").data(d => d).join("div")
-    toggles.classed("toggle recipe", true).classed("selected", d => !spec.disable.has(d)).on("click", clickRecipeToggle)
+    const toggles = toggleRows.selectAll<HTMLButtonElement, Recipe>("button").data(d => d).join("button")
+    toggles.attr("type", "button").classed("toggle recipe", true).on("click", clickRecipeToggle)
+    setPressed(toggles, d => !spec.disable.has(d))
     toggles.append(d => iconOf(d).make(32))
 }
 

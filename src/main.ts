@@ -35,7 +35,7 @@ import { type Settings, decodeFragment } from "./state/url-codec.ts"
 import { warnUrl } from "./ui/warnings.ts"
 import {
     plusHandler, clickTab, clickVisualize, changeTitle, changeRatePrecision, changeCountPrecision, changeFormat, changeMprod, changeVisType,
-    changeVisRender, changeVisDir, changeVisElectricity, toggleDebug,
+    changeVisRender, changeVisDir, changeVisElectricity, toggleDebug, resourceKeyHandler,
 } from "./ui/events.ts"
 import { getSprites } from "./ui/icon.ts"
 import { renderSettings } from "./ui/settings.ts"
@@ -115,6 +115,7 @@ function bindControls(): void {
     on("#value_format input", "change", changeFormat)
     on("#mprod", "change", changeMprod)
     on("#render_debug", "change", toggleDebug)
+    document.addEventListener("keydown", resourceKeyHandler)
 }
 
 bindControls()
