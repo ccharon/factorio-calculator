@@ -16,6 +16,7 @@ import { Rational, zero, one } from "../core/rational.ts"
 import type { IconSource } from "./icon-source.ts"
 import type { Dataset, DatasetProduct, DatasetRecipe, SurfaceConditionData } from "./dataset.ts"
 import type { Item } from "./item.ts"
+import type { Quality } from "./quality.ts"
 
 /** Returns the item with this key. Throws if the dataset has no such item. */
 export function requireItem(items: ReadonlyMap<string, Item>, key: string): Item {
@@ -146,6 +147,12 @@ export interface RecipeOptions {
 
     /** Alt text of the icon. Defaults to the name of the first product. */
     iconName?: string
+
+    /** For a variant: the normal recipe. */
+    base?: Recipe
+
+    /** For a variant: the quality of its solid ingredients. */
+    quality?: Quality
 }
 
 /** A crafting recipe. Also the base class for pseudo-recipes such as mining and pumping. */
@@ -177,6 +184,15 @@ export class Recipe implements RecipeLike {
     /** Weight within its priority level, for recipes that extract resources. */
     defaultWeight: Rational | undefined
 
+    /** The normal recipe of a variant, or the recipe itself. */
+    readonly base: Recipe
+
+    /** The quality of the solid ingredients of a variant, or null for the normal recipe. */
+    readonly quality: Quality | null
+
+    /** The variants for ingredients of higher qualities. Empty for recipes without quality. */
+    readonly variants: Map<Quality, Recipe> = new Map()
+
     constructor(options: RecipeOptions) {
         this.key = options.key
         this.name = options.name
@@ -201,6 +217,38 @@ export class Recipe implements RecipeLike {
         this.icon_col = options.icon_col
         this.icon_row = options.icon_row
         this.iconName = options.iconName ?? this.products[0]?.item.name ?? options.name
+        this.base = options.base ?? this
+        this.quality = options.quality ?? null
+    }
+
+    /** Returns this recipe for ingredients of quality: a variant, or the normal recipe. */
+    variant(quality: Quality): Recipe {
+        return this.base.variants.get(quality) ?? this.base
+    }
+
+    /** Creates and registers the variant of this normal recipe for ingredients of quality. Solid items take that quality. */
+    addVariant(quality: Quality): Recipe {
+        const atQuality = (ing: Ingredient): Ingredient => new Ingredient(ing.item.variant(quality), ing.amount, ing.ignoredByProductivity)
+        const recipe = new Recipe({
+            key: `${this.key}@${quality.key}`,
+            name: this.name,
+            order: this.order,
+            icon_col: this.icon_col,
+            icon_row: this.icon_row,
+            allowProductivity: this.allow_productivity,
+            allowQuality: this.allowQuality,
+            categories: this.categories,
+            time: this.time,
+            ingredients: this.ingredients.map(atQuality),
+            products: this.products.map(atQuality),
+            conditions: this.conditions,
+            maximumProductivity: this.maximumProductivity,
+            iconName: this.iconName,
+            base: this,
+            quality,
+        })
+        this.variants.set(quality, recipe)
+        return recipe
     }
 
     /** Returns the ingredients including fuel. */

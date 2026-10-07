@@ -17,6 +17,7 @@ limitations under the License.*/
 import { Rational, zero, one } from "../core/rational.ts"
 import type { Dataset } from "./dataset.ts"
 import type { IconSource } from "./icon-source.ts"
+import type { Item } from "./item.ts"
 import type { Recipe } from "./recipe.ts"
 
 /** A quality level such as uncommon. */
@@ -88,4 +89,26 @@ export function getQualities(data: Dataset): Quality[] {
         }
     })
     return qualities
+}
+
+/**
+ * Creates the variants of higher qualities: of every solid item that is not in orbit, and of every
+ * recipe that allows quality and has a solid ingredient.
+ */
+export function addQualityVariants(items: Iterable<Item>, recipes: Iterable<Recipe>, qualities: readonly Quality[]): void {
+    const higher = qualities.slice(1)
+    for (const item of items) {
+        if (item.phase === "solid" && item.ground === null) {
+            for (const quality of higher) {
+                item.addVariant(quality)
+            }
+        }
+    }
+    for (const recipe of recipes) {
+        if (recipe.allowQuality && recipe.ingredients.some(ing => ing.item.variants.size > 0)) {
+            for (const quality of higher) {
+                recipe.addVariant(quality)
+            }
+        }
+    }
 }

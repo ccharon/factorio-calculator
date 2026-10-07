@@ -53,6 +53,25 @@ function readSolution() {
     return { recipes, items, surplus }
 }
 
+// Lists the first entries that differ, by list and key, such as "recipes iron-plate".
+function describeDifference(expected, actual) {
+    if (expected === undefined || actual === undefined) {
+        return expected === undefined ? " (new scenario)" : " (missing scenario)"
+    }
+    const differences = []
+    for (const list of ["recipes", "items", "surplus"]) {
+        const before = new Map(expected[list].map(entry => [entry.key, entry]))
+        const after = new Map(actual[list].map(entry => [entry.key, entry]))
+        for (const key of new Set([...before.keys(), ...after.keys()])) {
+            if (!isDeepStrictEqual(before.get(key), after.get(key))) {
+                differences.push(`${list} ${key}`)
+            }
+        }
+    }
+    const shown = differences.slice(0, 5).join(", ")
+    return differences.length > 5 ? `: ${shown} and ${differences.length - 5} more` : `: ${shown}`
+}
+
 const { base, browser, close } = await startBrowser({ dist: process.argv.includes("--dist") })
 const results = {}
 const errors = []
@@ -74,7 +93,7 @@ if (mode === "record") {
     const expected = JSON.parse(readFileSync(SNAPSHOT, "utf8"))
     for (const name of new Set([...Object.keys(expected), ...Object.keys(results)])) {
         if (!isDeepStrictEqual(expected[name], results[name])) {
-            errors.push(`${name}: result differs from snapshot`)
+            errors.push(`${name}: result differs from snapshot${describeDifference(expected[name], results[name])}`)
         }
     }
     console.log(`checked ${Object.keys(results).length} scenarios`)

@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 import type { IconSource } from "./icon-source.ts"
 import type { Dataset } from "./dataset.ts"
+import type { Quality } from "./quality.ts"
 import { DisabledRecipe, ELECTRICITY, HEAT, type Recipe, type RecipeLike } from "./recipe.ts"
 
 /** Item state for the solver: a solid item, a fluid, or an abstract quantity such as reactor cycles. */
@@ -49,7 +50,20 @@ export class Item implements IconSource {
     /** For an item in orbit, the item that was launched. Null for all other items. */
     ground: Item | null = null
 
-    constructor(key: string, name: string, col: number, row: number, phase: Phase, group: string, subgroup: string, order: string, weight: number | null = null) {
+    /** The quality of a variant, or null for the normal item. */
+    readonly quality: Quality | null
+
+    /** The normal item of a variant, or the item itself. */
+    readonly base: Item
+
+    /** The variants of higher qualities. Empty for items without quality, such as fluids. */
+    readonly variants: Map<Quality, Item> = new Map()
+
+    /**
+     * @param weight - Weight in grams, or null for fluids and abstract items.
+     * @param base - For a variant: the normal item. The variant has its key and quality.
+     */
+    constructor(key: string, name: string, col: number, row: number, phase: Phase, group: string, subgroup: string, order: string, weight: number | null = null, base: Item | null = null, quality: Quality | null = null) {
         this.key = key
         this.name = name
         this.phase = phase
@@ -60,6 +74,20 @@ export class Item implements IconSource {
         this.order = order
         this.disableRecipe = new DisabledRecipe(this)
         this.weight = weight
+        this.base = base ?? this
+        this.quality = quality
+    }
+
+    /** Returns this item at quality: a variant, or the normal item for the normal quality and items without quality. */
+    variant(quality: Quality): Item {
+        return this.base.variants.get(quality) ?? this.base
+    }
+
+    /** Creates and registers the variant of this normal item at quality. */
+    addVariant(quality: Quality): Item {
+        const item = new Item(`${this.key}@${quality.key}`, this.name, this.icon_col, this.icon_row, this.phase, this.group, this.subgroup, this.order, this.weight, this, quality)
+        this.variants.set(quality, item)
+        return item
     }
 
     /** Returns the producing recipes plus the DisabledRecipe. */

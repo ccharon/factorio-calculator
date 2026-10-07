@@ -373,6 +373,12 @@ export function solve(context: SolverContext, fullOutputs: readonly Output[]): S
     for (const recipe of maxPriorityRecipes.values()) {
         A.setIndex(row(recipe), columns - 1, P)
     }
+    // A DisabledRecipe outside the priority list, such as one of an item variant, is the last resort too.
+    recipeArray.forEach((recipe, i) => {
+        if (recipe.isDisable() && A.index(i, columns - 1).isZero()) {
+            A.setIndex(i, columns - 1, P)
+        }
+    })
 
     const tableau = A.copy()
     const metadata: TableauMetadata = { items, recipes: recipeArray, targets: partial.targets }

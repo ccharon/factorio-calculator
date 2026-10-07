@@ -422,12 +422,13 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
      * Net-negative recipe loops can still make a solution infeasible.
      */
     isItemDisabled(item: Item): boolean {
-        return !item.recipes.some(recipe => !this.disable.has(recipe) && recipe.isNetProducer(item, this))
+        return !item.recipes.some(recipe => !this.disable.has(recipe.base) && recipe.isNetProducer(item, this))
     }
 
     /** Returns the enabled recipes for item, plus its DisabledRecipe if the item is disabled or ignored. */
     getRecipes(item: Item): RecipeLike[] {
-        let recipes = item.recipes.filter(recipe => !this.disable.has(recipe))
+        // Variants of recipes also make fluids, but only variant items take them into the graph.
+        let recipes = item.recipes.filter(recipe => !this.disable.has(recipe.base) && (item.quality !== null || recipe.quality === null))
         // Electricity and heat come from outside only while no source of them is enabled.
         if ((item.key === ELECTRICITY || item.key === HEAT) && recipes.some(r => !r.isResource())) {
             recipes = recipes.filter(r => !r.isResource())
@@ -476,7 +477,8 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
         if (!(recipe instanceof Recipe)) {
             return null
         }
-        const group = this.recipeGroups.get(recipe)
+        // A variant has the buildings of its normal recipe.
+        const group = this.recipeGroups.get(recipe.base)
         if (group === undefined) {
             return null
         }
@@ -557,7 +559,7 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
             effect = effect.add(recipe.neighbourBonus.mul(reactorNeighbours(this.reactorBlock)))
         }
         for (const [research, level] of this.researchLevels) {
-            effect = effect.add(research.bonus(recipe, level))
+            effect = effect.add(research.bonus(recipe.base, level))
         }
         if (recipe.maximumProductivity !== null) {
             const cap = one.add(recipe.maximumProductivity)

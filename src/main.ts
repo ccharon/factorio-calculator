@@ -28,7 +28,7 @@ import { getModules } from "./data/module.ts"
 import { getPlanets } from "./data/planet.ts"
 import { addPowerRecipes } from "./data/power.ts"
 import { getProductivityResearch } from "./data/research.ts"
-import { getQualities } from "./data/quality.ts"
+import { addQualityVariants, getQualities } from "./data/quality.ts"
 import { addResources, getRecipes } from "./data/recipe.ts"
 import { spec } from "./state/factory.ts"
 import { type Settings, decodeFragment } from "./state/url-codec.ts"
@@ -79,6 +79,8 @@ function loadData(data: Dataset, settings: Settings): void {
     addRocketCargo(data, items, recipes)
     addPowerRecipes(data, items, recipes)
     addResources(items, recipes)
+    const qualities = getQualities(data)
+    addQualityVariants(items.values(), recipes.values(), qualities)
     const buildings = getBuildings(data, items)
     const planets = getPlanets(data, recipes, buildings)
     const modules = getModules(data, items)
@@ -87,7 +89,7 @@ function loadData(data: Dataset, settings: Settings): void {
     getSprites(data)
     const itemGroups = getItemGroups(items, data)
     const research = getProductivityResearch(data, recipes)
-    spec.setData(items, recipes, planets, modules, buildings, belts, fuel, itemGroups, research, getQualities(data))
+    spec.setData(items, recipes, planets, modules, buildings, belts, fuel, itemGroups, research, qualities)
     renderSettings(settings)
     spec.updateSolution()
 }
