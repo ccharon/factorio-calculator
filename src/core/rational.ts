@@ -23,9 +23,25 @@ function parseInteger(s: string): bigint {
     return BigInt(s)
 }
 
+const MAX_SAFE = BigInt(Number.MAX_SAFE_INTEGER)
+
+// Greatest common divisor of two non-negative integers. Small values use number arithmetic, which is
+// exact below 2^53 and much faster than BigInt.
 function gcd(a: bigint, b: bigint): bigint {
     while (b !== 0n) {
-        [a, b] = [b, a % b]
+        if (a <= MAX_SAFE && b <= MAX_SAFE) {
+            let x = Number(a)
+            let y = Number(b)
+            while (y !== 0) {
+                const t = x % y
+                x = y
+                y = t
+            }
+            return BigInt(x)
+        }
+        const t = a % b
+        a = b
+        b = t
     }
     return a
 }
@@ -44,7 +60,15 @@ export class Rational {
     readonly p: bigint
     readonly q: bigint
 
-    constructor(p: bigint, q: bigint) {
+    /**
+     * @param reduced - True if p/q is already reduced with a positive q. Skips the reduction.
+     */
+    constructor(p: bigint, q: bigint, reduced = false) {
+        if (reduced) {
+            this.p = p
+            this.q = q
+            return
+        }
         if (q < 0n) {
             p = -p
             q = -q
@@ -182,7 +206,7 @@ export class Rational {
 
     /** Returns this + other. */
     add(other: Rational): Rational {
-        return new Rational(this.p * other.q + this.q * other.p, this.q * other.q)
+        return this.addSigned(other.p, other.q)
     }
 
     /** Returns this - other. */
@@ -190,7 +214,22 @@ export class Rational {
         if (other.isZero()) {
             return this
         }
-        return new Rational(this.p * other.q - this.q * other.p, this.q * other.q)
+        return this.addSigned(-other.p, other.q)
+    }
+
+    // Returns this + p/q for a reduced p/q. Reduces by the gcd of the denominators first, which keeps
+    // the numbers that need a gcd small (Knuth, TAOCP 4.5.1).
+    private addSigned(p: bigint, q: bigint): Rational {
+        const d = gcd(this.q, q)
+        if (d === 1n) {
+            return new Rational(this.p * q + p * this.q, this.q * q, true)
+        }
+        const t = this.p * (q / d) + p * (this.q / d)
+        if (t === 0n) {
+            return zero
+        }
+        const e = gcd(t < 0n ? -t : t, d)
+        return new Rational(t / e, (this.q / d) * (q / e), true)
     }
 
     /** Returns this * other. */
@@ -204,7 +243,10 @@ export class Rational {
         if (other.isOne()) {
             return this
         }
-        return new Rational(this.p * other.p, this.q * other.q)
+        // Cross reduction keeps the result reduced without a gcd of the products.
+        const d1 = gcd(this.p < 0n ? -this.p : this.p, other.q)
+        const d2 = gcd(other.p < 0n ? -other.p : other.p, this.q)
+        return new Rational((this.p / d1) * (other.p / d2), (this.q / d2) * (other.q / d1), true)
     }
 
     /** Returns this / other. */

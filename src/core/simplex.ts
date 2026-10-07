@@ -65,6 +65,13 @@ export class Matrix {
 
 function pivot(A: Matrix, row: number, col: number): void {
     A.mulRow(row, A.index(row, col).reciprocate())
+    // The tableau is sparse. Columns where the pivot row is zero do not change.
+    const columns: number[] = []
+    for (let c = 0; c < A.cols; c++) {
+        if (!A.index(row, c).isZero()) {
+            columns.push(c)
+        }
+    }
     for (let r = 0; r < A.rows; r++) {
         if (r === row) {
             continue
@@ -73,7 +80,7 @@ function pivot(A: Matrix, row: number, col: number): void {
         if (ratio.isZero()) {
             continue
         }
-        for (let c = 0; c < A.cols; c++) {
+        for (const c of columns) {
             A.setIndex(r, c, A.index(r, c).sub(A.index(row, c).mul(ratio)))
         }
     }
