@@ -12,42 +12,36 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
-// Icon dropdowns: a row of radio buttons with icon labels that shows only the selected one
-// until clicked.
+// Icon dropdowns: a radio group with icon labels that shows only the selected one until clicked.
+// The open dropdown is a popover over its place in the page (see .dropdown in dropdown.css).
 
 import * as d3 from "d3"
 
-/** Called with the dropdown wrapper when it opens or closes. */
+/** Called with the dropdown content div when it opens or closes. */
 export type DropdownCallback = (dropdown: d3.Selection<HTMLDivElement, unknown, null, undefined>) => void
 
-interface DropdownState {
-    readonly dropdownNode: HTMLDivElement
-    readonly onOpen: DropdownCallback | undefined
-    readonly onClose: DropdownCallback | undefined
+let anchorCount = 0
+
+// Closes the dropdown that contains element.
+function closeDropdown(element: Element): void {
+    const dropdown = element.closest<HTMLDivElement>(".dropdown")
+    if (dropdown?.matches(":popover-open")) {
+        dropdown.hidePopover()
+        dropdown.focus()
+    }
 }
 
-const dropdownLocal = d3.local<DropdownState>()
-
-// Opens or closes the dropdown that contains element.
-function toggleDropdown(element: Element): void {
-    const state = dropdownLocal.get(element)
-    if (state === undefined) {
+// Opens a closed dropdown. The wrapper keeps the closed size while the content floats above it.
+function openDropdown(dropdown: HTMLDivElement): void {
+    if (dropdown.matches(":popover-open")) {
         return
     }
-
-    const dropdown = d3.select<HTMLDivElement, unknown>(state.dropdownNode)
-    const classes = state.dropdownNode.classList
-
-    if (classes.contains("open")) {
-        classes.remove("open")
-        state.onClose?.(dropdown)
-    } else {
-        // The spacer keeps the closed dropdown's size while the open one floats above it.
-        const selected = dropdown.select<HTMLLabelElement>("input:checked + label")
-        dropdown.select(".spacer").style("width", selected.style("width")).style("height", selected.style("height"))
-        classes.add("open")
-        state.onOpen?.(dropdown)
+    const wrapper = dropdown.parentElement
+    if (wrapper !== null) {
+        wrapper.style.width = `${wrapper.offsetWidth}px`
+        wrapper.style.height = `${wrapper.offsetHeight}px`
     }
+    dropdown.showPopover()
 }
 
 /**
@@ -60,21 +54,50 @@ export function makeDropdown<GElement extends HTMLElement, Datum, PElement exten
     onClose?: DropdownCallback,
 ): d3.Selection<HTMLDivElement, Datum, PElement, PDatum> {
     const wrapper = selector.append("div").classed("dropdownWrapper", true).each(function () {
-        dropdownLocal.set(this, { dropdownNode: this, onOpen, onClose })
+        this.style.setProperty("anchor-name", `--dropdown-${anchorCount++}`)
     })
 
-    wrapper.append("div").classed("clicker", true).on("click", function () {
-        toggleDropdown(this)
+    const inner = wrapper.append("div").classed("dropdown", true).attr("popover", "auto").attr("tabindex", 0).attr("role", "button")
+    inner.each(function () {
+        this.style.setProperty("position-anchor", this.parentElement?.style.getPropertyValue("anchor-name") ?? "")
     })
-    const inner = wrapper.append("div").classed("dropdown", true).on("click", function () {
-        toggleDropdown(this)
+    inner.on("click", function (event: MouseEvent) {
+        if (event.target instanceof HTMLInputElement) {
+            // The second click of a label click. The first one, on the label, was handled already.
+            return
+        }
+        if (!this.matches(":popover-open")) {
+            openDropdown(this)
+        } else if (event.target instanceof Element && event.target.closest("input:checked + label") !== null) {
+            // A click on the selected choice changes nothing, so no change event closes the dropdown.
+            closeDropdown(this)
+        }
+    }).on("keydown", function (event: KeyboardEvent) {
+        if (event.target === this && (event.key === "Enter" || event.key === " ")) {
+            event.preventDefault()
+            openDropdown(this)
+        } else if (event.target instanceof HTMLInputElement && event.target.type === "radio" && (event.key === "Enter" || event.key === " ")) {
+            event.preventDefault()
+            closeDropdown(this)
+        }
+    }).on("toggle", function (event: ToggleEvent) {
+        const dropdown = d3.select<HTMLDivElement, unknown>(this)
+        if (event.newState === "open") {
+            dropdown.select<HTMLInputElement>("input:checked").node()?.focus({ preventScroll: true })
+            onOpen?.(dropdown)
+        } else {
+            this.parentElement?.style.removeProperty("width")
+            this.parentElement?.style.removeProperty("height")
+            onClose?.(dropdown)
+        }
     })
-    wrapper.append("div").classed("spacer", true)
 
     return inner
 }
 
 let inputId = 0
+// The choice made with arrow keys in an open dropdown, applied when it closes.
+const pendingChoice = new WeakMap<Element, () => void>()
 
 /**
  * Appends a radio input and its label to each element of selector. Returns the labels, which
@@ -95,9 +118,26 @@ export function addInputs<GElement extends HTMLElement, Datum, PElement extends 
         ids.set(this, `input-${inputId++}`)
     })
 
-    selector.append("input").on("change", function (_event: Event, d: Datum) {
-        toggleDropdown(this)
-        callback(d)
+    // Arrow keys change the selection without closing the dropdown. The choice takes effect when the
+    // dropdown closes, because the callback may rebuild the dropdown.
+    let fromKeyboard = false
+    selector.append("input").on("keydown", (event: KeyboardEvent) => {
+        fromKeyboard = event.key.startsWith("Arrow")
+    }).on("change", function (_event: Event, d: Datum) {
+        const dropdown = this.closest(".dropdown")
+        if (fromKeyboard && dropdown !== null) {
+            if (!pendingChoice.has(dropdown)) {
+                dropdown.addEventListener("toggle", () => {
+                    pendingChoice.get(dropdown)?.()
+                    pendingChoice.delete(dropdown)
+                }, { once: true })
+            }
+            pendingChoice.set(dropdown, () => callback(d))
+        } else {
+            closeDropdown(this)
+            callback(d)
+        }
+        fromKeyboard = false
     }).attr("id", function () {
         return this.parentElement === null ? "" : ids.get(this.parentElement) ?? ""
     }).attr("name", typeof name === "string" ? name : d => name(d)).attr("type", "radio").property("checked", checked)

@@ -474,13 +474,14 @@ svg.popout {
 .dropdownWrapper .dropdown .search {
     display: none;
     width: 100%;
+    box-sizing: border-box;
     padding-left: 0.4em;
     margin-bottom: 0.4em;
 }
-.dropdownWrapper.open .dropdown .search {
+.dropdownWrapper .dropdown:popover-open .search {
     display: block;
 }
-.dropdownWrapper.open div.itemDropdown {
+.dropdownWrapper div.itemDropdown:popover-open {
     height: 400px;
     width: 380px;
     overflow-y: scroll;
