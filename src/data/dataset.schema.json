@@ -231,11 +231,12 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["key", "localized_name", "consumption", "energy_source", "icon_col", "icon_row"],
+        "required": ["key", "localized_name", "consumption", "neighbour_bonus", "energy_source", "icon_col", "icon_row"],
         "properties": {
           "key": { "$ref": "#/$defs/key" },
           "localized_name": { "$ref": "#/$defs/localizedName" },
           "consumption": { "type": "number", "exclusiveMinimum": 0, "description": "Heat output in W." },
+          "neighbour_bonus": { "type": "number", "minimum": 0, "description": "Extra heat output per active neighbouring reactor, such as 1 for +100%." },
           "energy_source": { "$ref": "#/$defs/energySource" },
           "icon_col": { "$ref": "#/$defs/iconIndex" },
           "icon_row": { "$ref": "#/$defs/iconIndex" }

@@ -24,7 +24,7 @@ import { type Module, type ModuleDefaults, ModuleSpec } from "../data/module.ts"
 import type { Planet } from "../data/planet.ts"
 import type { ProductivityResearch } from "../data/research.ts"
 import { Quality } from "../data/quality.ts"
-import { DISABLED_RECIPE_PREFIX, ELECTRICITY, HEAT, type Ingredient, Recipe, type RecipeContext, type RecipeLike, type RecipeNode } from "../data/recipe.ts"
+import { DISABLED_RECIPE_PREFIX, ELECTRICITY, HEAT, type Ingredient, ReactorRecipe, Recipe, type RecipeContext, type RecipeLike, type RecipeNode } from "../data/recipe.ts"
 import { renderDebug } from "../ui/debug.ts"
 import { displayItems } from "../ui/display.ts"
 import { currentTab } from "../ui/events.ts"
@@ -34,7 +34,7 @@ import { reapTooltips } from "../ui/tooltip.ts"
 import { renderTotals } from "../visualize/visualize.ts"
 import { Formatter } from "./align.ts"
 import { type BuildingGroup, getBuildingGroups } from "./building-groups.ts"
-import { type PowerUsage, getEnergyIngredients, getPowerUsage } from "./energy.ts"
+import { type PowerUsage, getEnergyIngredients, getPowerUsage, reactorNeighbours } from "./energy.ts"
 import { FuelChoice } from "./fuel-choice.ts"
 import { formatSettings } from "./fragment.ts"
 import { PriorityList, type PriorityLevelMap } from "./priority.ts"
@@ -42,6 +42,8 @@ import { encodeSettings } from "./url-codec.ts"
 
 export const DEFAULT_PLANET = "nauvis"
 export const DEFAULT_BELT = "transport-belt"
+/** A single reactor without neighbours. */
+export const DEFAULT_REACTOR_BLOCK = 0
 const hundred = Rational.from_float(100)
 const NORMAL_QUALITY = new Quality("normal", "Normal", 0, 0, 0)
 const ten = Rational.from_float(10)
@@ -88,6 +90,8 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
     defaultBeaconCount: Rational = zero
 
     miningProd: Rational = zero
+    /** Length of the 2×N block of nuclear reactors, or 0 for a single reactor. */
+    reactorBlock: number = DEFAULT_REACTOR_BLOCK
     /** Quality levels from lowest to highest. */
     qualities: Quality[] = []
     // Before the dataset is loaded, every quality setting is the normal quality.
@@ -188,6 +192,7 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
         this.fuel.setFuels(fuels)
 
         this.miningProd = zero
+        this.reactorBlock = DEFAULT_REACTOR_BLOCK
         this.itemGroups = itemGroups
         this.research = research
         this.qualities = qualities
@@ -525,6 +530,9 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
         let effect = this.getModuleSpec(recipe)?.prodEffect(this) ?? one
         if (!(recipe instanceof Recipe)) {
             return effect
+        }
+        if (recipe instanceof ReactorRecipe) {
+            effect = effect.add(recipe.neighbourBonus.mul(reactorNeighbours(this.reactorBlock)))
         }
         for (const [research, level] of this.researchLevels) {
             effect = effect.add(research.bonus(recipe, level))

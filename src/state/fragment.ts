@@ -24,7 +24,7 @@ import {
 } from "../ui/events.ts"
 import { DEFAULT_TITLE, DEFAULT_COLOR_SCHEME, colorScheme } from "../ui/settings.ts"
 import { DEFAULT_RATE, DEFAULT_RATE_PRECISION, DEFAULT_COUNT_PRECISION, DEFAULT_FORMAT } from "./align.ts"
-import { spec, DEFAULT_BELT } from "./factory.ts"
+import { spec, DEFAULT_BELT, DEFAULT_REACTOR_BLOCK } from "./factory.ts"
 
 const hundred = Rational.from_float(100)
 
@@ -72,6 +72,9 @@ export function formatSettings(excludeTitle = false, overrideTab?: string, targe
     }
     if (!spec.miningProd.isZero()) {
         add("mprod", spec.miningProd.mul(hundred).toString())
+    }
+    if (spec.reactorBlock !== DEFAULT_REACTOR_BLOCK) {
+        add("reactors", String(spec.reactorBlock))
     }
     const research = spec.research.filter(r => (spec.researchLevels.get(r) ?? 0) > 0).map(r => `${r.key}:${spec.researchLevels.get(r) ?? 0}`)
     if (research.length > 0) {

@@ -30581,6 +30581,7 @@
         "en": "Nuclear reactor"
       },
       "consumption": 40000000,
+      "neighbour_bonus": 1,
       "energy_source": {
         "type": "burner",
         "fuel_categories": [
@@ -30598,6 +30599,7 @@
         "en": "Heating tower"
       },
       "consumption": 40000000,
+      "neighbour_bonus": 0,
       "energy_source": {
         "type": "burner",
         "fuel_categories": [

@@ -53,7 +53,7 @@ The browser checks use `/usr/bin/google-chrome-stable`. Set `CHROME` to use anot
 ## Known limitations
 
 - Quality is one global setting each for machines, modules and beacons. Quality per recipe and recycling loops for a target quality are not modelled.
-- The nuclear reactor neighbour bonus is not modelled.
+- The nuclear reactor neighbour bonus assumes one block of two rows. Other layouts need the block length with the same average number of neighbours.
 - Thruster fuel use does not depend on the thruster performance level. Targets set the fuel and oxidizer rates directly.
 - Spoilage during transport is not modelled.
 - Heating on Aquilo counts buildings only, not inserters, belts or pipes.

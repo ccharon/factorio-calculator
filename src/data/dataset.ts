@@ -170,6 +170,8 @@ export interface DatasetSolarPanel extends NamedPrototype {
 export interface DatasetReactor extends NamedPrototype {
     /** Heat output in W. */
     consumption: number
+    /** Extra heat output per active neighbouring reactor, such as 1 for +100%. */
+    neighbour_bonus: number
     energy_source: EnergySource
 }
 

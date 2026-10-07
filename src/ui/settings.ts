@@ -29,12 +29,13 @@ import { type Module, moduleRows, shortModules } from "../data/module.ts"
 import type { Planet } from "../data/planet.ts"
 import type { Quality } from "../data/quality.ts"
 import type { ProductivityResearch } from "../data/research.ts"
-import type { Recipe, RecipeLike } from "../data/recipe.ts"
+import { ReactorRecipe, type Recipe, type RecipeLike } from "../data/recipe.ts"
 import {
     DEFAULT_RATE, DEFAULT_RATE_PRECISION, DEFAULT_COUNT_PRECISION, DEFAULT_FORMAT, type DisplayFormat, isRateName, longRateNames, type RateName,
 } from "../state/align.ts"
 import type { BuildingGroup } from "../state/building-groups.ts"
-import { DEFAULT_PLANET, DEFAULT_BELT, spec } from "../state/factory.ts"
+import { reactorNeighbours } from "../state/energy.ts"
+import { DEFAULT_PLANET, DEFAULT_BELT, DEFAULT_REACTOR_BLOCK, spec } from "../state/factory.ts"
 import type { Settings } from "../state/url-codec.ts"
 import { type ColorScheme, colorSchemes } from "./color.ts"
 import {
@@ -43,11 +44,12 @@ import {
 } from "./events.ts"
 import { type ModuleCell, type ModuleInput, moduleDropdown } from "./module-dropdown.ts"
 import { iconOf } from "./icons.ts"
-import { readRational } from "./number-input.ts"
+import { readCount, readRational } from "./number-input.ts"
 import { addTarget } from "./target.ts"
 import { warnUrl } from "./warnings.ts"
 
 const hundred = Rational.from_float(100)
+const MAX_REACTOR_BLOCK = 100
 
 function warn(message: string, value: string): void {
     warnUrl(message, value)
@@ -71,13 +73,14 @@ function parseRational(value: string, name: string): Rational | null {
 }
 
 // Parses a non-negative whole number from the URL, or returns fallback.
-function parseCount(value: string | undefined, fallback: number): number {
+// Parses a whole number from 0 to max from the URL, or returns fallback.
+function parseCount(value: string | undefined, fallback: number, name: string, max: number): number {
     if (value === undefined) {
         return fallback
     }
     const n = Number(value)
-    if (!Number.isInteger(n) || n < 0 || n > 20) {
-        warn("invalid precision", value)
+    if (!Number.isInteger(n) || n < 0 || n > max) {
+        warn(`invalid ${name}`, value)
         return fallback
     }
     return n
@@ -264,9 +267,9 @@ function renderRateOptions(settings: Settings): void {
 // precisions
 
 function renderPrecisions(settings: Settings): void {
-    spec.format.ratePrecision = parseCount(settings.get("rp"), DEFAULT_RATE_PRECISION)
+    spec.format.ratePrecision = parseCount(settings.get("rp"), DEFAULT_RATE_PRECISION, "precision", 20)
     d3.select("#rprec").attr("value", spec.format.ratePrecision)
-    spec.format.countPrecision = parseCount(settings.get("cp"), DEFAULT_COUNT_PRECISION)
+    spec.format.countPrecision = parseCount(settings.get("cp"), DEFAULT_COUNT_PRECISION, "precision", 20)
     d3.select("#cprec").attr("value", spec.format.countPrecision)
 }
 
@@ -287,6 +290,27 @@ function renderValueFormat(settings: Settings): void {
 }
 
 // mining productivity
+
+// Shows the heat bonus of each reactor for the block length.
+function showReactorBonus(): void {
+    const bonus = spec.recipes.get("nuclear-reactor-cycle")
+    const neighbours = reactorNeighbours(spec.reactorBlock)
+    const percent = bonus instanceof ReactorRecipe ? bonus.neighbourBonus.mul(neighbours).mul(hundred) : zero
+    d3.select("#reactor_bonus").text(`(+${percent.toDecimal(1)}% heat)`)
+}
+
+function renderReactorBlock(settings: Settings): void {
+    spec.reactorBlock = parseCount(settings.get("reactors"), DEFAULT_REACTOR_BLOCK, "reactor block", MAX_REACTOR_BLOCK)
+    d3.select<HTMLInputElement, unknown>("#reactor_block").property("value", spec.reactorBlock).on("change", function () {
+        const count = readCount(this, MAX_REACTOR_BLOCK)
+        if (count !== null) {
+            spec.reactorBlock = count
+            showReactorBonus()
+            spec.updateSolution()
+        }
+    })
+    showReactorBonus()
+}
 
 function renderMiningProd(settings: Settings): void {
     const mprod = settings.get("mprod") ?? "0"
@@ -801,6 +825,7 @@ export function renderSettings(settings: Settings): void {
     renderPrecisions(settings)
     renderValueFormat(settings)
     renderMiningProd(settings)
+    renderReactorBlock(settings)
     renderResearch(settings)
     renderColorScheme(settings)
     renderBuildings(settings)

@@ -330,6 +330,7 @@ export function convert(raw, localeFiles, version, runtime) {
         key: p.name,
         localized_name: locale.name("entity", p.name),
         consumption: parseEnergy(p.consumption, "W"),
+        neighbour_bonus: p.neighbour_bonus ?? 1,
         energy_source: normalizeEnergySource(p.energy_source),
         icon_ref: `entity/${p.name}`,
     }))

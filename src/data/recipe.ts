@@ -353,6 +353,20 @@ function makeRecipe(items: ReadonlyMap<string, Item>, d: DatasetRecipe): Recipe 
 
 const hundred = Rational.from_float(100)
 
+/**
+ * The nuclear reactor burning one fuel cell. Each active neighbouring reactor adds neighbourBonus times
+ * the heat. The bonus enters the solver like productivity on the heat product.
+ */
+export class ReactorRecipe extends Recipe {
+    /** Extra heat per active neighbour, such as 1 for +100%. */
+    readonly neighbourBonus: Rational
+
+    constructor(neighbourBonus: Rational, options: RecipeOptions) {
+        super(options)
+        this.neighbourBonus = neighbourBonus
+    }
+}
+
 /** Pseudo-recipe for an item that no recipe produces. It supplies the item at a fixed priority. */
 class ResourceRecipe extends Recipe {
     constructor(item: Item, priority: number | undefined, weight: Rational | undefined) {
@@ -558,7 +572,7 @@ export function getRecipes(data: Dataset, items: Map<string, Item>): Map<string,
         throw new Error("dataset lacks the nuclear reactor or the uranium fuel cell")
     }
 
-    recipes.set("nuclear-reactor-cycle", new Recipe({
+    recipes.set("nuclear-reactor-cycle", new ReactorRecipe(Rational.from_float_approximate(reactorDef.neighbour_bonus), {
         key: "nuclear-reactor-cycle",
         name: "Nuclear reactor cycle",
         order: reactor.order,
@@ -570,7 +584,8 @@ export function getRecipes(data: Dataset, items: Map<string, Item>): Map<string,
         time: Rational.from_float(cellValue).div(Rational.from_float(reactorDef.consumption)),
         ingredients: [new Ingredient(item("uranium-fuel-cell"), one)],
         products: [
-            new Ingredient(item("depleted-uranium-fuel-cell"), one),
+            // The neighbour bonus adds heat, not depleted cells.
+            new Ingredient(item("depleted-uranium-fuel-cell"), one, one),
             new Ingredient(item(HEAT), Rational.from_float(cellValue).mul(Rational.from_float_approximate(reactorDef.energy_source.effectivity ?? 1)).div(ELECTRICITY_UNIT)),
         ],
     }))

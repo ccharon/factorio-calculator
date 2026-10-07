@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 // Energy use of buildings: fuel, electricity and heat per craft, and power use for display.
 
-import { type Rational, zero, one } from "../core/rational.ts"
+import { Rational, zero, one } from "../core/rational.ts"
 import type { Building } from "../data/building.ts"
 import type { Item } from "../data/item.ts"
 import type { ModuleSpec } from "../data/module.ts"
@@ -35,6 +35,18 @@ export interface EnergyContext extends QualityContext {
     getRecipeRate(recipe: RecipeNode): Rational | null
     getCount(recipe: RecipeNode, rate: Rational): Rational
     getModuleSpec(recipe: RecipeNode): ModuleSpec | undefined
+}
+
+/**
+ * Returns the average number of active neighbours of a nuclear reactor in a block of two rows with
+ * blockLength reactors each. 0 stands for a single reactor.
+ */
+export function reactorNeighbours(blockLength: number): Rational {
+    if (blockLength === 0) {
+        return zero
+    }
+    // 2N reactors share N vertical and 2(N-1) horizontal contacts, and each contact counts for two reactors.
+    return Rational.from_float(3).sub(Rational.from_floats(2, blockLength))
 }
 
 /** Power use of a recipe: the fuel category of burner buildings, "electric", or null without building. */

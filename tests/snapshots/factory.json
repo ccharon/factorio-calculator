@@ -2476,6 +2476,322 @@
     ],
     "surplus": []
   },
+  "nauvis-nuclear-reactor-block": {
+    "fragment": "#items=processing-unit:r:60&planet=nauvis&enable=steam-turbine-power,nuclear-reactor-cycle&reactors=4",
+    "recipes": [
+      {
+        "key": "(output)",
+        "rate": "1",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "advanced-circuit",
+        "rate": "2",
+        "building": "assembling-machine-1",
+        "count": "24",
+        "fuel": "electric",
+        "power": "1860000"
+      },
+      {
+        "key": "advanced-oil-processing",
+        "rate": "1348634175791/2766179581731",
+        "building": "oil-refinery",
+        "count": "6743170878955/2766179581731",
+        "fuel": "electric",
+        "power": "982770437197934000/922059860577"
+      },
+      {
+        "key": "coal",
+        "rate": "2",
+        "building": "electric-mining-drill",
+        "count": "4",
+        "fuel": "electric",
+        "power": "360000"
+      },
+      {
+        "key": "copper-cable",
+        "rate": "40",
+        "building": "assembling-machine-1",
+        "count": "40",
+        "fuel": "electric",
+        "power": "3100000"
+      },
+      {
+        "key": "copper-ore",
+        "rate": "40",
+        "building": "electric-mining-drill",
+        "count": "80",
+        "fuel": "electric",
+        "power": "7200000"
+      },
+      {
+        "key": "copper-plate",
+        "rate": "40",
+        "building": "electric-furnace",
+        "count": "64",
+        "fuel": "electric",
+        "power": "11904000"
+      },
+      {
+        "key": "crude-oil",
+        "rate": "134863417579100/2766179581731",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "electronic-circuit",
+        "rate": "24",
+        "building": "assembling-machine-1",
+        "count": "24",
+        "fuel": "electric",
+        "power": "1860000"
+      },
+      {
+        "key": "heavy-oil-cracking",
+        "rate": "6743170878955/22129436653848",
+        "building": "chemical-plant",
+        "count": "6743170878955/11064718326924",
+        "fuel": "electric",
+        "power": "124459909405751500/922059860577"
+      },
+      {
+        "key": "iron-ore",
+        "rate": "266681567491847/11064718326924",
+        "building": "electric-mining-drill",
+        "count": "266681567491847/5532359163462",
+        "fuel": "electric",
+        "power": "1333407837459235000/307353286859"
+      },
+      {
+        "key": "iron-plate",
+        "rate": "266681567491847/11064718326924",
+        "building": "electric-furnace",
+        "count": "533363134983694/13830897908655",
+        "fuel": "electric",
+        "power": "2205373209059782000/307353286859"
+      },
+      {
+        "key": "kovarex-enrichment-process",
+        "rate": "73890342229/553235916346200",
+        "building": "centrifuge",
+        "count": "73890342229/9220598605770",
+        "fuel": "electric",
+        "power": "4447842339360000/307353286859"
+      },
+      {
+        "key": "light-oil-cracking",
+        "rate": "22926780988447/22129436653848",
+        "building": "chemical-plant",
+        "count": "22926780988447/11064718326924",
+        "fuel": "electric",
+        "power": "420581924369939500/922059860577"
+      },
+      {
+        "key": "nuclear-fuel-reprocessing",
+        "rate": "27688398751/92205986057700",
+        "building": "centrifuge",
+        "count": "27688398751/1536766434295",
+        "fuel": "electric",
+        "power": "16571928777775000/922059860577"
+      },
+      {
+        "key": "nuclear-reactor-cycle",
+        "rate": "27688398751/18441197211540",
+        "building": "nuclear-reactor",
+        "count": "276883987510/922059860577",
+        "fuel": "electric",
+        "power": "0"
+      },
+      {
+        "key": "plastic-bar",
+        "rate": "2",
+        "building": "chemical-plant",
+        "count": "2",
+        "fuel": "electric",
+        "power": "434000"
+      },
+      {
+        "key": "processing-unit",
+        "rate": "1",
+        "building": "assembling-machine-2",
+        "count": "40/3",
+        "fuel": "electric",
+        "power": "2070000"
+      },
+      {
+        "key": "steam-500",
+        "rate": "38763758251400000/89439806475969",
+        "building": "heat-exchanger",
+        "count": "3876375825140/922059860577",
+        "fuel": "electric",
+        "power": "0"
+      },
+      {
+        "key": "steam-turbine-power",
+        "rate": "38763758251400000/89439806475969",
+        "building": "steam-turbine",
+        "count": "1938187912570000/268319419427907",
+        "fuel": "electric",
+        "power": "0"
+      },
+      {
+        "key": "sulfur",
+        "rate": "2779286516051/11064718326924",
+        "building": "chemical-plant",
+        "count": "2779286516051/11064718326924",
+        "fuel": "electric",
+        "power": "55091933054931500/922059860577"
+      },
+      {
+        "key": "sulfuric-acid",
+        "rate": "2779286516051/27661795817310",
+        "building": "chemical-plant",
+        "count": "2779286516051/27661795817310",
+        "fuel": "electric",
+        "power": "25909424636396000/922059860577"
+      },
+      {
+        "key": "uranium-fuel-cell",
+        "rate": "27688398751/184411972115400",
+        "building": "assembling-machine-1",
+        "count": "27688398751/9220598605770",
+        "fuel": "electric",
+        "power": "837604214025000/307353286859"
+      },
+      {
+        "key": "uranium-ore",
+        "rate": "65534671600/2766179581731",
+        "building": "electric-mining-drill",
+        "count": "262138686400/2766179581731",
+        "fuel": "electric",
+        "power": "2621386864000000/307353286859"
+      },
+      {
+        "key": "uranium-processing",
+        "rate": "6553467160/2766179581731",
+        "building": "centrifuge",
+        "count": "26213868640/922059860577",
+        "fuel": "electric",
+        "power": "6644073021355000/307353286859"
+      },
+      {
+        "key": "water",
+        "rate": "15371381595505600/29813268825323",
+        "building": "offshore-pump",
+        "count": "38428453988764/89439806475969",
+        "fuel": "electric",
+        "power": "0"
+      }
+    ],
+    "items": [
+      {
+        "key": "advanced-circuit",
+        "rate": "2"
+      },
+      {
+        "key": "coal",
+        "rate": "2"
+      },
+      {
+        "key": "copper-cable",
+        "rate": "80"
+      },
+      {
+        "key": "copper-ore",
+        "rate": "40"
+      },
+      {
+        "key": "copper-plate",
+        "rate": "40"
+      },
+      {
+        "key": "crude-oil",
+        "rate": "134863417579100/2766179581731"
+      },
+      {
+        "key": "depleted-uranium-fuel-cell",
+        "rate": "27688398751/18441197211540"
+      },
+      {
+        "key": "electricity",
+        "rate": "38763758251400/922059860577"
+      },
+      {
+        "key": "electronic-circuit",
+        "rate": "24"
+      },
+      {
+        "key": "heat",
+        "rate": "38763758251400/922059860577"
+      },
+      {
+        "key": "heavy-oil",
+        "rate": "33715854394775/2766179581731"
+      },
+      {
+        "key": "iron-ore",
+        "rate": "266681567491847/11064718326924"
+      },
+      {
+        "key": "iron-plate",
+        "rate": "266681567491847/11064718326924"
+      },
+      {
+        "key": "light-oil",
+        "rate": "114633904942235/3688239442308"
+      },
+      {
+        "key": "petroleum-gas",
+        "rate": "87661221426415/1844119721154"
+      },
+      {
+        "key": "plastic-bar",
+        "rate": "4"
+      },
+      {
+        "key": "processing-unit",
+        "rate": "1"
+      },
+      {
+        "key": "steam-500",
+        "rate": "38763758251400000/89439806475969"
+      },
+      {
+        "key": "sulfur",
+        "rate": "2779286516051/5532359163462"
+      },
+      {
+        "key": "sulfuric-acid",
+        "rate": "13896432580255/2766179581731"
+      },
+      {
+        "key": "uranium-235",
+        "rate": "3038678885413/553235916346200"
+      },
+      {
+        "key": "uranium-238",
+        "rate": "243461304994/69154489543275"
+      },
+      {
+        "key": "uranium-fuel-cell",
+        "rate": "27688398751/18441197211540"
+      },
+      {
+        "key": "uranium-ore",
+        "rate": "65534671600/2766179581731"
+      },
+      {
+        "key": "water",
+        "rate": "15371381595505600/29813268825323"
+      }
+    ],
+    "surplus": []
+  },
   "nauvis-quality": {
     "fragment": "#items=processing-unit:r:60&planet=nauvis&dm=s3&db=s3:s3&dbc=4&qm=rare&qd=legendary&qb=epic",
     "recipes": [

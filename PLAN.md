@@ -187,7 +187,7 @@ Branch `develop`, everything committed, not pushed. Phases 0 to 7 and 6a are don
 Next steps:
 
 1. Push `develop` when the user asks, then merge into `main` for a release.
-2. From phase 5: quality per recipe, recycling loops for a target quality, reactor neighbour bonus.
+2. From phase 5: quality per recipe, recycling loops for a target quality. Done: reactor neighbour bonus (`reactors=<N>` for a 2×N block, `ReactorRecipe`, bonus enters `getProdEffect` with the depleted cell ignored by productivity).
 
 Notes on phase 6: drag and drop in the Resources tab cannot be tested automatically (neither the Chrome extension nor headless Chrome start a native drag); ask the user to try it. Number inputs go through `readRational()` in `src/ui/number-input.ts`. `align.ts` stays because Chrome has no CSS decimal alignment.
 
