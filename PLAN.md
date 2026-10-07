@@ -130,6 +130,14 @@ Comes before the model changes, so phases 4 to 6 are written once, in the new st
 4. Fuel per building fuel category (nutrients for biochamber, chemical for boilers and burners).
 5. Rocket launch and cargo for Space Age.
 
+## Phase 4a: Layering of `src/data/`
+
+`src/data/` must not import `src/ui/` or `src/state/`. Today the data classes create `Icon` objects, build tooltip DOM in `renderTooltip()`, format energy with `ui/energy.ts`, and read the global `spec` (`Recipe.gives()`, fuel, building tooltips).
+
+1. Data classes keep only plain data such as `icon_col` and `icon_row`. Icons and tooltips are built in `src/ui/` from that data.
+2. Calculations that need settings (productivity, fuel, building choice) take a context interface as a parameter, like `BuildingContext`, instead of importing `spec`.
+3. A check fails on imports from `src/ui/` or `src/state/` in `src/data/` and `src/core/`. Exceptions are explained in the commit and in CLAUDE.md.
+
 ## Phase 5: Space Age mechanics
 
 Ordered by usefulness for planning:
