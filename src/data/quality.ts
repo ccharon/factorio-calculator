@@ -14,7 +14,7 @@ limitations under the License.*/
 
 // Quality levels. Quality raises the crafting speed of machines, the positive effects of modules
 // and the distribution effectivity of beacons.
-import { Rational, zero } from "../core/rational.ts"
+import { Rational, zero, one } from "../core/rational.ts"
 import type { Dataset } from "./dataset.ts"
 import type { IconSource } from "./icon-source.ts"
 import type { Recipe } from "./recipe.ts"
@@ -54,6 +54,27 @@ export const QUALITY_KINDS: readonly QualityKind[] = ["machine", "module", "beac
 export interface QualityContext {
     /** Returns the quality of the given kind for recipe. */
     getQuality(recipe: Recipe, kind: QualityKind): Quality
+}
+
+/**
+ * Returns the share of each product quality when a machine with the given quality effect crafts from
+ * ingredients of quality from. A raise happens with chance effect × nextProbability, and each raise
+ * reaches one quality further with the chainProbability of the quality it reached.
+ *
+ * @param effect - Total quality effect of modules and beacons, such as 0.1 for +10%. Values of zero or less raise nothing.
+ */
+export function qualityDistribution(from: Quality, effect: Rational): Map<Quality, Rational> {
+    const raise = from.next === null || !zero.less(effect) ? zero : effect.mul(from.nextProbability)
+    const raised = one.less(raise) ? one : raise
+
+    const shares = new Map<Quality, Rational>([[from, one.sub(raised)]])
+    let remaining = raised
+    for (let quality = from.next; quality !== null && !remaining.isZero(); quality = quality.next) {
+        const further = quality.next === null ? zero : quality.chainProbability
+        shares.set(quality, remaining.mul(one.sub(further)))
+        remaining = remaining.mul(further)
+    }
+    return shares
 }
 
 /** Creates the quality levels from lowest to highest, linked to their next quality. */

@@ -183,7 +183,7 @@ Goal: targets with a quality, such as 60 legendary processing units per minute, 
 Mechanics from the 2.1 prototype docs: a machine with quality effect Q raises the product quality with probability Q × `next_probability` of the ingredient quality (1 for every quality in 2.1). After each raise, the reached quality raises once more with its `chain_probability` (0.1). Legendary has no next quality. Negative effects (speed modules) lower nothing, because `previous_probability` is 0. Fluids have no quality. Recycling returns the ingredients at the quality of the recycled item.
 
 1. Done: qualities have `next`, `next_probability`, `chain_probability`; recipes have `allow_quality` (`Recipe.allowQuality`, mining recipes allow quality); modules have their `quality` effect.
-2. Quality distribution as a pure function with unit tests: input quality and effect give the share of each output quality.
+2. Done: `qualityDistribution(from, effect)` in `src/data/quality.ts`, tested in `tests/quality.test.js`.
 3. Variants: every solid item has one item per quality (`item.variant(quality)`, key `<item>@<quality>`), every recipe that allows quality has one recipe per input quality. Variants stay out of `spec.items` and `spec.recipes`, so toggles, building groups and the priority list keep showing base recipes. A variant uses the building, disable state and planets of its base recipe, and has its own modules and qualities.
 4. Solver: `context.getProducts(recipe)` replaces `recipe.products` in the solver, totals and cycle detection, and spreads solid products over the qualities by the recipe's quality effect. The recipe graph adds the variants that can reach a requested quality.
 5. Targets: a quality choice next to the item, stored as `<item>@<quality>` in `items=`.
