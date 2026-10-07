@@ -86,6 +86,9 @@ export interface RecipeContext {
 
     /** Returns the productivity multiplier of recipe, such as 1.5 for +50%. */
     getProdEffect(recipe: RecipeNode): Rational
+
+    /** Returns the products of recipe per craft, with solid products spread over the qualities they reach. */
+    getProducts(recipe: RecipeNode): readonly Ingredient[]
 }
 
 /** A node of the solution graph: a recipe, or the solver's output and surplus nodes. */
@@ -259,12 +262,11 @@ export class Recipe implements RecipeLike {
     /** Returns the amount of item produced per craft, including productivity. Throws if the recipe does not produce item. */
     gives(item: Item, context: RecipeContext): Rational {
         const prodEffect = context.getProdEffect(this)
-        for (const ing of this.products) {
-            if (ing.item === item) {
-                return ing.productAmount(prodEffect)
-            }
+        const products = context.getProducts(this).filter(ing => ing.item === item)
+        if (products.length === 0) {
+            throw new Error(`recipe ${this.key} does not give ${item.key}`)
         }
-        throw new Error(`recipe ${this.key} does not give ${item.key}`)
+        return products.reduce((total, ing) => total.add(ing.productAmount(prodEffect)), zero)
     }
 
     /** Returns the amount of item used per craft including fuel, or zero. Unlike gives(), it never throws. */

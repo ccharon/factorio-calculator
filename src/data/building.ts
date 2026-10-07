@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 import { Rational, zero, one } from "../core/rational.ts"
 import type { IconSource } from "./icon-source.ts"
-import type { Dataset, DatasetMachine } from "./dataset.ts"
+import type { Dataset, DatasetMachine, EffectName } from "./dataset.ts"
 import { HEAT_EXCHANGE_CATEGORY, powerCategory } from "./power.ts"
 import type { Item } from "./item.ts"
 import type { ModuleSpec } from "./module.ts"
@@ -52,6 +52,8 @@ export interface BuildingOptions {
     heatingEnergy?: Rational
     /** Crafting speed by quality key. Missing qualities use speed. */
     speedByQuality?: ReadonlyMap<string, Rational>
+    /** Module effects the building accepts. Undefined accepts all. */
+    allowedEffects?: ReadonlySet<EffectName>
 }
 
 /** A machine that crafts recipes, such as an assembler or furnace. Base class for miners, pumps and the rocket silo. */
@@ -68,6 +70,7 @@ export class Building implements IconSource {
     /** Heat in W that keeps the building from freezing on planets that require heating. */
     readonly heatingEnergy: Rational
     private readonly speedByQuality: ReadonlyMap<string, Rational>
+    private readonly allowedEffects: ReadonlySet<EffectName> | null
     readonly icon_col: number
     readonly icon_row: number
 
@@ -83,6 +86,7 @@ export class Building implements IconSource {
         this.conditions = options.conditions ?? []
         this.heatingEnergy = options.heatingEnergy ?? zero
         this.speedByQuality = options.speedByQuality ?? new Map()
+        this.allowedEffects = options.allowedEffects ?? null
         this.icon_col = options.icon_col
         this.icon_row = options.icon_row
     }
@@ -95,6 +99,11 @@ export class Building implements IconSource {
     /** Returns whether the building works on a surface with these property values. */
     worksOn(properties: ReadonlyMap<string, number>): boolean {
         return this.conditions.every(c => c.holds(properties))
+    }
+
+    /** Returns whether module effects of the given kind work in this building. */
+    allowsEffect(effect: EffectName): boolean {
+        return this.allowedEffects === null || this.allowedEffects.has(effect)
     }
 
     /** Returns whether the crafting speed depends on the building's quality. */
@@ -274,7 +283,7 @@ function fuelCategory(d: DatasetMachine): string | null {
     return d.energy_source?.type === "burner" ? d.energy_source.fuel_category ?? "chemical" : null
 }
 
-function machineOptions(d: DatasetMachine): Pick<BuildingOptions, "key" | "name" | "icon_col" | "icon_row" | "moduleSlots" | "power" | "fuel" | "conditions" | "heatingEnergy"> {
+function machineOptions(d: DatasetMachine): Pick<BuildingOptions, "key" | "name" | "icon_col" | "icon_row" | "moduleSlots" | "power" | "fuel" | "conditions" | "heatingEnergy" | "allowedEffects"> {
     return {
         key: d.key,
         name: d.localized_name.en,
@@ -285,6 +294,7 @@ function machineOptions(d: DatasetMachine): Pick<BuildingOptions, "key" | "name"
         fuel: fuelCategory(d),
         conditions: surfaceConditions(d.surface_conditions),
         heatingEnergy: Rational.from_float_approximate(d.heating_energy ?? 0),
+        allowedEffects: d.allowed_effects === undefined ? undefined : new Set(d.allowed_effects),
     }
 }
 

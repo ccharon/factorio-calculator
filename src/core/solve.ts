@@ -154,12 +154,12 @@ function traverse(context: SolverContext, cyclic: ReadonlySet<RecipeLike>, item:
     if (recipe === null) {
         const itemRecipes = context.getRecipes(item)
         const only = itemRecipes[0]
-        if (itemRecipes.length !== 1 || only === undefined || only.products.length > 1 || cyclic.has(only)) {
+        if (itemRecipes.length !== 1 || only === undefined || context.getProducts(only).length > 1 || cyclic.has(only)) {
             result.remainder(item, rate)
             return result
         }
         recipe = only
-    } else if (recipe.products.length > 1 || cyclic.has(recipe)) {
+    } else if (context.getProducts(recipe).length > 1 || cyclic.has(recipe)) {
         result.remainder(item, rate)
         result.targets.push({ item, rate, recipe })
         return result
@@ -238,7 +238,7 @@ export function solve(context: SolverContext, fullOutputs: readonly Output[]): S
             }
             let candidate = false
             let outside = false
-            for (const subrecipe of item.recipes) {
+            for (const subrecipe of context.getRecipes(item)) {
                 if (cyclic.has(subrecipe)) {
                     candidate = true
                 } else if (recipes.has(subrecipe)) {
@@ -262,7 +262,7 @@ export function solve(context: SolverContext, fullOutputs: readonly Output[]): S
     for (const recipe of recipes) {
         recipeRows.set(recipe, recipeArray.length)
         recipeArray.push(recipe)
-        for (const ing of recipe.products) {
+        for (const ing of context.getProducts(recipe)) {
             if (!itemColumns.has(ing.item)) {
                 itemColumns.set(ing.item, items.length)
                 items.push(ing.item)
@@ -296,8 +296,8 @@ export function solve(context: SolverContext, fullOutputs: readonly Output[]): S
 
     recipeArray.forEach((recipe, i) => {
         const prodEffect = context.getProdEffect(recipe)
-        for (const ing of recipe.products) {
-            A.setIndex(i, column(ing.item), ing.productAmount(prodEffect))
+        for (const ing of context.getProducts(recipe)) {
+            A.addIndex(i, column(ing.item), ing.productAmount(prodEffect))
         }
         for (const ing of recipe.getIngredients(context)) {
             A.addIndex(i, column(ing.item), zero.sub(ing.amount))

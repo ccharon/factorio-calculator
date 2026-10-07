@@ -89,8 +89,8 @@ export class Totals {
                 set(this.consumers, ing.item, recipe, itemRate)
                 add(this.items, ing.item, itemRate)
             }
-            for (const ing of recipe.products) {
-                set(this.producers, ing.item, recipe, rate.mul(recipe.gives(ing.item, context)))
+            for (const item of new Set(context.getProducts(recipe).map(ing => ing.item))) {
+                set(this.producers, item, recipe, rate.mul(recipe.gives(item, context)))
             }
         }
 

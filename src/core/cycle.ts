@@ -21,6 +21,8 @@ import type { RecipeContext, RecipeLike } from "../data/recipe.ts"
 export interface CycleContext extends RecipeContext {
     /** Returns the fuel, electricity and heat that the building of recipe uses. */
     getEnergyItems(recipe: RecipeLike): Item[]
+    /** Returns the recipes that can produce item, including those that reach its quality. */
+    getRecipes(item: Item): RecipeLike[]
 }
 
 // Recipes in the set whose building burns item as fuel.
@@ -32,13 +34,13 @@ function getFuelConsumers(context: CycleContext, recipes: ReadonlySet<RecipeLike
 // use a product of recipe.
 function neighboringRecipes(context: CycleContext, recipes: ReadonlySet<RecipeLike>, recipe: RecipeLike, invert: boolean): Set<RecipeLike> {
     const result = new Set<RecipeLike>()
-    const itemSet = invert ? recipe.products : recipe.getIngredients(context)
+    const itemSet = invert ? context.getProducts(recipe) : recipe.getIngredients(context)
     for (const ing of itemSet) {
         let recipeSet: readonly RecipeLike[]
         if (invert) {
             recipeSet = [...ing.item.uses, ...getFuelConsumers(context, recipes, ing.item)]
         } else {
-            recipeSet = ing.item.recipes
+            recipeSet = context.getRecipes(ing.item)
         }
         for (const neighbor of recipeSet) {
             if (recipes.has(neighbor)) {
@@ -69,7 +71,7 @@ function isSelfCycle(context: CycleContext, component: readonly RecipeLike[]): b
     if (recipe === undefined) {
         return false
     }
-    const products = new Set(recipe.products.map(p => p.item))
+    const products = new Set(context.getProducts(recipe).map(p => p.item))
     return recipe.getIngredients(context).some(ing => products.has(ing.item))
 }
 

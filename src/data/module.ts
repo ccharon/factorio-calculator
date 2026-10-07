@@ -233,6 +233,14 @@ export class ModuleSpec {
         return prod
     }
 
+    /** Returns the quality effect, such as 0.1 for +10%, or zero where the building or the recipe takes no quality. */
+    qualityEffect(context: QualityContext): Rational {
+        if (!this.recipe.allowQuality || this.building?.allowsEffect("quality") !== true) {
+            return zero
+        }
+        return this.sumEffect(context, e => e.quality).sub(one)
+    }
+
     /** Returns the power multiplier. The game limits it to at least 0.2. */
     powerEffect(context: QualityContext): Rational {
         const power = this.sumEffect(context, e => e.power)

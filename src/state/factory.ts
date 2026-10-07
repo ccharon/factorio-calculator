@@ -23,8 +23,8 @@ import type { Item } from "../data/item.ts"
 import { type Module, type ModuleDefaults, ModuleSpec } from "../data/module.ts"
 import type { Planet } from "../data/planet.ts"
 import type { ProductivityResearch } from "../data/research.ts"
-import { QUALITY_KINDS, Quality, type QualityKind } from "../data/quality.ts"
-import { DISABLED_RECIPE_PREFIX, ELECTRICITY, HEAT, type Ingredient, ReactorRecipe, Recipe, type RecipeContext, type RecipeLike, type RecipeNode } from "../data/recipe.ts"
+import { QUALITY_KINDS, Quality, type QualityKind, qualityDistribution } from "../data/quality.ts"
+import { DISABLED_RECIPE_PREFIX, ELECTRICITY, HEAT, Ingredient, ReactorRecipe, Recipe, type RecipeContext, type RecipeLike, type RecipeNode } from "../data/recipe.ts"
 import { renderDebug } from "../ui/debug.ts"
 import { displayItems } from "../ui/display.ts"
 import { currentTab } from "../ui/events.ts"
@@ -422,20 +422,58 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
      * Net-negative recipe loops can still make a solution infeasible.
      */
     isItemDisabled(item: Item): boolean {
-        return !item.recipes.some(recipe => !this.disable.has(recipe.base) && recipe.isNetProducer(item, this))
+        return !this.producersOf(item).some(recipe => !this.disable.has(recipe.base) && recipe.isNetProducer(item, this))
+    }
+
+    // The recipes that can make item: its own recipes, and for a variant also the recipes of lower
+    // qualities whose quality effect reaches it. Variants of recipes also make fluids, but only
+    // variant items take them into the graph.
+    private producersOf(item: Item): Recipe[] {
+        const own = item.recipes.filter(recipe => item.quality !== null || recipe.quality === null)
+        const quality = item.quality
+        if (quality === null) {
+            return own
+        }
+        const raising: Recipe[] = []
+        for (const base of item.base.recipes.filter(recipe => recipe.quality === null)) {
+            for (const recipe of [base, ...base.variants.values()]) {
+                if ((recipe.quality?.level ?? 0) < quality.level && this.getProducts(recipe).some(ing => ing.item === item)) {
+                    raising.push(recipe)
+                }
+            }
+        }
+        return [...own, ...raising]
+    }
+
+    /** Returns the products of recipe per craft, with solid products spread over the qualities that its quality effect reaches. */
+    getProducts(recipe: RecipeNode): readonly Ingredient[] {
+        if (!(recipe instanceof Recipe) || !recipe.allowQuality) {
+            return recipe.products
+        }
+        const effect = this.getModuleSpec(recipe)?.qualityEffect(this) ?? zero
+        if (!zero.less(effect)) {
+            return recipe.products
+        }
+        const shares = qualityDistribution(recipe.quality ?? this.qualities[0] ?? NORMAL_QUALITY, effect)
+        return recipe.products.flatMap(ing => {
+            if (ing.item.base.variants.size === 0) {
+                return [ing]
+            }
+            const spread = Array.from(shares, ([quality, share]) => new Ingredient(ing.item.variant(quality), ing.amount.mul(share), ing.ignoredByProductivity.mul(share)))
+            return spread.filter(product => !product.amount.isZero())
+        })
     }
 
     /** Returns the enabled recipes for item, plus its DisabledRecipe if the item is disabled or ignored. */
     getRecipes(item: Item): RecipeLike[] {
-        // Variants of recipes also make fluids, but only variant items take them into the graph.
-        let recipes = item.recipes.filter(recipe => !this.disable.has(recipe.base) && (item.quality !== null || recipe.quality === null))
+        let recipes: RecipeLike[] = this.producersOf(item).filter(recipe => !this.disable.has(recipe.base))
         // Electricity and heat come from outside only while no source of them is enabled.
         if ((item.key === ELECTRICITY || item.key === HEAT) && recipes.some(r => !r.isResource())) {
             recipes = recipes.filter(r => !r.isResource())
         }
         if (this.isItemDisabled(item) || this.ignore.has(item)) {
             // Recipes that also produce other, not ignored items stay in.
-            const shared = recipes.filter(r => r.products.some(ing => !this.ignore.has(ing.item)))
+            const shared = recipes.filter(r => this.getProducts(r).some(ing => !this.ignore.has(ing.item)))
             return [item.disableRecipe, ...shared]
         }
         return recipes
