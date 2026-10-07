@@ -23,7 +23,7 @@ import type { Item } from "../data/item.ts"
 import { type Module, type ModuleDefaults, ModuleSpec } from "../data/module.ts"
 import type { Planet } from "../data/planet.ts"
 import type { ProductivityResearch } from "../data/research.ts"
-import { DISABLED_RECIPE_PREFIX, Recipe, type RecipeLike, type RecipeNode } from "../data/recipe.ts"
+import { DISABLED_RECIPE_PREFIX, Ingredient, Recipe, type RecipeContext, type RecipeLike, type RecipeNode } from "../data/recipe.ts"
 import { renderDebug } from "../ui/debug.ts"
 import { displayItems } from "../ui/display.ts"
 import { currentTab } from "../ui/events.ts"
@@ -169,7 +169,7 @@ function required<T>(value: T | null, name: string): T {
  * The calculator state: game data, settings, build targets and the last solution. One instance
  * exists as spec. It implements the context interfaces of the solver and the data classes.
  */
-export class FactorySpecification implements BuildingContext, ModuleDefaults {
+export class FactorySpecification implements BuildingContext, ModuleDefaults, RecipeContext {
     items: Map<string, Item> = new Map()
     recipes: Map<string, Recipe> = new Map()
     modules: Map<string, Module> = new Map()
@@ -251,6 +251,23 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults {
     /** Returns the fuel that buildings of a fuel category burn. */
     getFuel(category: string): Fuel {
         return this.selectedFuels.get(category) ?? this.getDefaultFuel(category)
+    }
+
+    /** Returns the fuel the building of recipe burns per craft, or an empty list. */
+    getFuelIngredients(recipe: Recipe): Ingredient[] {
+        const building = this.getBuilding(recipe)
+        if (building === null || building.fuel === null) {
+            return []
+        }
+        const fuel = this.getFuel(building.fuel)
+
+        // craft/s and J/s give J/craft. Divided by J/item, that is items per craft.
+        const baseRate = this.getRecipeRate(recipe)
+        if (baseRate === null) {
+            return []
+        }
+        const perCraftEnergy = this.getPowerUsage(recipe, baseRate).power.div(baseRate)
+        return [new Ingredient(fuel.item, perCraftEnergy.div(fuel.value))]
     }
 
     /** Returns the fuel item that the building of recipe burns, or null for buildings without fuel. */
@@ -508,7 +525,7 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults {
      * Net-negative recipe loops can still make a solution infeasible.
      */
     isItemDisabled(item: Item): boolean {
-        return !item.recipes.some(recipe => !this.disable.has(recipe) && recipe.isNetProducer(item))
+        return !item.recipes.some(recipe => !this.disable.has(recipe) && recipe.isNetProducer(item, this))
     }
 
     /** Returns the enabled recipes for item, plus its DisabledRecipe if the item is disabled or ignored. */
@@ -528,7 +545,7 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults {
                 continue
             }
             recipes.add(recipe)
-            for (const ing of recipe.getIngredients()) {
+            for (const ing of recipe.getIngredients(this)) {
                 this.addItemGraph(ing.item, recipes)
             }
         }

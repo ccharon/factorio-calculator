@@ -13,7 +13,6 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 import * as d3 from "d3"
 import { Rational, zero, one } from "../core/rational.ts"
-import { spec } from "../state/factory.ts"
 import { Icon, type IconSource, getSprite } from "../ui/icon.ts"
 import type { Dataset, DatasetProduct, DatasetRecipe, SurfaceConditionData } from "./dataset.ts"
 import type { Item } from "./item.ts"
@@ -72,13 +71,23 @@ export class SurfaceCondition {
     }
 }
 
+/** What recipes need from the factory state, because fuel and productivity depend on the settings. */
+export interface RecipeContext {
+    /** Returns the fuel the building of recipe burns per craft, or an empty list. */
+    getFuelIngredients(recipe: Recipe): Ingredient[]
+    /** Returns the productivity multiplier of recipe, such as 1.5 for +50%. */
+    getProdEffect(recipe: RecipeNode): Rational
+}
+
 /** A node of the solution graph: a recipe, or the solver's output and surplus nodes. */
 export interface RecipeNode {
     readonly name: string
     readonly ingredients: readonly Ingredient[]
     readonly products: readonly Ingredient[]
-    getIngredients(): Ingredient[]
-    gives(item: Item): Rational
+    /** Returns the ingredients per craft, including fuel. */
+    getIngredients(context: RecipeContext): Ingredient[]
+    /** Returns the amount of item produced per craft, including productivity. */
+    gives(item: Item, context: RecipeContext): Rational
     /** Returns true for game recipes and false for the solver's output and surplus nodes. */
     isReal(): boolean
 }
@@ -164,32 +173,14 @@ export class Recipe implements RecipeLike {
         this.icon = new Icon(this, options.iconName ?? this.products[0]?.item.name)
     }
 
-    /** Returns the fuel a burner building burns per craft as an extra ingredient, or an empty list. */
-    fuelIngredient(): Ingredient[] {
-        const building = spec.getBuilding(this)
-        if (building === null || building.fuel === null) {
-            return []
-        }
-        const fuel = spec.getFuel(building.fuel)
-
-        // craft/s and J/s give J/craft. Divided by J/item, that is items per craft.
-        const baseRate = spec.getRecipeRate(this)
-        if (baseRate === null) {
-            return []
-        }
-        const basePower = spec.getPowerUsage(this, baseRate).power
-        const perCraftEnergy = basePower.div(baseRate)
-        return [new Ingredient(fuel.item, perCraftEnergy.div(fuel.value))]
-    }
-
     /** Returns the ingredients including fuel. */
-    getIngredients(): Ingredient[] {
-        return this.ingredients.concat(this.fuelIngredient())
+    getIngredients(context: RecipeContext): Ingredient[] {
+        return this.ingredients.concat(context.getFuelIngredients(this))
     }
 
     /** Returns the amount of item produced per craft, including productivity. Throws if the recipe does not produce item. */
-    gives(item: Item): Rational {
-        const prodEffect = spec.getProdEffect(this)
+    gives(item: Item, context: RecipeContext): Rational {
+        const prodEffect = context.getProdEffect(this)
         for (const ing of this.products) {
             if (ing.item === item) {
                 return ing.productAmount(prodEffect)
@@ -199,8 +190,8 @@ export class Recipe implements RecipeLike {
     }
 
     /** Returns the amount of item used per craft including fuel, or zero. Unlike gives(), it never throws. */
-    uses(item: Item): Rational {
-        for (const ing of this.getIngredients()) {
+    uses(item: Item, context: RecipeContext): Rational {
+        for (const ing of this.getIngredients(context)) {
             if (ing.item === item) {
                 return ing.amount
             }
@@ -209,8 +200,8 @@ export class Recipe implements RecipeLike {
     }
 
     /** Returns whether one craft produces more of item than it uses. */
-    isNetProducer(item: Item): boolean {
-        return zero.less(this.gives(item).sub(this.uses(item)))
+    isNetProducer(item: Item, context: RecipeContext): boolean {
+        return zero.less(this.gives(item, context).sub(this.uses(item, context)))
     }
 
     /** Returns whether this recipe extracts a raw resource. Resources appear in the Resources tab. */

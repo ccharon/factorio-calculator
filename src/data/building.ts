@@ -19,13 +19,13 @@ import { Icon, type IconSource } from "../ui/icon.ts"
 import type { Dataset, DatasetMachine } from "./dataset.ts"
 import type { Item } from "./item.ts"
 import type { ModuleSpec } from "./module.ts"
-import { MiningRecipe, type Recipe, type RecipeLike, type SurfaceCondition, requireItem, surfaceConditions } from "./recipe.ts"
+import { MiningRecipe, type Recipe, type RecipeContext, type RecipeLike, type SurfaceCondition, requireItem, surfaceConditions } from "./recipe.ts"
 
 const thirty = Rational.from_float(30)
 const sixty = Rational.from_float(60)
 
 /** What buildings need from the factory state. FactorySpecification implements it. */
-export interface BuildingContext {
+export interface BuildingContext extends RecipeContext {
     readonly miningProd: Rational
     readonly recipes: ReadonlyMap<string, Recipe>
     getModuleSpec(recipe: RecipeLike): ModuleSpec | undefined
@@ -253,7 +253,7 @@ function launchRate(context: BuildingContext): LaunchRate {
         throw new Error("rocket parts need the rocket-part recipe and a rocket silo")
     }
 
-    const gives = partRecipe.gives(partItem)
+    const gives = partRecipe.gives(partItem, context)
     // Rocket part rate of the silo without the launch pauses.
     const rate = Building.prototype.getRecipeRate.call(partFactory, context, partRecipe)
     const perLaunch = partFactory.partsRequired.div(gives)

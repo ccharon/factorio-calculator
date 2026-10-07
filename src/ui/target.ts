@@ -219,7 +219,7 @@ export class BuildTarget {
 
         const recipes = spec.ignore.has(this.item)
             ? []
-            : this.item.recipes.filter(recipe => !spec.disable.has(recipe) && recipe.isNetProducer(this.item))
+            : this.item.recipes.filter(recipe => !spec.disable.has(recipe) && recipe.isNetProducer(this.item, spec))
         if (this.recipe === null || !recipes.includes(this.recipe)) {
             this.recipe = null
         }
@@ -258,7 +258,7 @@ export class BuildTarget {
 
         let baseRate: Rational | null = null
         if (recipe !== null) {
-            baseRate = spec.getRecipeRate(recipe)?.mul(recipe.gives(this.item)) ?? null
+            baseRate = spec.getRecipeRate(recipe)?.mul(recipe.gives(this.item, spec)) ?? null
         }
 
         if (this.changedBuilding && baseRate !== null) {

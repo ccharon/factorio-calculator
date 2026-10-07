@@ -14,16 +14,16 @@ limitations under the License.*/
 // Groups of recipes that produce the same items, ordered so that producers come before consumers.
 
 import type { Item } from "./item.ts"
-import type { RecipeLike } from "./recipe.ts"
+import type { RecipeContext, RecipeLike } from "./recipe.ts"
 
 /** A set of recipes that share at least one product, directly or through other recipes of the set. */
 export type RecipeGroup = Set<RecipeLike>
 
-function neighbors(groupMap: ReadonlyMap<RecipeLike, RecipeGroup>, group: RecipeGroup): Set<RecipeGroup> {
+function neighbors(context: RecipeContext, groupMap: ReadonlyMap<RecipeLike, RecipeGroup>, group: RecipeGroup): Set<RecipeGroup> {
     const result = new Set<RecipeGroup>()
     for (const recipe of group) {
         // Reversed, so that ingredients appear in recipe order after the final reverse in topoSort.
-        const ingredients = Array.from(recipe.getIngredients()).reverse()
+        const ingredients = Array.from(recipe.getIngredients(context)).reverse()
         for (const ing of ingredients) {
             for (const subRecipe of ing.item.allRecipes()) {
                 const subGroup = groupMap.get(subRecipe)
@@ -37,20 +37,20 @@ function neighbors(groupMap: ReadonlyMap<RecipeLike, RecipeGroup>, group: Recipe
     return result
 }
 
-function visit(groupMap: ReadonlyMap<RecipeLike, RecipeGroup>, group: RecipeGroup, result: Set<RecipeGroup>, seen: Set<RecipeGroup>): void {
+function visit(context: RecipeContext, groupMap: ReadonlyMap<RecipeLike, RecipeGroup>, group: RecipeGroup, result: Set<RecipeGroup>, seen: Set<RecipeGroup>): void {
     if (result.has(group) || seen.has(group)) {
         return
     }
     seen.add(group)
-    for (const g of neighbors(groupMap, group)) {
-        visit(groupMap, g, result, seen)
+    for (const g of neighbors(context, groupMap, group)) {
+        visit(context, groupMap, g, result, seen)
     }
     seen.delete(group)
     result.add(group)
 }
 
 /** Orders recipe groups so that each group comes before the groups that produce its ingredients. Cycles are broken arbitrarily. */
-export function topoSort(groups: Iterable<RecipeGroup>): RecipeGroup[] {
+export function topoSort(groups: Iterable<RecipeGroup>, context: RecipeContext): RecipeGroup[] {
     const groupList = Array.from(groups)
     const groupMap = new Map<RecipeLike, RecipeGroup>()
     for (const group of groupList) {
@@ -62,7 +62,7 @@ export function topoSort(groups: Iterable<RecipeGroup>): RecipeGroup[] {
     const result = new Set<RecipeGroup>()
     const seen = new Set<RecipeGroup>()
     for (const group of groupList) {
-        visit(groupMap, group, result, seen)
+        visit(context, groupMap, group, result, seen)
     }
 
     return Array.from(result).reverse()

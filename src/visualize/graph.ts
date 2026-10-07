@@ -152,7 +152,7 @@ export class GraphNode {
 
     constructor(name: string, recipe: RecipeNode, building: Building | null, count: Rational, rate: Rational | null) {
         this.name = name
-        this.ingredients = recipe.getIngredients()
+        this.ingredients = recipe.getIngredients(spec)
         this.recipe = recipe
         this.building = building
         this.count = count
@@ -282,7 +282,7 @@ function itemNeighbors(item: Item): Set<Item> {
     const touching = new Set<Item>()
     const recipes = item.recipes.concat(item.uses)
     for (const recipe of recipes) {
-        const ingredients = recipe.getIngredients().concat(recipe.products)
+        const ingredients = recipe.getIngredients(spec).concat(recipe.products)
         for (const ing of ingredients) {
             touching.add(ing.item)
         }

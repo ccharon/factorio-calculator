@@ -14,10 +14,10 @@ limitations under the License.*/
 // Finds recipes that take part in production cycles, such as Kovarex enrichment.
 
 import type { Item } from "../data/item.ts"
-import type { RecipeLike } from "../data/recipe.ts"
+import type { RecipeContext, RecipeLike } from "../data/recipe.ts"
 
 /** What cycle detection needs from the factory state. */
-export interface CycleContext {
+export interface CycleContext extends RecipeContext {
     /** Returns the fuel item that the building of recipe burns, or null. */
     getFuelItem(recipe: RecipeLike): Item | null
 }
@@ -31,7 +31,7 @@ function getFuelConsumers(context: CycleContext, recipes: ReadonlySet<RecipeLike
 // use a product of recipe.
 function neighboringRecipes(context: CycleContext, recipes: ReadonlySet<RecipeLike>, recipe: RecipeLike, invert: boolean): Set<RecipeLike> {
     const result = new Set<RecipeLike>()
-    const itemSet = invert ? recipe.products : recipe.getIngredients()
+    const itemSet = invert ? recipe.products : recipe.getIngredients(context)
     for (const ing of itemSet) {
         let recipeSet: readonly RecipeLike[]
         if (invert) {
@@ -63,13 +63,13 @@ function visit(context: CycleContext, recipes: ReadonlySet<RecipeLike>, recipe: 
 }
 
 // A single recipe forms a cycle if it uses one of its own products.
-function isSelfCycle(component: readonly RecipeLike[]): boolean {
+function isSelfCycle(context: CycleContext, component: readonly RecipeLike[]): boolean {
     const recipe = component[0]
     if (recipe === undefined) {
         return false
     }
     const products = new Set(recipe.products.map(p => p.item))
-    return recipe.getIngredients().some(ing => products.has(ing.item))
+    return recipe.getIngredients(context).some(ing => products.has(ing.item))
 }
 
 /**
@@ -90,7 +90,7 @@ export function getCycleRecipes(context: CycleContext, recipes: ReadonlySet<Reci
             continue
         }
         const component = visit(context, recipes, root, seen, true)
-        if (component.length > 1 || isSelfCycle(component)) {
+        if (component.length > 1 || isSelfCycle(context, component)) {
             for (const recipe of component) {
                 result.add(recipe)
             }

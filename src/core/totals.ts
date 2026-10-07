@@ -14,11 +14,11 @@ limitations under the License.*/
 // The solution graph: recipe rates plus the item flows between recipes.
 
 import type { Item } from "../data/item.ts"
-import type { RecipeLike, RecipeNode } from "../data/recipe.ts"
+import type { RecipeContext, RecipeLike, RecipeNode } from "../data/recipe.ts"
 import type { Rational } from "./rational.ts"
 
 /** What Totals needs from the factory state. */
-export interface TotalsContext {
+export interface TotalsContext extends RecipeContext {
     /** Returns the enabled recipes that may produce item. */
     getRecipes(item: Item): RecipeLike[]
 }
@@ -83,18 +83,18 @@ export class Totals {
         this.extra = extraRecipes
 
         for (const [recipe, rate] of rates) {
-            for (const ing of recipe.getIngredients()) {
+            for (const ing of recipe.getIngredients(context)) {
                 const itemRate = rate.mul(ing.amount)
                 set(this.consumers, ing.item, recipe, itemRate)
                 add(this.items, ing.item, itemRate)
             }
             for (const ing of recipe.products) {
-                set(this.producers, ing.item, recipe, rate.mul(recipe.gives(ing.item)))
+                set(this.producers, ing.item, recipe, rate.mul(recipe.gives(ing.item, context)))
             }
         }
 
         for (const [recipe, recipeRate] of rates) {
-            const ingredients = recipe.getIngredients()
+            const ingredients = recipe.getIngredients(context)
             ingredients.forEach((ing, i) => {
                 const totalRate = this.items.get(ing.item)
                 if (totalRate === undefined) {
@@ -120,7 +120,7 @@ export class Totals {
                         item: ing.item,
                         from: subRecipe,
                         to: recipe,
-                        rate: subRecipeRate.mul(subRecipe.gives(ing.item)).mul(ratio),
+                        rate: subRecipeRate.mul(subRecipe.gives(ing.item, context)).mul(ratio),
                         fuel,
                     })
                 }

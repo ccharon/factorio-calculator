@@ -71,7 +71,7 @@ function getBreakdown(item: Item, totals: Totals): BreakdownRow[] {
         if (!totals.rates.has(recipe)) {
             continue
         }
-        for (const ing of recipe.getIngredients()) {
+        for (const ing of recipe.getIngredients(spec)) {
             const rate = rateOf(totals.consumers.get(ing.item), recipe)
             let building: Building | null = null
             let count: Rational | null = null
@@ -79,7 +79,7 @@ function getBreakdown(item: Item, totals: Totals): BreakdownRow[] {
             const [only] = producers?.keys() ?? []
             if (producers?.size === 1 && only !== undefined) {
                 building = spec.getBuilding(only)
-                count = spec.getCount(only, rate.div(only.gives(ing.item)))
+                count = spec.getCount(only, rate.div(only.gives(ing.item, spec)))
             }
             rows.push({ item: ing.item, recipe, rate, building, count, percent: null, divider: false })
             found = true
@@ -93,7 +93,7 @@ function getBreakdown(item: Item, totals: Totals): BreakdownRow[] {
         if (!isRecipeLike(recipe)) {
             continue
         }
-        const count = singleRecipe === undefined ? null : spec.getCount(singleRecipe, rate.div(singleRecipe.gives(item)))
+        const count = singleRecipe === undefined ? null : spec.getCount(singleRecipe, rate.div(singleRecipe.gives(item, spec)))
         const percent = rate.div(rateOf(totals.items, item)).mul(hundred)
         const percentStr = percent.less(one) ? "<1%" : `${percent.toDecimal(0)}%`
         rows.push({ item, recipe, rate, building, count, percent: percentStr, divider: found })
@@ -246,7 +246,7 @@ function makeRow(totals: Totals, item: Item | null, recipe: RecipeLike | null): 
 // Groups the solution's recipes by shared products, ordered from final products to raw resources.
 function getDisplayGroups(totals: Totals): DisplayGroup[] {
     const recipes = Array.from(totals.rates.keys()).filter(isRecipeLike).reverse()
-    return topoSort(getRecipeGroups(new Set(recipes))).map(group => {
+    return topoSort(getRecipeGroups(new Set(recipes)), spec).map(group => {
         const items = new Set<Item>()
         for (const recipe of group) {
             for (const ing of recipe.products) {

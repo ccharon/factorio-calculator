@@ -165,14 +165,14 @@ function traverse(context: SolverContext, cyclic: ReadonlySet<RecipeLike>, item:
         return result
     }
 
-    const recipeRate = rate.div(recipe.gives(item))
+    const recipeRate = rate.div(recipe.gives(item, context))
     result.add(recipe, recipeRate)
 
     if (context.ignore.has(item)) {
         return result
     }
 
-    for (const ing of recipe.getIngredients()) {
+    for (const ing of recipe.getIngredients(context)) {
         result.combine(traverse(context, cyclic, ing.item, recipeRate.mul(ing.amount), null))
     }
     return result
@@ -232,7 +232,7 @@ export function solve(context: SolverContext, fullOutputs: readonly Output[]): S
         if (!cyclic.has(recipe)) {
             continue
         }
-        for (const { item } of recipe.getIngredients()) {
+        for (const { item } of recipe.getIngredients(context)) {
             if (recipes.has(item.disableRecipe)) {
                 continue
             }
@@ -299,7 +299,7 @@ export function solve(context: SolverContext, fullOutputs: readonly Output[]): S
         for (const ing of recipe.products) {
             A.setIndex(i, column(ing.item), ing.productAmount(prodEffect))
         }
-        for (const ing of recipe.getIngredients()) {
+        for (const ing of recipe.getIngredients(context)) {
             A.addIndex(i, column(ing.item), zero.sub(ing.amount))
         }
 
