@@ -170,6 +170,20 @@ export function changeVisDir(event: Event): void {
     spec.display()
 }
 
+/** Whether the visualizer shows electricity and the buildings that only supply it. */
+export let visualizerElectricity = false
+
+/** Sets whether the visualizer shows electricity. */
+export function setVisualizerElectricity(show: boolean): void {
+    visualizerElectricity = show
+}
+
+/** Applies the electricity checkbox. */
+export function changeVisElectricity(event: Event): void {
+    setVisualizerElectricity(event.target instanceof HTMLInputElement && event.target.checked)
+    spec.display()
+}
+
 // Number of distinct zoom steps.
 const MAX_SCALE = 10
 // Aspect ratio of the visualizer viewport.

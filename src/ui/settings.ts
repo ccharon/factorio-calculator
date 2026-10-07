@@ -36,7 +36,7 @@ import type { Settings } from "../state/url-codec.ts"
 import { type ColorScheme, colorSchemes } from "./color.ts"
 import {
     DEFAULT_TAB, clickTab, DEFAULT_VISUALIZER, visualizerType, setVisualizerType, DEFAULT_RENDER, visualizerRender, setVisualizerRender,
-    visualizerDirection, getDefaultVisDirection, setVisualizerDirection,
+    visualizerDirection, getDefaultVisDirection, setVisualizerDirection, visualizerElectricity, setVisualizerElectricity,
 } from "./events.ts"
 import { type ModuleCell, type ModuleInput, moduleDropdown } from "./module-dropdown.ts"
 import { iconOf } from "./icons.ts"
@@ -504,6 +504,8 @@ function renderVisualizer(settings: Settings): void {
     d3.select(`#${visualizerRender}_render`).property("checked", true)
     setVisualizerDirection(settings.get("vd") ?? getDefaultVisDirection())
     d3.select(`#${visualizerDirection}_direction`).property("checked", true)
+    setVisualizerElectricity(settings.get("ve") === "1")
+    d3.select("#graph_electricity").property("checked", visualizerElectricity)
 }
 
 // default modules

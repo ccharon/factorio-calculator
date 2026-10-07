@@ -14,19 +14,50 @@ limitations under the License.*/
 // Builds the visualizer graph from a solution and renders it in the selected layout.
 import * as d3 from "d3"
 import type { Item } from "../data/item.ts"
-import { isRecipeLike, type RecipeNode } from "../data/recipe.ts"
+import { ELECTRICITY, isRecipeLike, type RecipeNode } from "../data/recipe.ts"
 import { zero } from "../core/rational.ts"
-import type { Totals } from "../core/totals.ts"
+import type { ItemLink, Totals } from "../core/totals.ts"
 import { spec } from "../state/factory.ts"
-import { visualizerType, visualizerRender, visualizerDirection, installSVGEvents } from "../ui/events.ts"
+import { visualizerType, visualizerRender, visualizerDirection, visualizerElectricity, installSVGEvents } from "../ui/events.ts"
 import { renderBoxGraph } from "./boxline.ts"
 import { GraphEdge, GraphNode, type Graph } from "./graph.ts"
 import { renderSankey } from "./sankey.ts"
 
+// Electricity flows into a building, unless it is a target of the factory.
+function isElectricityUse({ item, to }: ItemLink): boolean {
+    return item.key === ELECTRICITY && to.isReal()
+}
+
+// Returns the recipes whose whole output is electricity use or goes to other such recipes:
+// generators, the electricity import, and the boilers and pumps that only feed generators.
+function electricitySuppliers(totals: Totals): Set<RecipeNode> {
+    const outgoing = new Map<RecipeNode, ItemLink[]>()
+    for (const link of totals.proportionate) {
+        outgoing.set(link.from, [...(outgoing.get(link.from) ?? []), link])
+    }
+
+    const hidden = new Set<RecipeNode>()
+    let changed = true
+    while (changed) {
+        changed = false
+        for (const [recipe, links] of outgoing) {
+            if (!hidden.has(recipe) && links.every(link => isElectricityUse(link) || hidden.has(link.to))) {
+                hidden.add(recipe)
+                changed = true
+            }
+        }
+    }
+    return hidden
+}
+
 function makeGraph(totals: Totals): Graph {
+    const hidden = visualizerElectricity ? new Set<RecipeNode>() : electricitySuppliers(totals)
     const nodes: GraphNode[] = []
     const nodeMap = new Map<RecipeNode, GraphNode>()
     for (const [recipe, rate] of totals.rates) {
+        if (hidden.has(recipe)) {
+            continue
+        }
         let node: GraphNode
         if (isRecipeLike(recipe)) {
             node = new GraphNode(recipe.name, recipe, spec.getBuilding(recipe), spec.getCount(recipe, rate), rate)
@@ -46,7 +77,11 @@ function makeGraph(totals: Totals): Graph {
     }
 
     const links: GraphEdge[] = []
-    for (const { item, from, to, rate, fuel } of totals.proportionate) {
+    for (const link of totals.proportionate) {
+        const { item, from, to, rate, fuel } = link
+        if (hidden.has(from) || hidden.has(to) || (!visualizerElectricity && isElectricityUse(link))) {
+            continue
+        }
         let value = rate.toFloat()
         if (item.phase === "fluid") {
             // Fluids operate on a different scale.

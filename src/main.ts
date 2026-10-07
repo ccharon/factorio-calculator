@@ -31,7 +31,7 @@ import { spec } from "./state/factory.ts"
 import { type Settings, decodeFragment } from "./state/url-codec.ts"
 import {
     plusHandler, clickTab, clickVisualize, changeTitle, changeRatePrecision, changeCountPrecision, changeFormat, changeMprod, changeVisType,
-    changeVisRender, changeVisDir, toggleDebug,
+    changeVisRender, changeVisDir, changeVisElectricity, toggleDebug,
 } from "./ui/events.ts"
 import { getSprites } from "./ui/icon.ts"
 import { renderSettings } from "./ui/settings.ts"
@@ -102,6 +102,7 @@ function bindControls(): void {
     on("#graph_type input", "change", changeVisType)
     on("#graph_render input", "change", changeVisRender)
     on("#graph_direction input", "change", changeVisDir)
+    on("#graph_electricity", "change", changeVisElectricity)
     on("#title_setting", "input", changeTitle)
     on("#rprec", "change", changeRatePrecision)
     on("#cprec", "change", changeCountPrecision)
