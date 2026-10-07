@@ -64,8 +64,7 @@ test.fails("from_float_approximate recognizes two thirds", () => {
     assert.ok(Rational.from_float_approximate(2 / 3).equal(twoThirds))
 })
 
-// Known defect, fixed with URL validation in phase 6.
-test.fails("from_string rejects invalid input", () => {
+test("from_string rejects invalid input", () => {
     assert.throws(() => r("abc"))
     assert.throws(() => r("1/0"))
 })

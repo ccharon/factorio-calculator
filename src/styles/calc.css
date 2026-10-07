@@ -55,6 +55,9 @@ input:focus, select:focus {
     border-color: var(--accent);
     outline: none;
 }
+input:invalid {
+    border-color: red;
+}
 .right-align {
     text-align: right;
 }

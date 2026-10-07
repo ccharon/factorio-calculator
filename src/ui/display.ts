@@ -33,6 +33,7 @@ import type { IconSource } from "../data/icon-source.ts"
 import { Icon } from "./icon.ts"
 import { type ModuleCell, type ModuleInput as DropdownInput, moduleDropdown } from "./module-dropdown.ts"
 import { iconOf, renderItemTooltip } from "./icons.ts"
+import { readRational } from "./number-input.ts"
 
 const hundred = Rational.from_float(100)
 
@@ -359,8 +360,11 @@ function createRow(enter: d3.Selection<d3.EnterElement, DisplayRow, HTMLTableSec
         if (d.moduleSpec === null || d.recipe === null) {
             return
         }
-        d.moduleSpec.setBeaconCount(Rational.from_string((event.target as HTMLInputElement).value))
-        moduleChanged(d.recipe, false)
+        const count = readRational(event.target as HTMLInputElement)
+        if (count !== null) {
+            d.moduleSpec.setBeaconCount(count)
+            moduleChanged(d.recipe, false)
+        }
     })
 
     row.append("td").classed("pad building fuel-icon", true)

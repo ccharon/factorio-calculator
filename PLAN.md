@@ -172,8 +172,9 @@ Also: modernize CSS (custom properties already partly used by `color.js`), keybo
 
 1. Move `src/core/sort.ts` out of `core` (it is a general helper used mostly by the UI), or drop it where plain `Array.sort` reads as well.
 2. Merge `src/core/matrix.ts` into `src/core/simplex.ts`; only the simplex uses it.
-3. Split `src/state/factory.ts`: energy (fuel, electricity, heat) and building groups into modules of their own, the DOM parts of targets (`addTarget`, `removeTarget`) into `src/ui/`. `FactorySpecification` stays as the state that implements the context interfaces.
-4. Keep `Rational`: exact fractions keep the simplex free of tolerances and the snapshot tests exact.
+3. Move the DOM part of `src/state/priority.ts` (the Resources tab view and its drag and keyboard handling) into `src/ui/`; the priority levels stay in `src/state/`.
+4. Split `src/state/factory.ts`: energy (fuel, electricity, heat) and building groups into modules of their own, the DOM parts of targets (`addTarget`, `removeTarget`) into `src/ui/`. `FactorySpecification` stays as the state that implements the context interfaces.
+5. Keep `Rational`: exact fractions keep the simplex free of tolerances and the snapshot tests exact.
 
 ## Phase 7: Documentation
 
@@ -185,7 +186,7 @@ Branch `develop`, everything committed and pushed. Phases 0 to 5 are done (phase
 
 Next steps:
 
-1. Phase 6 (robustness and security), in progress. Done: CSP meta tag in the build (Vite plugin in `vite.config.js`), ignored URL settings shown on the page (`src/ui/warnings.ts`), custom code replaced by standard means (stable `Array.sort` in `sorted()`, native base64, `d3.zoom` for the visualizer, popover and CSS anchor positioning for tooltips; `@floating-ui/dom` removed). Negative numbers in URL settings are rejected with a visible warning. Keyboard access: planet and recipe toggles are `<button>` with `aria-pressed`; priority list icons are focusable images (a `<button>` blocks dragging in Chrome), arrow keys select and move them. Drag and drop cannot be tested automatically (neither the Chrome extension nor headless Chrome start a native drag); ask the user to try it. Icon dropdowns are popovers placed with anchor positioning, open with Enter, and apply arrow-key choices on close (the module callback rebuilds the table). Open: (c) review of the remaining custom code (`src/state/align.ts` number formatting, `src/state/priority.ts`). Ask before adding any dependency.
+1. Phase 6 (robustness and security), in progress. Done: CSP meta tag in the build (Vite plugin in `vite.config.js`), ignored URL settings shown on the page (`src/ui/warnings.ts`), custom code replaced by standard means (stable `Array.sort` in `sorted()`, native base64, `d3.zoom` for the visualizer, popover and CSS anchor positioning for tooltips; `@floating-ui/dom` removed). Negative numbers in URL settings are rejected with a visible warning. Keyboard access: planet and recipe toggles are `<button>` with `aria-pressed`; priority list icons are focusable images (a `<button>` blocks dragging in Chrome), arrow keys select and move them. Drag and drop cannot be tested automatically (neither the Chrome extension nor headless Chrome start a native drag); ask the user to try it. Icon dropdowns are popovers placed with anchor positioning, open with Enter, and apply arrow-key choices on close (the module callback rebuilds the table). Number inputs go through `readRational()` in `src/ui/number-input.ts` (rejects text, negatives and zero denominators with the browser's validation message). `align.ts` stays: Chrome has no CSS decimal alignment, and the exact decimals come from `Rational`. Phase 6 is done except the CSS modernization; ask before adding any dependency.
 2. Later, from phase 5: quality per recipe, recycling loops for a target quality, reactor neighbour bonus.
 3. Phase 6a: module structure (see its section).
 4. Phase 7: README and changelog.

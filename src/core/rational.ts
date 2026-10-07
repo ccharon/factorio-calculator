@@ -250,6 +250,9 @@ export class Rational {
         }
         const j = s.indexOf("+")
         const q = parseInteger(s.slice(i + 1))
+        if (q === 0n) {
+            throw new Error(`zero denominator in ${s}`)
+        }
         let p: bigint
         if (j !== -1) {
             const integer = parseInteger(s.slice(0, j))

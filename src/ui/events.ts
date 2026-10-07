@@ -20,6 +20,7 @@ import type { Item } from "../data/item.ts"
 import type { DisplayFormat } from "../state/align.ts"
 import { spec } from "../state/factory.ts"
 import { renderTotals } from "../visualize/visualize.ts"
+import { readRational } from "./number-input.ts"
 import { setTitle } from "./settings.ts"
 
 export const TAB_NAMES = ["totals", "graph", "resources", "settings", "faq", "about", "debug"] as const
@@ -110,8 +111,11 @@ export function changeFormat(event: Event): void {
 
 /** Applies the mining productivity input, given in percent. */
 export function changeMprod(event: Event): void {
-    spec.miningProd = Rational.from_string(inputValue(event)).div(Rational.from_float(100))
-    spec.updateSolution()
+    const percent = readRational(event.target as HTMLInputElement)
+    if (percent !== null) {
+        spec.miningProd = percent.div(Rational.from_float(100))
+        spec.updateSolution()
+    }
 }
 
 // visualizer events

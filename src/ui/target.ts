@@ -13,12 +13,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
 import * as d3 from "d3"
-import { Rational, zero, one } from "../core/rational.ts"
+import { type Rational, zero, one } from "../core/rational.ts"
 import type { ItemGroups } from "../data/group.ts"
 import type { Item } from "../data/item.ts"
 import type { Recipe } from "../data/recipe.ts"
 import { spec } from "../state/factory.ts"
 import { addInputs, makeDropdown } from "./dropdown.ts"
+import { readRational } from "./number-input.ts"
 import { iconOf } from "./icons.ts"
 
 const SELECTED_INPUT = "selected"
@@ -276,10 +277,15 @@ export class BuildTarget {
 
     /** Makes the building count the input, read from its field. */
     buildingsChanged(): void {
+        const buildings = readRational(this.buildingInput)
+        if (buildings === null) {
+            return
+        }
+
         this.changedBuilding = true
         this.buildingLabel.classList.add(SELECTED_INPUT)
         this.rateLabel.classList.remove(SELECTED_INPUT)
-        this.buildings = Rational.from_string(this.buildingInput.value)
+        this.buildings = buildings
         this.rate = zero
         this.rateInput.value = ""
     }
@@ -293,11 +299,16 @@ export class BuildTarget {
 
     /** Makes the rate the input, read from its field in the displayed time unit. */
     rateChanged(): void {
+        const rate = readRational(this.rateInput)
+        if (rate === null) {
+            return
+        }
+
         this.changedBuilding = false
         this.buildingLabel.classList.remove(SELECTED_INPUT)
         this.rateLabel.classList.add(SELECTED_INPUT)
         this.buildings = zero
-        this.rate = Rational.from_string(this.rateInput.value).div(spec.format.rateFactor)
+        this.rate = rate.div(spec.format.rateFactor)
         this.buildingInput.value = ""
     }
 

@@ -16,10 +16,11 @@ limitations under the License.*/
 // drag and drop.
 
 import * as d3 from "d3"
-import { Rational } from "../core/rational.ts"
+import type { Rational } from "../core/rational.ts"
 import type { RecipeLike } from "../data/recipe.ts"
 import { spec } from "./factory.ts"
 import { iconOf } from "../ui/icons.ts"
+import { readRational } from "../ui/number-input.ts"
 
 type Div<T> = d3.Selection<HTMLDivElement, T, null, undefined>
 
@@ -78,9 +79,12 @@ class Resource {
             }
         })
         this.div.append("input").attr("type", "text").attr("size", 4).attr("value", this.weight.toString()).on("change", (event: Event) => {
-            this.weight = Rational.from_string((event.target as HTMLInputElement).value)
-            this.level?.insertSorted(this)
-            spec.updateSolution()
+            const weight = readRational(event.target as HTMLInputElement)
+            if (weight !== null) {
+                this.weight = weight
+                this.level?.insertSorted(this)
+                spec.updateSolution()
+            }
         })
     }
 

@@ -42,6 +42,7 @@ import {
 } from "./events.ts"
 import { type ModuleCell, type ModuleInput, moduleDropdown } from "./module-dropdown.ts"
 import { iconOf } from "./icons.ts"
+import { readRational } from "./number-input.ts"
 import { warnUrl } from "./warnings.ts"
 
 const hundred = Rational.from_float(100)
@@ -638,7 +639,7 @@ function renderDefaultBeacon(settings: Settings): void {
     select.selectAll("*").remove()
     moduleDropdown(select, cells)
     d3.select("#default_beacon_count").attr("value", defaultCount.toDecimal()).on("change", (event: Event) => {
-        const count = parseRational((event.target as HTMLInputElement).value, "beacon count")
+        const count = readRational(event.target as HTMLInputElement)
         if (count !== null) {
             spec.setDefaultBeaconCount(count)
             spec.updateSolution()

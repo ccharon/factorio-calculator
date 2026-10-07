@@ -80,7 +80,7 @@ The dataset format is defined in `src/data/dataset.schema.json`. `tests/dataset.
 | Core math and solver, no DOM | `src/core/`: `rational.ts`, `matrix.ts`, `simplex.ts`, `solve.ts` (with the `SolverContext` interface), `cycle.ts`, `totals.ts`, `sort.ts` |
 | Game data loading | `src/data/`: `dataset.ts` (types of the dataset JSON), `dataset.schema.json`, `item.ts`, `recipe.ts`, `building.ts`, `module.ts`, `belt.ts`, `fuel.ts`, `planet.ts`, `research.ts` (recipe productivity technologies), `cargo.ts` (items in orbit and launch recipes), `power.ts` (generator, solar and heat exchanger recipes), `quality.ts`, `icon-source.ts`, `group.ts`, `groups.ts` |
 | State and URL settings | `src/state/`: `factory.ts` (`FactorySpecification`, global `spec`), `fragment.ts` (writes the settings string), `url-codec.ts` (parses and compresses the URL fragment), `priority.ts`, `align.ts` (number formatting) |
-| UI | `src/ui/`: `display.ts`, `target.ts`, `settings.ts`, `dropdown.ts`, `module-dropdown.ts`, `tooltip.ts`, `events.ts`, `icon.ts`, `icons.ts` (`iconOf()` and the tooltips of game objects), `energy.ts`, `color.ts`, `debug.ts` |
+| UI | `src/ui/`: `display.ts`, `target.ts`, `settings.ts`, `dropdown.ts`, `module-dropdown.ts`, `tooltip.ts`, `events.ts`, `number-input.ts` (validated number fields), `icon.ts`, `icons.ts` (`iconOf()` and the tooltips of game objects), `energy.ts`, `color.ts`, `debug.ts` |
 | Visualizer | `src/visualize/`: `visualize.ts` (builds the graph), `graph.ts` (graph types, colors, node rendering), `sankey.ts`, `sankey-layout.ts` (adapted d3-sankey layout, BSD-3), `boxline.ts` (dagre), `circlepath.ts` |
 | Styles | `src/styles/` |
 | Static files | `public/`: dataset, sprite sheet, SVG icons, favicon. Copied unchanged into `dist/`. |
