@@ -16,7 +16,7 @@ import { renderBoxGraph } from "./boxline.js"
 import { visualizerType, visualizerRender, visualizerDirection, installSVGEvents } from "../ui/events.js"
 import { spec } from "../state/factory.js"
 import { iconSize, colonWidth } from "./graph.js"
-import { zero } from "../core/rational.js"
+import { zero } from "../core/rational.ts"
 import { renderSankey } from "./sankey.js"
 
 let clickedNode = null

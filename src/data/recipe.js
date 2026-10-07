@@ -14,7 +14,7 @@ limitations under the License.*/
 import * as d3 from "d3"
 import { spec } from "../state/factory.js"
 import { Icon, sprites } from "../ui/icon.js"
-import { Rational, zero, one } from "../core/rational.js"
+import { Rational, zero, one } from "../core/rational.ts"
 
 // An amount of an item that a recipe uses or produces per craft. amount is a Rational.
 export class Ingredient {

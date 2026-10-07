@@ -14,7 +14,7 @@ limitations under the License.*/
 import * as d3 from "d3"
 import { spec } from "../state/factory.js"
 import { Icon } from "../ui/icon.js"
-import { Rational } from "../core/rational.js"
+import { Rational } from "../core/rational.ts"
 
 class Belt {
     constructor(key, name, col, row, rate) {

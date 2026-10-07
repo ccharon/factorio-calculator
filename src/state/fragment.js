@@ -15,7 +15,7 @@ import * as pako from "pako"
 import { DEFAULT_RATE, DEFAULT_RATE_PRECISION, DEFAULT_COUNT_PRECISION, DEFAULT_FORMAT } from "./align.js"
 import { DEFAULT_TAB, currentTab, DEFAULT_VISUALIZER, visualizerType, DEFAULT_RENDER, visualizerRender, isDefaultVisDirection, visualizerDirection } from "../ui/events.js"
 import { spec, DEFAULT_BELT, DEFAULT_FUEL } from "./factory.js"
-import { Rational } from "../core/rational.js"
+import { Rational } from "../core/rational.ts"
 import { DEFAULT_TITLE, DEFAULT_COLOR_SCHEME, colorScheme } from "../ui/settings.js"
 import { sorted } from "../core/sort.js"
 

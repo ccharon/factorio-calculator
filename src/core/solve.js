@@ -14,7 +14,7 @@ limitations under the License.*/
 
 import { getCycleRecipes } from "./cycle.js"
 import { Matrix } from "./matrix.js"
-import { Rational, minusOne, zero, one } from "./rational.js"
+import { Rational, minusOne, zero, one } from "./rational.ts"
 import { Ingredient } from "../data/recipe.js"
 import { simplex } from "./simplex.js"
 import { Totals } from "./totals.js"

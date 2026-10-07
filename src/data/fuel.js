@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 import * as d3 from "d3"
 import { Icon } from "../ui/icon.js"
-import { Rational } from "../core/rational.js"
+import { Rational } from "../core/rational.ts"
 
 let energySuffixes = ["J", "kJ", "MJ", "GJ", "TJ", "PJ"]
 

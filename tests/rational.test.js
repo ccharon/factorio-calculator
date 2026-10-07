@@ -1,6 +1,6 @@
 import assert from "node:assert/strict"
 import { test } from "vitest"
-import { Rational, zero, one, oneThird, twoThirds } from "../src/core/rational.js"
+import { Rational, zero, one, oneThird, twoThirds } from "../src/core/rational.ts"
 
 const r = s => Rational.from_string(s)
 

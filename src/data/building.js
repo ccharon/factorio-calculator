@@ -15,7 +15,7 @@ import * as d3 from "d3"
 import { powerRepr } from "../ui/display.js"
 import { spec } from "../state/factory.js"
 import { Icon } from "../ui/icon.js"
-import { Rational, zero, one } from "../core/rational.js"
+import { Rational, zero, one } from "../core/rational.ts"
 
 let thirty = Rational.from_float(30)
 

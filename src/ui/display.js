@@ -18,7 +18,7 @@ import { formatSettings } from "../state/fragment.js"
 import { getRecipeGroups, topoSort } from "../data/groups.js"
 import { Icon } from "./icon.js"
 import { moduleRows, moduleDropdown } from "../data/module.js"
-import { Rational, zero, one } from "../core/rational.js"
+import { Rational, zero, one } from "../core/rational.ts"
 
 let powerSuffixes = ["\u00A0W", "kW", "MW", "GW", "TW", "PW"]
 

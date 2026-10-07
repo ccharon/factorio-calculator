@@ -107,7 +107,7 @@ Comes before the model changes, so phases 4 to 6 are written once, in the new st
    | `tools/` | Node scripts: data build. |
    | `tests/` | Vitest tests. |
 
-4. Dependencies from npm, `third_party/` is deleted. Done except `BigInt` and `CompressionStream`: `big-integer` and `pako` come from npm until the `core` and `state` ports.
+4. Dependencies from npm, `third_party/` is deleted. Done except `CompressionStream`: `pako` comes from npm until the `state` port. `src/core/rational.ts` uses native `BigInt`.
 
    | Library | Replacement |
    |---------|-------------|

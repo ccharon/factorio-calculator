@@ -17,7 +17,7 @@ import { CirclePath, makeCurve } from "./circlepath.js"
 import { spec } from "../state/factory.js"
 import { colorList, iconSize, getColorMaps, renderNode, imageViewBox } from "./graph.js"
 import { sheetHash, sheetWidth, sheetHeight } from "../ui/icon.js"
-import { one } from "../core/rational.js"
+import { one } from "../core/rational.ts"
 import { graphClickHandler, graphMouseOverHandler, graphMouseLeaveHandler } from "./visualize.js"
 
 

@@ -18,7 +18,7 @@ import { DEFAULT_TAB, clickTab, DEFAULT_VISUALIZER, visualizerType, setVisualize
 import { spec, DEFAULT_PLANET, DEFAULT_BELT, DEFAULT_FUEL } from "../state/factory.js"
 import { getRecipeGroups } from "../data/groups.js"
 import { shortModules, moduleRows, moduleDropdown } from "../data/module.js"
-import { Rational, zero } from "../core/rational.js"
+import { Rational, zero } from "../core/rational.ts"
 import { sorted } from "../core/sort.js"
 
 // There are several things going on with this control flow. Settings should

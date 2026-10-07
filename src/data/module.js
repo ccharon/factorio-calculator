@@ -14,7 +14,7 @@ limitations under the License.*/
 import * as d3 from "d3"
 import { makeDropdown, addInputs } from "../ui/dropdown.js"
 import { Icon, sprites } from "../ui/icon.js"
-import { Rational, zero, one } from "../core/rational.js"
+import { Rational, zero, one } from "../core/rational.ts"
 import { sorted } from "../core/sort.js"
 
 let hundred = Rational.from_float(100)

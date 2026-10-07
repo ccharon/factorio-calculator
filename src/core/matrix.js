@@ -12,7 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
 
-import { zero, one } from "./rational.js"
+import { zero, one } from "./rational.ts"
 
 // An MxN matrix of rationals.
 export class Matrix {
