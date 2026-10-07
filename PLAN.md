@@ -188,8 +188,8 @@ Mechanics from the 2.1 prototype docs: a machine with quality effect Q raises th
 4. Done: `RecipeContext.getProducts(recipe)` spreads solid products by `ModuleSpec.qualityEffect()` (zero where the building's `allowed_effects` or the recipe exclude quality); solver, totals and cycle detection use it. `spec.producersOf(item)` adds lower-quality recipes that reach a variant. The legendary processing unit test with recycling solves in about 3 s (exact simplex on 236×412); moving the solver into a Web Worker would keep the page responsive.
 5. Done: targets have a quality dropdown next to the item, stored as `<item>@<quality>` in `items=`. `spec.findItem()` and `spec.findRecipe()` resolve variant keys in URLs (targets, `modules=`, `rq=`).
 6. Done: `iconOf()` gives variants a quality badge (`Icon.make()` returns a `span.quality-icon` with the image and the badge).
-7. Recycling: recycling recipes have variants like other recipes. Loops come from enabling them in the recipe toggles.
-8. Snapshot scenarios for a legendary target with and without recycling; check solver time.
+7. Done: recycling recipes have variants like other recipes; loops come from enabling them in the recipe toggles. The visualizer draws quality badges too.
+8. Done: snapshot scenarios `nauvis-quality-target` and `nauvis-quality-recycling` (iron gear wheels, under 0.1 s each).
 
 ## Phase 7: Documentation
 
@@ -202,7 +202,7 @@ Branch `develop`, everything committed, not pushed. Phases 0 to 7 and 6a are don
 Next steps:
 
 1. Push `develop` when the user asks, then merge into `main` for a release.
-2. Phase 8 (items with quality and recycling loops), in progress. From phase 5 done: quality per recipe (`spec.recipeQuality`, `QualityContext.getQuality(recipe, kind)`, URL `rq=<recipe>:<machine>:<module>:<beacon>`, quality column in the factory table); reactor neighbour bonus (`reactors=<N>` for a 2×N block, `ReactorRecipe`, bonus enters `getProdEffect` with the depleted cell ignored by productivity).
+2. Phase 8 (items with quality and recycling loops) is done. Possible next step: solve in a Web Worker, so that large quality targets do not block the page. From phase 5 done: quality per recipe (`spec.recipeQuality`, `QualityContext.getQuality(recipe, kind)`, URL `rq=<recipe>:<machine>:<module>:<beacon>`, quality column in the factory table); reactor neighbour bonus (`reactors=<N>` for a 2×N block, `ReactorRecipe`, bonus enters `getProdEffect` with the depleted cell ignored by productivity).
 
 Notes on phase 6: drag and drop in the Resources tab cannot be tested automatically (neither the Chrome extension nor headless Chrome start a native drag); ask the user to try it. Number inputs go through `readRational()` in `src/ui/number-input.ts`. `align.ts` stays because Chrome has no CSS decimal alignment.
 

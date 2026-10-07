@@ -52,7 +52,10 @@ The browser checks use `/usr/bin/google-chrome-stable`. Set `CHROME` to use anot
 
 ## Known limitations
 
-- Quality of machines, modules and beacons is set per recipe, not per building or module slot. Recycling loops for a target quality are not modelled.
+- Quality of machines, modules and beacons is set per recipe, not per building or module slot.
+- Items of higher quality do not spoil into items of the same quality. Spoilage of quality items is not modelled.
+- Targets of higher quality with recycling loops can take several seconds to solve, and the page does not respond meanwhile.
+- In the visualizer, the rate labels of recipes with many products can overlap.
 - The nuclear reactor neighbour bonus assumes one block of two rows. Other layouts can only be approximated by a block with the same average number of neighbours.
 - Thruster fuel use does not depend on the thruster performance level. Targets set the fuel and oxidizer rates directly.
 - Spoilage during transport is not modelled.

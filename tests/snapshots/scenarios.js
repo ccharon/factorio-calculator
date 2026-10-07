@@ -31,6 +31,8 @@ export const SCENARIOS = [
     ["nauvis-nuclear-reactor-block", "#items=processing-unit:r:60&planet=nauvis&enable=steam-turbine-power,nuclear-reactor-cycle&reactors=4"],
     ["nauvis-quality", "#items=processing-unit:r:60&planet=nauvis&dm=s3&db=s3:s3&dbc=4&qm=rare&qd=legendary&qb=epic"],
     ["nauvis-recipe-quality", "#items=processing-unit:r:60&planet=nauvis&dm=s3&db=s3:s3&dbc=4&qm=rare&rq=processing-unit:legendary:epic:,electronic-circuit::legendary:uncommon"],
+    ["nauvis-quality-target", "#items=iron-gear-wheel@rare:r:60&planet=nauvis&dm=q3"],
+    ["nauvis-quality-recycling", "#items=iron-gear-wheel@legendary:r:60&planet=nauvis&dm=q3&enable=iron-gear-wheel-recycling"],
     ["nauvis-ignore", "#items=advanced-circuit:r:60&planet=nauvis&ignore=electronic-circuit"],
     ["nauvis-disable", "#items=plastic-bar:r:600&planet=nauvis&disable=advanced-oil-processing"],
     ["nauvis-priority-weight", "#items=plastic-bar:r:600&planet=nauvis&priority=water=10;crude-oil=100000"],

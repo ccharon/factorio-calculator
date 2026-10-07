@@ -16,7 +16,7 @@ limitations under the License.*/
 import * as d3 from "d3"
 import type { Building } from "../data/building.ts"
 import type { Item } from "../data/item.ts"
-import { isRecipeLike, type RecipeLike, type RecipeNode, type Ingredient } from "../data/recipe.ts"
+import { isRecipeLike, Recipe, type RecipeLike, type RecipeNode, type Ingredient } from "../data/recipe.ts"
 import type { Rational } from "../core/rational.ts"
 import { spec } from "../state/factory.ts"
 import type { IconSource } from "../data/icon-source.ts"
@@ -449,6 +449,22 @@ export function renderNode(rects: d3.Selection<SVGGElement, GraphNode, SVGGEleme
         .attr("height", iconSize)
         .append("image")
         .classed("ignore", d => isIgnored(d, ignore))
+        .attr("xlink:href", spriteSheetURL())
+        .attr("width", spriteSheet().width)
+        .attr("height", spriteSheet().height)
+    // quality badge of a recipe variant, in the lower left corner of the recipe icon
+    const badgeSize = Math.round(iconSize * 0.45)
+    const qualityOf = (d: GraphNode): IconSource | null => {
+        const recipe = d.icon()
+        return recipe instanceof Recipe ? recipe.quality : null
+    }
+    labeledNode.filter(d => qualityOf(d) !== null).append("svg")
+        .attr("viewBox", d => imageViewBox(qualityOf(d) ?? d.icon()))
+        .attr("x", d => d.labelX + nodeMargin + 0.5)
+        .attr("y", d => (d.y0 + d.y1) / 2 + iconSize / 2 - badgeSize + 0.5)
+        .attr("width", badgeSize)
+        .attr("height", badgeSize)
+        .append("image")
         .attr("xlink:href", spriteSheetURL())
         .attr("width", spriteSheet().width)
         .attr("height", spriteSheet().height)

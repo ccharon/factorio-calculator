@@ -3256,6 +3256,359 @@
     ],
     "surplus": []
   },
+  "nauvis-quality-target": {
+    "fragment": "#items=iron-gear-wheel@rare:r:60&planet=nauvis&dm=q3",
+    "recipes": [
+      {
+        "key": "(output)",
+        "rate": "1",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "(surplus)",
+        "rate": "1",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "electricity",
+        "rate": "1771408237/22215600",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "iron-gear-wheel@rare",
+        "rate": "1",
+        "building": "assembling-machine-1",
+        "count": "1",
+        "fuel": "electric",
+        "power": "77500"
+      },
+      {
+        "key": "iron-ore",
+        "rate": "160000/1089",
+        "building": "electric-mining-drill",
+        "count": "6400000/18513",
+        "fuel": "electric",
+        "power": "64000000000/2057"
+      },
+      {
+        "key": "iron-plate",
+        "rate": "148000/1089",
+        "building": "electric-furnace",
+        "count": "2368000/9801",
+        "fuel": "electric",
+        "power": "48941228000/1089"
+      },
+      {
+        "key": "iron-plate@rare",
+        "rate": "120/121",
+        "building": "electric-furnace",
+        "count": "640/363",
+        "fuel": "electric",
+        "power": "39852000/121"
+      },
+      {
+        "key": "iron-plate@uncommon",
+        "rate": "1200/121",
+        "building": "electric-furnace",
+        "count": "6400/363",
+        "fuel": "electric",
+        "power": "397068000/121"
+      }
+    ],
+    "items": [
+      {
+        "key": "electricity",
+        "rate": "1771408237/22215600"
+      },
+      {
+        "key": "iron-gear-wheel@rare",
+        "rate": "1"
+      },
+      {
+        "key": "iron-ore",
+        "rate": "148000/1089"
+      },
+      {
+        "key": "iron-ore@epic",
+        "rate": "12/121"
+      },
+      {
+        "key": "iron-ore@legendary",
+        "rate": "4/363"
+      },
+      {
+        "key": "iron-ore@rare",
+        "rate": "120/121"
+      },
+      {
+        "key": "iron-ore@uncommon",
+        "rate": "1200/121"
+      },
+      {
+        "key": "iron-plate",
+        "rate": "140600/1089"
+      },
+      {
+        "key": "iron-plate@epic",
+        "rate": "91/605"
+      },
+      {
+        "key": "iron-plate@legendary",
+        "rate": "91/5445"
+      },
+      {
+        "key": "iron-plate@rare",
+        "rate": "2"
+      },
+      {
+        "key": "iron-plate@uncommon",
+        "rate": "1880/121"
+      }
+    ],
+    "surplus": [
+      {
+        "key": "iron-ore@epic",
+        "rate": "12/121"
+      },
+      {
+        "key": "iron-ore@legendary",
+        "rate": "4/363"
+      },
+      {
+        "key": "iron-plate",
+        "rate": "140600/1089"
+      },
+      {
+        "key": "iron-plate@epic",
+        "rate": "91/605"
+      },
+      {
+        "key": "iron-plate@legendary",
+        "rate": "91/5445"
+      },
+      {
+        "key": "iron-plate@uncommon",
+        "rate": "1880/121"
+      }
+    ]
+  },
+  "nauvis-quality-recycling": {
+    "fragment": "#items=iron-gear-wheel@legendary:r:60&planet=nauvis&dm=q3&enable=iron-gear-wheel-recycling",
+    "recipes": [
+      {
+        "key": "(output)",
+        "rate": "1",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "electricity",
+        "rate": "7280015406924721/2716326177600",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "iron-gear-wheel",
+        "rate": "83772292000/33288311",
+        "building": "assembling-machine-1",
+        "count": "83772292000/33288311",
+        "fuel": "electric",
+        "power": "6492388596967500/33288311"
+      },
+      {
+        "key": "iron-gear-wheel-recycling",
+        "rate": "83772292000/33288311",
+        "building": "recycler",
+        "count": "13089420625/66576622",
+        "fuel": "electric",
+        "power": "1217394639852000/33288311"
+      },
+      {
+        "key": "iron-gear-wheel-recycling@epic",
+        "rate": "274659732/33288311",
+        "building": "recycler",
+        "count": "343324665/532612976",
+        "fuel": "electric",
+        "power": "4062132347250/33288311"
+      },
+      {
+        "key": "iron-gear-wheel-recycling@rare",
+        "rate": "1904197320/33288311",
+        "building": "recycler",
+        "count": "1190123325/266306488",
+        "fuel": "electric",
+        "power": "27776424142500/33288311"
+      },
+      {
+        "key": "iron-gear-wheel-recycling@uncommon",
+        "rate": "12513373200/33288311",
+        "building": "recycler",
+        "count": "3910429125/133153244",
+        "fuel": "electric",
+        "power": "181961206605000/33288311"
+      },
+      {
+        "key": "iron-gear-wheel@epic",
+        "rate": "274659732/33288311",
+        "building": "assembling-machine-1",
+        "count": "274659732/33288311",
+        "fuel": "electric",
+        "power": "21348466897500/33288311"
+      },
+      {
+        "key": "iron-gear-wheel@legendary",
+        "rate": "1",
+        "building": "assembling-machine-1",
+        "count": "1",
+        "fuel": "electric",
+        "power": "77500"
+      },
+      {
+        "key": "iron-gear-wheel@rare",
+        "rate": "1904197320/33288311",
+        "building": "assembling-machine-1",
+        "count": "1904197320/33288311",
+        "fuel": "electric",
+        "power": "147641604095000/33288311"
+      },
+      {
+        "key": "iron-gear-wheel@uncommon",
+        "rate": "12513373200/33288311",
+        "building": "assembling-machine-1",
+        "count": "12513373200/33288311",
+        "fuel": "electric",
+        "power": "969794002340000/33288311"
+      },
+      {
+        "key": "iron-ore",
+        "rate": "147763360000/33288311",
+        "building": "electric-mining-drill",
+        "count": "5910534400000/565901287",
+        "fuel": "electric",
+        "power": "531948096000000000/565901287"
+      },
+      {
+        "key": "iron-plate",
+        "rate": "136681108000/33288311",
+        "building": "electric-furnace",
+        "count": "2186897728000/299594799",
+        "fuel": "electric",
+        "power": "45195982581800000/33288311"
+      },
+      {
+        "key": "iron-plate@epic",
+        "rate": "99740268/33288311",
+        "building": "electric-furnace",
+        "count": "177316032/33288311",
+        "fuel": "electric",
+        "power": "33115264956000/33288311"
+      },
+      {
+        "key": "iron-plate@legendary",
+        "rate": "11082252/33288311",
+        "building": "electric-furnace",
+        "count": "59105344/99864933",
+        "fuel": "electric",
+        "power": "3746050506000/33288311"
+      },
+      {
+        "key": "iron-plate@rare",
+        "rate": "997402680/33288311",
+        "building": "electric-furnace",
+        "count": "1773160320/33288311",
+        "fuel": "electric",
+        "power": "329954270364000/33288311"
+      },
+      {
+        "key": "iron-plate@uncommon",
+        "rate": "9974026800/33288311",
+        "building": "electric-furnace",
+        "count": "17731603200/33288311",
+        "fuel": "electric",
+        "power": "3298144594578000/33288311"
+      }
+    ],
+    "items": [
+      {
+        "key": "electricity",
+        "rate": "7280015406924721/2716326177600"
+      },
+      {
+        "key": "iron-gear-wheel",
+        "rate": "83772292000/33288311"
+      },
+      {
+        "key": "iron-gear-wheel@epic",
+        "rate": "274659732/33288311"
+      },
+      {
+        "key": "iron-gear-wheel@legendary",
+        "rate": "1"
+      },
+      {
+        "key": "iron-gear-wheel@rare",
+        "rate": "1904197320/33288311"
+      },
+      {
+        "key": "iron-gear-wheel@uncommon",
+        "rate": "12513373200/33288311"
+      },
+      {
+        "key": "iron-ore",
+        "rate": "136681108000/33288311"
+      },
+      {
+        "key": "iron-ore@epic",
+        "rate": "99740268/33288311"
+      },
+      {
+        "key": "iron-ore@legendary",
+        "rate": "11082252/33288311"
+      },
+      {
+        "key": "iron-ore@rare",
+        "rate": "997402680/33288311"
+      },
+      {
+        "key": "iron-ore@uncommon",
+        "rate": "9974026800/33288311"
+      },
+      {
+        "key": "iron-plate",
+        "rate": "167544584000/33288311"
+      },
+      {
+        "key": "iron-plate@epic",
+        "rate": "549319464/33288311"
+      },
+      {
+        "key": "iron-plate@legendary",
+        "rate": "2"
+      },
+      {
+        "key": "iron-plate@rare",
+        "rate": "3808394640/33288311"
+      },
+      {
+        "key": "iron-plate@uncommon",
+        "rate": "25026746400/33288311"
+      }
+    ],
+    "surplus": []
+  },
   "nauvis-ignore": {
     "fragment": "#items=advanced-circuit:r:60&planet=nauvis&ignore=electronic-circuit",
     "recipes": [
