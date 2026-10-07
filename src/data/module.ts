@@ -15,6 +15,7 @@ import { Rational, zero, one } from "../core/rational.ts"
 import { sorted } from "../core/sort.ts"
 import type { IconSource } from "./icon-source.ts"
 import type { Building, BuildingContext } from "./building.ts"
+import type { Quality, QualityContext } from "./quality.ts"
 import type { Dataset } from "./dataset.ts"
 import type { Item } from "./item.ts"
 import { requireItem, type Recipe } from "./recipe.ts"
@@ -31,11 +32,13 @@ export class Module implements IconSource {
     readonly speed: Rational
     /** Change of power consumption, such as -0.3 for -30%. */
     readonly power: Rational
+    // Effects by quality key. Missing qualities use the normal effects.
+    private readonly effectsByQuality: ReadonlyMap<string, ModuleEffect>
     readonly icon_col: number
     readonly icon_row: number
     private short: string
 
-    constructor(item: Item, category: string, productivity: Rational, speed: Rational, power: Rational) {
+    constructor(item: Item, category: string, productivity: Rational, speed: Rational, power: Rational, effectsByQuality: ReadonlyMap<string, ModuleEffect> = new Map()) {
         this.key = item.key
         this.name = item.name
         this.category = category
@@ -43,10 +46,16 @@ export class Module implements IconSource {
         this.productivity = productivity
         this.speed = speed
         this.power = power
+        this.effectsByQuality = effectsByQuality
         this.icon_col = item.icon_col
         this.icon_row = item.icon_row
         // First and last letter of the key, such as "s3" for speed-module-3.
         this.short = this.key.charAt(0) + this.key.charAt(this.key.length - 1)
+    }
+
+    /** Returns the effects of the module at quality. */
+    effectAt(quality: Quality): ModuleEffect {
+        return this.effectsByQuality.get(quality.key) ?? { productivity: this.productivity, speed: this.speed, power: this.power }
     }
 
     /** Returns the short name used in URLs. */
@@ -80,6 +89,14 @@ export interface ModuleDefaults {
     readonly defaultBeacon: readonly [Module | null, Module | null]
     readonly defaultBeaconCount: Rational
     getDefaultModule(recipe: Recipe): Module | null
+}
+
+/** The effects of one module at one quality. */
+export interface ModuleEffect {
+    readonly productivity: Rational
+    readonly speed: Rational
+    /** Change of power consumption, such as -0.3 for -30%. */
+    readonly power: Rational
 }
 
 /** The modules and beacons configured for one recipe. */
@@ -137,8 +154,8 @@ export class ModuleSpec {
         this.beaconCount = count
     }
 
-    /** Returns the total transmission strength of all beacons affecting one building. */
-    beaconMultiplier(): Rational {
+    /** Returns the total transmission strength of all beacons affecting one building, for beacons of the given quality. */
+    beaconMultiplier(beaconQuality: Quality): Rational {
         if (this.beaconCount.isZero()) {
             return zero
         }
@@ -147,22 +164,24 @@ export class ModuleSpec {
         if (profile === undefined) {
             throw new Error("beacon profile not loaded")
         }
-        return this.beaconCount.mul(beaconEffect).mul(profile)
+        const effectivity = beaconEffect.add(beaconBonusPerLevel.mul(Rational.from_float(beaconQuality.level)))
+        return this.beaconCount.mul(effectivity).mul(profile)
     }
 
     // Sums one effect over the building's modules and, if the building has module slots, the beacons.
-    private sumEffect(effect: (module: Module) => Rational): Rational {
+    private sumEffect(context: QualityContext, effect: (e: ModuleEffect) => Rational): Rational {
         let total = one
         for (const module of this.modules) {
             if (module) {
-                total = total.add(effect(module))
+                total = total.add(effect(module.effectAt(context.moduleQuality)))
             }
         }
 
         if (this.modules.length > 0) {
+            const multiplier = this.beaconMultiplier(context.beaconQuality)
             for (const module of this.beaconModules) {
                 if (module) {
-                    total = total.add(effect(module).mul(this.beaconMultiplier()))
+                    total = total.add(effect(module.effectAt(context.moduleQuality)).mul(multiplier))
                 }
             }
         }
@@ -171,8 +190,8 @@ export class ModuleSpec {
     }
 
     /** Returns the speed multiplier, such as 1.5 for +50%. */
-    speedEffect(): Rational {
-        return this.sumEffect(m => m.speed)
+    speedEffect(context: QualityContext): Rational {
+        return this.sumEffect(context, e => e.speed)
     }
 
     /** Returns the productivity multiplier of modules and building, such as 1.5 for +50%. */
@@ -180,7 +199,7 @@ export class ModuleSpec {
         let prod = one
         for (const module of this.modules) {
             if (module) {
-                prod = prod.add(module.productivity)
+                prod = prod.add(module.effectAt(context.moduleQuality).productivity)
             }
         }
         if (this.building) {
@@ -190,8 +209,8 @@ export class ModuleSpec {
     }
 
     /** Returns the power multiplier. The game limits it to at least 0.2. */
-    powerEffect(): Rational {
-        const power = this.sumEffect(m => m.power)
+    powerEffect(context: QualityContext): Rational {
+        const power = this.sumEffect(context, e => e.power)
         return power.less(minimumPower) ? minimumPower : power
     }
 }
@@ -204,6 +223,7 @@ export const shortModules: Map<string, Module> = new Map()
 
 let beaconProfile: Rational[] = []
 let beaconEffect: Rational = one
+let beaconBonusPerLevel: Rational = zero
 
 /** Creates all modules by item key, and fills moduleRows, shortModules and the beacon settings. */
 export function getModules(data: Dataset, items: ReadonlyMap<string, Item>): Map<string, Module> {
@@ -211,7 +231,8 @@ export function getModules(data: Dataset, items: ReadonlyMap<string, Item>): Map
     for (const d of data.modules) {
         const item = requireItem(items, d.item_key)
         const R = (x: number | undefined): Rational => Rational.from_float_approximate(x ?? 0)
-        modules.set(d.item_key, new Module(item, d.category, R(d.effect.productivity), R(d.effect.speed), R(d.effect.consumption)))
+        const byQuality = new Map(Object.entries(d.effect_by_quality ?? {}).map(([q, e]) => [q, { productivity: R(e.productivity), speed: R(e.speed), power: R(e.consumption) }]))
+        modules.set(d.item_key, new Module(item, d.category, R(d.effect.productivity), R(d.effect.speed), R(d.effect.consumption), byQuality))
     }
 
     moduleRows.length = 0
@@ -233,6 +254,7 @@ export function getModules(data: Dataset, items: ReadonlyMap<string, Item>): Map
     }
 
     beaconEffect = Rational.from_float_approximate(data.beacon.distribution_effectivity)
+    beaconBonusPerLevel = Rational.from_float_approximate(data.beacon.distribution_effectivity_bonus_per_quality_level ?? 0)
     beaconProfile = data.beacon.profile.map(x => Rational.from_float_approximate(x))
 
     return modules

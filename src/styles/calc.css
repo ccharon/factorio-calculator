@@ -476,3 +476,7 @@ svg.popout {
     margin: 0 4px;
     cursor: pointer;
 }
+#quality_selector .quality-label {
+    display: inline-block;
+    width: 5em;
+}

@@ -5477,7 +5477,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 13,
+      "icon_col": 18,
       "icon_row": 12
     },
     {
@@ -5520,7 +5520,7 @@
       ],
       "order": "d[other-chemistry]-a[acid-neutralisation]",
       "subgroup": "fluid-recipes",
-      "icon_col": 14,
+      "icon_col": 19,
       "icon_row": 12
     },
     {
@@ -5599,7 +5599,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 15,
+      "icon_col": 20,
       "icon_row": 12
     },
     {
@@ -5638,7 +5638,7 @@
       ],
       "order": "e[advanced-carbonic-asteroid-crushing]",
       "subgroup": "space-crushing",
-      "icon_col": 16,
+      "icon_col": 21,
       "icon_row": 12
     },
     {
@@ -5718,7 +5718,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 17,
+      "icon_col": 22,
       "icon_row": 12
     },
     {
@@ -5757,7 +5757,7 @@
       ],
       "order": "c-a-b",
       "subgroup": "space-crushing",
-      "icon_col": 18,
+      "icon_col": 23,
       "icon_row": 12
     },
     {
@@ -5801,7 +5801,7 @@
       ],
       "order": "a[oil-processing]-b[advanced-oil-processing]",
       "subgroup": "fluid-recipes",
-      "icon_col": 19,
+      "icon_col": 24,
       "icon_row": 12
     },
     {
@@ -5840,7 +5840,7 @@
       ],
       "order": "f[advanced-oxide-asteroid-crushing]",
       "subgroup": "space-crushing",
-      "icon_col": 20,
+      "icon_col": 25,
       "icon_row": 12
     },
     {
@@ -5886,7 +5886,7 @@
       ],
       "order": "b[advanced-thruster-fuel]",
       "subgroup": "space-processing",
-      "icon_col": 21,
+      "icon_col": 26,
       "icon_row": 12
     },
     {
@@ -5932,7 +5932,7 @@
       ],
       "order": "d[advanced-thruster-oxydizer]",
       "subgroup": "space-processing",
-      "icon_col": 22,
+      "icon_col": 27,
       "icon_row": 12
     },
     {
@@ -6003,8 +6003,8 @@
       "order": "i",
       "subgroup": "science-pack",
       "hidden": true,
-      "icon_col": 23,
-      "icon_row": 12
+      "icon_col": 0,
+      "icon_row": 13
     },
     {
       "key": "agricultural-tower",
@@ -6092,8 +6092,8 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 24,
-      "icon_row": 12
+      "icon_col": 1,
+      "icon_row": 13
     },
     {
       "key": "ammonia-rocket-fuel",
@@ -6132,8 +6132,8 @@
       ],
       "order": "a[ammonia]-c[ammonia-rocket-fuel]",
       "subgroup": "aquilo-processes",
-      "icon_col": 25,
-      "icon_row": 12
+      "icon_col": 2,
+      "icon_row": 13
     },
     {
       "key": "ammoniacal-solution-separation",
@@ -6167,8 +6167,8 @@
       ],
       "order": "a[ammonia]-a[ammoniacal-solution-separation]",
       "subgroup": "aquilo-processes",
-      "icon_col": 26,
-      "icon_row": 12
+      "icon_col": 3,
+      "icon_row": 13
     },
     {
       "key": "arithmetic-combinator",
@@ -6236,8 +6236,8 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 27,
-      "icon_row": 12
+      "icon_col": 4,
+      "icon_row": 13
     },
     {
       "key": "artificial-jellynut-soil",
@@ -6322,7 +6322,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 0,
+      "icon_col": 5,
       "icon_row": 13
     },
     {
@@ -6408,7 +6408,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 1,
+      "icon_col": 6,
       "icon_row": 13
     },
     {
@@ -6497,7 +6497,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 2,
+      "icon_col": 7,
       "icon_row": 13
     },
     {
@@ -6586,7 +6586,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 3,
+      "icon_col": 8,
       "icon_row": 13
     },
     {
@@ -6685,7 +6685,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 4,
+      "icon_col": 9,
       "icon_row": 13
     },
     {
@@ -6764,7 +6764,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 5,
+      "icon_col": 10,
       "icon_row": 13
     },
     {
@@ -6853,7 +6853,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 6,
+      "icon_col": 11,
       "icon_row": 13
     },
     {
@@ -6922,7 +6922,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 7,
+      "icon_col": 12,
       "icon_row": 13
     },
     {
@@ -7001,7 +7001,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 8,
+      "icon_col": 13,
       "icon_row": 13
     },
     {
@@ -7080,7 +7080,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 9,
+      "icon_col": 14,
       "icon_row": 13
     },
     {
@@ -7144,7 +7144,7 @@
       "order": "a[automation-science-pack]",
       "subgroup": "science-pack",
       "hidden": true,
-      "icon_col": 10,
+      "icon_col": 15,
       "icon_row": 13
     },
     {
@@ -7203,7 +7203,7 @@
       "order": "a[smelting]-c[steel-plate]",
       "subgroup": "intermediate-product",
       "hidden": true,
-      "icon_col": 11,
+      "icon_col": 16,
       "icon_row": 13
     },
     {
@@ -7232,7 +7232,7 @@
       ],
       "order": "a[oil-processing]-a[basic-oil-processing]",
       "subgroup": "fluid-recipes",
-      "icon_col": 12,
+      "icon_col": 17,
       "icon_row": 13
     },
     {
@@ -7341,7 +7341,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 13,
+      "icon_col": 18,
       "icon_row": 13
     },
     {
@@ -7420,7 +7420,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 14,
+      "icon_col": 19,
       "icon_row": 13
     },
     {
@@ -7489,7 +7489,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 15,
+      "icon_col": 20,
       "icon_row": 13
     },
     {
@@ -7524,7 +7524,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 16,
+      "icon_col": 21,
       "icon_row": 13
     },
     {
@@ -7614,7 +7614,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 17,
+      "icon_col": 22,
       "icon_row": 13
     },
     {
@@ -7683,7 +7683,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 18,
+      "icon_col": 23,
       "icon_row": 13
     },
     {
@@ -7763,7 +7763,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 19,
+      "icon_col": 24,
       "icon_row": 13
     },
     {
@@ -7864,7 +7864,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 20,
+      "icon_col": 25,
       "icon_row": 13
     },
     {
@@ -7971,7 +7971,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 21,
+      "icon_col": 26,
       "icon_row": 13
     },
     {
@@ -8035,7 +8035,7 @@
       "order": "a[organic-processing]-b[bioflux]",
       "subgroup": "agriculture-products",
       "hidden": true,
-      "icon_col": 22,
+      "icon_col": 27,
       "icon_row": 13
     },
     {
@@ -8114,8 +8114,8 @@
       "order": "z[z-biolab]",
       "subgroup": "production-machine",
       "hidden": true,
-      "icon_col": 23,
-      "icon_row": 13
+      "icon_col": 0,
+      "icon_row": 14
     },
     {
       "key": "biolubricant",
@@ -8143,8 +8143,8 @@
       ],
       "order": "a[organic-products]-b[biolubricant]",
       "subgroup": "agriculture-products",
-      "icon_col": 24,
-      "icon_row": 13
+      "icon_col": 1,
+      "icon_row": 14
     },
     {
       "key": "bioplastic",
@@ -8177,8 +8177,8 @@
       ],
       "order": "a[organic-products]-c[bioplastic]",
       "subgroup": "agriculture-products",
-      "icon_col": 25,
-      "icon_row": 13
+      "icon_col": 2,
+      "icon_row": 14
     },
     {
       "key": "biosulfur",
@@ -8211,8 +8211,8 @@
       ],
       "order": "a[organic-products]-d[biosulfur]",
       "subgroup": "agriculture-products",
-      "icon_col": 26,
-      "icon_row": 13
+      "icon_col": 3,
+      "icon_row": 14
     },
     {
       "key": "biter-egg",
@@ -8264,8 +8264,8 @@
       "order": "c[eggs]-a[biter-egg]",
       "subgroup": "agriculture-products",
       "hidden": true,
-      "icon_col": 27,
-      "icon_row": 13
+      "icon_col": 4,
+      "icon_row": 14
     },
     {
       "key": "blueprint-book-recycling",
@@ -8294,7 +8294,7 @@
       "order": "c[automated-construction]-d[blueprint-book]",
       "subgroup": "tool",
       "hidden": true,
-      "icon_col": 0,
+      "icon_col": 5,
       "icon_row": 14
     },
     {
@@ -8324,7 +8324,7 @@
       "order": "c[automated-construction]-a[blueprint]",
       "subgroup": "tool",
       "hidden": true,
-      "icon_col": 1,
+      "icon_col": 6,
       "icon_row": 14
     },
     {
@@ -8393,7 +8393,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 2,
+      "icon_col": 7,
       "icon_row": 14
     },
     {
@@ -8423,7 +8423,7 @@
       "order": "a[items]-c[bottomless-chest]",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 3,
+      "icon_col": 8,
       "icon_row": 14
     },
     {
@@ -8502,7 +8502,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 4,
+      "icon_col": 9,
       "icon_row": 14
     },
     {
@@ -8591,7 +8591,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 5,
+      "icon_col": 10,
       "icon_row": 14
     },
     {
@@ -8621,7 +8621,7 @@
       "order": "t[item]-o[burner-generator]",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 6,
+      "icon_col": 11,
       "icon_row": 14
     },
     {
@@ -8690,7 +8690,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 7,
+      "icon_col": 12,
       "icon_row": 14
     },
     {
@@ -8769,7 +8769,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 8,
+      "icon_col": 13,
       "icon_row": 14
     },
     {
@@ -8798,7 +8798,7 @@
       ],
       "order": "a[organic-products]-h[burnt-spoilage]",
       "subgroup": "agriculture-products",
-      "icon_col": 9,
+      "icon_col": 14,
       "icon_row": 14
     },
     {
@@ -8828,7 +8828,7 @@
       "order": "a[melting]-a[calcite]",
       "subgroup": "vulcanus-processes",
       "hidden": true,
-      "icon_col": 10,
+      "icon_col": 15,
       "icon_row": 14
     },
     {
@@ -8907,7 +8907,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 11,
+      "icon_col": 16,
       "icon_row": 14
     },
     {
@@ -8981,7 +8981,7 @@
       "order": "z[biter-nest]",
       "subgroup": "agriculture",
       "hidden": true,
-      "icon_col": 12,
+      "icon_col": 17,
       "icon_row": 14
     },
     {
@@ -9070,7 +9070,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 13,
+      "icon_col": 18,
       "icon_row": 14
     },
     {
@@ -9149,7 +9149,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 14,
+      "icon_col": 19,
       "icon_row": 14
     },
     {
@@ -9248,7 +9248,7 @@
       "order": "a[organic-products]-e[carbon-fiber]",
       "subgroup": "agriculture-products",
       "hidden": true,
-      "icon_col": 15,
+      "icon_col": 20,
       "icon_row": 14
     },
     {
@@ -9278,7 +9278,7 @@
       "order": "b[chemistry]-f[carbon]",
       "subgroup": "raw-material",
       "hidden": true,
-      "icon_col": 16,
+      "icon_col": 21,
       "icon_row": 14
     },
     {
@@ -9308,7 +9308,7 @@
       "order": "b[carbonic]-e[chunk]",
       "subgroup": "space-material",
       "hidden": true,
-      "icon_col": 17,
+      "icon_col": 22,
       "icon_row": 14
     },
     {
@@ -9342,7 +9342,7 @@
       ],
       "order": "b-a-b",
       "subgroup": "space-crushing",
-      "icon_col": 18,
+      "icon_col": 23,
       "icon_row": 14
     },
     {
@@ -9381,7 +9381,7 @@
       ],
       "order": "b-b-b",
       "subgroup": "space-crushing",
-      "icon_col": 19,
+      "icon_col": 24,
       "icon_row": 14
     },
     {
@@ -9460,7 +9460,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 20,
+      "icon_col": 25,
       "icon_row": 14
     },
     {
@@ -9539,7 +9539,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 21,
+      "icon_col": 26,
       "icon_row": 14
     },
     {
@@ -9618,7 +9618,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 22,
+      "icon_col": 27,
       "icon_row": 14
     },
     {
@@ -9647,8 +9647,8 @@
       ],
       "order": "b[casting]-b[casting-copper]",
       "subgroup": "vulcanus-processes",
-      "icon_col": 23,
-      "icon_row": 14
+      "icon_col": 0,
+      "icon_row": 15
     },
     {
       "key": "casting-copper-cable",
@@ -9676,8 +9676,8 @@
       ],
       "order": "b[casting]-h[casting-copper-cable]",
       "subgroup": "vulcanus-processes",
-      "icon_col": 24,
-      "icon_row": 14
+      "icon_col": 1,
+      "icon_row": 15
     },
     {
       "key": "casting-iron",
@@ -9705,8 +9705,8 @@
       ],
       "order": "b[casting]-a[casting-iron]",
       "subgroup": "vulcanus-processes",
-      "icon_col": 25,
-      "icon_row": 14
+      "icon_col": 2,
+      "icon_row": 15
     },
     {
       "key": "casting-iron-gear-wheel",
@@ -9734,8 +9734,8 @@
       ],
       "order": "b[casting]-d[casting-iron-gear-wheel]",
       "subgroup": "vulcanus-processes",
-      "icon_col": 26,
-      "icon_row": 14
+      "icon_col": 3,
+      "icon_row": 15
     },
     {
       "key": "casting-iron-stick",
@@ -9763,8 +9763,8 @@
       ],
       "order": "b[casting]-e[casting-iron-stick]",
       "subgroup": "vulcanus-processes",
-      "icon_col": 27,
-      "icon_row": 14
+      "icon_col": 4,
+      "icon_row": 15
     },
     {
       "key": "casting-low-density-structure",
@@ -9802,7 +9802,7 @@
       ],
       "order": "b[casting]-f[low-density-structure]",
       "subgroup": "vulcanus-processes",
-      "icon_col": 0,
+      "icon_col": 5,
       "icon_row": 15
     },
     {
@@ -9831,7 +9831,7 @@
       ],
       "order": "b[casting]-f[casting-pipe]",
       "subgroup": "energy-pipe-distribution",
-      "icon_col": 1,
+      "icon_col": 6,
       "icon_row": 15
     },
     {
@@ -9865,7 +9865,7 @@
       ],
       "order": "b[casting]-g[casting-pipe-to-ground]",
       "subgroup": "energy-pipe-distribution",
-      "icon_col": 2,
+      "icon_col": 7,
       "icon_row": 15
     },
     {
@@ -9894,7 +9894,7 @@
       ],
       "order": "b[casting]-c[casting-steel]",
       "subgroup": "vulcanus-processes",
-      "icon_col": 3,
+      "icon_col": 8,
       "icon_row": 15
     },
     {
@@ -9983,7 +9983,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 4,
+      "icon_col": 9,
       "icon_row": 15
     },
     {
@@ -10072,7 +10072,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 5,
+      "icon_col": 10,
       "icon_row": 15
     },
     {
@@ -10141,7 +10141,7 @@
       "order": "d[chemical-science-pack]",
       "subgroup": "science-pack",
       "hidden": true,
-      "icon_col": 6,
+      "icon_col": 11,
       "icon_row": 15
     },
     {
@@ -10230,7 +10230,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 7,
+      "icon_col": 12,
       "icon_row": 15
     },
     {
@@ -10309,7 +10309,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 8,
+      "icon_col": 13,
       "icon_row": 15
     },
     {
@@ -10359,7 +10359,7 @@
       ],
       "order": "a[oil-processing]-d[coal-liquefaction]",
       "subgroup": "fluid-recipes",
-      "icon_col": 9,
+      "icon_col": 14,
       "icon_row": 15
     },
     {
@@ -10389,7 +10389,7 @@
       "order": "b[coal]",
       "subgroup": "raw-resource",
       "hidden": true,
-      "icon_col": 10,
+      "icon_col": 15,
       "icon_row": 15
     },
     {
@@ -10428,7 +10428,7 @@
       ],
       "order": "m",
       "subgroup": "raw-material",
-      "icon_col": 11,
+      "icon_col": 16,
       "icon_row": 15
     },
     {
@@ -10458,7 +10458,7 @@
       "order": "y",
       "subgroup": "science-pack",
       "hidden": true,
-      "icon_col": 12,
+      "icon_col": 17,
       "icon_row": 15
     },
     {
@@ -10547,7 +10547,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 13,
+      "icon_col": 18,
       "icon_row": 15
     },
     {
@@ -10625,7 +10625,7 @@
       ],
       "order": "b[casting]-g[concrete]",
       "subgroup": "vulcanus-processes",
-      "icon_col": 14,
+      "icon_col": 19,
       "icon_row": 15
     },
     {
@@ -10660,7 +10660,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 15,
+      "icon_col": 20,
       "icon_row": 15
     },
     {
@@ -10729,7 +10729,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 16,
+      "icon_col": 21,
       "icon_row": 15
     },
     {
@@ -10798,7 +10798,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 17,
+      "icon_col": 22,
       "icon_row": 15
     },
     {
@@ -10882,7 +10882,7 @@
       ],
       "order": "b[agriculture]-d[bacteria]-d[copper-bacteria-cultivation]",
       "subgroup": "agriculture-processes",
-      "icon_col": 18,
+      "icon_col": 23,
       "icon_row": 15
     },
     {
@@ -10912,7 +10912,7 @@
       "order": "b[agriculture]-d[bacteria]-c[copper-bacteria]",
       "subgroup": "agriculture-processes",
       "hidden": true,
-      "icon_col": 19,
+      "icon_col": 24,
       "icon_row": 15
     },
     {
@@ -10972,7 +10972,7 @@
       "order": "a[smelting]-b[copper-plate]",
       "subgroup": "raw-material",
       "hidden": true,
-      "icon_col": 20,
+      "icon_col": 25,
       "icon_row": 15
     },
     {
@@ -11007,7 +11007,7 @@
       "main_product": "molten-copper",
       "order": "a[melting]-c[copper-ore-melting]",
       "subgroup": "vulcanus-processes",
-      "icon_col": 21,
+      "icon_col": 26,
       "icon_row": 15
     },
     {
@@ -11037,7 +11037,7 @@
       "order": "f[copper-ore]",
       "subgroup": "raw-resource",
       "hidden": true,
-      "icon_col": 22,
+      "icon_col": 27,
       "icon_row": 15
     },
     {
@@ -11096,8 +11096,8 @@
       "order": "a[smelting]-b[copper-plate]",
       "subgroup": "raw-material",
       "hidden": true,
-      "icon_col": 23,
-      "icon_row": 15
+      "icon_col": 0,
+      "icon_row": 16
     },
     {
       "key": "crude-oil-barrel",
@@ -11130,8 +11130,8 @@
       ],
       "order": "a[fluid]-b[oil]-a[crude-oil]",
       "subgroup": "fill-barrel",
-      "icon_col": 24,
-      "icon_row": 15
+      "icon_col": 1,
+      "icon_row": 16
     },
     {
       "key": "crude-oil-barrel-recycling",
@@ -11160,8 +11160,8 @@
       "order": "a[basic-intermediates]-d[empty-barrel]",
       "subgroup": "fill-barrel",
       "hidden": true,
-      "icon_col": 25,
-      "icon_row": 15
+      "icon_col": 2,
+      "icon_row": 16
     },
     {
       "key": "crusher",
@@ -11239,8 +11239,8 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 26,
-      "icon_row": 15
+      "icon_col": 3,
+      "icon_row": 16
     },
     {
       "key": "cryogenic-plant",
@@ -11336,8 +11336,8 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 27,
-      "icon_row": 15
+      "icon_col": 4,
+      "icon_row": 16
     },
     {
       "key": "cryogenic-science-pack",
@@ -11419,7 +11419,7 @@
       "order": "k",
       "subgroup": "science-pack",
       "hidden": true,
-      "icon_col": 0,
+      "icon_col": 5,
       "icon_row": 16
     },
     {
@@ -11488,7 +11488,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 1,
+      "icon_col": 6,
       "icon_row": 16
     },
     {
@@ -11518,7 +11518,7 @@
       "order": "c[automated-construction]-b[deconstruction-planner]",
       "subgroup": "tool",
       "hidden": true,
-      "icon_col": 2,
+      "icon_col": 7,
       "icon_row": 16
     },
     {
@@ -11597,7 +11597,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 3,
+      "icon_col": 8,
       "icon_row": 16
     },
     {
@@ -11627,7 +11627,7 @@
       "order": "b[uranium-products]-b[depleted-uranium-fuel-cell]",
       "subgroup": "uranium-processing",
       "hidden": true,
-      "icon_col": 4,
+      "icon_col": 9,
       "icon_row": 16
     },
     {
@@ -11706,7 +11706,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 5,
+      "icon_col": 10,
       "icon_row": 16
     },
     {
@@ -11786,7 +11786,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 6,
+      "icon_col": 11,
       "icon_row": 16
     },
     {
@@ -11855,7 +11855,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 7,
+      "icon_col": 12,
       "icon_row": 16
     },
     {
@@ -11924,7 +11924,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 8,
+      "icon_col": 13,
       "icon_row": 16
     },
     {
@@ -12039,7 +12039,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 9,
+      "icon_col": 14,
       "icon_row": 16
     },
     {
@@ -12129,7 +12129,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 10,
+      "icon_col": 15,
       "icon_row": 16
     },
     {
@@ -12164,7 +12164,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 11,
+      "icon_col": 16,
       "icon_row": 16
     },
     {
@@ -12194,7 +12194,7 @@
       "order": "a[electric-energy-interface]-b[electric-energy-interface-equipment]",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 12,
+      "icon_col": 17,
       "icon_row": 16
     },
     {
@@ -12224,7 +12224,7 @@
       "order": "a[electric-energy-interface]-b[electric-energy-interface]",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 13,
+      "icon_col": 18,
       "icon_row": 16
     },
     {
@@ -12298,7 +12298,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 14,
+      "icon_col": 19,
       "icon_row": 16
     },
     {
@@ -12377,7 +12377,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 15,
+      "icon_col": 20,
       "icon_row": 16
     },
     {
@@ -12456,7 +12456,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 16,
+      "icon_col": 21,
       "icon_row": 16
     },
     {
@@ -12591,7 +12591,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 17,
+      "icon_col": 22,
       "icon_row": 16
     },
     {
@@ -12672,7 +12672,7 @@
       "order": "j",
       "subgroup": "science-pack",
       "hidden": true,
-      "icon_col": 18,
+      "icon_col": 23,
       "icon_row": 16
     },
     {
@@ -12742,7 +12742,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 19,
+      "icon_col": 24,
       "icon_row": 16
     },
     {
@@ -12776,7 +12776,7 @@
       ],
       "order": "a[fluid]-b[oil]-a[crude-oil]",
       "subgroup": "empty-barrel",
-      "icon_col": 20,
+      "icon_col": 25,
       "icon_row": 16
     },
     {
@@ -12810,7 +12810,7 @@
       ],
       "order": "b[new-fluid]-e[aquilo]-e[fluoroketone-cold]",
       "subgroup": "empty-barrel",
-      "icon_col": 21,
+      "icon_col": 26,
       "icon_row": 16
     },
     {
@@ -12844,7 +12844,7 @@
       ],
       "order": "b[new-fluid]-e[aquilo]-d[fluoroketone-hot]",
       "subgroup": "empty-barrel",
-      "icon_col": 22,
+      "icon_col": 27,
       "icon_row": 16
     },
     {
@@ -12878,8 +12878,8 @@
       ],
       "order": "a[fluid]-b[oil]-d[heavy-oil]",
       "subgroup": "empty-barrel",
-      "icon_col": 23,
-      "icon_row": 16
+      "icon_col": 0,
+      "icon_row": 17
     },
     {
       "key": "empty-light-oil-barrel",
@@ -12912,8 +12912,8 @@
       ],
       "order": "a[fluid]-b[oil]-c[light-oil]",
       "subgroup": "empty-barrel",
-      "icon_col": 24,
-      "icon_row": 16
+      "icon_col": 1,
+      "icon_row": 17
     },
     {
       "key": "empty-lubricant-barrel",
@@ -12946,8 +12946,8 @@
       ],
       "order": "a[fluid]-b[oil]-e[lubricant]",
       "subgroup": "empty-barrel",
-      "icon_col": 25,
-      "icon_row": 16
+      "icon_col": 2,
+      "icon_row": 17
     },
     {
       "key": "empty-module-slot-recycling",
@@ -12976,8 +12976,8 @@
       "order": "z[meta]-a[empty-module-slot]",
       "subgroup": "module",
       "hidden": true,
-      "icon_col": 26,
-      "icon_row": 16
+      "icon_col": 3,
+      "icon_row": 17
     },
     {
       "key": "empty-petroleum-gas-barrel",
@@ -13010,8 +13010,8 @@
       ],
       "order": "a[fluid]-b[oil]-b[petroleum-gas]",
       "subgroup": "empty-barrel",
-      "icon_col": 27,
-      "icon_row": 16
+      "icon_col": 4,
+      "icon_row": 17
     },
     {
       "key": "empty-sulfuric-acid-barrel",
@@ -13044,7 +13044,7 @@
       ],
       "order": "a[fluid]-b[oil]-f[sulfuric-acid]",
       "subgroup": "empty-barrel",
-      "icon_col": 0,
+      "icon_col": 5,
       "icon_row": 17
     },
     {
@@ -13078,7 +13078,7 @@
       ],
       "order": "a[fluid]-a[water]-a[water]",
       "subgroup": "empty-barrel",
-      "icon_col": 1,
+      "icon_col": 6,
       "icon_row": 17
     },
     {
@@ -13147,7 +13147,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 2,
+      "icon_col": 7,
       "icon_row": 17
     },
     {
@@ -13226,7 +13226,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 3,
+      "icon_col": 8,
       "icon_row": 17
     },
     {
@@ -13305,7 +13305,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 4,
+      "icon_col": 9,
       "icon_row": 17
     },
     {
@@ -13384,7 +13384,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 5,
+      "icon_col": 10,
       "icon_row": 17
     },
     {
@@ -13463,7 +13463,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 6,
+      "icon_col": 11,
       "icon_row": 17
     },
     {
@@ -13532,7 +13532,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 7,
+      "icon_col": 12,
       "icon_row": 17
     },
     {
@@ -13601,7 +13601,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 8,
+      "icon_col": 13,
       "icon_row": 17
     },
     {
@@ -13671,7 +13671,7 @@
       "order": "b[chemistry]-e[explosives]",
       "subgroup": "raw-material",
       "hidden": true,
-      "icon_col": 9,
+      "icon_col": 14,
       "icon_row": 17
     },
     {
@@ -13741,7 +13741,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 10,
+      "icon_col": 15,
       "icon_row": 17
     },
     {
@@ -13826,7 +13826,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 11,
+      "icon_col": 16,
       "icon_row": 17
     },
     {
@@ -13901,7 +13901,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 12,
+      "icon_col": 17,
       "icon_row": 17
     },
     {
@@ -13976,7 +13976,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 13,
+      "icon_col": 18,
       "icon_row": 17
     },
     {
@@ -14055,7 +14055,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 14,
+      "icon_col": 19,
       "icon_row": 17
     },
     {
@@ -14125,7 +14125,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 15,
+      "icon_col": 20,
       "icon_row": 17
     },
     {
@@ -14205,7 +14205,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 16,
+      "icon_col": 21,
       "icon_row": 17
     },
     {
@@ -14275,7 +14275,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 17,
+      "icon_col": 22,
       "icon_row": 17
     },
     {
@@ -14345,7 +14345,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 18,
+      "icon_col": 23,
       "icon_row": 17
     },
     {
@@ -14404,7 +14404,7 @@
       "order": "a[smelting]-a[iron-plate]",
       "subgroup": "raw-material",
       "hidden": true,
-      "icon_col": 19,
+      "icon_col": 24,
       "icon_row": 17
     },
     {
@@ -14452,7 +14452,7 @@
       ],
       "order": "b[nauvis-agriculture]-b[fish-breeding]",
       "subgroup": "nauvis-agriculture",
-      "icon_col": 20,
+      "icon_col": 25,
       "icon_row": 17
     },
     {
@@ -14531,7 +14531,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 12,
+      "icon_col": 17,
       "icon_row": 16
     },
     {
@@ -14629,7 +14629,7 @@
       "order": "e[flamethrower]",
       "subgroup": "ammo",
       "hidden": true,
-      "icon_col": 21,
+      "icon_col": 26,
       "icon_row": 17
     },
     {
@@ -14664,7 +14664,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 22,
+      "icon_col": 27,
       "icon_row": 17
     },
     {
@@ -14753,8 +14753,8 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 23,
-      "icon_row": 17
+      "icon_col": 0,
+      "icon_row": 18
     },
     {
       "key": "fluid-wagon",
@@ -14842,8 +14842,8 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 24,
-      "icon_row": 17
+      "icon_col": 1,
+      "icon_row": 18
     },
     {
       "key": "fluoroketone",
@@ -14921,8 +14921,8 @@
       ],
       "order": "b[new-fluid]-e[aquilo]-e[fluoroketone-cold]",
       "subgroup": "fill-barrel",
-      "icon_col": 25,
-      "icon_row": 17
+      "icon_col": 2,
+      "icon_row": 18
     },
     {
       "key": "fluoroketone-cold-barrel-recycling",
@@ -14951,8 +14951,8 @@
       "order": "a[basic-intermediates]-d[empty-barrel]",
       "subgroup": "fill-barrel",
       "hidden": true,
-      "icon_col": 26,
-      "icon_row": 17
+      "icon_col": 3,
+      "icon_row": 18
     },
     {
       "key": "fluoroketone-cooling",
@@ -14981,8 +14981,8 @@
       ],
       "order": "b[fluoroketone]-b[fluoroketone-cooling]",
       "subgroup": "aquilo-processes",
-      "icon_col": 27,
-      "icon_row": 17
+      "icon_col": 4,
+      "icon_row": 18
     },
     {
       "key": "fluoroketone-hot-barrel",
@@ -15015,7 +15015,7 @@
       ],
       "order": "b[new-fluid]-e[aquilo]-d[fluoroketone-hot]",
       "subgroup": "fill-barrel",
-      "icon_col": 0,
+      "icon_col": 5,
       "icon_row": 18
     },
     {
@@ -15045,7 +15045,7 @@
       "order": "a[basic-intermediates]-d[empty-barrel]",
       "subgroup": "fill-barrel",
       "hidden": true,
-      "icon_col": 1,
+      "icon_col": 6,
       "icon_row": 18
     },
     {
@@ -15134,7 +15134,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 2,
+      "icon_col": 7,
       "icon_row": 18
     },
     {
@@ -15228,7 +15228,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 3,
+      "icon_col": 8,
       "icon_row": 18
     },
     {
@@ -15330,7 +15330,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 4,
+      "icon_col": 9,
       "icon_row": 18
     },
     {
@@ -15416,7 +15416,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 5,
+      "icon_col": 10,
       "icon_row": 18
     },
     {
@@ -15485,7 +15485,7 @@
       "order": "c[lithium]-d[fusion-power-cell]",
       "subgroup": "aquilo-processes",
       "hidden": true,
-      "icon_col": 6,
+      "icon_col": 11,
       "icon_row": 18
     },
     {
@@ -15640,7 +15640,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 7,
+      "icon_col": 12,
       "icon_row": 18
     },
     {
@@ -15680,7 +15680,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 8,
+      "icon_col": 13,
       "icon_row": 18
     },
     {
@@ -15759,7 +15759,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 9,
+      "icon_col": 14,
       "icon_row": 18
     },
     {
@@ -15828,7 +15828,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 10,
+      "icon_col": 15,
       "icon_row": 18
     },
     {
@@ -15907,7 +15907,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 11,
+      "icon_col": 16,
       "icon_row": 18
     },
     {
@@ -15971,7 +15971,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 12,
+      "icon_col": 17,
       "icon_row": 18
     },
     {
@@ -16050,7 +16050,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 13,
+      "icon_col": 18,
       "icon_row": 18
     },
     {
@@ -16120,7 +16120,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 14,
+      "icon_col": 19,
       "icon_row": 18
     },
     {
@@ -16189,7 +16189,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 15,
+      "icon_col": 20,
       "icon_row": 18
     },
     {
@@ -16268,7 +16268,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 16,
+      "icon_col": 21,
       "icon_row": 18
     },
     {
@@ -16337,7 +16337,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 17,
+      "icon_col": 22,
       "icon_row": 18
     },
     {
@@ -16371,7 +16371,7 @@
       ],
       "order": "a[fluid]-b[oil]-d[heavy-oil]",
       "subgroup": "fill-barrel",
-      "icon_col": 18,
+      "icon_col": 23,
       "icon_row": 18
     },
     {
@@ -16401,7 +16401,7 @@
       "order": "a[basic-intermediates]-d[empty-barrel]",
       "subgroup": "fill-barrel",
       "hidden": true,
-      "icon_col": 19,
+      "icon_col": 24,
       "icon_row": 18
     },
     {
@@ -16436,7 +16436,7 @@
       ],
       "order": "b[fluid-chemistry]-a[heavy-oil-cracking]",
       "subgroup": "fluid-recipes",
-      "icon_col": 20,
+      "icon_col": 25,
       "icon_row": 18
     },
     {
@@ -16466,7 +16466,7 @@
       "order": "b[holmium]-a[holmium-ore]",
       "subgroup": "fulgora-processes",
       "hidden": true,
-      "icon_col": 21,
+      "icon_col": 26,
       "icon_row": 18
     },
     {
@@ -16526,7 +16526,7 @@
       "order": "b[holmium]-c[holmium-plate]",
       "subgroup": "fulgora-processes",
       "hidden": true,
-      "icon_col": 22,
+      "icon_col": 27,
       "icon_row": 18
     },
     {
@@ -16595,8 +16595,8 @@
       ],
       "order": "d[other-chemistry]-c[ice-melting]",
       "subgroup": "fluid-recipes",
-      "icon_col": 23,
-      "icon_row": 18
+      "icon_col": 0,
+      "icon_row": 19
     },
     {
       "key": "ice-platform",
@@ -16659,8 +16659,8 @@
       "order": "j[ice]",
       "subgroup": "raw-resource",
       "hidden": true,
-      "icon_col": 24,
-      "icon_row": 18
+      "icon_col": 1,
+      "icon_row": 19
     },
     {
       "key": "ice-recycling",
@@ -16689,8 +16689,8 @@
       "order": "j[ice]",
       "subgroup": "raw-resource",
       "hidden": true,
-      "icon_col": 25,
-      "icon_row": 18
+      "icon_col": 2,
+      "icon_row": 19
     },
     {
       "key": "infinity-cargo-wagon-recycling",
@@ -16719,8 +16719,8 @@
       "order": "c[item]-o[infinity-cargo-wagon]",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 26,
-      "icon_row": 18
+      "icon_col": 3,
+      "icon_row": 19
     },
     {
       "key": "infinity-chest",
@@ -16789,8 +16789,8 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 27,
-      "icon_row": 18
+      "icon_col": 4,
+      "icon_row": 19
     },
     {
       "key": "infinity-pipe",
@@ -16859,7 +16859,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 0,
+      "icon_col": 5,
       "icon_row": 19
     },
     {
@@ -16938,7 +16938,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 1,
+      "icon_col": 6,
       "icon_row": 19
     },
     {
@@ -17022,7 +17022,7 @@
       ],
       "order": "b[agriculture]-d[bacteria]-b[iron-bacteria-cultivation]",
       "subgroup": "agriculture-processes",
-      "icon_col": 2,
+      "icon_col": 7,
       "icon_row": 19
     },
     {
@@ -17052,7 +17052,7 @@
       "order": "b[agriculture]-d[bacteria]-a[iron-bacteria]",
       "subgroup": "agriculture-processes",
       "hidden": true,
-      "icon_col": 3,
+      "icon_col": 8,
       "icon_row": 19
     },
     {
@@ -17111,7 +17111,7 @@
       "order": "a[smelting]-a[iron-plate]",
       "subgroup": "raw-material",
       "hidden": true,
-      "icon_col": 4,
+      "icon_col": 9,
       "icon_row": 19
     },
     {
@@ -17170,7 +17170,7 @@
       "order": "a[smelting]-a[iron-plate]",
       "subgroup": "raw-material",
       "hidden": true,
-      "icon_col": 5,
+      "icon_col": 10,
       "icon_row": 19
     },
     {
@@ -17205,7 +17205,7 @@
       "main_product": "molten-iron",
       "order": "a[melting]-b[iron-ore-melting]",
       "subgroup": "vulcanus-processes",
-      "icon_col": 6,
+      "icon_col": 11,
       "icon_row": 19
     },
     {
@@ -17235,7 +17235,7 @@
       "order": "e[iron-ore]",
       "subgroup": "raw-resource",
       "hidden": true,
-      "icon_col": 7,
+      "icon_col": 12,
       "icon_row": 19
     },
     {
@@ -17294,7 +17294,7 @@
       "order": "a[smelting]-a[iron-plate]",
       "subgroup": "raw-material",
       "hidden": true,
-      "icon_col": 8,
+      "icon_col": 13,
       "icon_row": 19
     },
     {
@@ -17353,7 +17353,7 @@
       "order": "a[smelting]-a[iron-plate]",
       "subgroup": "raw-material",
       "hidden": true,
-      "icon_col": 9,
+      "icon_col": 14,
       "icon_row": 19
     },
     {
@@ -17383,7 +17383,7 @@
       "order": "a[organic-processing]-d[jelly]",
       "subgroup": "agriculture-products",
       "hidden": true,
-      "icon_col": 10,
+      "icon_col": 15,
       "icon_row": 19
     },
     {
@@ -17418,7 +17418,7 @@
       ],
       "order": "a[seeds]-b[jellynut-processing]",
       "subgroup": "agriculture-processes",
-      "icon_col": 11,
+      "icon_col": 16,
       "icon_row": 19
     },
     {
@@ -17448,7 +17448,7 @@
       "order": "b[agriculture]-b[jellynut]",
       "subgroup": "agriculture-processes",
       "hidden": true,
-      "icon_col": 12,
+      "icon_col": 17,
       "icon_row": 19
     },
     {
@@ -17478,7 +17478,7 @@
       "order": "a[seeds]-b[jellynut-seed]",
       "subgroup": "agriculture-processes",
       "hidden": true,
-      "icon_col": 13,
+      "icon_col": 18,
       "icon_row": 19
     },
     {
@@ -17519,7 +17519,7 @@
       ],
       "order": "b[uranium-products]-c[kovarex-enrichment-process]",
       "subgroup": "uranium-processing",
-      "icon_col": 14,
+      "icon_col": 19,
       "icon_row": 19
     },
     {
@@ -17598,7 +17598,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 15,
+      "icon_col": 20,
       "icon_row": 19
     },
     {
@@ -17667,7 +17667,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 16,
+      "icon_col": 21,
       "icon_row": 19
     },
     {
@@ -17726,7 +17726,7 @@
       "order": "c[landfill]-a[dirt]",
       "subgroup": "terrain",
       "hidden": true,
-      "icon_col": 17,
+      "icon_col": 22,
       "icon_row": 19
     },
     {
@@ -17815,7 +17815,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 18,
+      "icon_col": 23,
       "icon_row": 19
     },
     {
@@ -17845,7 +17845,7 @@
       "order": "b[items]-b[lane-splitter]",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 19,
+      "icon_col": 24,
       "icon_row": 19
     },
     {
@@ -17924,7 +17924,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 20,
+      "icon_col": 25,
       "icon_row": 19
     },
     {
@@ -17983,7 +17983,7 @@
       "order": "a[smelting]-a[iron-plate]",
       "subgroup": "raw-material",
       "hidden": true,
-      "icon_col": 21,
+      "icon_col": 26,
       "icon_row": 19
     },
     {
@@ -18017,7 +18017,7 @@
       ],
       "order": "a[fluid]-b[oil]-c[light-oil]",
       "subgroup": "fill-barrel",
-      "icon_col": 22,
+      "icon_col": 27,
       "icon_row": 19
     },
     {
@@ -18047,8 +18047,8 @@
       "order": "a[basic-intermediates]-d[empty-barrel]",
       "subgroup": "fill-barrel",
       "hidden": true,
-      "icon_col": 23,
-      "icon_row": 19
+      "icon_col": 0,
+      "icon_row": 20
     },
     {
       "key": "light-oil-cracking",
@@ -18082,8 +18082,8 @@
       ],
       "order": "b[fluid-chemistry]-b[light-oil-cracking]",
       "subgroup": "fluid-recipes",
-      "icon_col": 24,
-      "icon_row": 19
+      "icon_col": 1,
+      "icon_row": 20
     },
     {
       "key": "lightning-collector",
@@ -18173,8 +18173,8 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 25,
-      "icon_row": 19
+      "icon_col": 2,
+      "icon_row": 20
     },
     {
       "key": "lightning-rod",
@@ -18260,8 +18260,8 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 26,
-      "icon_row": 19
+      "icon_col": 3,
+      "icon_row": 20
     },
     {
       "key": "linked-belt-recycling",
@@ -18290,8 +18290,8 @@
       "order": "b[items]-b[linked-belt]",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 27,
-      "icon_row": 19
+      "icon_col": 4,
+      "icon_row": 20
     },
     {
       "key": "linked-chest-recycling",
@@ -18320,7 +18320,7 @@
       "order": "a[items]-a[linked-chest]",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 0,
+      "icon_col": 5,
       "icon_row": 20
     },
     {
@@ -18419,7 +18419,7 @@
       "order": "c[lithium]-b[lithium-plate]",
       "subgroup": "aquilo-processes",
       "hidden": true,
-      "icon_col": 1,
+      "icon_col": 6,
       "icon_row": 20
     },
     {
@@ -18449,7 +18449,7 @@
       "order": "c[lithium]-a[lithium]",
       "subgroup": "aquilo-processes",
       "hidden": true,
-      "icon_col": 2,
+      "icon_col": 7,
       "icon_row": 20
     },
     {
@@ -18549,7 +18549,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 3,
+      "icon_col": 8,
       "icon_row": 20
     },
     {
@@ -18628,7 +18628,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 4,
+      "icon_col": 9,
       "icon_row": 20
     },
     {
@@ -18697,7 +18697,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 5,
+      "icon_col": 10,
       "icon_row": 20
     },
     {
@@ -18761,7 +18761,7 @@
       "order": "b[logistic-science-pack]",
       "subgroup": "science-pack",
       "hidden": true,
-      "icon_col": 6,
+      "icon_col": 11,
       "icon_row": 20
     },
     {
@@ -18840,7 +18840,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 7,
+      "icon_col": 12,
       "icon_row": 20
     },
     {
@@ -18919,7 +18919,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 8,
+      "icon_col": 13,
       "icon_row": 20
     },
     {
@@ -18982,7 +18982,7 @@
       ],
       "order": "a[fluid]-b[oil]-e[lubricant]",
       "subgroup": "fill-barrel",
-      "icon_col": 9,
+      "icon_col": 14,
       "icon_row": 20
     },
     {
@@ -19012,7 +19012,7 @@
       "order": "a[basic-intermediates]-d[empty-barrel]",
       "subgroup": "fill-barrel",
       "hidden": true,
-      "icon_col": 10,
+      "icon_col": 15,
       "icon_row": 20
     },
     {
@@ -19111,7 +19111,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 11,
+      "icon_col": 16,
       "icon_row": 20
     },
     {
@@ -19191,7 +19191,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 12,
+      "icon_col": 17,
       "icon_row": 20
     },
     {
@@ -19221,7 +19221,7 @@
       "order": "a[metallic]-e[chunk]",
       "subgroup": "space-material",
       "hidden": true,
-      "icon_col": 13,
+      "icon_col": 18,
       "icon_row": 20
     },
     {
@@ -19255,7 +19255,7 @@
       ],
       "order": "b-a-a",
       "subgroup": "space-crushing",
-      "icon_col": 14,
+      "icon_col": 19,
       "icon_row": 20
     },
     {
@@ -19294,7 +19294,7 @@
       ],
       "order": "b-b-a",
       "subgroup": "space-crushing",
-      "icon_col": 15,
+      "icon_col": 20,
       "icon_row": 20
     },
     {
@@ -19370,7 +19370,7 @@
       "order": "h",
       "subgroup": "science-pack",
       "hidden": true,
-      "icon_col": 16,
+      "icon_col": 21,
       "icon_row": 20
     },
     {
@@ -19439,7 +19439,7 @@
       "order": "c[military-science-pack]",
       "subgroup": "science-pack",
       "hidden": true,
-      "icon_col": 17,
+      "icon_col": 22,
       "icon_row": 20
     },
     {
@@ -19508,7 +19508,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 18,
+      "icon_col": 23,
       "icon_row": 20
     },
     {
@@ -19547,7 +19547,7 @@
       ],
       "order": "a[melting]-a[lava-b]",
       "subgroup": "vulcanus-processes",
-      "icon_col": 19,
+      "icon_col": 24,
       "icon_row": 20
     },
     {
@@ -19586,7 +19586,7 @@
       ],
       "order": "a[melting]-a[lava-a]",
       "subgroup": "vulcanus-processes",
-      "icon_col": 20,
+      "icon_col": 25,
       "icon_row": 20
     },
     {
@@ -19655,7 +19655,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 21,
+      "icon_col": 26,
       "icon_row": 20
     },
     {
@@ -19724,7 +19724,7 @@
       "order": "",
       "subgroup": "uranium-processing",
       "hidden": true,
-      "icon_col": 22,
+      "icon_col": 27,
       "icon_row": 20
     },
     {
@@ -19753,8 +19753,8 @@
       ],
       "order": "b[uranium-products]-b[nuclear-fuel-reprocessing]",
       "subgroup": "uranium-processing",
-      "icon_col": 23,
-      "icon_row": 20
+      "icon_col": 0,
+      "icon_row": 21
     },
     {
       "key": "nuclear-reactor",
@@ -19842,8 +19842,8 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 24,
-      "icon_row": 20
+      "icon_col": 1,
+      "icon_row": 21
     },
     {
       "key": "nutrients-from-bioflux",
@@ -19871,8 +19871,8 @@
       ],
       "order": "c[nutrients]-e[nutrients-from-bioflux]",
       "subgroup": "agriculture-processes",
-      "icon_col": 25,
-      "icon_row": 20
+      "icon_col": 2,
+      "icon_row": 21
     },
     {
       "key": "nutrients-from-biter-egg",
@@ -19901,8 +19901,8 @@
       ],
       "order": "b[nauvis-agriculture]-d[nutrients-from-biter-egg]",
       "subgroup": "nauvis-agriculture",
-      "icon_col": 26,
-      "icon_row": 20
+      "icon_col": 3,
+      "icon_row": 21
     },
     {
       "key": "nutrients-from-fish",
@@ -19931,8 +19931,8 @@
       ],
       "order": "b[nauvis-agriculture]-c[nutrients-from-fish]",
       "subgroup": "nauvis-agriculture",
-      "icon_col": 27,
-      "icon_row": 20
+      "icon_col": 4,
+      "icon_row": 21
     },
     {
       "key": "nutrients-from-spoilage",
@@ -19962,7 +19962,7 @@
       ],
       "order": "c[nutrients]-c[nutrients-from-spoilage]",
       "subgroup": "agriculture-processes",
-      "icon_col": 0,
+      "icon_col": 5,
       "icon_row": 21
     },
     {
@@ -19991,7 +19991,7 @@
       ],
       "order": "c[nutrients]-d[nutrients-from-yumako-mash]",
       "subgroup": "agriculture-processes",
-      "icon_col": 1,
+      "icon_col": 6,
       "icon_row": 21
     },
     {
@@ -20021,7 +20021,7 @@
       "order": "c[nutrients]-a[spoilage]",
       "subgroup": "agriculture-processes",
       "hidden": true,
-      "icon_col": 2,
+      "icon_col": 7,
       "icon_row": 21
     },
     {
@@ -20090,7 +20090,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 3,
+      "icon_col": 8,
       "icon_row": 21
     },
     {
@@ -20189,7 +20189,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 4,
+      "icon_col": 9,
       "icon_row": 21
     },
     {
@@ -20219,7 +20219,7 @@
       "order": "b[items]-o[one-way-valve]",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 5,
+      "icon_col": 10,
       "icon_row": 21
     },
     {
@@ -20249,7 +20249,7 @@
       "order": "b[items]-o[overflow-valve]",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 6,
+      "icon_col": 11,
       "icon_row": 21
     },
     {
@@ -20350,7 +20350,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 7,
+      "icon_col": 12,
       "icon_row": 21
     },
     {
@@ -20451,7 +20451,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 8,
+      "icon_col": 13,
       "icon_row": 21
     },
     {
@@ -20481,7 +20481,7 @@
       "order": "c[oxide]-e[chunk]",
       "subgroup": "space-material",
       "hidden": true,
-      "icon_col": 9,
+      "icon_col": 14,
       "icon_row": 21
     },
     {
@@ -20515,7 +20515,7 @@
       ],
       "order": "b-a-c",
       "subgroup": "space-crushing",
-      "icon_col": 10,
+      "icon_col": 15,
       "icon_row": 21
     },
     {
@@ -20554,7 +20554,7 @@
       ],
       "order": "b-b-c",
       "subgroup": "space-crushing",
-      "icon_col": 11,
+      "icon_col": 16,
       "icon_row": 21
     },
     {
@@ -20633,7 +20633,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 12,
+      "icon_col": 17,
       "icon_row": 21
     },
     {
@@ -20680,7 +20680,7 @@
       ],
       "order": "d[organic-processing]-a[pentapod-egg]",
       "subgroup": "agriculture-processes",
-      "icon_col": 13,
+      "icon_col": 18,
       "icon_row": 21
     },
     {
@@ -20710,7 +20710,7 @@
       "order": "c[eggs]-b[pentapod-egg]",
       "subgroup": "agriculture-products",
       "hidden": true,
-      "icon_col": 14,
+      "icon_col": 19,
       "icon_row": 21
     },
     {
@@ -20789,7 +20789,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 15,
+      "icon_col": 20,
       "icon_row": 21
     },
     {
@@ -20878,7 +20878,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 16,
+      "icon_col": 21,
       "icon_row": 21
     },
     {
@@ -20957,7 +20957,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 17,
+      "icon_col": 22,
       "icon_row": 21
     },
     {
@@ -20991,7 +20991,7 @@
       ],
       "order": "a[fluid]-b[oil]-b[petroleum-gas]",
       "subgroup": "fill-barrel",
-      "icon_col": 18,
+      "icon_col": 23,
       "icon_row": 21
     },
     {
@@ -21021,7 +21021,7 @@
       "order": "a[basic-intermediates]-d[empty-barrel]",
       "subgroup": "fill-barrel",
       "hidden": true,
-      "icon_col": 19,
+      "icon_col": 24,
       "icon_row": 21
     },
     {
@@ -21100,7 +21100,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 20,
+      "icon_col": 25,
       "icon_row": 21
     },
     {
@@ -21179,7 +21179,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 21,
+      "icon_col": 26,
       "icon_row": 21
     },
     {
@@ -21238,7 +21238,7 @@
       "order": "a[smelting]-a[iron-plate]",
       "subgroup": "raw-material",
       "hidden": true,
-      "icon_col": 22,
+      "icon_col": 27,
       "icon_row": 21
     },
     {
@@ -21307,8 +21307,8 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 23,
-      "icon_row": 21
+      "icon_col": 0,
+      "icon_row": 22
     },
     {
       "key": "pistol",
@@ -21372,8 +21372,8 @@
       "order": "a[basic-clips]-a[pistol]",
       "subgroup": "gun",
       "hidden": true,
-      "icon_col": 24,
-      "icon_row": 21
+      "icon_col": 1,
+      "icon_row": 22
     },
     {
       "key": "plastic-bar",
@@ -21437,8 +21437,8 @@
       "order": "b[chemistry]-b[plastic-bar]",
       "subgroup": "raw-material",
       "hidden": true,
-      "icon_col": 25,
-      "icon_row": 21
+      "icon_col": 2,
+      "icon_row": 22
     },
     {
       "key": "poison-capsule",
@@ -21516,8 +21516,8 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 26,
-      "icon_row": 21
+      "icon_col": 3,
+      "icon_row": 22
     },
     {
       "key": "power-armor",
@@ -21654,8 +21654,8 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 27,
-      "icon_row": 21
+      "icon_col": 4,
+      "icon_row": 22
     },
     {
       "key": "power-armor-recycling",
@@ -21694,7 +21694,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 0,
+      "icon_col": 5,
       "icon_row": 22
     },
     {
@@ -21773,7 +21773,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 1,
+      "icon_col": 6,
       "icon_row": 22
     },
     {
@@ -21848,7 +21848,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 2,
+      "icon_col": 7,
       "icon_row": 22
     },
     {
@@ -21917,7 +21917,7 @@
       "order": "e[production-science-pack]",
       "subgroup": "science-pack",
       "hidden": true,
-      "icon_col": 3,
+      "icon_col": 8,
       "icon_row": 22
     },
     {
@@ -22032,7 +22032,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 4,
+      "icon_col": 9,
       "icon_row": 22
     },
     {
@@ -22122,7 +22122,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 5,
+      "icon_col": 10,
       "icon_row": 22
     },
     {
@@ -22157,7 +22157,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 6,
+      "icon_col": 11,
       "icon_row": 22
     },
     {
@@ -22246,7 +22246,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 7,
+      "icon_col": 12,
       "icon_row": 22
     },
     {
@@ -22276,7 +22276,7 @@
       "order": "d[promethium]-e[chunk]",
       "subgroup": "space-material",
       "hidden": true,
-      "icon_col": 8,
+      "icon_col": 13,
       "icon_row": 22
     },
     {
@@ -22352,7 +22352,7 @@
       "order": "l",
       "subgroup": "science-pack",
       "hidden": true,
-      "icon_col": 9,
+      "icon_col": 14,
       "icon_row": 22
     },
     {
@@ -22382,7 +22382,7 @@
       "order": "a[items]-a[proxy-container]",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 10,
+      "icon_col": 15,
       "icon_row": 22
     },
     {
@@ -22461,7 +22461,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 11,
+      "icon_col": 16,
       "icon_row": 22
     },
     {
@@ -22550,7 +22550,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 12,
+      "icon_col": 17,
       "icon_row": 22
     },
     {
@@ -22665,7 +22665,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 13,
+      "icon_col": 18,
       "icon_row": 22
     },
     {
@@ -22755,7 +22755,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 14,
+      "icon_col": 19,
       "icon_row": 22
     },
     {
@@ -22790,7 +22790,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 15,
+      "icon_col": 20,
       "icon_row": 22
     },
     {
@@ -22908,7 +22908,7 @@
       "order": "",
       "subgroup": "aquilo-processes",
       "hidden": true,
-      "icon_col": 16,
+      "icon_col": 21,
       "icon_row": 22
     },
     {
@@ -22987,7 +22987,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 17,
+      "icon_col": 22,
       "icon_row": 22
     },
     {
@@ -23095,7 +23095,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 18,
+      "icon_col": 23,
       "icon_row": 22
     },
     {
@@ -23174,7 +23174,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 19,
+      "icon_col": 24,
       "icon_row": 22
     },
     {
@@ -23214,7 +23214,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 20,
+      "icon_col": 25,
       "icon_row": 22
     },
     {
@@ -23283,7 +23283,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 21,
+      "icon_col": 26,
       "icon_row": 22
     },
     {
@@ -23352,7 +23352,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 22,
+      "icon_col": 27,
       "icon_row": 22
     },
     {
@@ -23475,8 +23475,8 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 23,
-      "icon_row": 22
+      "icon_col": 0,
+      "icon_row": 23
     },
     {
       "key": "railgun-recycling",
@@ -23515,8 +23515,8 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 24,
-      "icon_row": 22
+      "icon_col": 1,
+      "icon_row": 23
     },
     {
       "key": "railgun-turret",
@@ -23609,8 +23609,8 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 25,
-      "icon_row": 22
+      "icon_col": 2,
+      "icon_row": 23
     },
     {
       "key": "raw-fish-recycling",
@@ -23639,8 +23639,8 @@
       "order": "h[raw-fish]",
       "subgroup": "raw-resource",
       "hidden": true,
-      "icon_col": 26,
-      "icon_row": 22
+      "icon_col": 3,
+      "icon_row": 23
     },
     {
       "key": "recycler",
@@ -23735,8 +23735,8 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 27,
-      "icon_row": 22
+      "icon_col": 4,
+      "icon_row": 23
     },
     {
       "key": "refined-concrete",
@@ -23819,7 +23819,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 0,
+      "icon_col": 5,
       "icon_row": 23
     },
     {
@@ -23888,7 +23888,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 1,
+      "icon_col": 6,
       "icon_row": 23
     },
     {
@@ -23957,7 +23957,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 2,
+      "icon_col": 7,
       "icon_row": 23
     },
     {
@@ -24036,7 +24036,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 3,
+      "icon_col": 8,
       "icon_row": 23
     },
     {
@@ -24115,7 +24115,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 4,
+      "icon_col": 9,
       "icon_row": 23
     },
     {
@@ -24223,7 +24223,7 @@
       ],
       "order": "a[organic-products]-a[rocket-fuel-from-jelly]",
       "subgroup": "agriculture-products",
-      "icon_col": 5,
+      "icon_col": 10,
       "icon_row": 23
     },
     {
@@ -24253,7 +24253,7 @@
       "order": "b[chemistry]-a[solid-fuel]",
       "subgroup": "raw-material",
       "hidden": true,
-      "icon_col": 6,
+      "icon_col": 11,
       "icon_row": 23
     },
     {
@@ -24332,7 +24332,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 7,
+      "icon_col": 12,
       "icon_row": 23
     },
     {
@@ -24406,7 +24406,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 8,
+      "icon_col": 13,
       "icon_row": 23
     },
     {
@@ -24505,7 +24505,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 9,
+      "icon_col": 14,
       "icon_row": 23
     },
     {
@@ -24604,7 +24604,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 10,
+      "icon_col": 15,
       "icon_row": 23
     },
     {
@@ -24634,7 +24634,7 @@
       "order": "zz[science]",
       "subgroup": "science-pack",
       "hidden": true,
-      "icon_col": 11,
+      "icon_col": 16,
       "icon_row": 23
     },
     {
@@ -24719,7 +24719,7 @@
       ],
       "order": "a[trash]-a[trash-recycling]",
       "subgroup": "fulgora-processes",
-      "icon_col": 12,
+      "icon_col": 17,
       "icon_row": 23
     },
     {
@@ -24749,7 +24749,7 @@
       "order": "e[automated-construction]-a[blueprint]",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 1,
+      "icon_col": 6,
       "icon_row": 14
     },
     {
@@ -24818,7 +24818,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 13,
+      "icon_col": 18,
       "icon_row": 23
     },
     {
@@ -24907,7 +24907,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 14,
+      "icon_col": 19,
       "icon_row": 23
     },
     {
@@ -24976,7 +24976,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 15,
+      "icon_col": 20,
       "icon_row": 23
     },
     {
@@ -25015,7 +25015,7 @@
       ],
       "order": "a[oil-processing]-c[coal-liquefaction]",
       "subgroup": "fluid-recipes",
-      "icon_col": 16,
+      "icon_col": 21,
       "icon_row": 23
     },
     {
@@ -25045,7 +25045,7 @@
       "order": "s[simple-entity-with-force]-f[simple-entity-with-force]",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 17,
+      "icon_col": 22,
       "icon_row": 23
     },
     {
@@ -25075,7 +25075,7 @@
       "order": "s[simple-entity-with-owner]-o[simple-entity-with-owner]",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 18,
+      "icon_col": 23,
       "icon_row": 23
     },
     {
@@ -25154,7 +25154,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 19,
+      "icon_col": 24,
       "icon_row": 23
     },
     {
@@ -25224,7 +25224,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 20,
+      "icon_col": 25,
       "icon_row": 23
     },
     {
@@ -25303,7 +25303,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 21,
+      "icon_col": 26,
       "icon_row": 23
     },
     {
@@ -25422,7 +25422,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 22,
+      "icon_col": 27,
       "icon_row": 23
     },
     {
@@ -25462,8 +25462,8 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 23,
-      "icon_row": 23
+      "icon_col": 0,
+      "icon_row": 24
     },
     {
       "key": "solid-fuel-from-ammonia",
@@ -25497,8 +25497,8 @@
       ],
       "order": "a[ammonia]-b[solid-fuel-from-ammonia]",
       "subgroup": "aquilo-processes",
-      "icon_col": 24,
-      "icon_row": 23
+      "icon_col": 1,
+      "icon_row": 24
     },
     {
       "key": "solid-fuel-from-heavy-oil",
@@ -25526,8 +25526,8 @@
       ],
       "order": "b[fluid-chemistry]-e[solid-fuel-from-heavy-oil]",
       "subgroup": "fluid-recipes",
-      "icon_col": 25,
-      "icon_row": 23
+      "icon_col": 2,
+      "icon_row": 24
     },
     {
       "key": "solid-fuel-from-light-oil",
@@ -25555,8 +25555,8 @@
       ],
       "order": "b[fluid-chemistry]-d[solid-fuel-from-light-oil]",
       "subgroup": "fluid-recipes",
-      "icon_col": 26,
-      "icon_row": 23
+      "icon_col": 3,
+      "icon_row": 24
     },
     {
       "key": "solid-fuel-from-petroleum-gas",
@@ -25584,8 +25584,8 @@
       ],
       "order": "b[fluid-chemistry]-c[solid-fuel-from-petroleum-gas]",
       "subgroup": "fluid-recipes",
-      "icon_col": 27,
-      "icon_row": 23
+      "icon_col": 4,
+      "icon_row": 24
     },
     {
       "key": "solid-fuel-recycling",
@@ -25614,7 +25614,7 @@
       "order": "b[chemistry]-a[solid-fuel]",
       "subgroup": "raw-material",
       "hidden": true,
-      "icon_col": 0,
+      "icon_col": 5,
       "icon_row": 24
     },
     {
@@ -25683,7 +25683,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 1,
+      "icon_col": 6,
       "icon_row": 24
     },
     {
@@ -25713,7 +25713,7 @@
       "order": "",
       "subgroup": "space-related",
       "hidden": true,
-      "icon_col": 2,
+      "icon_col": 7,
       "icon_row": 24
     },
     {
@@ -25792,7 +25792,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 3,
+      "icon_col": 8,
       "icon_row": 24
     },
     {
@@ -25869,7 +25869,7 @@
       "order": "g[space-science-pack]",
       "subgroup": "science-pack",
       "hidden": true,
-      "icon_col": 4,
+      "icon_col": 9,
       "icon_row": 24
     },
     {
@@ -25984,7 +25984,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 5,
+      "icon_col": 10,
       "icon_row": 24
     },
     {
@@ -26074,7 +26074,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 6,
+      "icon_col": 11,
       "icon_row": 24
     },
     {
@@ -26109,7 +26109,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 7,
+      "icon_col": 12,
       "icon_row": 24
     },
     {
@@ -26208,7 +26208,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 8,
+      "icon_col": 13,
       "icon_row": 24
     },
     {
@@ -26288,7 +26288,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 9,
+      "icon_col": 14,
       "icon_row": 24
     },
     {
@@ -26318,7 +26318,7 @@
       "order": "c[nutrients]-a[spoilage]",
       "subgroup": "agriculture-processes",
       "hidden": true,
-      "icon_col": 10,
+      "icon_col": 15,
       "icon_row": 24
     },
     {
@@ -26407,7 +26407,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 11,
+      "icon_col": 16,
       "icon_row": 24
     },
     {
@@ -26437,7 +26437,7 @@
       ],
       "order": "d[other-chemistry]-b[steam-condensation]",
       "subgroup": "fluid-recipes",
-      "icon_col": 12,
+      "icon_col": 17,
       "icon_row": 24
     },
     {
@@ -26516,7 +26516,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 6,
+      "icon_col": 11,
       "icon_row": 14
     },
     {
@@ -26595,7 +26595,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 13,
+      "icon_col": 18,
       "icon_row": 24
     },
     {
@@ -26654,7 +26654,7 @@
       "order": "a[smelting]-c[steel-plate]",
       "subgroup": "raw-material",
       "hidden": true,
-      "icon_col": 17,
+      "icon_col": 22,
       "icon_row": 23
     },
     {
@@ -26723,7 +26723,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 14,
+      "icon_col": 19,
       "icon_row": 24
     },
     {
@@ -26782,7 +26782,7 @@
       "order": "a[smelting]-c[steel-plate]",
       "subgroup": "raw-material",
       "hidden": true,
-      "icon_col": 15,
+      "icon_col": 20,
       "icon_row": 24
     },
     {
@@ -26841,7 +26841,7 @@
       "order": "a[stone-brick]",
       "subgroup": "terrain",
       "hidden": true,
-      "icon_col": 16,
+      "icon_col": 21,
       "icon_row": 24
     },
     {
@@ -26900,7 +26900,7 @@
       "order": "d[stone]",
       "subgroup": "raw-resource",
       "hidden": true,
-      "icon_col": 17,
+      "icon_col": 22,
       "icon_row": 24
     },
     {
@@ -26930,7 +26930,7 @@
       "order": "d[stone]",
       "subgroup": "raw-resource",
       "hidden": true,
-      "icon_col": 18,
+      "icon_col": 23,
       "icon_row": 24
     },
     {
@@ -26989,7 +26989,7 @@
       "order": "a[stone-brick]",
       "subgroup": "terrain",
       "hidden": true,
-      "icon_col": 19,
+      "icon_col": 24,
       "icon_row": 24
     },
     {
@@ -27068,7 +27068,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 20,
+      "icon_col": 25,
       "icon_row": 24
     },
     {
@@ -27137,7 +27137,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 21,
+      "icon_col": 26,
       "icon_row": 24
     },
     {
@@ -27216,7 +27216,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 22,
+      "icon_col": 27,
       "icon_row": 24
     },
     {
@@ -27296,8 +27296,8 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 23,
-      "icon_row": 24
+      "icon_col": 0,
+      "icon_row": 25
     },
     {
       "key": "sulfur",
@@ -27361,8 +27361,8 @@
       "order": "b[chemistry]-c[sulfur]",
       "subgroup": "raw-material",
       "hidden": true,
-      "icon_col": 24,
-      "icon_row": 24
+      "icon_col": 1,
+      "icon_row": 25
     },
     {
       "key": "sulfuric-acid",
@@ -27435,8 +27435,8 @@
       ],
       "order": "a[fluid]-b[oil]-f[sulfuric-acid]",
       "subgroup": "fill-barrel",
-      "icon_col": 25,
-      "icon_row": 24
+      "icon_col": 2,
+      "icon_row": 25
     },
     {
       "key": "sulfuric-acid-barrel-recycling",
@@ -27465,8 +27465,8 @@
       "order": "a[basic-intermediates]-d[empty-barrel]",
       "subgroup": "fill-barrel",
       "hidden": true,
-      "icon_col": 26,
-      "icon_row": 24
+      "icon_col": 3,
+      "icon_row": 25
     },
     {
       "key": "supercapacitor",
@@ -27559,8 +27559,8 @@
       "order": "",
       "subgroup": "fulgora-processes",
       "hidden": true,
-      "icon_col": 27,
-      "icon_row": 24
+      "icon_col": 4,
+      "icon_row": 25
     },
     {
       "key": "superconductor",
@@ -27633,7 +27633,7 @@
       "order": "b[holmium]-d[superconductor]",
       "subgroup": "fulgora-processes",
       "hidden": true,
-      "icon_col": 0,
+      "icon_col": 5,
       "icon_row": 25
     },
     {
@@ -27722,7 +27722,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 1,
+      "icon_col": 6,
       "icon_row": 25
     },
     {
@@ -27796,7 +27796,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 2,
+      "icon_col": 7,
       "icon_row": 25
     },
     {
@@ -27890,7 +27890,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 3,
+      "icon_col": 8,
       "icon_row": 25
     },
     {
@@ -27974,7 +27974,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 4,
+      "icon_col": 9,
       "icon_row": 25
     },
     {
@@ -28135,7 +28135,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 5,
+      "icon_col": 10,
       "icon_row": 25
     },
     {
@@ -28204,7 +28204,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 6,
+      "icon_col": 11,
       "icon_row": 25
     },
     {
@@ -28234,7 +28234,7 @@
       "order": "b[items]-o[top-up-valve]",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 7,
+      "icon_col": 12,
       "icon_row": 25
     },
     {
@@ -28323,7 +28323,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 8,
+      "icon_col": 13,
       "icon_row": 25
     },
     {
@@ -28393,7 +28393,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 9,
+      "icon_col": 14,
       "icon_row": 25
     },
     {
@@ -28460,7 +28460,7 @@
       "order": "a[seeds]-b[tree-seed]",
       "subgroup": "nauvis-agriculture",
       "hidden": true,
-      "icon_col": 10,
+      "icon_col": 15,
       "icon_row": 25
     },
     {
@@ -28529,7 +28529,7 @@
       "order": "c[tungsten]-b[tungsten-carbide]",
       "subgroup": "vulcanus-processes",
       "hidden": true,
-      "icon_col": 11,
+      "icon_col": 16,
       "icon_row": 25
     },
     {
@@ -28559,7 +28559,7 @@
       "order": "c[tungsten]-a[tungsten-ore]",
       "subgroup": "vulcanus-processes",
       "hidden": true,
-      "icon_col": 12,
+      "icon_col": 17,
       "icon_row": 25
     },
     {
@@ -28623,7 +28623,7 @@
       "order": "c[tungsten]-c[tungsten-plate]",
       "subgroup": "vulcanus-processes",
       "hidden": true,
-      "icon_col": 13,
+      "icon_col": 18,
       "icon_row": 25
     },
     {
@@ -28693,7 +28693,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 14,
+      "icon_col": 19,
       "icon_row": 25
     },
     {
@@ -28784,7 +28784,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 15,
+      "icon_col": 20,
       "icon_row": 25
     },
     {
@@ -28865,7 +28865,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 16,
+      "icon_col": 21,
       "icon_row": 25
     },
     {
@@ -28946,7 +28946,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 17,
+      "icon_col": 22,
       "icon_row": 25
     },
     {
@@ -29016,7 +29016,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 18,
+      "icon_col": 23,
       "icon_row": 25
     },
     {
@@ -29046,7 +29046,7 @@
       "order": "c[automated-construction]-c[upgrade-planner]",
       "subgroup": "tool",
       "hidden": true,
-      "icon_col": 19,
+      "icon_col": 24,
       "icon_row": 25
     },
     {
@@ -29076,7 +29076,7 @@
       "order": "a[uranium-processing]-b[uranium-235]",
       "subgroup": "uranium-processing",
       "hidden": true,
-      "icon_col": 20,
+      "icon_col": 25,
       "icon_row": 25
     },
     {
@@ -29106,7 +29106,7 @@
       "order": "a[uranium-processing]-c[uranium-238]",
       "subgroup": "uranium-processing",
       "hidden": true,
-      "icon_col": 21,
+      "icon_col": 26,
       "icon_row": 25
     },
     {
@@ -29175,7 +29175,7 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 22,
+      "icon_col": 27,
       "icon_row": 25
     },
     {
@@ -29244,8 +29244,8 @@
       "order": "b[uranium-products]-a[uranium-fuel-cell]",
       "subgroup": "uranium-processing",
       "hidden": true,
-      "icon_col": 23,
-      "icon_row": 25
+      "icon_col": 0,
+      "icon_row": 26
     },
     {
       "key": "uranium-ore-recycling",
@@ -29274,8 +29274,8 @@
       "order": "g[uranium-ore]",
       "subgroup": "raw-resource",
       "hidden": true,
-      "icon_col": 24,
-      "icon_row": 25
+      "icon_col": 1,
+      "icon_row": 26
     },
     {
       "key": "uranium-processing",
@@ -29308,8 +29308,8 @@
       ],
       "order": "a[uranium-processing]-a[uranium-processing]",
       "subgroup": "uranium-processing",
-      "icon_col": 25,
-      "icon_row": 25
+      "icon_col": 2,
+      "icon_row": 26
     },
     {
       "key": "uranium-rounds-magazine",
@@ -29377,8 +29377,8 @@
       "order": "",
       "subgroup": "other",
       "hidden": true,
-      "icon_col": 26,
-      "icon_row": 25
+      "icon_col": 3,
+      "icon_row": 26
     },
     {
       "key": "utility-science-pack",
@@ -29446,8 +29446,8 @@
       "order": "f[utility-science-pack]",
       "subgroup": "science-pack",
       "hidden": true,
-      "icon_col": 27,
-      "icon_row": 25
+      "icon_col": 4,
+      "icon_row": 26
     },
     {
       "key": "water-barrel",
@@ -29480,7 +29480,7 @@
       ],
       "order": "a[fluid]-a[water]-a[water]",
       "subgroup": "fill-barrel",
-      "icon_col": 0,
+      "icon_col": 5,
       "icon_row": 26
     },
     {
@@ -29510,7 +29510,7 @@
       "order": "a[basic-intermediates]-d[empty-barrel]",
       "subgroup": "fill-barrel",
       "hidden": true,
-      "icon_col": 1,
+      "icon_col": 6,
       "icon_row": 26
     },
     {
@@ -29540,7 +29540,7 @@
       "order": "a[wood]",
       "subgroup": "raw-resource",
       "hidden": true,
-      "icon_col": 2,
+      "icon_col": 7,
       "icon_row": 26
     },
     {
@@ -29599,7 +29599,7 @@
       "order": "a[wood]",
       "subgroup": "raw-resource",
       "hidden": true,
-      "icon_col": 18,
+      "icon_col": 23,
       "icon_row": 23
     },
     {
@@ -29629,7 +29629,7 @@
       "order": "a[organic-processing]-c[yumako-mash]",
       "subgroup": "agriculture-products",
       "hidden": true,
-      "icon_col": 3,
+      "icon_col": 8,
       "icon_row": 26
     },
     {
@@ -29664,7 +29664,7 @@
       ],
       "order": "a[seeds]-a[yumako-processing]",
       "subgroup": "agriculture-processes",
-      "icon_col": 4,
+      "icon_col": 9,
       "icon_row": 26
     },
     {
@@ -29694,7 +29694,7 @@
       "order": "b[agriculture]-a[yumako]",
       "subgroup": "agriculture-processes",
       "hidden": true,
-      "icon_col": 5,
+      "icon_col": 10,
       "icon_row": 26
     },
     {
@@ -29724,7 +29724,7 @@
       "order": "a[seeds]-a[yumako-seed]",
       "subgroup": "agriculture-processes",
       "hidden": true,
-      "icon_col": 6,
+      "icon_col": 11,
       "icon_row": 26
     }
   ],
@@ -29753,6 +29753,13 @@
         "advanced-crafting"
       ],
       "crafting_speed": 0.5,
+      "crafting_speed_by_quality": {
+        "normal": 0.5,
+        "uncommon": 0.65,
+        "rare": 0.8,
+        "epic": 0.95,
+        "legendary": 1.25
+      },
       "prod_bonus": 0,
       "icon_col": 1,
       "icon_row": 0
@@ -29784,6 +29791,13 @@
         "crafting-with-fluid"
       ],
       "crafting_speed": 0.75,
+      "crafting_speed_by_quality": {
+        "normal": 0.75,
+        "uncommon": 0.975,
+        "rare": 1.2000000000000002,
+        "epic": 1.4249999999999998,
+        "legendary": 1.875
+      },
       "prod_bonus": 0,
       "icon_col": 2,
       "icon_row": 0
@@ -29815,6 +29829,13 @@
         "crafting-with-fluid"
       ],
       "crafting_speed": 1.25,
+      "crafting_speed_by_quality": {
+        "normal": 1.25,
+        "uncommon": 1.625,
+        "rare": 2,
+        "epic": 2.375,
+        "legendary": 3.125
+      },
       "prod_bonus": 0,
       "icon_col": 3,
       "icon_row": 0
@@ -29843,6 +29864,13 @@
         "oil-processing"
       ],
       "crafting_speed": 1,
+      "crafting_speed_by_quality": {
+        "normal": 1,
+        "uncommon": 1.3,
+        "rare": 1.6,
+        "epic": 1.9,
+        "legendary": 2.5
+      },
       "prod_bonus": 0,
       "icon_col": 5,
       "icon_row": 1
@@ -29872,6 +29900,13 @@
         "chemistry"
       ],
       "crafting_speed": 1,
+      "crafting_speed_by_quality": {
+        "normal": 1,
+        "uncommon": 1.3,
+        "rare": 1.6,
+        "epic": 1.9,
+        "legendary": 2.5
+      },
       "prod_bonus": 0,
       "icon_col": 11,
       "icon_row": 0
@@ -29901,6 +29936,13 @@
         "centrifuging"
       ],
       "crafting_speed": 1,
+      "crafting_speed_by_quality": {
+        "normal": 1,
+        "uncommon": 1.3,
+        "rare": 1.6,
+        "epic": 1.9,
+        "legendary": 2.5
+      },
       "prod_bonus": 0,
       "icon_col": 10,
       "icon_row": 0
@@ -29935,6 +29977,13 @@
         "organic"
       ],
       "crafting_speed": 2,
+      "crafting_speed_by_quality": {
+        "normal": 2,
+        "uncommon": 2.6,
+        "rare": 3.2,
+        "epic": 3.8,
+        "legendary": 5
+      },
       "prod_bonus": 0.5,
       "icon_col": 5,
       "icon_row": 0
@@ -29971,6 +30020,13 @@
         "crushing"
       ],
       "crafting_speed": 1,
+      "crafting_speed_by_quality": {
+        "normal": 1,
+        "uncommon": 1.3,
+        "rare": 1.6,
+        "epic": 1.9,
+        "legendary": 2.5
+      },
       "prod_bonus": 0,
       "icon_col": 15,
       "icon_row": 0
@@ -30000,6 +30056,13 @@
         "metallurgy"
       ],
       "crafting_speed": 4,
+      "crafting_speed_by_quality": {
+        "normal": 4,
+        "uncommon": 5.2,
+        "rare": 6.4,
+        "epic": 7.6,
+        "legendary": 10
+      },
       "prod_bonus": 0.5,
       "icon_col": 23,
       "icon_row": 0
@@ -30034,6 +30097,13 @@
         "captive-spawner-process"
       ],
       "crafting_speed": 1,
+      "crafting_speed_by_quality": {
+        "normal": 1,
+        "uncommon": 1.3,
+        "rare": 1.6,
+        "epic": 1.9,
+        "legendary": 2.5
+      },
       "prod_bonus": 0,
       "icon_col": 9,
       "icon_row": 0
@@ -30063,6 +30133,13 @@
         "electromagnetics"
       ],
       "crafting_speed": 2,
+      "crafting_speed_by_quality": {
+        "normal": 2,
+        "uncommon": 2.6,
+        "rare": 3.2,
+        "epic": 3.8,
+        "legendary": 5
+      },
       "prod_bonus": 0.5,
       "icon_col": 19,
       "icon_row": 0
@@ -30092,6 +30169,13 @@
         "cryogenics"
       ],
       "crafting_speed": 2,
+      "crafting_speed_by_quality": {
+        "normal": 2,
+        "uncommon": 2.6,
+        "rare": 3.2,
+        "epic": 3.8,
+        "legendary": 5
+      },
       "prod_bonus": 0,
       "icon_col": 16,
       "icon_row": 0
@@ -30129,6 +30213,13 @@
         "smelting"
       ],
       "crafting_speed": 1,
+      "crafting_speed_by_quality": {
+        "normal": 1,
+        "uncommon": 1.3,
+        "rare": 1.6,
+        "epic": 1.9,
+        "legendary": 2.5
+      },
       "prod_bonus": 0,
       "icon_col": 15,
       "icon_row": 1
@@ -30158,6 +30249,13 @@
         "smelting"
       ],
       "crafting_speed": 2,
+      "crafting_speed_by_quality": {
+        "normal": 2,
+        "uncommon": 2.6,
+        "rare": 3.2,
+        "epic": 3.8,
+        "legendary": 5
+      },
       "prod_bonus": 0,
       "icon_col": 17,
       "icon_row": 0
@@ -30195,6 +30293,13 @@
         "smelting"
       ],
       "crafting_speed": 2,
+      "crafting_speed_by_quality": {
+        "normal": 2,
+        "uncommon": 2.6,
+        "rare": 3.2,
+        "epic": 3.8,
+        "legendary": 5
+      },
       "prod_bonus": 0,
       "icon_col": 13,
       "icon_row": 1
@@ -30223,6 +30328,13 @@
         "recycling"
       ],
       "crafting_speed": 0.5,
+      "crafting_speed_by_quality": {
+        "normal": 0.5,
+        "uncommon": 0.65,
+        "rare": 0.8,
+        "epic": 0.95,
+        "legendary": 1.25
+      },
       "prod_bonus": 0,
       "icon_col": 7,
       "icon_row": 1
@@ -30256,6 +30368,13 @@
         "rocket-building"
       ],
       "crafting_speed": 1,
+      "crafting_speed_by_quality": {
+        "normal": 1,
+        "uncommon": 1.3,
+        "rare": 1.6,
+        "epic": 1.9,
+        "legendary": 2.5
+      },
       "rocket_parts_required": 50,
       "icon_col": 8,
       "icon_row": 1
@@ -30694,6 +30813,33 @@
         "speed": 0.2,
         "consumption": 0.5,
         "quality": -0.01
+      },
+      "effect_by_quality": {
+        "normal": {
+          "consumption": 0.5,
+          "speed": 0.2,
+          "quality": -0.01
+        },
+        "uncommon": {
+          "consumption": 0.5,
+          "speed": 0.26,
+          "quality": -0.01
+        },
+        "rare": {
+          "consumption": 0.5,
+          "speed": 0.32,
+          "quality": -0.01
+        },
+        "epic": {
+          "consumption": 0.5,
+          "speed": 0.38,
+          "quality": -0.01
+        },
+        "legendary": {
+          "consumption": 0.5,
+          "speed": 0.5,
+          "quality": -0.01
+        }
       }
     },
     {
@@ -30704,6 +30850,33 @@
         "speed": 0.3,
         "consumption": 0.6,
         "quality": -0.015
+      },
+      "effect_by_quality": {
+        "normal": {
+          "consumption": 0.6,
+          "speed": 0.3,
+          "quality": -0.015
+        },
+        "uncommon": {
+          "consumption": 0.6,
+          "speed": 0.39,
+          "quality": -0.015
+        },
+        "rare": {
+          "consumption": 0.6,
+          "speed": 0.48,
+          "quality": -0.015
+        },
+        "epic": {
+          "consumption": 0.6,
+          "speed": 0.57,
+          "quality": -0.015
+        },
+        "legendary": {
+          "consumption": 0.6,
+          "speed": 0.75,
+          "quality": -0.015
+        }
       }
     },
     {
@@ -30714,6 +30887,33 @@
         "speed": 0.5,
         "consumption": 0.7,
         "quality": -0.025
+      },
+      "effect_by_quality": {
+        "normal": {
+          "consumption": 0.7,
+          "speed": 0.5,
+          "quality": -0.025
+        },
+        "uncommon": {
+          "consumption": 0.7,
+          "speed": 0.65,
+          "quality": -0.025
+        },
+        "rare": {
+          "consumption": 0.7,
+          "speed": 0.8,
+          "quality": -0.025
+        },
+        "epic": {
+          "consumption": 0.7,
+          "speed": 0.95,
+          "quality": -0.025
+        },
+        "legendary": {
+          "consumption": 0.7,
+          "speed": 1.25,
+          "quality": -0.025
+        }
       }
     },
     {
@@ -30722,6 +30922,23 @@
       "tier": 1,
       "effect": {
         "consumption": -0.3
+      },
+      "effect_by_quality": {
+        "normal": {
+          "consumption": -0.3
+        },
+        "uncommon": {
+          "consumption": -0.39
+        },
+        "rare": {
+          "consumption": -0.48
+        },
+        "epic": {
+          "consumption": -0.57
+        },
+        "legendary": {
+          "consumption": -0.75
+        }
       }
     },
     {
@@ -30730,6 +30947,23 @@
       "tier": 2,
       "effect": {
         "consumption": -0.4
+      },
+      "effect_by_quality": {
+        "normal": {
+          "consumption": -0.4
+        },
+        "uncommon": {
+          "consumption": -0.52
+        },
+        "rare": {
+          "consumption": -0.64
+        },
+        "epic": {
+          "consumption": -0.76
+        },
+        "legendary": {
+          "consumption": -1
+        }
       }
     },
     {
@@ -30738,6 +30972,23 @@
       "tier": 3,
       "effect": {
         "consumption": -0.5
+      },
+      "effect_by_quality": {
+        "normal": {
+          "consumption": -0.5
+        },
+        "uncommon": {
+          "consumption": -0.65
+        },
+        "rare": {
+          "consumption": -0.8
+        },
+        "epic": {
+          "consumption": -0.95
+        },
+        "legendary": {
+          "consumption": -1.25
+        }
       }
     },
     {
@@ -30749,6 +31000,38 @@
         "consumption": 0.4,
         "pollution": 0.05,
         "speed": -0.05
+      },
+      "effect_by_quality": {
+        "normal": {
+          "consumption": 0.4,
+          "speed": -0.05,
+          "productivity": 0.04,
+          "pollution": 0.05
+        },
+        "uncommon": {
+          "consumption": 0.4,
+          "speed": -0.05,
+          "productivity": 0.052000000000000005,
+          "pollution": 0.05
+        },
+        "rare": {
+          "consumption": 0.4,
+          "speed": -0.05,
+          "productivity": 0.064,
+          "pollution": 0.05
+        },
+        "epic": {
+          "consumption": 0.4,
+          "speed": -0.05,
+          "productivity": 0.076,
+          "pollution": 0.05
+        },
+        "legendary": {
+          "consumption": 0.4,
+          "speed": -0.05,
+          "productivity": 0.1,
+          "pollution": 0.05
+        }
       }
     },
     {
@@ -30760,6 +31043,38 @@
         "consumption": 0.6,
         "pollution": 0.07,
         "speed": -0.1
+      },
+      "effect_by_quality": {
+        "normal": {
+          "consumption": 0.6,
+          "speed": -0.1,
+          "productivity": 0.06,
+          "pollution": 0.07
+        },
+        "uncommon": {
+          "consumption": 0.6,
+          "speed": -0.1,
+          "productivity": 0.07800000000000001,
+          "pollution": 0.07
+        },
+        "rare": {
+          "consumption": 0.6,
+          "speed": -0.1,
+          "productivity": 0.096,
+          "pollution": 0.07
+        },
+        "epic": {
+          "consumption": 0.6,
+          "speed": -0.1,
+          "productivity": 0.11400000000000002,
+          "pollution": 0.07
+        },
+        "legendary": {
+          "consumption": 0.6,
+          "speed": -0.1,
+          "productivity": 0.15,
+          "pollution": 0.07
+        }
       }
     },
     {
@@ -30771,6 +31086,38 @@
         "consumption": 0.8,
         "pollution": 0.1,
         "speed": -0.15
+      },
+      "effect_by_quality": {
+        "normal": {
+          "consumption": 0.8,
+          "speed": -0.15,
+          "productivity": 0.1,
+          "pollution": 0.1
+        },
+        "uncommon": {
+          "consumption": 0.8,
+          "speed": -0.15,
+          "productivity": 0.13,
+          "pollution": 0.1
+        },
+        "rare": {
+          "consumption": 0.8,
+          "speed": -0.15,
+          "productivity": 0.16,
+          "pollution": 0.1
+        },
+        "epic": {
+          "consumption": 0.8,
+          "speed": -0.15,
+          "productivity": 0.19,
+          "pollution": 0.1
+        },
+        "legendary": {
+          "consumption": 0.8,
+          "speed": -0.15,
+          "productivity": 0.25,
+          "pollution": 0.1
+        }
       }
     },
     {
@@ -30780,6 +31127,28 @@
       "effect": {
         "quality": 0.01,
         "speed": -0.05
+      },
+      "effect_by_quality": {
+        "normal": {
+          "speed": -0.05,
+          "quality": 0.01
+        },
+        "uncommon": {
+          "speed": -0.05,
+          "quality": 0.013000000000000001
+        },
+        "rare": {
+          "speed": -0.05,
+          "quality": 0.016
+        },
+        "epic": {
+          "speed": -0.05,
+          "quality": 0.019
+        },
+        "legendary": {
+          "speed": -0.05,
+          "quality": 0.025
+        }
       }
     },
     {
@@ -30789,6 +31158,28 @@
       "effect": {
         "quality": 0.02,
         "speed": -0.05
+      },
+      "effect_by_quality": {
+        "normal": {
+          "speed": -0.05,
+          "quality": 0.02
+        },
+        "uncommon": {
+          "speed": -0.05,
+          "quality": 0.026000000000000002
+        },
+        "rare": {
+          "speed": -0.05,
+          "quality": 0.032
+        },
+        "epic": {
+          "speed": -0.05,
+          "quality": 0.038
+        },
+        "legendary": {
+          "speed": -0.05,
+          "quality": 0.05
+        }
       }
     },
     {
@@ -30798,6 +31189,28 @@
       "effect": {
         "quality": 0.025,
         "speed": -0.05
+      },
+      "effect_by_quality": {
+        "normal": {
+          "speed": -0.05,
+          "quality": 0.025
+        },
+        "uncommon": {
+          "speed": -0.05,
+          "quality": 0.0325
+        },
+        "rare": {
+          "speed": -0.05,
+          "quality": 0.04
+        },
+        "epic": {
+          "speed": -0.05,
+          "quality": 0.0475
+        },
+        "legendary": {
+          "speed": -0.05,
+          "quality": 0.0625
+        }
       }
     }
   ],
@@ -30856,7 +31269,7 @@
         "plants": [],
         "asteroid": []
       },
-      "icon_col": 10,
+      "icon_col": 15,
       "icon_row": 26
     },
     {
@@ -30887,7 +31300,7 @@
         "plants": [],
         "asteroid": []
       },
-      "icon_col": 11,
+      "icon_col": 16,
       "icon_row": 26
     },
     {
@@ -30918,7 +31331,7 @@
         ],
         "asteroid": []
       },
-      "icon_col": 9,
+      "icon_col": 14,
       "icon_row": 26
     },
     {
@@ -30946,7 +31359,7 @@
         "plants": [],
         "asteroid": []
       },
-      "icon_col": 8,
+      "icon_col": 13,
       "icon_row": 26
     },
     {
@@ -30977,7 +31390,7 @@
         "plants": [],
         "asteroid": []
       },
-      "icon_col": 7,
+      "icon_col": 12,
       "icon_row": 26
     },
     {
@@ -31005,7 +31418,7 @@
           "promethium-asteroid-chunk"
         ]
       },
-      "icon_col": 12,
+      "icon_col": 17,
       "icon_row": 26
     }
   ],
@@ -31354,7 +31767,7 @@
           "change": 0.1
         }
       ],
-      "icon_col": 13,
+      "icon_col": 18,
       "icon_row": 26
     },
     {
@@ -31373,7 +31786,7 @@
           "change": 0.1
         }
       ],
-      "icon_col": 14,
+      "icon_col": 19,
       "icon_row": 26
     },
     {
@@ -31392,7 +31805,7 @@
           "change": 0.1
         }
       ],
-      "icon_col": 15,
+      "icon_col": 20,
       "icon_row": 26
     },
     {
@@ -31407,7 +31820,7 @@
           "change": 0.1
         }
       ],
-      "icon_col": 16,
+      "icon_col": 21,
       "icon_row": 26
     },
     {
@@ -31430,7 +31843,7 @@
           "change": 0.1
         }
       ],
-      "icon_col": 17,
+      "icon_col": 22,
       "icon_row": 26
     },
     {
@@ -31445,7 +31858,7 @@
           "change": 0.1
         }
       ],
-      "icon_col": 18,
+      "icon_col": 23,
       "icon_row": 26
     },
     {
@@ -31460,7 +31873,7 @@
           "change": 0.1
         }
       ],
-      "icon_col": 19,
+      "icon_col": 24,
       "icon_row": 26
     },
     {
@@ -31479,8 +31892,55 @@
           "change": 0.1
         }
       ],
-      "icon_col": 20,
+      "icon_col": 25,
       "icon_row": 26
+    }
+  ],
+  "qualities": [
+    {
+      "key": "normal",
+      "localized_name": {
+        "en": "Normal"
+      },
+      "level": 0,
+      "icon_col": 15,
+      "icon_row": 12
+    },
+    {
+      "key": "uncommon",
+      "localized_name": {
+        "en": "Uncommon"
+      },
+      "level": 1,
+      "icon_col": 17,
+      "icon_row": 12
+    },
+    {
+      "key": "rare",
+      "localized_name": {
+        "en": "Rare"
+      },
+      "level": 2,
+      "icon_col": 16,
+      "icon_row": 12
+    },
+    {
+      "key": "epic",
+      "localized_name": {
+        "en": "Epic"
+      },
+      "level": 3,
+      "icon_col": 13,
+      "icon_row": 12
+    },
+    {
+      "key": "legendary",
+      "localized_name": {
+        "en": "Legendary"
+      },
+      "level": 5,
+      "icon_col": 14,
+      "icon_row": 12
     }
   ],
   "rocket_lift_weight": 1000000,
@@ -31498,16 +31958,16 @@
       },
       "electricity": {
         "name": "Electricity",
-        "icon_col": 21,
+        "icon_col": 26,
         "icon_row": 26
       },
       "heat": {
         "name": "Heat",
-        "icon_col": 22,
+        "icon_col": 27,
         "icon_row": 26
       }
     },
-    "hash": "fca72c91f3147a7b19a0f0f3e9d50570",
+    "hash": "ddd0f329ff44abe9ac3697b370890bfb",
     "width": 896,
     "height": 864
   }

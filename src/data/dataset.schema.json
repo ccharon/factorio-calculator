@@ -8,7 +8,7 @@
   "required": [
     "version", "groups", "items", "fluids", "fuel", "spoilage", "recipes", "crafting_machines",
     "rocket_silo", "mining_drills", "offshore_pumps", "boilers", "generators", "solar_panels", "reactors", "fusion_reactors", "fusion_generators", "belts", "beacon", "modules",
-    "agricultural_tower", "planets", "resources", "plants", "surface_properties", "recipe_productivity", "rocket_lift_weight", "sprites"
+    "agricultural_tower", "planets", "resources", "plants", "surface_properties", "recipe_productivity", "qualities", "rocket_lift_weight", "sprites"
   ],
   "properties": {
     "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$", "description": "Game version the data was dumped from." },
@@ -124,6 +124,7 @@
         "properties": {
           "crafting_categories": { "type": "array", "items": { "type": "string" } },
           "crafting_speed": { "type": "number", "exclusiveMinimum": 0 },
+          "crafting_speed_by_quality": { "type": "object", "additionalProperties": { "type": "number", "exclusiveMinimum": 0 }, "description": "Crafting speed by quality key." },
           "prod_bonus": { "type": "number", "minimum": 0, "description": "Built-in productivity bonus, such as 0.5 for the foundry." }
         },
         "unevaluatedProperties": false
@@ -138,6 +139,7 @@
         "properties": {
           "crafting_categories": { "type": "array", "items": { "type": "string" } },
           "crafting_speed": { "type": "number", "exclusiveMinimum": 0 },
+          "crafting_speed_by_quality": { "type": "object", "additionalProperties": { "type": "number", "exclusiveMinimum": 0 }, "description": "Crafting speed by quality key." },
           "rocket_parts_required": { "type": "integer", "minimum": 1 }
         },
         "unevaluatedProperties": false
@@ -316,7 +318,8 @@
           "item_key": { "$ref": "#/$defs/key" },
           "category": { "type": "string" },
           "tier": { "type": "integer", "minimum": 1 },
-          "effect": { "$ref": "#/$defs/effect" }
+          "effect": { "$ref": "#/$defs/effect" },
+          "effect_by_quality": { "type": "object", "additionalProperties": { "$ref": "#/$defs/effect" }, "description": "Effects by quality key." }
         }
       }
     },
@@ -328,6 +331,22 @@
         "required": ["plots"],
         "properties": { "radius": { "type": "number", "minimum": 0 }, "plots": { "type": "integer", "minimum": 1, "description": "Number of plants one tower tends." } },
         "unevaluatedProperties": false
+      }
+    },
+    "qualities": {
+      "description": "Quality levels from lowest to highest.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["key", "localized_name", "level", "icon_col", "icon_row"],
+        "properties": {
+          "key": { "$ref": "#/$defs/key" },
+          "localized_name": { "$ref": "#/$defs/localizedName" },
+          "level": { "type": "integer", "minimum": 0 },
+          "icon_col": { "$ref": "#/$defs/iconIndex" },
+          "icon_row": { "$ref": "#/$defs/iconIndex" }
+        }
       }
     },
     "rocket_lift_weight": { "type": "number", "exclusiveMinimum": 0, "description": "Rocket cargo capacity in grams." },

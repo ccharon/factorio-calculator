@@ -48,7 +48,33 @@ const DUMP_MOD_FILES = {
         local surface = planet.surface or planet.create_surface()
         daytime[name] = { dusk = surface.dusk, evening = surface.evening, morning = surface.morning, dawn = surface.dawn }
     end
-    helpers.write_file("${DUMP_FILE}", helpers.table_to_json({ item_weights = weights, daytime = daytime }))
+    local qualities = {}
+    local speeds = {}
+    local energy = {}
+    local modules = {}
+    for qname, quality in pairs(prototypes.quality) do
+        if not quality.hidden then
+            qualities[qname] = { level = quality.level, default_multiplier = quality.default_multiplier }
+        end
+    end
+    for name, entity in pairs(prototypes.get_entity_filtered({ { filter = "crafting-machine" } })) do
+        speeds[name] = {}
+        energy[name] = {}
+        for qname in pairs(qualities) do
+            speeds[name][qname] = entity.get_crafting_speed(qname)
+            energy[name][qname] = entity.get_max_energy_usage(qname)
+        end
+    end
+    for name, item in pairs(prototypes.get_item_filtered({ { filter = "type", type = "module" } })) do
+        modules[name] = {}
+        for qname in pairs(qualities) do
+            modules[name][qname] = item.get_module_effects(qname)
+        end
+    end
+    helpers.write_file("${DUMP_FILE}", helpers.table_to_json({
+        item_weights = weights, daytime = daytime, qualities = qualities,
+        crafting_speeds = speeds, max_energy_usage = energy, module_effects = modules,
+    }))
 end)
 `,
 }
@@ -102,7 +128,7 @@ export function dumpGameData(factorioDir, workDir) {
  * Reads data.raw and all locale files from a script-output directory.
  *
  * @param {string} outputDir - Directory produced by dumpGameData().
- * @returns {{raw: Object, locale: Object<string, Object>, runtime: {item_weights: Object<string, number>, daytime: Object<string, Object<string, number>>}}}
+ * @returns {{raw: Object, locale: Object<string, Object>, runtime: Object}} runtime holds item_weights, daytime, qualities, crafting_speeds, max_energy_usage and module_effects.
  */
 export function readDump(outputDir) {
     const raw = JSON.parse(readFileSync(join(outputDir, "data-raw-dump.json"), "utf8"))

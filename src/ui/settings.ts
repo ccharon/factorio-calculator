@@ -26,6 +26,7 @@ import type { Fuel } from "../data/fuel.ts"
 import { getRecipeGroups } from "../data/groups.ts"
 import { type Module, moduleRows, shortModules } from "../data/module.ts"
 import type { Planet } from "../data/planet.ts"
+import type { Quality } from "../data/quality.ts"
 import type { ProductivityResearch } from "../data/research.ts"
 import type { Recipe, RecipeLike } from "../data/recipe.ts"
 import {
@@ -435,6 +436,45 @@ function renderBuildingSelector(): void {
     )
 }
 
+// quality
+
+// The three quality settings with their URL keys and labels.
+const QUALITY_SETTINGS = [
+    { key: "qm", label: "Machines", get: (): Quality => spec.machineQuality, set: (q: Quality): void => { spec.machineQuality = q } },
+    { key: "qd", label: "Modules", get: (): Quality => spec.moduleQuality, set: (q: Quality): void => { spec.moduleQuality = q } },
+    { key: "qb", label: "Beacons", get: (): Quality => spec.beaconQuality, set: (q: Quality): void => { spec.beaconQuality = q } },
+] as const
+
+type QualitySetting = typeof QUALITY_SETTINGS[number]
+
+function renderQuality(settings: Settings): void {
+    for (const setting of QUALITY_SETTINGS) {
+        const requested = settings.get(setting.key)
+        const quality = requested === undefined ? undefined : spec.qualities.find(q => q.key === requested)
+        if (requested !== undefined && quality === undefined) {
+            warn("unknown quality", requested)
+        }
+        if (quality !== undefined) {
+            setting.set(quality)
+        }
+    }
+
+    const div = d3.select("#quality_selector")
+    div.selectAll("*").remove()
+    const rows = div.selectAll<HTMLDivElement, QualitySetting>("div").data(QUALITY_SETTINGS).join("div").classed("radio-setting", true)
+    rows.append("b").classed("quality-label", true).text(d => d.label)
+    radioSetting<HTMLDivElement, Quality, QualitySetting>(
+        rows,
+        d => `quality_${d.key}`,
+        () => spec.qualities,
+        (quality, d) => quality === d.get(),
+        (quality, d) => {
+            d.set(quality)
+            spec.updateSolution()
+        },
+    )
+}
+
 // belt
 
 function renderBelts(settings: Settings): void {
@@ -745,6 +785,7 @@ export function renderSettings(settings: Settings): void {
     renderResearch(settings)
     renderColorScheme(settings)
     renderBuildings(settings)
+    renderQuality(settings)
     renderBelts(settings)
     renderFuel(settings)
     renderVisualizer(settings)

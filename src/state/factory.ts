@@ -23,6 +23,7 @@ import type { Item } from "../data/item.ts"
 import { type Module, type ModuleDefaults, ModuleSpec } from "../data/module.ts"
 import type { Planet } from "../data/planet.ts"
 import type { ProductivityResearch } from "../data/research.ts"
+import { Quality } from "../data/quality.ts"
 import { DISABLED_RECIPE_PREFIX, ELECTRICITY, ELECTRICITY_UNIT, HEAT, Ingredient, Recipe, type RecipeContext, type RecipeLike, type RecipeNode } from "../data/recipe.ts"
 import { renderDebug } from "../ui/debug.ts"
 import { displayItems } from "../ui/display.ts"
@@ -47,6 +48,7 @@ const DEFAULT_BUILDINGS = new Set([
 ])
 
 const hundred = Rational.from_float(100)
+const NORMAL_QUALITY = new Quality("normal", "Normal", 0, 0, 0)
 const ten = Rational.from_float(10)
 
 /** Sorts buildings in place from slowest to fastest. */
@@ -196,6 +198,13 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
     defaultBeaconCount: Rational = zero
 
     miningProd: Rational = zero
+    /** Quality levels from lowest to highest. */
+    qualities: Quality[] = []
+    // Before the dataset is loaded, every quality setting is the normal quality.
+    machineQuality: Quality = NORMAL_QUALITY
+    moduleQuality: Quality = NORMAL_QUALITY
+    beaconQuality: Quality = NORMAL_QUALITY
+
     /** Recipe productivity technologies, sorted by order. */
     research: ProductivityResearch[] = []
     /** Researched level of each technology. Missing entries are level 0. */
@@ -276,7 +285,7 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
             const fuel = this.getFuel(building.fuel)
             return [new Ingredient(fuel.item, building.power.div(baseRate).div(fuel.value)), ...heating]
         }
-        const powerEffect = this.getModuleSpec(recipe)?.powerEffect() ?? one
+        const powerEffect = this.getModuleSpec(recipe)?.powerEffect(this) ?? one
         const watts = building.power.mul(powerEffect).add(building.drain())
         return [new Ingredient(this.electricity, watts.div(baseRate).div(ELECTRICITY_UNIT)), ...heating]
     }
@@ -317,6 +326,7 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
         fuels: Map<string, Fuel>,
         itemGroups: ItemGroups,
         research: ProductivityResearch[],
+        qualities: Quality[],
     ): void {
         this.items = items
         this.recipes = recipes
@@ -336,6 +346,11 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
         this.miningProd = zero
         this.itemGroups = itemGroups
         this.research = research
+        this.qualities = qualities
+        const normal = qualities[0] ?? NORMAL_QUALITY
+        this.machineQuality = normal
+        this.moduleQuality = normal
+        this.beaconQuality = normal
         this.researchLevels.clear()
         this.defaultPriority = this.getDefaultPriorityArray()
         this.priorityValue = null
@@ -773,7 +788,7 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
             return { fuel: building.fuel, power: building.power.mul(count) }
         }
 
-        const powerEffect = this.getModuleSpec(recipe)?.powerEffect() ?? one
+        const powerEffect = this.getModuleSpec(recipe)?.powerEffect(this) ?? one
         const power = building.power.mul(count).mul(powerEffect).add(building.drain().mul(count.ceil()))
         return { fuel: "electric", power }
     }

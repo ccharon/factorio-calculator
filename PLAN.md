@@ -149,7 +149,7 @@ Ordered by usefulness for planning:
    2. Done. Generators are recipes that produce electricity: steam engine from boiler steam, solar panel per planet (`solar-power` × average light from the runtime daytime parameters), nuclear reactor heat → heat exchanger → `steam-500` → steam turbine. Generators are disabled on every planet until enabled in the recipe toggles; while one is enabled, the free electricity import is dropped. The reactor neighbour bonus is not modelled. Fusion: the reactor turns cold fluoroketone into plasma with electricity and fusion cells, the generator turns plasma into electricity and hot fluoroketone; the plasma energy comes from the generator's output over its flow.
    3. Done. While every selected planet requires heating (Aquilo), buildings use their `heating_energy` as the abstract item `heat` (MJ). Heating towers and nuclear reactors supply it and are disabled by default like generators; otherwise heat is a free import. Inserters, belts and pipes are not counted.
 4. Done in step 3: steam engines, turbines, heat exchangers, solar with per-planet `solar-power`.
-5. Quality: quality level for machines, modules and beacons as effect multipliers. Recycling loops for target quality as a later step.
+5. Done for global settings: one quality each for machines (crafting speed), modules (their effects, also in beacons) and beacons (distribution effectivity), stored as `qm`, `qd`, `qb`. The values per quality come from the running game through the helper mod. Mining drills get no speed from quality. Later: quality per recipe, and recycling loops for target quality.
 
 ## Phase 6: Robustness and security (OWASP Top 10 2021)
 
@@ -178,6 +178,6 @@ Branch `develop`. Phase 3 and phases 4 and 4a are done. Last pushed commit: `9f8
 
 Next steps:
 
-1. Phase 5, step 5.
+1. Phase 6.
 
 Helper scripts (ignored by git) in `.port/`: `port.cjs` writes a TS file with the old license header and rewrites imports; `blank2.cjs` inserts empty lines before anchor lines.

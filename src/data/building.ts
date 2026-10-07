@@ -17,13 +17,14 @@ import type { Dataset, DatasetMachine } from "./dataset.ts"
 import { HEAT_EXCHANGE_CATEGORY, powerCategory } from "./power.ts"
 import type { Item } from "./item.ts"
 import type { ModuleSpec } from "./module.ts"
+import type { Quality, QualityContext } from "./quality.ts"
 import { AGRICULTURE_CATEGORY, MiningRecipe, type Recipe, type RecipeContext, type RecipeLike, type SurfaceCondition, requireItem, surfaceConditions } from "./recipe.ts"
 
 const thirty = Rational.from_float(30)
 const sixty = Rational.from_float(60)
 
 /** What buildings need from the factory state. FactorySpecification implements it. */
-export interface BuildingContext extends RecipeContext {
+export interface BuildingContext extends RecipeContext, QualityContext {
     readonly miningProd: Rational
     readonly recipes: ReadonlyMap<string, Recipe>
     getModuleSpec(recipe: RecipeLike): ModuleSpec | undefined
@@ -48,6 +49,8 @@ export interface BuildingOptions {
     conditions?: readonly SurfaceCondition[]
     /** Heat in W that keeps the building from freezing on planets that require heating. */
     heatingEnergy?: Rational
+    /** Crafting speed by quality key. Missing qualities use speed. */
+    speedByQuality?: ReadonlyMap<string, Rational>
 }
 
 /** A machine that crafts recipes, such as an assembler or furnace. Base class for miners, pumps and the rocket silo. */
@@ -63,6 +66,7 @@ export class Building implements IconSource {
     readonly conditions: readonly SurfaceCondition[]
     /** Heat in W that keeps the building from freezing on planets that require heating. */
     readonly heatingEnergy: Rational
+    private readonly speedByQuality: ReadonlyMap<string, Rational>
     readonly icon_col: number
     readonly icon_row: number
 
@@ -77,6 +81,7 @@ export class Building implements IconSource {
         this.fuel = options.fuel
         this.conditions = options.conditions ?? []
         this.heatingEnergy = options.heatingEnergy ?? zero
+        this.speedByQuality = options.speedByQuality ?? new Map()
         this.icon_col = options.icon_col
         this.icon_row = options.icon_row
     }
@@ -89,6 +94,11 @@ export class Building implements IconSource {
     /** Returns whether the building works on a surface with these property values. */
     worksOn(properties: ReadonlyMap<string, number>): boolean {
         return this.conditions.every(c => c.holds(properties))
+    }
+
+    /** Returns the crafting speed of the building at quality. */
+    speedAt(quality: Quality): Rational {
+        return this.speedByQuality.get(quality.key) ?? this.speed
     }
 
     /** Orders buildings from slowest to fastest. Module slots break ties. */
@@ -106,8 +116,8 @@ export class Building implements IconSource {
 
     /** Returns crafts per second of one building, including module and beacon speed effects. */
     getRecipeRate(context: BuildingContext, recipe: Recipe): Rational {
-        const speedEffect = context.getModuleSpec(recipe)?.speedEffect() ?? one
-        return recipe.time.reciprocate().mul(this.speed).mul(speedEffect)
+        const speedEffect = context.getModuleSpec(recipe)?.speedEffect(context) ?? one
+        return recipe.time.reciprocate().mul(this.speedAt(context.machineQuality)).mul(speedEffect)
     }
 
     /** Returns whether modules and beacons can affect this building. */
@@ -154,7 +164,7 @@ export class Miner extends Building {
         if (!(recipe instanceof MiningRecipe)) {
             throw new Error(`${this.key} cannot mine ${recipe.key}`)
         }
-        const speedEffect = context.getModuleSpec(recipe)?.speedEffect() ?? one
+        const speedEffect = context.getModuleSpec(recipe)?.speedEffect(context) ?? one
         return this.miningSpeed.div(recipe.miningTime).mul(speedEffect)
     }
 
@@ -246,6 +256,10 @@ export class AgriculturalTower extends Building {
     }
 }
 
+function qualitySpeeds(speeds: Record<string, number> | undefined): Map<string, Rational> {
+    return new Map(Object.entries(speeds ?? {}).map(([q, s]) => [q, Rational.from_float_approximate(s)]))
+}
+
 function iconOptions(d: { key: string, localized_name: { en: string }, icon_col: number, icon_row: number }): Pick<BuildingOptions, "key" | "name" | "icon_col" | "icon_row"> {
     return { key: d.key, name: d.localized_name.en, icon_col: d.icon_col, icon_row: d.icon_row }
 }
@@ -293,6 +307,7 @@ export function getBuildings(data: Dataset, items: ReadonlyMap<string, Item>): B
             ...machineOptions(d),
             categories: d.crafting_categories,
             speed: Rational.from_float_approximate(d.crafting_speed),
+            speedByQuality: qualitySpeeds(d.crafting_speed_by_quality),
             prodBonus: d.prod_bonus ? Rational.from_float_approximate(d.prod_bonus) : zero,
         }))
     }
@@ -333,6 +348,7 @@ export function getBuildings(data: Dataset, items: ReadonlyMap<string, Item>): B
             ...machineOptions(d),
             categories: d.crafting_categories,
             speed: Rational.from_float_approximate(d.crafting_speed),
+            speedByQuality: qualitySpeeds(d.crafting_speed_by_quality),
             prodBonus: zero,
             fuel: null,
         }, Rational.from_float(d.rocket_parts_required)))

@@ -112,12 +112,16 @@ export interface DatasetMachine extends NamedPrototype {
 export interface DatasetCraftingMachine extends DatasetMachine {
     crafting_categories: string[]
     crafting_speed: number
+    /** Crafting speed by quality key. */
+    crafting_speed_by_quality?: Record<string, number>
     prod_bonus: number
 }
 
 export interface DatasetRocketSilo extends DatasetMachine {
     crafting_categories: string[]
     crafting_speed: number
+    /** Crafting speed by quality key. */
+    crafting_speed_by_quality?: Record<string, number>
     rocket_parts_required: number
 }
 
@@ -203,6 +207,13 @@ export interface DatasetModule {
     category: string
     tier: number
     effect: Effect
+    /** Effects by quality key. Quality raises the positive effects. */
+    effect_by_quality?: Record<string, Effect>
+}
+
+/** A quality level such as uncommon. */
+export interface DatasetQuality extends NamedPrototype {
+    level: number
 }
 
 export interface DatasetAgriculturalTower extends DatasetMachine {
@@ -314,6 +325,8 @@ export interface Dataset {
     plants: DatasetPlant[]
     surface_properties: DatasetSurfaceProperty[]
     recipe_productivity: DatasetRecipeProductivity[]
+    /** Quality levels from lowest to highest. */
+    qualities: DatasetQuality[]
     /** Rocket cargo capacity in grams. */
     rocket_lift_weight: number
     sprites: SpriteSheetData

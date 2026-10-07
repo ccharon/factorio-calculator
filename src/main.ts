@@ -27,6 +27,7 @@ import { getModules } from "./data/module.ts"
 import { getPlanets } from "./data/planet.ts"
 import { addPowerRecipes } from "./data/power.ts"
 import { getProductivityResearch } from "./data/research.ts"
+import { getQualities } from "./data/quality.ts"
 import { addResources, getRecipes } from "./data/recipe.ts"
 import { spec } from "./state/factory.ts"
 import { type Settings, decodeFragment } from "./state/url-codec.ts"
@@ -84,7 +85,7 @@ function loadData(data: Dataset, settings: Settings): void {
     getSprites(data)
     const itemGroups = getItemGroups(items, data)
     const research = getProductivityResearch(data, recipes)
-    spec.setData(items, recipes, planets, modules, buildings, belts, fuel, itemGroups, research)
+    spec.setData(items, recipes, planets, modules, buildings, belts, fuel, itemGroups, research, getQualities(data))
     renderSettings(settings)
     spec.updateSolution()
 }

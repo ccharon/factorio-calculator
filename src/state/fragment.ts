@@ -87,6 +87,13 @@ export function formatSettings(excludeTitle = false, overrideTab?: string, targe
         add("buildings", buildings.join(","))
     }
 
+    const normal = spec.qualities[0]
+    for (const [key, quality] of [["qm", spec.machineQuality], ["qd", spec.moduleQuality], ["qb", spec.beaconQuality]] as const) {
+        if (quality !== normal) {
+            add(key, quality.key)
+        }
+    }
+
     if (spec.belt.key !== DEFAULT_BELT) {
         add("belt", spec.belt.key)
     }

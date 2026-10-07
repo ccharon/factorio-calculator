@@ -14,6 +14,7 @@ export const SCENARIOS = [
     ["nauvis-steam-power", "#items=processing-unit:r:60&planet=nauvis&enable=steam-engine-power"],
     ["nauvis-solar-power", "#items=processing-unit:r:60&planet=nauvis&enable=solar-panel-nauvis"],
     ["nauvis-nuclear-power", "#items=processing-unit:r:60&planet=nauvis&enable=steam-turbine-power,nuclear-reactor-cycle"],
+    ["nauvis-quality", "#items=processing-unit:r:60&planet=nauvis&dm=s3&db=s3:s3&dbc=4&qm=rare&qd=legendary&qb=epic"],
     ["nauvis-ignore", "#items=advanced-circuit:r:60&planet=nauvis&ignore=electronic-circuit"],
     ["nauvis-disable", "#items=plastic-bar:r:600&planet=nauvis&disable=advanced-oil-processing"],
     ["nauvis-mining-productivity", "#items=iron-gear-wheel:r:600&planet=nauvis&mprod=50"],

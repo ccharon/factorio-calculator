@@ -257,6 +257,7 @@ export function convert(raw, localeFiles, version, runtime) {
                 ...machineFields(p),
                 crafting_categories: asArray(p.crafting_categories),
                 crafting_speed: p.crafting_speed,
+                crafting_speed_by_quality: runtime.crafting_speeds?.[p.name],
                 prod_bonus: p.effect_receiver?.base_effect?.productivity ?? 0,
             })
         }
@@ -266,6 +267,7 @@ export function convert(raw, localeFiles, version, runtime) {
         ...machineFields(p),
         crafting_categories: asArray(p.crafting_categories),
         crafting_speed: p.crafting_speed,
+        crafting_speed_by_quality: runtime.crafting_speeds?.[p.name],
         rocket_parts_required: p.rocket_parts_required,
     }))
 
@@ -362,7 +364,16 @@ export function convert(raw, localeFiles, version, runtime) {
         category: m.category,
         tier: m.tier,
         effect: m.effect ?? {},
+        effect_by_quality: runtime.module_effects?.[m.name],
     }))
+
+    // Quality levels, from lowest to highest. The runtime data gives the effects that quality changes.
+    const qualities = Object.entries(runtime.qualities ?? {}).map(([name, q]) => ({
+        key: name,
+        localized_name: locale.name("quality", name),
+        level: q.level,
+        icon_ref: `quality/${name}`,
+    })).sort((a, b) => a.level - b.level)
 
     // The tower plants into a grid of growth_grid_tile_size cells (default 3) that reaches radius cells
     // beyond the cells its collision box covers. The tower's own cells hold no plants.
@@ -536,6 +547,7 @@ export function convert(raw, localeFiles, version, runtime) {
         plants,
         surface_properties,
         recipe_productivity,
+        qualities,
         rocket_lift_weight: raw["utility-constants"].default.default_rocket_lift_weight,
         sprites,
     }

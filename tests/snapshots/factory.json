@@ -2476,6 +2476,238 @@
     ],
     "surplus": []
   },
+  "nauvis-quality": {
+    "fragment": "#items=processing-unit:r:60&planet=nauvis&dm=s3&db=s3:s3&dbc=4&qm=rare&qd=legendary&qb=epic",
+    "recipes": [
+      {
+        "key": "(output)",
+        "rate": "1",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "advanced-circuit",
+        "rate": "2",
+        "building": "assembling-machine-1",
+        "count": "15",
+        "fuel": "electric",
+        "power": "1162500"
+      },
+      {
+        "key": "advanced-oil-processing",
+        "rate": "19/39",
+        "building": "oil-refinery",
+        "count": "475/4758",
+        "fuel": "electric",
+        "power": "309687000/793"
+      },
+      {
+        "key": "coal",
+        "rate": "2",
+        "building": "electric-mining-drill",
+        "count": "16/61",
+        "fuel": "electric",
+        "power": "12931200/61"
+      },
+      {
+        "key": "copper-cable",
+        "rate": "40",
+        "building": "assembling-machine-1",
+        "count": "25",
+        "fuel": "electric",
+        "power": "1937500"
+      },
+      {
+        "key": "copper-ore",
+        "rate": "40",
+        "building": "electric-mining-drill",
+        "count": "320/61",
+        "fuel": "electric",
+        "power": "258624000/61"
+      },
+      {
+        "key": "copper-plate",
+        "rate": "40",
+        "building": "electric-furnace",
+        "count": "20/7",
+        "fuel": "electric",
+        "power": "29934000/7"
+      },
+      {
+        "key": "crude-oil",
+        "rate": "1900/39",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "electricity",
+        "rate": "419108667/21350000",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "electronic-circuit",
+        "rate": "24",
+        "building": "assembling-machine-1",
+        "count": "15",
+        "fuel": "electric",
+        "power": "1162500"
+      },
+      {
+        "key": "heavy-oil-cracking",
+        "rate": "95/312",
+        "building": "chemical-plant",
+        "count": "475/19032",
+        "fuel": "electric",
+        "power": "42874125/793"
+      },
+      {
+        "key": "iron-ore",
+        "rate": "241/10",
+        "building": "electric-mining-drill",
+        "count": "964/305",
+        "fuel": "electric",
+        "power": "155820960/61"
+      },
+      {
+        "key": "iron-plate",
+        "rate": "241/10",
+        "building": "electric-furnace",
+        "count": "241/140",
+        "fuel": "electric",
+        "power": "18043320/7"
+      },
+      {
+        "key": "light-oil-cracking",
+        "rate": "323/312",
+        "building": "chemical-plant",
+        "count": "1615/19032",
+        "fuel": "electric",
+        "power": "132449625/793"
+      },
+      {
+        "key": "plastic-bar",
+        "rate": "2",
+        "building": "chemical-plant",
+        "count": "5/61",
+        "fuel": "electric",
+        "power": "9856000/61"
+      },
+      {
+        "key": "processing-unit",
+        "rate": "1",
+        "building": "assembling-machine-2",
+        "count": "25/42",
+        "fuel": "electric",
+        "power": "5210000/7"
+      },
+      {
+        "key": "sulfur",
+        "rate": "1/4",
+        "building": "chemical-plant",
+        "count": "5/488",
+        "fuel": "electric",
+        "power": "1605625/61"
+      },
+      {
+        "key": "sulfuric-acid",
+        "rate": "1/10",
+        "building": "chemical-plant",
+        "count": "1/244",
+        "fuel": "electric",
+        "power": "898450/61"
+      },
+      {
+        "key": "water",
+        "rate": "3200/39",
+        "building": "offshore-pump",
+        "count": "8/117",
+        "fuel": "electric",
+        "power": "0"
+      }
+    ],
+    "items": [
+      {
+        "key": "advanced-circuit",
+        "rate": "2"
+      },
+      {
+        "key": "coal",
+        "rate": "2"
+      },
+      {
+        "key": "copper-cable",
+        "rate": "80"
+      },
+      {
+        "key": "copper-ore",
+        "rate": "40"
+      },
+      {
+        "key": "copper-plate",
+        "rate": "40"
+      },
+      {
+        "key": "crude-oil",
+        "rate": "1900/39"
+      },
+      {
+        "key": "electricity",
+        "rate": "419108667/21350000"
+      },
+      {
+        "key": "electronic-circuit",
+        "rate": "24"
+      },
+      {
+        "key": "heavy-oil",
+        "rate": "475/39"
+      },
+      {
+        "key": "iron-ore",
+        "rate": "241/10"
+      },
+      {
+        "key": "iron-plate",
+        "rate": "241/10"
+      },
+      {
+        "key": "light-oil",
+        "rate": "1615/52"
+      },
+      {
+        "key": "petroleum-gas",
+        "rate": "95/2"
+      },
+      {
+        "key": "plastic-bar",
+        "rate": "4"
+      },
+      {
+        "key": "processing-unit",
+        "rate": "1"
+      },
+      {
+        "key": "sulfur",
+        "rate": "1/2"
+      },
+      {
+        "key": "sulfuric-acid",
+        "rate": "5"
+      },
+      {
+        "key": "water",
+        "rate": "3200/39"
+      }
+    ],
+    "surplus": []
+  },
   "nauvis-ignore": {
     "fragment": "#items=advanced-circuit:r:60&planet=nauvis&ignore=electronic-circuit",
     "recipes": [
