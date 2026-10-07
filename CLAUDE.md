@@ -35,6 +35,13 @@ Node 25 or newer (the tests use `Uint8Array.toBase64`).
 
 Oxlint JS plugins are alpha and are not used.
 
+## Working notes
+
+- A converter change must leave `public/data/space-age-<version>.json` byte-identical unless the change is intended. `npm run build-data -- --factorio <dir> --keep` keeps the dump; later runs can use `--dump <dir>`.
+- After an intended result change: `npm run snapshot:record`, then compare the old and new `tests/snapshots/factory.json` per scenario before committing. `snapshot:check` names the differing entries.
+- Browser checks use JS queries; screenshots only when the layout changed. Keyboard tests run with puppeteer through `tests/browser/browser.ts`. Neither puppeteer nor the Chrome extension starts a native drag, so drag and drop needs a manual test by the user.
+- Stop the dev server with `pkill -u $(id -u) -f "node.*[v]ite"` in a Bash call of its own; the pattern also matches a calling shell whose command contains `node` and `vite`.
+
 ## CI and deployment
 
 | Workflow | Trigger | Steps |
