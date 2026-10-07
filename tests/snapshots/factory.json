@@ -2735,10 +2735,10 @@
       {
         "key": "jellystem",
         "rate": "2696/210225",
-        "building": null,
-        "count": "0",
-        "fuel": null,
-        "power": "0"
+        "building": "agricultural-tower",
+        "count": "674/8409",
+        "fuel": "electric",
+        "power": "31810000/2803"
       },
       {
         "key": "nutrients-from-bioflux",
@@ -2775,10 +2775,10 @@
       {
         "key": "yumako-tree",
         "rate": "1348/42045",
-        "building": null,
-        "count": "0",
-        "fuel": null,
-        "power": "0"
+        "building": "agricultural-tower",
+        "count": "1685/8409",
+        "fuel": "electric",
+        "power": "65510000/2803"
       }
     ],
     "items": [

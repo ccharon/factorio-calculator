@@ -302,10 +302,18 @@ export function convert(raw, localeFiles, version, runtime) {
         effect: m.effect ?? {},
     }))
 
-    const agricultural_tower = Object.values(raw["agricultural-tower"]).map(p => compact({
-        ...machineFields(p),
-        radius: p.radius,
-    }))
+    // The tower plants into a grid of growth_grid_tile_size cells (default 3) that reaches radius cells
+    // beyond the cells its collision box covers. The tower's own cells hold no plants.
+    const agricultural_tower = Object.values(raw["agricultural-tower"]).map(p => {
+        const grid = p.growth_grid_tile_size ?? 3
+        const [[x0], [x1]] = p.collision_box ?? [[0], [0]]
+        const own = Math.max(1, Math.ceil((x1 - x0) / grid))
+        return compact({
+            ...machineFields(p),
+            radius: p.radius,
+            plots: (own + 2 * p.radius) ** 2 - own ** 2,
+        })
+    })
 
     // Technologies that raise the productivity of recipes, one level at a time.
     const recipe_productivity = []

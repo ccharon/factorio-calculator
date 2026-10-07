@@ -162,6 +162,8 @@ export interface DatasetModule {
 
 export interface DatasetAgriculturalTower extends DatasetMachine {
     radius?: number
+    /** Number of plants one tower tends. */
+    plots: number
 }
 
 export interface PlanetResources {

@@ -238,7 +238,8 @@
       "items": {
         "type": "object",
         "allOf": [{ "$ref": "#/$defs/machine" }],
-        "properties": { "radius": { "type": "number", "minimum": 0 } },
+        "required": ["plots"],
+        "properties": { "radius": { "type": "number", "minimum": 0 }, "plots": { "type": "integer", "minimum": 1, "description": "Number of plants one tower tends." } },
         "unevaluatedProperties": false
       }
     },

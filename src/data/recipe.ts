@@ -359,10 +359,16 @@ class SpoilageRecipe extends Recipe {
     }
 }
 
-/** Pseudo-recipe for growing a plant from its seed. Plants without surface conditions count as resources. */
+/** Crafting category of plant recipes, which agricultural towers tend. */
+export const AGRICULTURE_CATEGORY = "agriculture"
+
+/**
+ * Pseudo-recipe for growing a plant from its seed, tended by an agricultural tower. time is the
+ * growth time. Plants without surface conditions count as resources.
+ */
 class PlantRecipe extends Recipe {
-    constructor(options: Omit<RecipeOptions, "allowProductivity" | "categories" | "time">) {
-        super({ ...options, allowProductivity: false, categories: [], time: zero })
+    constructor(options: Omit<RecipeOptions, "allowProductivity" | "categories">) {
+        super({ ...options, allowProductivity: false, categories: [AGRICULTURE_CATEGORY] })
         if (this.isResource()) {
             this.defaultPriority = 1
             this.defaultWeight = hundred
@@ -588,6 +594,8 @@ export function getRecipes(data: Dataset, items: Map<string, Item>): Map<string,
             ingredients: [new Ingredient(item(plant.seed), one)],
             products: productIngredients(items, plant.results),
             conditions: surfaceConditions(plant.surface_conditions),
+            // The dataset gives ticks.
+            time: Rational.from_floats(plant.growth_ticks, 60),
         }))
     }
 

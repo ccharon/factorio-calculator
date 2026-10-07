@@ -143,7 +143,7 @@ Comes before the model changes, so phases 4 to 6 are written once, in the new st
 Ordered by usefulness for planning:
 
 1. Done. The space platform surface has every asteroid chunk that spawns in the solar system as a resource without building (`resources.asteroid`; the collector rate depends on the asteroid density). Crushing, reprocessing and thruster fuel are ordinary recipes. Thruster consumption per performance level is not modelled; targets set fuel and oxidizer rates directly.
-2. Gleba: agricultural tower and plant yield per minute, spoilage chain, captive spawner.
+2. Done. Plants have their growth time and the agricultural tower as building. A tower tends `plots` plants (48, from radius, grid size and collision box) and harvests each once per growth time. Spoilage recipes and the captive spawner (burning bioflux since phase 4.4) were already modelled. Spoilage during transport is not modelled.
 3. Aquilo and Vulcanus: heating tower, fusion power, foundry and melting recipes.
 4. Power generation: steam engines, turbines, heat exchangers, solar with per-planet `solar-power`.
 5. Quality: quality level for machines, modules and beacons as effect multipliers. Recycling loops for target quality as a later step.
@@ -175,6 +175,6 @@ Branch `develop`. Phase 3 and phases 4 and 4a are done. Last pushed commit: `9f8
 
 Next steps:
 
-1. Phase 5, step 2.
+1. Phase 5, step 3.
 
 Helper scripts (ignored by git) in `.port/`: `port.cjs` writes a TS file with the old license header and rewrites imports; `blank2.cjs` inserts empty lines before anchor lines.

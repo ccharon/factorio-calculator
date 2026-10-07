@@ -16,7 +16,7 @@ import type { IconSource } from "./icon-source.ts"
 import type { Dataset, DatasetMachine } from "./dataset.ts"
 import type { Item } from "./item.ts"
 import type { ModuleSpec } from "./module.ts"
-import { MiningRecipe, type Recipe, type RecipeContext, type RecipeLike, type SurfaceCondition, requireItem, surfaceConditions } from "./recipe.ts"
+import { AGRICULTURE_CATEGORY, MiningRecipe, type Recipe, type RecipeContext, type RecipeLike, type SurfaceCondition, requireItem, surfaceConditions } from "./recipe.ts"
 
 const thirty = Rational.from_float(30)
 const sixty = Rational.from_float(60)
@@ -224,6 +224,22 @@ export class RocketSilo extends Building {
     }
 }
 
+/** An agricultural tower. It harvests each of its plots once per growth time of the plant. */
+export class AgriculturalTower extends Building {
+    /** Number of plants one tower tends. */
+    readonly plots: Rational
+
+    constructor(options: Omit<BuildingOptions, "speed" | "prodBonus" | "categories">, plots: number) {
+        super({ ...options, categories: [AGRICULTURE_CATEGORY], speed: one, prodBonus: zero })
+        this.plots = Rational.from_float(plots)
+    }
+
+    /** Returns harvests per second of one tower. */
+    override getRecipeRate(_context: BuildingContext, recipe: Recipe): Rational {
+        return this.plots.div(recipe.time)
+    }
+}
+
 function fuelCategory(d: DatasetMachine): string | null {
     return d.energy_source?.type === "burner" ? d.energy_source.fuel_category ?? "chemical" : null
 }
@@ -268,6 +284,10 @@ export function getBuildings(data: Dataset, items: ReadonlyMap<string, Item>): B
             speed: Rational.from_float_approximate(d.crafting_speed),
             prodBonus: d.prod_bonus ? Rational.from_float_approximate(d.prod_bonus) : zero,
         }))
+    }
+
+    for (const d of data.agricultural_tower) {
+        buildings.push(new AgriculturalTower(machineOptions(d), d.plots))
     }
 
     for (const d of data.rocket_silo) {

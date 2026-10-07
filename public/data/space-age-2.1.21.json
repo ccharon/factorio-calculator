@@ -30690,6 +30690,7 @@
         }
       ],
       "radius": 3,
+      "plots": 48,
       "icon_col": 0,
       "icon_row": 0
     }
