@@ -26,7 +26,9 @@ export async function startBrowser({ base, dist = false } = {}) {
         }
         base = server.resolvedUrls.local[0]
     }
-    const browser = await puppeteer.launch({ executablePath: CHROME, headless: true })
+    // GitHub runners on Ubuntu 24.04 block the Chrome sandbox through AppArmor.
+    const args = process.env.CI ? ["--no-sandbox"] : []
+    const browser = await puppeteer.launch({ executablePath: CHROME, headless: true, args })
     return {
         base,
         browser,

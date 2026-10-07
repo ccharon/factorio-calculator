@@ -35,6 +35,15 @@ Node 20 or newer.
 
 Oxlint JS plugins are alpha and are not used.
 
+## CI and deployment
+
+| Workflow | Trigger | Steps |
+|----------|---------|-------|
+| `.github/workflows/check.yml` | Push to `develop`, pull requests to `develop` and `main` | `npm run check`, then `snapshot:check --dist` in headless Chrome. |
+| `.github/workflows/deploy.yml` | Push to `main` | `npm run check`, then force-pushes `dist/` as the root of the orphan branch `dist`. |
+
+Dependabot (`.github/dependabot.yml`) opens weekly npm and action updates against `develop`.
+
 ## Local Factorio install
 
 | Item | Value |
