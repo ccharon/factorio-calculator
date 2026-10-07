@@ -78,9 +78,9 @@ export function parseSettings(s: string): Settings {
 
 /**
  * Parses a URL fragment such as "#items=..." or "#zip=...". Invalid compressed data yields
- * empty settings and a console warning.
+ * empty settings and a call of warn.
  */
-export async function decodeFragment(fragment: string): Promise<Settings> {
+export async function decodeFragment(fragment: string, warn: (message: string, value: string) => void): Promise<Settings> {
     const settings = parseSettings(fragment.replace(/^#/, ""))
     const zip = settings.get("zip")
     if (zip === undefined) {
@@ -89,7 +89,7 @@ export async function decodeFragment(fragment: string): Promise<Settings> {
     try {
         return parseSettings(await decompress(zip))
     } catch (error) {
-        console.warn("ignoring invalid settings in URL:", error)
+        warn("invalid compressed settings", String(error))
         return new Map()
     }
 }

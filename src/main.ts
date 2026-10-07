@@ -31,6 +31,7 @@ import { getQualities } from "./data/quality.ts"
 import { addResources, getRecipes } from "./data/recipe.ts"
 import { spec } from "./state/factory.ts"
 import { type Settings, decodeFragment } from "./state/url-codec.ts"
+import { warnUrl } from "./ui/warnings.ts"
 import {
     plusHandler, clickTab, clickVisualize, changeTitle, changeRatePrecision, changeCountPrecision, changeFormat, changeMprod, changeVisType,
     changeVisRender, changeVisDir, changeVisElectricity, toggleDebug,
@@ -116,7 +117,7 @@ function bindControls(): void {
 }
 
 bindControls()
-Promise.all([fetchDataset(), decodeFragment(window.location.hash)]).then(([data, settings]) => loadData(data, settings)).catch((error: unknown) => {
+Promise.all([fetchDataset(), decodeFragment(window.location.hash, warnUrl)]).then(([data, settings]) => loadData(data, settings)).catch((error: unknown) => {
     console.error(error)
     setStatus("failed to load")
 })

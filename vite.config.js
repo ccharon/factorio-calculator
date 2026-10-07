@@ -1,7 +1,15 @@
 // Build, dev server and test configuration.
 import { defineConfig } from "vitest/config"
 
+// Content Security Policy of the production build. The dev server injects inline styles, so it runs without one.
+const CSP = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'"
+
 export default defineConfig({
+    plugins: [{
+        name: "content-security-policy",
+        apply: "build",
+        transformIndexHtml: html => html.replace("<head>", `<head>\n    <meta http-equiv="Content-Security-Policy" content="${CSP}">`),
+    }],
     // Relative asset paths, so the build works from any directory on a web server.
     base: "./",
     build: {

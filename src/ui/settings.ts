@@ -41,11 +41,12 @@ import {
 } from "./events.ts"
 import { type ModuleCell, type ModuleInput, moduleDropdown } from "./module-dropdown.ts"
 import { iconOf } from "./icons.ts"
+import { warnUrl } from "./warnings.ts"
 
 const hundred = Rational.from_float(100)
 
 function warn(message: string, value: string): void {
-    console.warn(`ignoring ${message} in URL:`, value)
+    warnUrl(message, value)
 }
 
 // Parses a rational from the URL. Invalid values log a warning and return null.

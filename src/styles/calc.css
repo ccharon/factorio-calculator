@@ -480,3 +480,7 @@ svg.popout {
     display: inline-block;
     width: 5em;
 }
+.url-warnings {
+    color: var(--accent);
+    margin-top: 4px;
+}

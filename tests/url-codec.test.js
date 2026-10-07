@@ -15,15 +15,20 @@ test("encodeSettings keeps short strings plain and zips long ones", async () => 
     assert.ok(encoded.length < long.length)
 })
 
+const noWarning = () => assert.fail("unexpected warning")
+
 test("decodeFragment reads plain and zipped fragments", async () => {
-    assert.deepEqual(await decodeFragment("#a=1&b=x=y&c"), new Map([["a", "1"], ["b", "x=y"]]))
-    const zipped = await decodeFragment("#" + await encodeSettings(long))
+    assert.deepEqual(await decodeFragment("#a=1&b=x=y&c", noWarning), new Map([["a", "1"], ["b", "x=y"]]))
+    const zipped = await decodeFragment("#" + await encodeSettings(long), noWarning)
     assert.equal(zipped.get("planet"), "nauvis")
 })
 
-test("decodeFragment ignores broken compressed data", async () => {
-    assert.deepEqual(await decodeFragment("#zip=AAAA"), new Map())
-    assert.deepEqual(await decodeFragment("#zip=not base64!"), new Map())
+test("decodeFragment ignores broken compressed data and warns", async () => {
+    const warnings = []
+    const warn = (message, value) => warnings.push(message)
+    assert.deepEqual(await decodeFragment("#zip=AAAA", warn), new Map())
+    assert.deepEqual(await decodeFragment("#zip=not base64!", warn), new Map())
+    assert.equal(warnings.length, 2)
 })
 
 test("decompress rejects output above the size limit", async () => {
