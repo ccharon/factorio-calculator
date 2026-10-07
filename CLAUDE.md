@@ -1,6 +1,6 @@
 # Factorio Calculator
 
-Static web calculator for production ratios in Factorio 2.1 with the Space Age expansion. Fork of Kirk McDonald's calculator (Apache 2.0). Keep the copyright headers in existing files.
+Static web calculator for production ratios in Factorio 2.1 with the Space Age expansion. Fork of Kirk McDonald's calculator (Apache 2.0).
 
 Repository: https://github.com/ccharon/factorio-calculator (remote `origin`).
 
@@ -98,6 +98,7 @@ Key facts:
 
 ## Conventions
 
+- File headers: files with Kirk McDonald's (or Mike Bostock's) copyright keep it, with `Copyright 2026 Christian Charon` as the next line. Every other source file starts with `/*Copyright 2026 Christian Charon` and the Apache 2.0 notice, as in `src/data/power.ts`.
 - TypeScript and Vite, no UI framework. Every library comes from npm and is imported. No `<script>` tags for libraries, no inline scripts or event handler attributes in HTML.
 - TypeScript rules for `src/` and new code:
   - No `any`, no non-null assertions (`!`), no `@ts-ignore`. Use `unknown` and narrow it, or write the type.

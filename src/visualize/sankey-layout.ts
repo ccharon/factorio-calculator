@@ -1,4 +1,5 @@
 /*Copyright 2015, Mike Bostock
+Copyright 2026 Christian Charon
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,

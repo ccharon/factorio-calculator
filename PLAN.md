@@ -185,7 +185,6 @@ Branch `develop`, everything committed and pushed. Phases 0 to 5 are done (phase
 
 Next steps:
 
-0. File headers, one commit, first thing next session: files with Kirk McDonald's header keep it and get a second line `Copyright 2026 Christian Charon` below it. Files without a header (new files such as `src/data/power.ts`, `quality.ts`, `cargo.ts`, `research.ts`, `icons.ts`, `warnings.ts`) get `/*Copyright 2026 Christian Charon` plus the Apache 2.0 text. Add the rule to CLAUDE.md (Conventions).
 1. Phase 6 (robustness and security), in progress. Done: CSP meta tag in the build (Vite plugin in `vite.config.js`), ignored URL settings shown on the page (`src/ui/warnings.ts`), custom code replaced by standard means (stable `Array.sort` in `sorted()`, native base64, `d3.zoom` for the visualizer, popover and CSS anchor positioning for tooltips; `@floating-ui/dom` removed). Negative numbers in URL settings are rejected with a visible warning. Open, in this order, one commit each: (a) keyboard access with `<button>` instead of clickable `<div>` (planet and recipe toggles, priority list); (b) icon dropdowns as popovers (`src/ui/dropdown.ts`, removes the clicker overlay and spacer; check target and module dropdown layout); (c) review of the remaining custom code (`src/state/align.ts` number formatting, `src/state/priority.ts`). Ask before adding any dependency.
 2. Later, from phase 5: quality per recipe, recycling loops for a target quality, reactor neighbour bonus.
 3. Phase 6a: module structure (see its section).

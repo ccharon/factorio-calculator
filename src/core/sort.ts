@@ -1,4 +1,5 @@
 /*Copyright 2015-2024 Kirk McDonald
+Copyright 2026 Christian Charon
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
