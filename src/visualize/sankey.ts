@@ -21,7 +21,7 @@ import { spriteSheet } from "../ui/icon.ts"
 import type { Direction } from "../ui/events.ts"
 import { CirclePath, makeCurve } from "./circlepath.ts"
 import {
-    colorOf, iconSize, getColorMaps, renderNode, imageViewBox, spriteSheetURL, graphClickHandler, graphMouseOverHandler, graphMouseLeaveHandler,
+    colorOf, iconSize, getColorMaps, renderNodes, imageViewBox, spriteSheetURL, graphClickHandler, graphMouseOverHandler, graphMouseLeaveHandler,
     type BeltLine, type Graph, type GraphEdge, type GraphNode,
 } from "./graph.ts"
 import { layoutSankey } from "./sankey-layout.ts"
@@ -152,15 +152,7 @@ export function renderSankey(data: Graph, direction: Direction, ignore: Readonly
     const svg = d3.select<SVGSVGElement, unknown>("svg#graph").classed("sankey", true)
     svg.selectAll("g").remove()
 
-    // Node rects
-    const rects = svg.append("g")
-        .classed("nodes", true)
-        .selectAll<SVGGElement, GraphNode>("g")
-        .data(nodes)
-        .join("g")
-        .classed("node", true)
-
-    renderNode(rects, sankeyNodeMargin, across ? "center" : "left", recipeColors, ignore)
+    renderNodes(svg, nodes, sankeyNodeMargin, across ? "center" : "left", recipeColors, ignore)
 
     // Link paths
     const link = svg.append("g")

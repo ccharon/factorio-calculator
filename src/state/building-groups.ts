@@ -24,7 +24,7 @@ const DEFAULT_BUILDINGS = new Set([
 ])
 
 /** Sorts buildings in place from slowest to fastest. */
-export function buildingSort(buildings: Building[]): void {
+function buildingSort(buildings: Building[]): void {
     buildings.sort((a, b) => (a.less(b) ? -1 : b.less(a) ? 1 : 0))
 }
 

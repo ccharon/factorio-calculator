@@ -36,9 +36,9 @@ interface QualityGroup {
     readonly name: string
 }
 
-/** One choice in a radio group. */
-interface QualityChoice {
-    readonly group: QualityGroup
+/** One choice in a radio group of qualities for the datum d. */
+interface QualityChoice<Datum> {
+    readonly d: Datum
     readonly quality: Quality
 }
 
@@ -65,16 +65,33 @@ export function qualityDropdown<GElement extends HTMLElement, Datum, PElement ex
         .classed("quality-group", true)
     groups.append("span").classed("quality-kind", true).text(group => KIND_LABELS.get(group.kind) ?? group.kind)
 
-    const choices = groups.selectAll<HTMLSpanElement, QualityChoice>("span.input").data(group => spec.qualities.map(quality => ({ group, quality }))).join("span").classed("input", true)
-    const labels = addInputs(
-        choices,
-        choice => choice.group.name,
-        choice => spec.getQuality(choice.group.recipe, choice.group.kind) === choice.quality,
-        choice => {
-            spec.setRecipeQuality(choice.group.recipe, choice.group.kind, choice.quality)
+    appendQualityChoices(groups, 16, {
+        name: group => group.name,
+        checked: (group, quality) => spec.getQuality(group.recipe, group.kind) === quality,
+        choose: (group, quality) => {
+            spec.setRecipeQuality(group.recipe, group.kind, quality)
             onChange()
         },
-    )
-    labels.attr("title", choice => `${KIND_LABELS.get(choice.group.kind) ?? ""}: ${choice.quality.name}`)
-    labels.append(choice => iconOf(choice.quality).make(16, true))
+        title: (group, quality) => `${KIND_LABELS.get(group.kind) ?? ""}: ${quality.name}`,
+    })
+}
+
+/** How a radio group of qualities reads and changes its value. */
+export interface QualityChoices<Datum> {
+    /** Radio group name, unique on the page. */
+    name(d: Datum): string
+    checked(d: Datum, quality: Quality): boolean
+    choose(d: Datum, quality: Quality): void
+    title(d: Datum, quality: Quality): string
+}
+
+/** Appends a radio group of all qualities with their icons of size pixels to each element of selector. */
+export function appendQualityChoices<GElement extends HTMLElement, Datum, PElement extends d3.BaseType, PDatum>(
+    selector: d3.Selection<GElement, Datum, PElement, PDatum>,
+    size: number,
+    choices: QualityChoices<Datum>,
+): void {
+    const inputs = selector.selectAll<HTMLSpanElement, QualityChoice<Datum>>("span.input").data(d => spec.qualities.map(quality => ({ d, quality }))).join("span").classed("input", true)
+    const labels = addInputs(inputs, c => choices.name(c.d), c => choices.checked(c.d, c.quality), c => choices.choose(c.d, c.quality))
+    labels.attr("title", c => choices.title(c.d, c.quality)).append(c => iconOf(c.quality).make(size, true))
 }

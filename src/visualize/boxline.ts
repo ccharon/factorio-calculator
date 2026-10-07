@@ -17,11 +17,10 @@ import * as d3 from "d3"
 import dagre, { type GraphLabel } from "@dagrejs/dagre"
 import type { Item } from "../data/item.ts"
 import { spec } from "../state/factory.ts"
-import { spriteSheet } from "../ui/icon.ts"
 import type { Direction } from "../ui/events.ts"
 import type { Point } from "./circlepath.ts"
 import {
-    colorOf, darkColorOf, iconSize, getColorMaps, measureText, renderNode, imageViewBox, spriteSheetURL,
+    appendSpriteIcon, colorOf, darkColorOf, iconSize, getColorMaps, measureText, renderNodes,
     graphClickHandler, graphMouseOverHandler, graphMouseLeaveHandler,
     type EdgeLabel, type Graph, type GraphEdge, type GraphNode,
 } from "./graph.ts"
@@ -162,29 +161,14 @@ export function renderBoxGraph({ nodes, links }: Graph, direction: Direction, ig
         .attr("fill", d => darkColorOf(itemColors, d.item))
         .attr("fill-opacity", 0)
         .attr("stroke", "none")
-    edgeLabels.append("svg")
-        .attr("viewBox", d => imageViewBox(d.item))
-        .attr("x", d => labelOf(d).x - labelOf(d).width / 2 + 5 + 0.5)
-        .attr("y", d => labelOf(d).y - iconSize / 2 + 0.5)
-        .attr("width", iconSize)
-        .attr("height", iconSize)
-        .append("image")
-        .attr("xlink:href", spriteSheetURL())
-        .attr("width", spriteSheet().width)
-        .attr("height", spriteSheet().height)
+    appendSpriteIcon(edgeLabels, d => d.item, d => labelOf(d).x - labelOf(d).width / 2 + 5, d => labelOf(d).y - iconSize / 2, iconSize)
     edgeLabels.append("text")
         .attr("x", d => labelOf(d).x - labelOf(d).width / 2 + 5 + iconSize)
         .attr("y", d => labelOf(d).y)
         .attr("dy", "0.35em")
         .text(d => labelOf(d).text)
 
-    const rects = svg.append("g")
-        .classed("nodes", true)
-        .selectAll<SVGGElement, GraphNode>("g")
-        .data(nodes)
-        .join("g")
-        .classed("node", true)
-    renderNode(rects, boxlineNodeMargin, "left", recipeColors, ignore)
+    renderNodes(svg, nodes, boxlineNodeMargin, "left", recipeColors, ignore)
 
     svg.append("g")
         .classed("overlay", true)

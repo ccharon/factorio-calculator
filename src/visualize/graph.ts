@@ -23,7 +23,7 @@ import type { IconSource } from "../data/icon-source.ts"
 import { PX_WIDTH, PX_HEIGHT, spriteSheet } from "../ui/icon.ts"
 import type { CirclePath, Point } from "./circlepath.ts"
 
-export const colorList: readonly string[] = [
+const colorList: readonly string[] = [
     "#1f77b4", // blue
     "#8c564b", // brown
     "#2ca02c", // green
@@ -37,7 +37,7 @@ export const colorList: readonly string[] = [
 ]
 
 export const iconSize = 32
-export const colonWidth = 12
+const colonWidth = 12
 
 /** Direction of a link relative to the node order of the Sankey layout. */
 export type LinkDirection = "forward" | "backward" | "self"
@@ -405,13 +405,43 @@ function isIgnored(node: GraphNode, ignore: ReadonlySet<Item>): boolean {
 }
 
 /**
- * Renders the laid-out nodes into rects, one group element per node.
+ * Appends to each element of selection an SVG that shows the sprite of source(d) at size pixels,
+ * with its top left corner at x(d), y(d). Returns the image elements.
+ */
+export function appendSpriteIcon<GElement extends d3.BaseType, Datum, PElement extends d3.BaseType, PDatum>(
+    selection: d3.Selection<GElement, Datum, PElement, PDatum>,
+    source: (d: Datum) => IconSource,
+    x: (d: Datum) => number,
+    y: (d: Datum) => number,
+    size: number,
+): d3.Selection<SVGImageElement, Datum, PElement, PDatum> {
+    return selection.append("svg")
+        .attr("viewBox", d => imageViewBox(source(d)))
+        .attr("x", d => x(d) + 0.5)
+        .attr("y", d => y(d) + 0.5)
+        .attr("width", size)
+        .attr("height", size)
+        .append<SVGImageElement>("image")
+        .attr("xlink:href", spriteSheetURL())
+        .attr("width", spriteSheet().width)
+        .attr("height", spriteSheet().height)
+}
+
+/**
+ * Renders the laid-out nodes into svg, one group element with a rect per node.
  *
  * @param nodeMargin - Space between the rect border and the icons and text.
  * @param justification - "left" places the label at the left edge, "center" in the middle.
  */
-export function renderNode(rects: d3.Selection<SVGGElement, GraphNode, SVGGElement, unknown>, nodeMargin: number, justification: "left" | "center",
-    recipeColors: ReadonlyMap<RecipeNode, number>, ignore: ReadonlySet<Item>): void {
+export function renderNodes(svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, unknown>, nodes: readonly GraphNode[], nodeMargin: number,
+    justification: "left" | "center", recipeColors: ReadonlyMap<RecipeNode, number>, ignore: ReadonlySet<Item>): void {
+    const rects = svg.append("g")
+        .classed("nodes", true)
+        .selectAll<SVGGElement, GraphNode>("g")
+        .data(nodes)
+        .join("g")
+        .classed("node", true)
+
     rects.each(d => {
         if (justification === "left") {
             d.labelX = d.x0
@@ -441,33 +471,16 @@ export function renderNode(rects: d3.Selection<SVGGElement, GraphNode, SVGGEleme
         .text(d => d.text())
     const labeledNode = rects.filter(d => d.rate !== null)
     // recipe icon
-    labeledNode.append("svg")
-        .attr("viewBox", d => imageViewBox(d.icon()))
-        .attr("x", d => d.labelX + nodeMargin + 0.5)
-        .attr("y", d => (d.y0 + d.y1) / 2 - iconSize / 2 + 0.5)
-        .attr("width", iconSize)
-        .attr("height", iconSize)
-        .append("image")
+    appendSpriteIcon(labeledNode, d => d.icon(), d => d.labelX + nodeMargin, d => (d.y0 + d.y1) / 2 - iconSize / 2, iconSize)
         .classed("ignore", d => isIgnored(d, ignore))
-        .attr("xlink:href", spriteSheetURL())
-        .attr("width", spriteSheet().width)
-        .attr("height", spriteSheet().height)
     // quality badge of a recipe variant, in the lower left corner of the recipe icon
     const badgeSize = Math.round(iconSize * 0.45)
     const qualityOf = (d: GraphNode): IconSource | null => {
         const recipe = d.icon()
         return recipe instanceof Recipe ? recipe.quality : null
     }
-    labeledNode.filter(d => qualityOf(d) !== null).append("svg")
-        .attr("viewBox", d => imageViewBox(qualityOf(d) ?? d.icon()))
-        .attr("x", d => d.labelX + nodeMargin + 0.5)
-        .attr("y", d => (d.y0 + d.y1) / 2 + iconSize / 2 - badgeSize + 0.5)
-        .attr("width", badgeSize)
-        .attr("height", badgeSize)
-        .append("image")
-        .attr("xlink:href", spriteSheetURL())
-        .attr("width", spriteSheet().width)
-        .attr("height", spriteSheet().height)
+    const badged = labeledNode.filter(d => qualityOf(d) !== null)
+    appendSpriteIcon(badged, d => qualityOf(d) ?? d.icon(), d => d.labelX + nodeMargin, d => (d.y0 + d.y1) / 2 + iconSize / 2 - badgeSize, badgeSize)
     // node text (building count, or plain rate if no building)
     labeledNode.append("text")
         .attr("x", d => d.labelX + nodeMargin + iconSize + (d.building === null ? 0 : colonWidth + iconSize))
@@ -487,14 +500,5 @@ export function renderNode(rects: d3.Selection<SVGGElement, GraphNode, SVGGEleme
         .attr("cy", d => (d.y0 + d.y1) / 2 + 4)
         .attr("r", 1)
     // building icon
-    buildingNode.append("svg")
-        .attr("viewBox", d => imageViewBox(buildingOf(d)))
-        .attr("x", d => d.labelX + iconSize + colonWidth + nodeMargin + 0.5)
-        .attr("y", d => (d.y0 + d.y1) / 2 - iconSize / 2 + 0.5)
-        .attr("width", iconSize)
-        .attr("height", iconSize)
-        .append("image")
-        .attr("xlink:href", spriteSheetURL())
-        .attr("width", spriteSheet().width)
-        .attr("height", spriteSheet().height)
+    appendSpriteIcon(buildingNode, buildingOf, d => d.labelX + iconSize + colonWidth + nodeMargin, d => (d.y0 + d.y1) / 2 - iconSize / 2, iconSize)
 }

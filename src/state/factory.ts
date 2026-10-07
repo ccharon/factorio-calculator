@@ -569,24 +569,23 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
 
     /** Returns the item with key, which may name a variant as "<item>@<quality>". */
     findItem(key: string): Item | undefined {
-        const [baseKey = "", qualityKey] = key.split("@")
-        const item = this.items.get(baseKey)
-        const quality = this.qualities.find(q => q.key === qualityKey)
-        if (qualityKey === undefined || item === undefined) {
-            return item
-        }
-        return quality === undefined ? undefined : item.variants.get(quality)
+        return this.findVariant(this.items, key)
     }
 
     /** Returns the recipe with key, which may name a variant as "<recipe>@<quality>". */
     findRecipe(key: string): Recipe | undefined {
+        return this.findVariant(this.recipes, key)
+    }
+
+    // Looks up "<key>" in objects, or "<key>@<quality>" among the variants of what it finds there.
+    private findVariant<T extends { readonly variants: ReadonlyMap<Quality, T> }>(objects: ReadonlyMap<string, T>, key: string): T | undefined {
         const [baseKey = "", qualityKey] = key.split("@")
-        const recipe = this.recipes.get(baseKey)
-        const quality = this.qualities.find(q => q.key === qualityKey)
-        if (qualityKey === undefined || recipe === undefined) {
-            return recipe
+        const object = objects.get(baseKey)
+        if (qualityKey === undefined || object === undefined) {
+            return object
         }
-        return quality === undefined ? undefined : recipe.variants.get(quality)
+        const quality = this.qualities.find(q => q.key === qualityKey)
+        return quality === undefined ? undefined : object.variants.get(quality)
     }
 
     /** Returns the quality of the given kind for recipe: its own setting, or the global one. */

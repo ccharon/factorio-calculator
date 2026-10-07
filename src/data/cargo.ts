@@ -19,7 +19,7 @@ import { Item } from "./item.ts"
 import { Ingredient, Recipe, requireItem } from "./recipe.ts"
 
 /** Suffix of the key of an item in orbit. */
-export const ORBIT_SUFFIX = "-in-orbit"
+const ORBIT_SUFFIX = "-in-orbit"
 
 /**
  * Pseudo-recipe for one rocket launch with a full load of one item. It has no building: the rocket
