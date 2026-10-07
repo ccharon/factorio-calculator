@@ -146,9 +146,9 @@ Ordered by usefulness for planning:
 2. Done. Plants have their growth time and the agricultural tower as building. A tower tends `plots` plants (48, from radius, grid size and collision box) and harvests each once per growth time. Spoilage recipes and the captive spawner (burning bioflux since phase 4.4) were already modelled. Spoilage during transport is not modelled.
 3. Energy as pseudo items. Foundry and melting recipes already work.
    1. Done. Electric buildings use the abstract item `electricity` (MJ, so a rate is in MW): working power with module effect plus idle drain, linear in the building count. Without generators it is a resource without priority, so it costs nothing and does not change the solution.
-   2. Done except fusion. Generators are recipes that produce electricity: steam engine from boiler steam, solar panel per planet (`solar-power` × average light from the runtime daytime parameters), nuclear reactor heat → heat exchanger → `steam-500` → steam turbine. Generators are disabled on every planet until enabled in the recipe toggles; while one is enabled, the free electricity import is dropped. The reactor neighbour bonus is not modelled. Fusion reactor and generator follow.
+   2. Done. Generators are recipes that produce electricity: steam engine from boiler steam, solar panel per planet (`solar-power` × average light from the runtime daytime parameters), nuclear reactor heat → heat exchanger → `steam-500` → steam turbine. Generators are disabled on every planet until enabled in the recipe toggles; while one is enabled, the free electricity import is dropped. The reactor neighbour bonus is not modelled. Fusion: the reactor turns cold fluoroketone into plasma with electricity and fusion cells, the generator turns plasma into electricity and hot fluoroketone; the plasma energy comes from the generator's output over its flow.
    3. Done. While every selected planet requires heating (Aquilo), buildings use their `heating_energy` as the abstract item `heat` (MJ). Heating towers and nuclear reactors supply it and are disabled by default like generators; otherwise heat is a free import. Inserters, belts and pipes are not counted.
-4. Power generation: steam engines, turbines, heat exchangers, solar with per-planet `solar-power`.
+4. Done in step 3: steam engines, turbines, heat exchangers, solar with per-planet `solar-power`.
 5. Quality: quality level for machines, modules and beacons as effect multipliers. Recycling loops for target quality as a later step.
 
 ## Phase 6: Robustness and security (OWASP Top 10 2021)
@@ -178,6 +178,6 @@ Branch `develop`. Phase 3 and phases 4 and 4a are done. Last pushed commit: `9f8
 
 Next steps:
 
-1. Phase 5, step 3.
+1. Phase 5, step 5.
 
 Helper scripts (ignored by git) in `.port/`: `port.cjs` writes a TS file with the old license header and rewrites imports; `blank2.cjs` inserts empty lines before anchor lines.

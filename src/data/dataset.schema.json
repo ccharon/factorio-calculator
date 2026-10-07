@@ -7,7 +7,7 @@
   "additionalProperties": false,
   "required": [
     "version", "groups", "items", "fluids", "fuel", "spoilage", "recipes", "crafting_machines",
-    "rocket_silo", "mining_drills", "offshore_pumps", "boilers", "generators", "solar_panels", "reactors", "belts", "beacon", "modules",
+    "rocket_silo", "mining_drills", "offshore_pumps", "boilers", "generators", "solar_panels", "reactors", "fusion_reactors", "fusion_generators", "belts", "beacon", "modules",
     "agricultural_tower", "planets", "resources", "plants", "surface_properties", "recipe_productivity", "rocket_lift_weight", "sprites"
   ],
   "properties": {
@@ -235,6 +235,43 @@
           "localized_name": { "$ref": "#/$defs/localizedName" },
           "consumption": { "type": "number", "exclusiveMinimum": 0, "description": "Heat output in W." },
           "energy_source": { "$ref": "#/$defs/energySource" },
+          "icon_col": { "$ref": "#/$defs/iconIndex" },
+          "icon_row": { "$ref": "#/$defs/iconIndex" }
+        }
+      }
+    },
+    "fusion_reactors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["key", "localized_name", "power_input", "fluid_usage", "input_fluid", "output_fluid", "burner", "icon_col", "icon_row"],
+        "properties": {
+          "key": { "$ref": "#/$defs/key" },
+          "localized_name": { "$ref": "#/$defs/localizedName" },
+          "power_input": { "type": "number", "exclusiveMinimum": 0, "description": "Electric power in W." },
+          "fluid_usage": { "type": "number", "exclusiveMinimum": 0, "description": "Fluid units per second." },
+          "input_fluid": { "$ref": "#/$defs/key" },
+          "output_fluid": { "$ref": "#/$defs/key" },
+          "burner": { "$ref": "#/$defs/energySource" },
+          "icon_col": { "$ref": "#/$defs/iconIndex" },
+          "icon_row": { "$ref": "#/$defs/iconIndex" }
+        }
+      }
+    },
+    "fusion_generators": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["key", "localized_name", "max_power_output", "fluid_usage", "input_fluid", "output_fluid", "icon_col", "icon_row"],
+        "properties": {
+          "key": { "$ref": "#/$defs/key" },
+          "localized_name": { "$ref": "#/$defs/localizedName" },
+          "max_power_output": { "type": "number", "exclusiveMinimum": 0, "description": "Electric output in W at full plasma flow." },
+          "fluid_usage": { "type": "number", "exclusiveMinimum": 0, "description": "Fluid units per second." },
+          "input_fluid": { "$ref": "#/$defs/key" },
+          "output_fluid": { "$ref": "#/$defs/key" },
           "icon_col": { "$ref": "#/$defs/iconIndex" },
           "icon_row": { "$ref": "#/$defs/iconIndex" }
         }

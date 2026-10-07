@@ -318,6 +318,27 @@ export function convert(raw, localeFiles, version, runtime) {
         icon_ref: `entity/${p.name}`,
     }))
 
+    // Fusion: the reactor turns a coolant into plasma, the generator turns plasma into electricity.
+    const fusion_reactors = Object.values(raw["fusion-reactor"] ?? {}).filter(p => !isSkipped(p)).map(p => ({
+        key: p.name,
+        localized_name: locale.name("entity", p.name),
+        power_input: parseEnergy(p.power_input, "W"),
+        fluid_usage: p.max_fluid_usage * 60,
+        input_fluid: p.input_fluid_box?.filter,
+        output_fluid: p.output_fluid_box?.filter,
+        burner: normalizeEnergySource(p.burner),
+        icon_ref: `entity/${p.name}`,
+    }))
+    const fusion_generators = Object.values(raw["fusion-generator"] ?? {}).filter(p => !isSkipped(p)).map(p => ({
+        key: p.name,
+        localized_name: locale.name("entity", p.name),
+        max_power_output: parseEnergy(p.energy_source?.output_flow_limit, "W"),
+        fluid_usage: p.max_fluid_usage * 60,
+        input_fluid: p.input_fluid_box?.filter,
+        output_fluid: p.output_fluid_box?.filter,
+        icon_ref: `entity/${p.name}`,
+    }))
+
     const belts = Object.values(raw["transport-belt"]).map(p => ({
         key: p.name,
         localized_name: locale.name("entity", p.name),
@@ -504,6 +525,8 @@ export function convert(raw, localeFiles, version, runtime) {
         generators,
         solar_panels,
         reactors,
+        fusion_reactors,
+        fusion_generators,
         belts,
         beacon,
         modules,

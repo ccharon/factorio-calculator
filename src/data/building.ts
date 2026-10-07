@@ -300,6 +300,15 @@ export function getBuildings(data: Dataset, items: ReadonlyMap<string, Item>): B
     for (const d of data.generators) {
         buildings.push(new PseudoBuilding({ ...iconOptions(d), categories: [powerCategory(d.key)], speed: one, prodBonus: zero, moduleSlots: 0, power: zero, fuel: null }))
     }
+    for (const d of data.fusion_generators) {
+        buildings.push(new PseudoBuilding({ ...iconOptions(d), categories: [powerCategory(d.key)], speed: one, prodBonus: zero, moduleSlots: 0, power: zero, fuel: null }))
+    }
+    for (const d of data.fusion_reactors) {
+        buildings.push(new Building({
+            ...iconOptions(d), categories: [powerCategory(d.key)], speed: one, prodBonus: zero, moduleSlots: 0,
+            power: Rational.from_float(d.power_input), fuel: null,
+        }))
+    }
     for (const d of data.solar_panels) {
         buildings.push(new PseudoBuilding({ ...iconOptions(d), categories: [powerCategory(d.key)], speed: one, prodBonus: zero, moduleSlots: 0, power: zero, fuel: null }))
     }

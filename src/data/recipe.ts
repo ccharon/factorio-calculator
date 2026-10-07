@@ -624,7 +624,14 @@ export function getRecipes(data: Dataset, items: Map<string, Item>): Map<string,
     recipes.set(ELECTRICITY, new ResourceRecipe(item(ELECTRICITY), undefined, undefined))
     recipes.set(HEAT, new ResourceRecipe(item(HEAT), undefined, undefined))
 
-    // Items that nothing produces become resources. Items that nothing produces or uses are removed.
+    return recipes
+}
+
+/**
+ * Turns items that no recipe produces into resources and removes items that no recipe produces
+ * or uses. Call it after all recipes, including pseudo-recipes, are added.
+ */
+export function addResources(items: Map<string, Item>, recipes: Map<string, Recipe>): void {
     for (const [itemKey, it] of Array.from(items)) {
         if (it.recipes.length === 0 && it.uses.length === 0) {
             items.delete(itemKey)
@@ -632,6 +639,4 @@ export function getRecipes(data: Dataset, items: Map<string, Item>): Map<string,
             recipes.set(itemKey, new ResourceRecipe(it, 2, hundred))
         }
     }
-
-    return recipes
 }

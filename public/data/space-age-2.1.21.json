@@ -210,7 +210,7 @@
       "order": "e[accumulator]-a[accumulator]",
       "stack_size": 50,
       "weight": 20000,
-      "icon_col": 17,
+      "icon_col": 19,
       "icon_row": 2
     },
     {
@@ -224,7 +224,7 @@
       "order": "b[storage]-c[active-provider-chest]",
       "stack_size": 50,
       "weight": 20000,
-      "icon_col": 18,
+      "icon_col": 20,
       "icon_row": 2
     },
     {
@@ -238,7 +238,7 @@
       "order": "b[circuits]-b[advanced-circuit]",
       "stack_size": 200,
       "weight": 1000,
-      "icon_col": 19,
+      "icon_col": 21,
       "icon_row": 2
     },
     {
@@ -252,7 +252,7 @@
       "order": "i",
       "stack_size": 200,
       "weight": 1000,
-      "icon_col": 20,
+      "icon_col": 22,
       "icon_row": 2
     },
     {
@@ -278,7 +278,7 @@
       "group": "fluids",
       "subgroup": "fluid",
       "order": "b[new-fluid]-e[aquilo]-b[ammonia]",
-      "icon_col": 23,
+      "icon_col": 25,
       "icon_row": 1
     },
     {
@@ -290,7 +290,7 @@
       "group": "fluids",
       "subgroup": "fluid",
       "order": "b[new-fluid]-e[aquilo]-a[ammoniacal-solution]",
-      "icon_col": 24,
+      "icon_col": 26,
       "icon_row": 1
     },
     {
@@ -304,7 +304,7 @@
       "order": "c[combinators]-a[arithmetic-combinator]",
       "stack_size": 50,
       "weight": 20000,
-      "icon_col": 21,
+      "icon_col": 23,
       "icon_row": 2
     },
     {
@@ -318,7 +318,7 @@
       "order": "c[landfill]-d[artificial-jellynut-soil]",
       "stack_size": 100,
       "weight": 14750,
-      "icon_col": 22,
+      "icon_col": 24,
       "icon_row": 2
     },
     {
@@ -332,7 +332,7 @@
       "order": "c[landfill]-b[artificial-yumako-soil]",
       "stack_size": 100,
       "weight": 14750,
-      "icon_col": 23,
+      "icon_col": 25,
       "icon_row": 2
     },
     {
@@ -346,7 +346,7 @@
       "order": "d[explosive-cannon-shell]-d[artillery]",
       "stack_size": 1,
       "weight": 100000,
-      "icon_col": 24,
+      "icon_col": 26,
       "icon_row": 2
     },
     {
@@ -360,7 +360,7 @@
       "order": "b[turret]-d[artillery-turret]-b[remote]",
       "stack_size": 1,
       "weight": 0,
-      "icon_col": 25,
+      "icon_col": 27,
       "icon_row": 2
     },
     {
@@ -374,8 +374,8 @@
       "order": "b[turret]-d[artillery-turret]-a[turret]",
       "stack_size": 10,
       "weight": 200000,
-      "icon_col": 26,
-      "icon_row": 2
+      "icon_col": 0,
+      "icon_row": 3
     },
     {
       "key": "artillery-wagon",
@@ -388,8 +388,8 @@
       "order": "c[rolling-stock]-d[artillery-wagon]",
       "stack_size": 5,
       "weight": 531666,
-      "icon_col": 27,
-      "icon_row": 2
+      "icon_col": 1,
+      "icon_row": 3
     },
     {
       "key": "artillery-wagon-cannon",
@@ -402,7 +402,7 @@
       "order": "z[artillery]-a[cannon]",
       "stack_size": 1,
       "weight": 100,
-      "icon_col": 0,
+      "icon_col": 2,
       "icon_row": 3
     },
     {
@@ -458,7 +458,7 @@
       "order": "d[asteroid-collector]",
       "stack_size": 10,
       "weight": 100000,
-      "icon_col": 1,
+      "icon_col": 3,
       "icon_row": 3
     },
     {
@@ -472,7 +472,7 @@
       "order": "d[rocket-launcher]-d[atomic-bomb]",
       "stack_size": 10,
       "weight": 1500000,
-      "icon_col": 2,
+      "icon_col": 4,
       "icon_row": 3
     },
     {
@@ -486,7 +486,7 @@
       "order": "a[automation-science-pack]",
       "stack_size": 200,
       "weight": 1000,
-      "icon_col": 3,
+      "icon_col": 5,
       "icon_row": 3
     },
     {
@@ -500,7 +500,7 @@
       "order": "a[basic-intermediates]-d[empty-barrel]",
       "stack_size": 10,
       "weight": 5000,
-      "icon_col": 4,
+      "icon_col": 6,
       "icon_row": 3
     },
     {
@@ -514,7 +514,7 @@
       "order": "b[chemistry]-d[battery]",
       "stack_size": 200,
       "weight": 2500,
-      "icon_col": 5,
+      "icon_col": 7,
       "icon_row": 3
     },
     {
@@ -528,7 +528,7 @@
       "order": "b[battery]-a[battery-equipment]",
       "stack_size": 20,
       "weight": 50000,
-      "icon_col": 6,
+      "icon_col": 8,
       "icon_row": 3
     },
     {
@@ -542,7 +542,7 @@
       "order": "b[battery]-b[battery-equipment-mk2]",
       "stack_size": 20,
       "weight": 100000,
-      "icon_col": 7,
+      "icon_col": 9,
       "icon_row": 3
     },
     {
@@ -556,7 +556,7 @@
       "order": "b[battery]-c[battery-equipment-mk3]",
       "stack_size": 20,
       "weight": 200000,
-      "icon_col": 8,
+      "icon_col": 10,
       "icon_row": 3
     },
     {
@@ -570,7 +570,7 @@
       "order": "a[beacon]",
       "stack_size": 20,
       "weight": 50000,
-      "icon_col": 9,
+      "icon_col": 11,
       "icon_row": 3
     },
     {
@@ -584,7 +584,7 @@
       "order": "c[belt-immunity]-a[belt-immunity]",
       "stack_size": 20,
       "weight": 50000,
-      "icon_col": 10,
+      "icon_col": 12,
       "icon_row": 3
     },
     {
@@ -598,7 +598,7 @@
       "order": "a[energy]-c[big-electric-pole]",
       "stack_size": 50,
       "weight": 20000,
-      "icon_col": 11,
+      "icon_col": 13,
       "icon_row": 3
     },
     {
@@ -640,7 +640,7 @@
       "order": "a[organic-processing]-b[bioflux]",
       "stack_size": 100,
       "weight": 1000,
-      "icon_col": 12,
+      "icon_col": 14,
       "icon_row": 3
     },
     {
@@ -654,7 +654,7 @@
       "order": "z[z-biolab]",
       "stack_size": 5,
       "weight": 1000000,
-      "icon_col": 13,
+      "icon_col": 15,
       "icon_row": 3
     },
     {
@@ -668,7 +668,7 @@
       "order": "c[eggs]-a[biter-egg]",
       "stack_size": 100,
       "weight": 2000,
-      "icon_col": 14,
+      "icon_col": 16,
       "icon_row": 3
     },
     {
@@ -682,7 +682,7 @@
       "order": "c[automated-construction]-a[blueprint]",
       "stack_size": 1,
       "weight": 100,
-      "icon_col": 15,
+      "icon_col": 17,
       "icon_row": 3
     },
     {
@@ -696,7 +696,7 @@
       "order": "c[automated-construction]-d[blueprint-book]",
       "stack_size": 1,
       "weight": 100,
-      "icon_col": 16,
+      "icon_col": 18,
       "icon_row": 3
     },
     {
@@ -724,7 +724,7 @@
       "order": "a[items]-c[bottomless-chest]",
       "stack_size": 10,
       "weight": 100,
-      "icon_col": 17,
+      "icon_col": 19,
       "icon_row": 3
     },
     {
@@ -738,7 +738,7 @@
       "order": "b[storage]-d[buffer-chest]",
       "stack_size": 50,
       "weight": 20000,
-      "icon_col": 18,
+      "icon_col": 20,
       "icon_row": 3
     },
     {
@@ -752,7 +752,7 @@
       "order": "f[bulk-inserter]",
       "stack_size": 50,
       "weight": 20000,
-      "icon_col": 19,
+      "icon_col": 21,
       "icon_row": 3
     },
     {
@@ -766,7 +766,7 @@
       "order": "t[item]-o[burner-generator]",
       "stack_size": 10,
       "weight": 100,
-      "icon_col": 9,
+      "icon_col": 11,
       "icon_row": 1
     },
     {
@@ -780,7 +780,7 @@
       "order": "a[burner-inserter]",
       "stack_size": 50,
       "weight": 20000,
-      "icon_col": 20,
+      "icon_col": 22,
       "icon_row": 3
     },
     {
@@ -822,7 +822,7 @@
       "order": "d[cannon-shell]-a[basic]",
       "stack_size": 100,
       "weight": 20000,
-      "icon_col": 21,
+      "icon_col": 23,
       "icon_row": 3
     },
     {
@@ -850,7 +850,7 @@
       "order": "d[rocket-launcher]-d[capture]",
       "stack_size": 10,
       "weight": 100000,
-      "icon_col": 22,
+      "icon_col": 24,
       "icon_row": 3
     },
     {
@@ -864,7 +864,7 @@
       "order": "b[personal-transport]-a[car]",
       "stack_size": 1,
       "weight": 1000000,
-      "icon_col": 23,
+      "icon_col": 25,
       "icon_row": 3
     },
     {
@@ -878,7 +878,7 @@
       "order": "b[chemistry]-f[carbon]",
       "stack_size": 50,
       "weight": 1000,
-      "icon_col": 24,
+      "icon_col": 26,
       "icon_row": 3
     },
     {
@@ -892,7 +892,7 @@
       "order": "a[organic-products]-e[carbon-fiber]",
       "stack_size": 100,
       "weight": 2000,
-      "icon_col": 25,
+      "icon_col": 27,
       "icon_row": 3
     },
     {
@@ -906,8 +906,8 @@
       "order": "b[carbonic]-e[chunk]",
       "stack_size": 1,
       "weight": 100000,
-      "icon_col": 26,
-      "icon_row": 3
+      "icon_col": 0,
+      "icon_row": 4
     },
     {
       "key": "cargo-bay",
@@ -920,8 +920,8 @@
       "order": "c-b[cargo-bay]",
       "stack_size": 10,
       "weight": 100000,
-      "icon_col": 27,
-      "icon_row": 3
+      "icon_col": 1,
+      "icon_row": 4
     },
     {
       "key": "cargo-landing-pad",
@@ -934,7 +934,7 @@
       "order": "c-a[cargo-landing-pad]",
       "stack_size": 1,
       "weight": 1000000,
-      "icon_col": 0,
+      "icon_col": 2,
       "icon_row": 4
     },
     {
@@ -948,7 +948,7 @@
       "order": "c[rolling-stock]-b[cargo-wagon]",
       "stack_size": 5,
       "weight": 200000,
-      "icon_col": 1,
+      "icon_col": 3,
       "icon_row": 4
     },
     {
@@ -990,7 +990,7 @@
       "order": "d[chemical-science-pack]",
       "stack_size": 200,
       "weight": 1000,
-      "icon_col": 2,
+      "icon_col": 4,
       "icon_row": 4
     },
     {
@@ -1004,7 +1004,7 @@
       "order": "d[cliff-explosives]",
       "stack_size": 20,
       "weight": 50000,
-      "icon_col": 3,
+      "icon_col": 5,
       "icon_row": 4
     },
     {
@@ -1018,7 +1018,7 @@
       "order": "a[grenade]-b[cluster]",
       "stack_size": 100,
       "weight": 40000,
-      "icon_col": 4,
+      "icon_col": 6,
       "icon_row": 4
     },
     {
@@ -1046,7 +1046,7 @@
       "order": "y",
       "stack_size": 100000,
       "weight": 100,
-      "icon_col": 5,
+      "icon_col": 7,
       "icon_row": 4
     },
     {
@@ -1060,7 +1060,7 @@
       "order": "b[shotgun]-a[combat]",
       "stack_size": 5,
       "weight": 200000,
-      "icon_col": 6,
+      "icon_col": 8,
       "icon_row": 4
     },
     {
@@ -1074,7 +1074,7 @@
       "order": "b[concrete]-a[plain]",
       "stack_size": 100,
       "weight": 10000,
-      "icon_col": 7,
+      "icon_col": 9,
       "icon_row": 4
     },
     {
@@ -1088,7 +1088,7 @@
       "order": "c[combinators]-d[constant-combinator]",
       "stack_size": 50,
       "weight": 20000,
-      "icon_col": 8,
+      "icon_col": 10,
       "icon_row": 4
     },
     {
@@ -1102,7 +1102,7 @@
       "order": "a[robot]-b[construction-robot]",
       "stack_size": 50,
       "weight": 20000,
-      "icon_col": 9,
+      "icon_col": 11,
       "icon_row": 4
     },
     {
@@ -1116,7 +1116,7 @@
       "order": "b[agriculture]-d[bacteria]-c[copper-bacteria]",
       "stack_size": 50,
       "weight": 1000,
-      "icon_col": 10,
+      "icon_col": 12,
       "icon_row": 4
     },
     {
@@ -1130,7 +1130,7 @@
       "order": "a[basic-intermediates]-c[copper-cable]",
       "stack_size": 200,
       "weight": 250,
-      "icon_col": 11,
+      "icon_col": 13,
       "icon_row": 4
     },
     {
@@ -1158,7 +1158,7 @@
       "order": "a[smelting]-b[copper-plate]",
       "stack_size": 100,
       "weight": 1000,
-      "icon_col": 12,
+      "icon_col": 14,
       "icon_row": 4
     },
     {
@@ -1172,7 +1172,7 @@
       "order": "",
       "stack_size": 1,
       "weight": 0,
-      "icon_col": 13,
+      "icon_col": 15,
       "icon_row": 4
     },
     {
@@ -1186,7 +1186,7 @@
       "order": "c[automated-construction]-x",
       "stack_size": 1,
       "weight": 0,
-      "icon_col": 14,
+      "icon_col": 16,
       "icon_row": 4
     },
     {
@@ -1198,7 +1198,7 @@
       "group": "fluids",
       "subgroup": "fluid",
       "order": "a[fluid]-b[oil]-a[crude-oil]",
-      "icon_col": 25,
+      "icon_col": 27,
       "icon_row": 1
     },
     {
@@ -1212,7 +1212,7 @@
       "order": "a[fluid]-b[oil]-a[crude-oil]",
       "stack_size": 10,
       "weight": 10000,
-      "icon_col": 15,
+      "icon_col": 17,
       "icon_row": 4
     },
     {
@@ -1254,7 +1254,7 @@
       "order": "k",
       "stack_size": 200,
       "weight": 1000,
-      "icon_col": 16,
+      "icon_col": 18,
       "icon_row": 4
     },
     {
@@ -1268,7 +1268,7 @@
       "order": "c[automated-construction]-x",
       "stack_size": 1,
       "weight": 0,
-      "icon_col": 17,
+      "icon_col": 19,
       "icon_row": 4
     },
     {
@@ -1282,7 +1282,7 @@
       "order": "c[combinators]-b[decider-combinator]",
       "stack_size": 50,
       "weight": 20000,
-      "icon_col": 18,
+      "icon_col": 20,
       "icon_row": 4
     },
     {
@@ -1296,7 +1296,7 @@
       "order": "c[automated-construction]-b[deconstruction-planner]",
       "stack_size": 1,
       "weight": 100,
-      "icon_col": 19,
+      "icon_col": 21,
       "icon_row": 4
     },
     {
@@ -1310,7 +1310,7 @@
       "order": "d[defender]-b[capsule]",
       "stack_size": 100,
       "weight": 10000,
-      "icon_col": 20,
+      "icon_col": 22,
       "icon_row": 4
     },
     {
@@ -1324,7 +1324,7 @@
       "order": "b[uranium-products]-b[depleted-uranium-fuel-cell]",
       "stack_size": 50,
       "weight": 100000,
-      "icon_col": 21,
+      "icon_col": 23,
       "icon_row": 4
     },
     {
@@ -1338,7 +1338,7 @@
       "order": "f[destroyer]-b[capsule]",
       "stack_size": 100,
       "weight": 40000,
-      "icon_col": 22,
+      "icon_col": 24,
       "icon_row": 4
     },
     {
@@ -1352,7 +1352,7 @@
       "order": "b[active-defense]-b[discharge-defense-equipment]-a[equipment]",
       "stack_size": 20,
       "weight": 233333,
-      "icon_col": 23,
+      "icon_col": 25,
       "icon_row": 4
     },
     {
@@ -1366,7 +1366,7 @@
       "order": "b[active-defense]-b[discharge-defense-equipment]-b[remote]",
       "stack_size": 1,
       "weight": 0,
-      "icon_col": 24,
+      "icon_col": 26,
       "icon_row": 4
     },
     {
@@ -1380,7 +1380,7 @@
       "order": "s[display-panel]",
       "stack_size": 10,
       "weight": 100000,
-      "icon_col": 25,
+      "icon_col": 27,
       "icon_row": 4
     },
     {
@@ -1394,8 +1394,8 @@
       "order": "e[distractor]-b[capsule]",
       "stack_size": 100,
       "weight": 20000,
-      "icon_col": 26,
-      "icon_row": 4
+      "icon_col": 0,
+      "icon_row": 5
     },
     {
       "key": "efficiency-module",
@@ -1408,8 +1408,8 @@
       "order": "c[efficiency]-a[efficiency-module-1]",
       "stack_size": 50,
       "weight": 20000,
-      "icon_col": 27,
-      "icon_row": 4
+      "icon_col": 1,
+      "icon_row": 5
     },
     {
       "key": "efficiency-module-2",
@@ -1422,7 +1422,7 @@
       "order": "c[efficiency]-b[efficiency-module-2]",
       "stack_size": 50,
       "weight": 20000,
-      "icon_col": 0,
+      "icon_col": 2,
       "icon_row": 5
     },
     {
@@ -1436,7 +1436,7 @@
       "order": "c[efficiency]-c[efficiency-module-3]",
       "stack_size": 50,
       "weight": 20000,
-      "icon_col": 1,
+      "icon_col": 3,
       "icon_row": 5
     },
     {
@@ -1450,7 +1450,7 @@
       "order": "a[electric-energy-interface]-b[electric-energy-interface]",
       "stack_size": 50,
       "weight": 100,
-      "icon_col": 2,
+      "icon_col": 4,
       "icon_row": 5
     },
     {
@@ -1464,7 +1464,7 @@
       "order": "a[electric-energy-interface]-b[electric-energy-interface-equipment]",
       "stack_size": 1,
       "weight": 250000,
-      "icon_col": 3,
+      "icon_col": 5,
       "icon_row": 5
     },
     {
@@ -1478,7 +1478,7 @@
       "order": "c[advanced-intermediates]-b[electric-engine-unit]",
       "stack_size": 50,
       "weight": 2500,
-      "icon_col": 4,
+      "icon_col": 6,
       "icon_row": 5
     },
     {
@@ -1518,8 +1518,8 @@
       "group": "fluids",
       "subgroup": "fluid",
       "order": "b[new-fluid]-c[fulgora]-b[electrolyte]",
-      "icon_col": 26,
-      "icon_row": 1
+      "icon_col": 0,
+      "icon_row": 2
     },
     {
       "key": "electromagnetic-plant",
@@ -1546,7 +1546,7 @@
       "order": "j",
       "stack_size": 200,
       "weight": 1000,
-      "icon_col": 5,
+      "icon_col": 7,
       "icon_row": 5
     },
     {
@@ -1560,7 +1560,7 @@
       "order": "b[circuits]-a[electronic-circuit]",
       "stack_size": 200,
       "weight": 500,
-      "icon_col": 6,
+      "icon_col": 8,
       "icon_row": 5
     },
     {
@@ -1574,7 +1574,7 @@
       "order": "z[meta]-a[empty-module-slot]",
       "stack_size": 1,
       "weight": 100,
-      "icon_col": 7,
+      "icon_col": 9,
       "icon_row": 5
     },
     {
@@ -1588,7 +1588,7 @@
       "order": "a[shield]-a[energy-shield-equipment]",
       "stack_size": 20,
       "weight": 50000,
-      "icon_col": 8,
+      "icon_col": 10,
       "icon_row": 5
     },
     {
@@ -1602,7 +1602,7 @@
       "order": "a[shield]-b[energy-shield-equipment-mk2]",
       "stack_size": 20,
       "weight": 100000,
-      "icon_col": 9,
+      "icon_col": 11,
       "icon_row": 5
     },
     {
@@ -1616,7 +1616,7 @@
       "order": "c[advanced-intermediates]-a[engine-unit]",
       "stack_size": 50,
       "weight": 2500,
-      "icon_col": 10,
+      "icon_col": 12,
       "icon_row": 5
     },
     {
@@ -1630,7 +1630,7 @@
       "order": "d[exoskeleton]-a[exoskeleton-equipment]",
       "stack_size": 20,
       "weight": 79166,
-      "icon_col": 11,
+      "icon_col": 13,
       "icon_row": 5
     },
     {
@@ -1644,7 +1644,7 @@
       "order": "d[cannon-shell]-c[explosive]",
       "stack_size": 100,
       "weight": 20000,
-      "icon_col": 12,
+      "icon_col": 14,
       "icon_row": 5
     },
     {
@@ -1658,7 +1658,7 @@
       "order": "d[rocket-launcher]-b[explosive]",
       "stack_size": 100,
       "weight": 40000,
-      "icon_col": 13,
+      "icon_col": 15,
       "icon_row": 5
     },
     {
@@ -1672,7 +1672,7 @@
       "order": "d[explosive-cannon-shell]-c[uranium]",
       "stack_size": 100,
       "weight": 40000,
-      "icon_col": 14,
+      "icon_col": 16,
       "icon_row": 5
     },
     {
@@ -1686,7 +1686,7 @@
       "order": "b[chemistry]-e[explosives]",
       "stack_size": 50,
       "weight": 2000,
-      "icon_col": 15,
+      "icon_col": 17,
       "icon_row": 5
     },
     {
@@ -1700,7 +1700,7 @@
       "order": "d[loader]-c[express-loader]",
       "stack_size": 50,
       "weight": 100,
-      "icon_col": 16,
+      "icon_col": 18,
       "icon_row": 5
     },
     {
@@ -1714,7 +1714,7 @@
       "order": "c[splitter]-c[express-splitter]",
       "stack_size": 50,
       "weight": 20000,
-      "icon_col": 17,
+      "icon_col": 19,
       "icon_row": 5
     },
     {
@@ -1742,7 +1742,7 @@
       "order": "b[underground-belt]-c[express-underground-belt]",
       "stack_size": 50,
       "weight": 20000,
-      "icon_col": 18,
+      "icon_col": 20,
       "icon_row": 5
     },
     {
@@ -1756,7 +1756,7 @@
       "order": "d[fast-inserter]",
       "stack_size": 50,
       "weight": 20000,
-      "icon_col": 19,
+      "icon_col": 21,
       "icon_row": 5
     },
     {
@@ -1770,7 +1770,7 @@
       "order": "d[loader]-b[fast-loader]",
       "stack_size": 50,
       "weight": 100,
-      "icon_col": 20,
+      "icon_col": 22,
       "icon_row": 5
     },
     {
@@ -1784,7 +1784,7 @@
       "order": "c[splitter]-b[fast-splitter]",
       "stack_size": 50,
       "weight": 20000,
-      "icon_col": 21,
+      "icon_col": 23,
       "icon_row": 5
     },
     {
@@ -1812,7 +1812,7 @@
       "order": "b[underground-belt]-b[fast-underground-belt]",
       "stack_size": 50,
       "weight": 20000,
-      "icon_col": 22,
+      "icon_col": 24,
       "icon_row": 5
     },
     {
@@ -1826,7 +1826,7 @@
       "order": "a[basic-clips]-a[firearm-magazine]",
       "stack_size": 100,
       "weight": 10000,
-      "icon_col": 23,
+      "icon_col": 25,
       "icon_row": 5
     },
     {
@@ -1840,7 +1840,7 @@
       "order": "a[energy-source]-b[fission-reactor]",
       "stack_size": 20,
       "weight": 250000,
-      "icon_col": 3,
+      "icon_col": 5,
       "icon_row": 5
     },
     {
@@ -1854,7 +1854,7 @@
       "order": "e[flamethrower]",
       "stack_size": 5,
       "weight": 200000,
-      "icon_col": 24,
+      "icon_col": 26,
       "icon_row": 5
     },
     {
@@ -1868,7 +1868,7 @@
       "order": "e[flamethrower]",
       "stack_size": 100,
       "weight": 10000,
-      "icon_col": 25,
+      "icon_col": 27,
       "icon_row": 5
     },
     {
@@ -1882,8 +1882,8 @@
       "order": "b[turret]-c[flamethrower-turret]",
       "stack_size": 50,
       "weight": 50000,
-      "icon_col": 26,
-      "icon_row": 5
+      "icon_col": 0,
+      "icon_row": 6
     },
     {
       "key": "fluid-wagon",
@@ -1896,8 +1896,8 @@
       "order": "c[rolling-stock]-c[fluid-wagon]",
       "stack_size": 5,
       "weight": 200000,
-      "icon_col": 27,
-      "icon_row": 5
+      "icon_col": 1,
+      "icon_row": 6
     },
     {
       "key": "fluorine",
@@ -1908,8 +1908,8 @@
       "group": "fluids",
       "subgroup": "fluid",
       "order": "b[new-fluid]-e[aquilo]-c[fluorine]",
-      "icon_col": 27,
-      "icon_row": 1
+      "icon_col": 1,
+      "icon_row": 2
     },
     {
       "key": "fluoroketone-cold",
@@ -1920,7 +1920,7 @@
       "group": "fluids",
       "subgroup": "fluid",
       "order": "b[new-fluid]-e[aquilo]-e[fluoroketone-cold]",
-      "icon_col": 0,
+      "icon_col": 2,
       "icon_row": 2
     },
     {
@@ -1934,7 +1934,7 @@
       "order": "b[new-fluid]-e[aquilo]-e[fluoroketone-cold]",
       "stack_size": 10,
       "weight": 10000,
-      "icon_col": 0,
+      "icon_col": 2,
       "icon_row": 6
     },
     {
@@ -1946,7 +1946,7 @@
       "group": "fluids",
       "subgroup": "fluid",
       "order": "b[new-fluid]-e[aquilo]-d[fluoroketone-hot]",
-      "icon_col": 1,
+      "icon_col": 3,
       "icon_row": 2
     },
     {
@@ -1960,7 +1960,7 @@
       "order": "b[new-fluid]-e[aquilo]-d[fluoroketone-hot]",
       "stack_size": 10,
       "weight": 10000,
-      "icon_col": 1,
+      "icon_col": 3,
       "icon_row": 6
     },
     {
@@ -1974,7 +1974,7 @@
       "order": "c[advanced-intermediates]-c[flying-robot-frame]",
       "stack_size": 50,
       "weight": 6666.666656494141,
-      "icon_col": 2,
+      "icon_col": 4,
       "icon_row": 6
     },
     {
@@ -1988,7 +1988,7 @@
       "order": "c[landfill]-g[foundation]",
       "stack_size": 50,
       "weight": 20000,
-      "icon_col": 3,
+      "icon_col": 5,
       "icon_row": 6
     },
     {
@@ -2016,8 +2016,8 @@
       "order": "g[fusion-energy]-b[generator]",
       "stack_size": 5,
       "weight": 200000,
-      "icon_col": 4,
-      "icon_row": 6
+      "icon_col": 24,
+      "icon_row": 0
     },
     {
       "key": "fusion-plasma",
@@ -2028,7 +2028,7 @@
       "group": "fluids",
       "subgroup": "fluid",
       "order": "b[new-fluid]-e[aquilo]-g[fusion-plasma]",
-      "icon_col": 2,
+      "icon_col": 4,
       "icon_row": 2
     },
     {
@@ -2042,7 +2042,7 @@
       "order": "c[lithium]-d[fusion-power-cell]",
       "stack_size": 50,
       "weight": 20000,
-      "icon_col": 5,
+      "icon_col": 6,
       "icon_row": 6
     },
     {
@@ -2056,8 +2056,8 @@
       "order": "g[fusion-energy]-a[reactor]",
       "stack_size": 1,
       "weight": 1000000,
-      "icon_col": 6,
-      "icon_row": 6
+      "icon_col": 25,
+      "icon_row": 0
     },
     {
       "key": "fusion-reactor-equipment",
@@ -2154,7 +2154,7 @@
       "order": "f[nuclear-energy]-c[heat-exchanger]",
       "stack_size": 50,
       "weight": 40000,
-      "icon_col": 24,
+      "icon_col": 26,
       "icon_row": 0
     },
     {
@@ -2196,7 +2196,7 @@
       "order": "c[heating-tower]",
       "stack_size": 20,
       "weight": 100000,
-      "icon_col": 25,
+      "icon_col": 27,
       "icon_row": 0
     },
     {
@@ -2222,7 +2222,7 @@
       "group": "fluids",
       "subgroup": "fluid",
       "order": "a[fluid]-b[oil]-d[heavy-oil]",
-      "icon_col": 3,
+      "icon_col": 5,
       "icon_row": 2
     },
     {
@@ -2276,7 +2276,7 @@
       "group": "fluids",
       "subgroup": "fluid",
       "order": "b[new-fluid]-c[fulgora]-a[holmium-solution]",
-      "icon_col": 4,
+      "icon_col": 6,
       "icon_row": 2
     },
     {
@@ -2416,8 +2416,8 @@
       "order": "e[iron-ore]",
       "stack_size": 50,
       "weight": 2000,
-      "icon_col": 26,
-      "icon_row": 0
+      "icon_col": 0,
+      "icon_row": 1
     },
     {
       "key": "iron-plate",
@@ -2582,7 +2582,7 @@
       "group": "fluids",
       "subgroup": "fluid",
       "order": "b[new-fluid]-b[vulcanus]-a[lava]",
-      "icon_col": 5,
+      "icon_col": 7,
       "icon_row": 2
     },
     {
@@ -2608,7 +2608,7 @@
       "group": "fluids",
       "subgroup": "fluid",
       "order": "a[fluid]-b[oil]-c[light-oil]",
-      "icon_col": 6,
+      "icon_col": 8,
       "icon_row": 2
     },
     {
@@ -2704,7 +2704,7 @@
       "group": "fluids",
       "subgroup": "fluid",
       "order": "b[new-fluid]-e[aquilo]-f[lithium-brine]",
-      "icon_col": 7,
+      "icon_col": 9,
       "icon_row": 2
     },
     {
@@ -2814,7 +2814,7 @@
       "group": "fluids",
       "subgroup": "fluid",
       "order": "a[fluid]-b[oil]-e[lubricant]",
-      "icon_col": 8,
+      "icon_col": 10,
       "icon_row": 2
     },
     {
@@ -2924,7 +2924,7 @@
       "group": "fluids",
       "subgroup": "fluid",
       "order": "b[new-fluid]-b[vulcanus]-b[molten-copper]",
-      "icon_col": 9,
+      "icon_col": 11,
       "icon_row": 2
     },
     {
@@ -2936,7 +2936,7 @@
       "group": "fluids",
       "subgroup": "fluid",
       "order": "b[new-fluid]-b[vulcanus]-a[molten-iron]",
-      "icon_col": 10,
+      "icon_col": 12,
       "icon_row": 2
     },
     {
@@ -2992,7 +2992,7 @@
       "order": "f[nuclear-energy]-a[reactor]",
       "stack_size": 10,
       "weight": 1000000,
-      "icon_col": 1,
+      "icon_col": 3,
       "icon_row": 1
     },
     {
@@ -3020,7 +3020,7 @@
       "order": "b[fluids]-a[offshore-pump]",
       "stack_size": 20,
       "weight": 50000,
-      "icon_col": 2,
+      "icon_col": 4,
       "icon_row": 1
     },
     {
@@ -3034,7 +3034,7 @@
       "order": "d[refinery]",
       "stack_size": 10,
       "weight": 100000,
-      "icon_col": 3,
+      "icon_col": 5,
       "icon_row": 1
     },
     {
@@ -3186,7 +3186,7 @@
       "group": "fluids",
       "subgroup": "fluid",
       "order": "a[fluid]-b[oil]-b[petroleum-gas]",
-      "icon_col": 11,
+      "icon_col": 13,
       "icon_row": 2
     },
     {
@@ -3494,7 +3494,7 @@
       "order": "b[fluids]-b[pumpjack]",
       "stack_size": 20,
       "weight": 50000,
-      "icon_col": 4,
+      "icon_col": 6,
       "icon_row": 1
     },
     {
@@ -3704,7 +3704,7 @@
       "order": "d[recycler]",
       "stack_size": 20,
       "weight": 100000,
-      "icon_col": 5,
+      "icon_col": 7,
       "icon_row": 1
     },
     {
@@ -3858,7 +3858,7 @@
       "order": "a[rocket-silo]",
       "stack_size": 1,
       "weight": 10000000,
-      "icon_col": 6,
+      "icon_col": 8,
       "icon_row": 1
     },
     {
@@ -3900,7 +3900,7 @@
       "order": "a[scrap]-a[scrap]",
       "stack_size": 50,
       "weight": 2000,
-      "icon_col": 7,
+      "icon_col": 9,
       "icon_row": 1
     },
     {
@@ -3914,7 +3914,7 @@
       "order": "e[automated-construction]-a[blueprint]",
       "stack_size": 1,
       "weight": 100,
-      "icon_col": 15,
+      "icon_col": 17,
       "icon_row": 3
     },
     {
@@ -4040,7 +4040,7 @@
       "order": "d[solar-panel]-a[solar-panel]",
       "stack_size": 50,
       "weight": 20000,
-      "icon_col": 8,
+      "icon_col": 10,
       "icon_row": 1
     },
     {
@@ -4304,7 +4304,7 @@
       "group": "fluids",
       "subgroup": "fluid",
       "order": "a[fluid]-a[water]-b[steam]",
-      "icon_col": 12,
+      "icon_col": 14,
       "icon_row": 2
     },
     {
@@ -4318,7 +4318,7 @@
       "order": "b[steam-power]-b[steam-engine]",
       "stack_size": 10,
       "weight": 100000,
-      "icon_col": 9,
+      "icon_col": 11,
       "icon_row": 1
     },
     {
@@ -4332,7 +4332,7 @@
       "order": "f[nuclear-energy]-d[steam-turbine]",
       "stack_size": 10,
       "weight": 100000,
-      "icon_col": 10,
+      "icon_col": 12,
       "icon_row": 1
     },
     {
@@ -4360,7 +4360,7 @@
       "order": "b[steel-furnace]",
       "stack_size": 50,
       "weight": 20000,
-      "icon_col": 11,
+      "icon_col": 13,
       "icon_row": 1
     },
     {
@@ -4388,7 +4388,7 @@
       "order": "d[stone]",
       "stack_size": 50,
       "weight": 2000,
-      "icon_col": 12,
+      "icon_col": 14,
       "icon_row": 1
     },
     {
@@ -4416,7 +4416,7 @@
       "order": "a[stone-furnace]",
       "stack_size": 50,
       "weight": 20000,
-      "icon_col": 13,
+      "icon_col": 15,
       "icon_row": 1
     },
     {
@@ -4512,7 +4512,7 @@
       "group": "fluids",
       "subgroup": "fluid",
       "order": "a[fluid]-b[oil]-f[sulfuric-acid]",
-      "icon_col": 13,
+      "icon_col": 15,
       "icon_row": 2
     },
     {
@@ -4582,7 +4582,7 @@
       "order": "z[tank]-a[cannon]",
       "stack_size": 1,
       "weight": 100,
-      "icon_col": 0,
+      "icon_col": 2,
       "icon_row": 3
     },
     {
@@ -4596,7 +4596,7 @@
       "order": "b[flamethrower]-b[tank-flamethrower]",
       "stack_size": 1,
       "weight": 100,
-      "icon_col": 24,
+      "icon_col": 26,
       "icon_row": 5
     },
     {
@@ -4678,7 +4678,7 @@
       "group": "fluids",
       "subgroup": "fluid",
       "order": "b[new-fluid]-a[space]-a[thruster-fuel]",
-      "icon_col": 14,
+      "icon_col": 16,
       "icon_row": 2
     },
     {
@@ -4690,7 +4690,7 @@
       "group": "fluids",
       "subgroup": "fluid",
       "order": "b[new-fluid]-a[space]-b[thruster-oxidizer]",
-      "icon_col": 15,
+      "icon_col": 17,
       "icon_row": 2
     },
     {
@@ -4746,7 +4746,7 @@
       "order": "a[transport-belt]-a[transport-belt]",
       "stack_size": 100,
       "weight": 10000,
-      "icon_col": 15,
+      "icon_col": 17,
       "icon_row": 1
     },
     {
@@ -4788,7 +4788,7 @@
       "order": "c[tungsten]-a[tungsten-ore]",
       "stack_size": 50,
       "weight": 10000,
-      "icon_col": 17,
+      "icon_col": 19,
       "icon_row": 1
     },
     {
@@ -4844,7 +4844,7 @@
       "order": "a[transport-belt]-d[turbo-transport-belt]",
       "stack_size": 100,
       "weight": 20000,
-      "icon_col": 18,
+      "icon_col": 20,
       "icon_row": 1
     },
     {
@@ -4956,7 +4956,7 @@
       "order": "g[uranium-ore]",
       "stack_size": 50,
       "weight": 5000,
-      "icon_col": 19,
+      "icon_col": 21,
       "icon_row": 1
     },
     {
@@ -5010,7 +5010,7 @@
       "group": "fluids",
       "subgroup": "fluid",
       "order": "a[fluid]-a[water]-a[water]",
-      "icon_col": 16,
+      "icon_col": 18,
       "icon_row": 2
     },
     {
@@ -5442,7 +5442,7 @@
       ],
       "order": "e[accumulator]-a[accumulator]",
       "subgroup": "energy",
-      "icon_col": 17,
+      "icon_col": 19,
       "icon_row": 2
     },
     {
@@ -5559,7 +5559,7 @@
       ],
       "order": "b[storage]-c[active-provider-chest]",
       "subgroup": "logistic-network",
-      "icon_col": 18,
+      "icon_col": 20,
       "icon_row": 2
     },
     {
@@ -5678,7 +5678,7 @@
       ],
       "order": "b[circuits]-b[advanced-circuit]",
       "subgroup": "intermediate-product",
-      "icon_col": 19,
+      "icon_col": 21,
       "icon_row": 2
     },
     {
@@ -5973,7 +5973,7 @@
       ],
       "order": "i",
       "subgroup": "science-pack",
-      "icon_col": 20,
+      "icon_col": 22,
       "icon_row": 2
     },
     {
@@ -6201,7 +6201,7 @@
       ],
       "order": "c[combinators]-a[arithmetic-combinator]",
       "subgroup": "circuit-network",
-      "icon_col": 21,
+      "icon_col": 23,
       "icon_row": 2
     },
     {
@@ -6282,7 +6282,7 @@
       ],
       "order": "c[landfill]-d[artificial-jellynut-soil]",
       "subgroup": "terrain",
-      "icon_col": 22,
+      "icon_col": 24,
       "icon_row": 2
     },
     {
@@ -6368,7 +6368,7 @@
       ],
       "order": "c[landfill]-b[artificial-yumako-soil]",
       "subgroup": "terrain",
-      "icon_col": 23,
+      "icon_col": 25,
       "icon_row": 2
     },
     {
@@ -6452,7 +6452,7 @@
       ],
       "order": "d[explosive-cannon-shell]-d[artillery]",
       "subgroup": "ammo",
-      "icon_col": 24,
+      "icon_col": 26,
       "icon_row": 2
     },
     {
@@ -6541,8 +6541,8 @@
       ],
       "order": "b[turret]-d[artillery-turret]-a[turret]",
       "subgroup": "turret",
-      "icon_col": 26,
-      "icon_row": 2
+      "icon_col": 0,
+      "icon_row": 3
     },
     {
       "key": "artillery-turret-recycling",
@@ -6635,8 +6635,8 @@
       ],
       "order": "c[rolling-stock]-d[artillery-wagon]",
       "subgroup": "train-transport",
-      "icon_col": 27,
-      "icon_row": 2
+      "icon_col": 1,
+      "icon_row": 3
     },
     {
       "key": "artillery-wagon-recycling",
@@ -6961,7 +6961,7 @@
       ],
       "order": "d[asteroid-collector]",
       "subgroup": "space-platform",
-      "icon_col": 1,
+      "icon_col": 3,
       "icon_row": 3
     },
     {
@@ -7040,7 +7040,7 @@
       ],
       "order": "d[rocket-launcher]-d[atomic-bomb]",
       "subgroup": "ammo",
-      "icon_col": 2,
+      "icon_col": 4,
       "icon_row": 3
     },
     {
@@ -7114,7 +7114,7 @@
       ],
       "order": "a[automation-science-pack]",
       "subgroup": "science-pack",
-      "icon_col": 3,
+      "icon_col": 5,
       "icon_row": 3
     },
     {
@@ -7173,7 +7173,7 @@
       ],
       "order": "a[basic-intermediates]-d[empty-barrel]",
       "subgroup": "intermediate-product",
-      "icon_col": 4,
+      "icon_col": 6,
       "icon_row": 3
     },
     {
@@ -7272,7 +7272,7 @@
       ],
       "order": "b[chemistry]-d[battery]",
       "subgroup": "raw-material",
-      "icon_col": 5,
+      "icon_col": 7,
       "icon_row": 3
     },
     {
@@ -7306,7 +7306,7 @@
       ],
       "order": "b[battery]-a[battery-equipment]",
       "subgroup": "equipment",
-      "icon_col": 6,
+      "icon_col": 8,
       "icon_row": 3
     },
     {
@@ -7380,7 +7380,7 @@
       ],
       "order": "b[battery]-b[battery-equipment-mk2]",
       "subgroup": "equipment",
-      "icon_col": 7,
+      "icon_col": 9,
       "icon_row": 3
     },
     {
@@ -7454,7 +7454,7 @@
       ],
       "order": "b[battery]-c[battery-equipment-mk3]",
       "subgroup": "equipment",
-      "icon_col": 8,
+      "icon_col": 10,
       "icon_row": 3
     },
     {
@@ -7569,7 +7569,7 @@
       ],
       "order": "a[beacon]",
       "subgroup": "module",
-      "icon_col": 9,
+      "icon_col": 11,
       "icon_row": 3
     },
     {
@@ -7648,7 +7648,7 @@
       ],
       "order": "c[belt-immunity]-a[belt-immunity]",
       "subgroup": "utility-equipment",
-      "icon_col": 10,
+      "icon_col": 12,
       "icon_row": 3
     },
     {
@@ -7723,7 +7723,7 @@
       ],
       "order": "a[energy]-c[big-electric-pole]",
       "subgroup": "energy-pipe-distribution",
-      "icon_col": 11,
+      "icon_col": 13,
       "icon_row": 3
     },
     {
@@ -8005,7 +8005,7 @@
       ],
       "order": "a[organic-products]-g[bioflux]",
       "subgroup": "agriculture-products",
-      "icon_col": 12,
+      "icon_col": 14,
       "icon_row": 3
     },
     {
@@ -8084,7 +8084,7 @@
       ],
       "order": "z[z-biolab]",
       "subgroup": "production-machine",
-      "icon_col": 13,
+      "icon_col": 15,
       "icon_row": 3
     },
     {
@@ -8234,7 +8234,7 @@
       ],
       "order": "c[eggs]-a[biter-egg]",
       "subgroup": "agriculture-products",
-      "icon_col": 14,
+      "icon_col": 16,
       "icon_row": 3
     },
     {
@@ -8462,7 +8462,7 @@
       ],
       "order": "b[storage]-d[buffer-chest]",
       "subgroup": "logistic-network",
-      "icon_col": 18,
+      "icon_col": 20,
       "icon_row": 3
     },
     {
@@ -8546,7 +8546,7 @@
       ],
       "order": "f[bulk-inserter]",
       "subgroup": "inserter",
-      "icon_col": 19,
+      "icon_col": 21,
       "icon_row": 3
     },
     {
@@ -8655,7 +8655,7 @@
       ],
       "order": "a[burner-inserter]",
       "subgroup": "inserter",
-      "icon_col": 20,
+      "icon_col": 22,
       "icon_row": 3
     },
     {
@@ -8867,7 +8867,7 @@
       ],
       "order": "d[cannon-shell]-a[basic]",
       "subgroup": "ammo",
-      "icon_col": 21,
+      "icon_col": 23,
       "icon_row": 3
     },
     {
@@ -9025,7 +9025,7 @@
       ],
       "order": "d[rocket-launcher]-d[capture]",
       "subgroup": "ammo",
-      "icon_col": 22,
+      "icon_col": 24,
       "icon_row": 3
     },
     {
@@ -9109,7 +9109,7 @@
       ],
       "order": "b[personal-transport]-a[car]",
       "subgroup": "transport",
-      "icon_col": 23,
+      "icon_col": 25,
       "icon_row": 3
     },
     {
@@ -9184,7 +9184,7 @@
       ],
       "order": "b[chemistry]-f[carbon]",
       "subgroup": "raw-material",
-      "icon_col": 24,
+      "icon_col": 26,
       "icon_row": 3
     },
     {
@@ -9218,7 +9218,7 @@
       ],
       "order": "a[organic-products]-h[carbon-fiber]",
       "subgroup": "agriculture-products",
-      "icon_col": 25,
+      "icon_col": 27,
       "icon_row": 3
     },
     {
@@ -9420,8 +9420,8 @@
       ],
       "order": "c-b[cargo-bay]",
       "subgroup": "space-interactors",
-      "icon_col": 27,
-      "icon_row": 3
+      "icon_col": 1,
+      "icon_row": 4
     },
     {
       "key": "cargo-bay-recycling",
@@ -9499,7 +9499,7 @@
       ],
       "order": "c-a[cargo-landing-pad]",
       "subgroup": "space-interactors",
-      "icon_col": 0,
+      "icon_col": 2,
       "icon_row": 4
     },
     {
@@ -9578,7 +9578,7 @@
       ],
       "order": "c[rolling-stock]-b[cargo-wagon]",
       "subgroup": "train-transport",
-      "icon_col": 1,
+      "icon_col": 3,
       "icon_row": 4
     },
     {
@@ -10111,7 +10111,7 @@
       ],
       "order": "d[chemical-science-pack]",
       "subgroup": "science-pack",
-      "icon_col": 2,
+      "icon_col": 4,
       "icon_row": 4
     },
     {
@@ -10185,7 +10185,7 @@
       ],
       "order": "d[cliff-explosives]",
       "subgroup": "terrain",
-      "icon_col": 3,
+      "icon_col": 5,
       "icon_row": 4
     },
     {
@@ -10269,7 +10269,7 @@
       ],
       "order": "a[grenade]-b[cluster]",
       "subgroup": "capsule",
-      "icon_col": 4,
+      "icon_col": 6,
       "icon_row": 4
     },
     {
@@ -10502,7 +10502,7 @@
       ],
       "order": "b[shotgun]-a[combat]",
       "subgroup": "gun",
-      "icon_col": 6,
+      "icon_col": 8,
       "icon_row": 4
     },
     {
@@ -10586,7 +10586,7 @@
       ],
       "order": "b[concrete]-a[plain]",
       "subgroup": "terrain",
-      "icon_col": 7,
+      "icon_col": 9,
       "icon_row": 4
     },
     {
@@ -10694,7 +10694,7 @@
       ],
       "order": "c[combinators]-d[constant-combinator]",
       "subgroup": "circuit-network",
-      "icon_col": 8,
+      "icon_col": 10,
       "icon_row": 4
     },
     {
@@ -10763,7 +10763,7 @@
       ],
       "order": "a[robot]-b[construction-robot]",
       "subgroup": "logistic-network",
-      "icon_col": 9,
+      "icon_col": 11,
       "icon_row": 4
     },
     {
@@ -10841,7 +10841,7 @@
       ],
       "order": "b[agriculture]-d[bacteria]-c[copper-bacteria]",
       "subgroup": "agriculture-processes",
-      "icon_col": 10,
+      "icon_col": 12,
       "icon_row": 4
     },
     {
@@ -10942,7 +10942,7 @@
       ],
       "order": "a[basic-intermediates]-c[copper-cable]",
       "subgroup": "intermediate-product",
-      "icon_col": 11,
+      "icon_col": 13,
       "icon_row": 4
     },
     {
@@ -11066,7 +11066,7 @@
       ],
       "order": "a[smelting]-b[copper-plate]",
       "subgroup": "raw-material",
-      "icon_col": 12,
+      "icon_col": 14,
       "icon_row": 4
     },
     {
@@ -11389,7 +11389,7 @@
       ],
       "order": "k",
       "subgroup": "science-pack",
-      "icon_col": 16,
+      "icon_col": 18,
       "icon_row": 4
     },
     {
@@ -11453,7 +11453,7 @@
       ],
       "order": "c[combinators]-b[decider-combinator]",
       "subgroup": "circuit-network",
-      "icon_col": 18,
+      "icon_col": 20,
       "icon_row": 4
     },
     {
@@ -11557,7 +11557,7 @@
       ],
       "order": "d[defender]-b[capsule]",
       "subgroup": "capsule",
-      "icon_col": 20,
+      "icon_col": 22,
       "icon_row": 4
     },
     {
@@ -11666,7 +11666,7 @@
       ],
       "order": "f[destroyer]-b[capsule]",
       "subgroup": "capsule",
-      "icon_col": 22,
+      "icon_col": 24,
       "icon_row": 4
     },
     {
@@ -11746,7 +11746,7 @@
       ],
       "order": "b[active-defense]-b[discharge-defense-equipment]-a[equipment]",
       "subgroup": "military-equipment",
-      "icon_col": 23,
+      "icon_col": 25,
       "icon_row": 4
     },
     {
@@ -11820,7 +11820,7 @@
       ],
       "order": "s[display-panel]",
       "subgroup": "circuit-network",
-      "icon_col": 25,
+      "icon_col": 27,
       "icon_row": 4
     },
     {
@@ -11889,8 +11889,8 @@
       ],
       "order": "e[distractor]-b[capsule]",
       "subgroup": "capsule",
-      "icon_col": 26,
-      "icon_row": 4
+      "icon_col": 0,
+      "icon_row": 5
     },
     {
       "key": "distractor-capsule-recycling",
@@ -11959,8 +11959,8 @@
       ],
       "order": "c[efficiency]-a[efficiency-module-1]",
       "subgroup": "module",
-      "icon_col": 27,
-      "icon_row": 4
+      "icon_col": 1,
+      "icon_row": 5
     },
     {
       "key": "efficiency-module-2",
@@ -11999,7 +11999,7 @@
       ],
       "order": "c[efficiency]-b[efficiency-module-2]",
       "subgroup": "module",
-      "icon_col": 0,
+      "icon_col": 2,
       "icon_row": 5
     },
     {
@@ -12084,7 +12084,7 @@
       ],
       "order": "c[efficiency]-c[efficiency-module-3]",
       "subgroup": "module",
-      "icon_col": 1,
+      "icon_col": 3,
       "icon_row": 5
     },
     {
@@ -12263,7 +12263,7 @@
       ],
       "order": "c[advanced-intermediates]-b[electric-engine-unit]",
       "subgroup": "intermediate-product",
-      "icon_col": 4,
+      "icon_col": 6,
       "icon_row": 5
     },
     {
@@ -12495,8 +12495,8 @@
       ],
       "order": "b[holmium]-e[electrolyte]",
       "subgroup": "fulgora-processes",
-      "icon_col": 26,
-      "icon_row": 1
+      "icon_col": 0,
+      "icon_row": 2
     },
     {
       "key": "electromagnetic-plant",
@@ -12642,7 +12642,7 @@
       ],
       "order": "j",
       "subgroup": "science-pack",
-      "icon_col": 5,
+      "icon_col": 7,
       "icon_row": 5
     },
     {
@@ -12707,7 +12707,7 @@
       ],
       "order": "b[circuits]-a[electronic-circuit]",
       "subgroup": "intermediate-product",
-      "icon_col": 6,
+      "icon_col": 8,
       "icon_row": 5
     },
     {
@@ -13112,7 +13112,7 @@
       ],
       "order": "a[shield]-a[energy-shield-equipment]",
       "subgroup": "military-equipment",
-      "icon_col": 8,
+      "icon_col": 10,
       "icon_row": 5
     },
     {
@@ -13186,7 +13186,7 @@
       ],
       "order": "a[shield]-b[energy-shield-equipment-mk2]",
       "subgroup": "military-equipment",
-      "icon_col": 9,
+      "icon_col": 11,
       "icon_row": 5
     },
     {
@@ -13265,7 +13265,7 @@
       ],
       "order": "c[advanced-intermediates]-a[engine-unit]",
       "subgroup": "intermediate-product",
-      "icon_col": 10,
+      "icon_col": 12,
       "icon_row": 5
     },
     {
@@ -13344,7 +13344,7 @@
       ],
       "order": "d[exoskeleton]-a[exoskeleton-equipment]",
       "subgroup": "utility-equipment",
-      "icon_col": 11,
+      "icon_col": 13,
       "icon_row": 5
     },
     {
@@ -13423,7 +13423,7 @@
       ],
       "order": "d[cannon-shell]-c[explosive]",
       "subgroup": "ammo",
-      "icon_col": 12,
+      "icon_col": 14,
       "icon_row": 5
     },
     {
@@ -13497,7 +13497,7 @@
       ],
       "order": "d[rocket-launcher]-b[explosive]",
       "subgroup": "ammo",
-      "icon_col": 13,
+      "icon_col": 15,
       "icon_row": 5
     },
     {
@@ -13566,7 +13566,7 @@
       ],
       "order": "d[explosive-cannon-shell]-c[uranium]",
       "subgroup": "ammo",
-      "icon_col": 14,
+      "icon_col": 16,
       "icon_row": 5
     },
     {
@@ -13641,7 +13641,7 @@
       ],
       "order": "b[chemistry]-e[explosives]",
       "subgroup": "raw-material",
-      "icon_col": 15,
+      "icon_col": 17,
       "icon_row": 5
     },
     {
@@ -13706,7 +13706,7 @@
       "order": "d[loader]-c[express-loader]",
       "subgroup": "belt",
       "hidden": true,
-      "icon_col": 16,
+      "icon_col": 18,
       "icon_row": 5
     },
     {
@@ -13786,7 +13786,7 @@
       ],
       "order": "c[splitter]-c[express-splitter]",
       "subgroup": "belt",
-      "icon_col": 17,
+      "icon_col": 19,
       "icon_row": 5
     },
     {
@@ -13941,7 +13941,7 @@
       ],
       "order": "b[underground-belt]-c[express-underground-belt]",
       "subgroup": "belt",
-      "icon_col": 18,
+      "icon_col": 20,
       "icon_row": 5
     },
     {
@@ -14015,7 +14015,7 @@
       ],
       "order": "d[fast-inserter]",
       "subgroup": "inserter",
-      "icon_col": 19,
+      "icon_col": 21,
       "icon_row": 5
     },
     {
@@ -14090,7 +14090,7 @@
       "order": "d[loader]-b[fast-loader]",
       "subgroup": "belt",
       "hidden": true,
-      "icon_col": 20,
+      "icon_col": 22,
       "icon_row": 5
     },
     {
@@ -14165,7 +14165,7 @@
       ],
       "order": "c[splitter]-b[fast-splitter]",
       "subgroup": "belt",
-      "icon_col": 21,
+      "icon_col": 23,
       "icon_row": 5
     },
     {
@@ -14310,7 +14310,7 @@
       ],
       "order": "b[underground-belt]-b[fast-underground-belt]",
       "subgroup": "belt",
-      "icon_col": 22,
+      "icon_col": 24,
       "icon_row": 5
     },
     {
@@ -14374,7 +14374,7 @@
       ],
       "order": "a[basic-clips]-a[firearm-magazine]",
       "subgroup": "ammo",
-      "icon_col": 23,
+      "icon_col": 25,
       "icon_row": 5
     },
     {
@@ -14491,7 +14491,7 @@
       ],
       "order": "a[energy-source]-b[fission-reactor]",
       "subgroup": "equipment",
-      "icon_col": 3,
+      "icon_col": 5,
       "icon_row": 5
     },
     {
@@ -14565,7 +14565,7 @@
       ],
       "order": "e[flamethrower]",
       "subgroup": "gun",
-      "icon_col": 24,
+      "icon_col": 26,
       "icon_row": 5
     },
     {
@@ -14599,7 +14599,7 @@
       ],
       "order": "e[flamethrower]",
       "subgroup": "ammo",
-      "icon_col": 25,
+      "icon_col": 27,
       "icon_row": 5
     },
     {
@@ -14708,8 +14708,8 @@
       ],
       "order": "b[turret]-c[flamethrower-turret]",
       "subgroup": "turret",
-      "icon_col": 26,
-      "icon_row": 5
+      "icon_col": 0,
+      "icon_row": 6
     },
     {
       "key": "flamethrower-turret-recycling",
@@ -14797,8 +14797,8 @@
       ],
       "order": "c[rolling-stock]-c[fluid-wagon]",
       "subgroup": "train-transport",
-      "icon_col": 27,
-      "icon_row": 5
+      "icon_col": 1,
+      "icon_row": 6
     },
     {
       "key": "fluid-wagon-recycling",
@@ -14887,7 +14887,7 @@
       ],
       "order": "b[fluoroketone]-a[fluoroketone]",
       "subgroup": "aquilo-processes",
-      "icon_col": 1,
+      "icon_col": 3,
       "icon_row": 2
     },
     {
@@ -15089,7 +15089,7 @@
       ],
       "order": "c[advanced-intermediates]-c[flying-robot-frame]",
       "subgroup": "intermediate-product",
-      "icon_col": 2,
+      "icon_col": 4,
       "icon_row": 6
     },
     {
@@ -15183,7 +15183,7 @@
       ],
       "order": "c[landfill]-g[foundation]",
       "subgroup": "terrain",
-      "icon_col": 3,
+      "icon_col": 5,
       "icon_row": 6
     },
     {
@@ -15376,8 +15376,8 @@
       ],
       "order": "g[fusion-energy]-b[generator]",
       "subgroup": "energy",
-      "icon_col": 4,
-      "icon_row": 6
+      "icon_col": 24,
+      "icon_row": 0
     },
     {
       "key": "fusion-generator-recycling",
@@ -15455,7 +15455,7 @@
       ],
       "order": "c[lithium]-d[fusion-power-cell]",
       "subgroup": "aquilo-processes",
-      "icon_col": 5,
+      "icon_col": 6,
       "icon_row": 6
     },
     {
@@ -15531,8 +15531,8 @@
       ],
       "order": "g[fusion-energy]-a[reactor]",
       "subgroup": "energy",
-      "icon_col": 6,
-      "icon_row": 6
+      "icon_col": 25,
+      "icon_row": 0
     },
     {
       "key": "fusion-reactor-equipment",
@@ -16010,7 +16010,7 @@
       ],
       "order": "f[nuclear-energy]-c[heat-exchanger]",
       "subgroup": "energy",
-      "icon_col": 24,
+      "icon_col": 26,
       "icon_row": 0
     },
     {
@@ -16228,7 +16228,7 @@
       ],
       "order": "c[heating-tower]",
       "subgroup": "environmental-protection",
-      "icon_col": 25,
+      "icon_col": 27,
       "icon_row": 0
     },
     {
@@ -16566,7 +16566,7 @@
       "main_product": "holmium-solution",
       "order": "b[holmium]-b[holmium-solution]",
       "subgroup": "fulgora-processes",
-      "icon_col": 4,
+      "icon_col": 6,
       "icon_row": 2
     },
     {
@@ -18948,7 +18948,7 @@
       ],
       "order": "c[oil-products]-a[lubricant]",
       "subgroup": "fluid-recipes",
-      "icon_col": 8,
+      "icon_col": 10,
       "icon_row": 2
     },
     {
@@ -19797,7 +19797,7 @@
       ],
       "order": "f[nuclear-energy]-a[reactor]",
       "subgroup": "energy",
-      "icon_col": 1,
+      "icon_col": 3,
       "icon_row": 1
     },
     {
@@ -20055,7 +20055,7 @@
       ],
       "order": "b[fluids]-a[offshore-pump]",
       "subgroup": "extraction-machine",
-      "icon_col": 2,
+      "icon_col": 4,
       "icon_row": 1
     },
     {
@@ -20139,7 +20139,7 @@
       ],
       "order": "d[refinery]",
       "subgroup": "production-machine",
-      "icon_col": 3,
+      "icon_col": 5,
       "icon_row": 1
     },
     {
@@ -22505,7 +22505,7 @@
       ],
       "order": "b[fluids]-b[pumpjack]",
       "subgroup": "extraction-machine",
-      "icon_col": 4,
+      "icon_col": 6,
       "icon_row": 1
     },
     {
@@ -23690,7 +23690,7 @@
       ],
       "order": "d[recycler]",
       "subgroup": "smelting-machine",
-      "icon_col": 5,
+      "icon_col": 7,
       "icon_row": 1
     },
     {
@@ -24455,7 +24455,7 @@
       ],
       "order": "a[rocket-silo]",
       "subgroup": "space-interactors",
-      "icon_col": 6,
+      "icon_col": 8,
       "icon_row": 1
     },
     {
@@ -25343,7 +25343,7 @@
       ],
       "order": "d[solar-panel]-a[solar-panel]",
       "subgroup": "energy",
-      "icon_col": 8,
+      "icon_col": 10,
       "icon_row": 1
     },
     {
@@ -26476,7 +26476,7 @@
       ],
       "order": "b[steam-power]-b[steam-engine]",
       "subgroup": "energy",
-      "icon_col": 9,
+      "icon_col": 11,
       "icon_row": 1
     },
     {
@@ -26555,7 +26555,7 @@
       ],
       "order": "f[nuclear-energy]-d[steam-turbine]",
       "subgroup": "energy",
-      "icon_col": 10,
+      "icon_col": 12,
       "icon_row": 1
     },
     {
@@ -26688,7 +26688,7 @@
       ],
       "order": "b[steel-furnace]",
       "subgroup": "smelting-machine",
-      "icon_col": 11,
+      "icon_col": 13,
       "icon_row": 1
     },
     {
@@ -26870,7 +26870,7 @@
       ],
       "order": "a[stone-furnace]",
       "subgroup": "smelting-machine",
-      "icon_col": 13,
+      "icon_col": 15,
       "icon_row": 1
     },
     {
@@ -27401,7 +27401,7 @@
       ],
       "order": "c[oil-products]-b[sulfuric-acid]",
       "subgroup": "fluid-recipes",
-      "icon_col": 13,
+      "icon_col": 15,
       "icon_row": 2
     },
     {
@@ -28054,7 +28054,7 @@
       ],
       "order": "a[thruster-fuel]",
       "subgroup": "space-processing",
-      "icon_col": 14,
+      "icon_col": 16,
       "icon_row": 2
     },
     {
@@ -28095,7 +28095,7 @@
       ],
       "order": "c[thruster-oxidizer]",
       "subgroup": "space-processing",
-      "icon_col": 15,
+      "icon_col": 17,
       "icon_row": 2
     },
     {
@@ -28358,7 +28358,7 @@
       ],
       "order": "a[transport-belt]-a[transport-belt]",
       "subgroup": "belt",
-      "icon_col": 15,
+      "icon_col": 17,
       "icon_row": 1
     },
     {
@@ -28830,7 +28830,7 @@
       ],
       "order": "a[transport-belt]-d[turbo-transport-belt]",
       "subgroup": "belt",
-      "icon_col": 18,
+      "icon_col": 20,
       "icon_row": 1
     },
     {
@@ -29844,7 +29844,7 @@
       ],
       "crafting_speed": 1,
       "prod_bonus": 0,
-      "icon_col": 3,
+      "icon_col": 5,
       "icon_row": 1
     },
     {
@@ -30130,7 +30130,7 @@
       ],
       "crafting_speed": 1,
       "prod_bonus": 0,
-      "icon_col": 13,
+      "icon_col": 15,
       "icon_row": 1
     },
     {
@@ -30196,7 +30196,7 @@
       ],
       "crafting_speed": 2,
       "prod_bonus": 0,
-      "icon_col": 11,
+      "icon_col": 13,
       "icon_row": 1
     },
     {
@@ -30224,7 +30224,7 @@
       ],
       "crafting_speed": 0.5,
       "prod_bonus": 0,
-      "icon_col": 5,
+      "icon_col": 7,
       "icon_row": 1
     }
   ],
@@ -30257,7 +30257,7 @@
       ],
       "crafting_speed": 1,
       "rocket_parts_required": 50,
-      "icon_col": 6,
+      "icon_col": 8,
       "icon_row": 1
     }
   ],
@@ -30343,7 +30343,7 @@
         "basic-fluid"
       ],
       "takes_fluid": false,
-      "icon_col": 4,
+      "icon_col": 6,
       "icon_row": 1
     },
     {
@@ -30378,7 +30378,7 @@
         "en": "Offshore pump"
       },
       "pumping_speed": 20,
-      "icon_col": 2,
+      "icon_col": 4,
       "icon_row": 1
     }
   ],
@@ -30414,7 +30414,7 @@
         "type": "heat"
       },
       "target_temperature": 500,
-      "icon_col": 24,
+      "icon_col": 26,
       "icon_row": 0
     }
   ],
@@ -30428,7 +30428,7 @@
       "fluid_usage": 30,
       "maximum_temperature": 165,
       "effectivity": 1,
-      "icon_col": 9,
+      "icon_col": 11,
       "icon_row": 1
     },
     {
@@ -30440,7 +30440,7 @@
       "fluid_usage": 60,
       "maximum_temperature": 500,
       "effectivity": 1,
-      "icon_col": 10,
+      "icon_col": 12,
       "icon_row": 1
     }
   ],
@@ -30451,7 +30451,7 @@
         "en": "Solar panel"
       },
       "production": 60000,
-      "icon_col": 8,
+      "icon_col": 10,
       "icon_row": 1
     }
   ],
@@ -30470,7 +30470,7 @@
         "fuel_category": "nuclear",
         "effectivity": 1
       },
-      "icon_col": 1,
+      "icon_col": 3,
       "icon_row": 1
     },
     {
@@ -30490,7 +30490,46 @@
           "pollution": 100
         }
       },
+      "icon_col": 27,
+      "icon_row": 0
+    }
+  ],
+  "fusion_reactors": [
+    {
+      "key": "fusion-reactor",
+      "localized_name": {
+        "en": "Fusion reactor"
+      },
+      "power_input": 10000000,
+      "fluid_usage": 4,
+      "input_fluid": "fluoroketone-cold",
+      "output_fluid": "fusion-plasma",
+      "burner": {
+        "type": "burner",
+        "fuel_categories": [
+          "fusion"
+        ],
+        "fuel_category": "fusion",
+        "effectivity": 1,
+        "emissions_per_minute": {
+          "pollution": 0
+        }
+      },
       "icon_col": 25,
+      "icon_row": 0
+    }
+  ],
+  "fusion_generators": [
+    {
+      "key": "fusion-generator",
+      "localized_name": {
+        "en": "Fusion generator"
+      },
+      "max_power_output": 50000000,
+      "fluid_usage": 2,
+      "input_fluid": "fusion-plasma",
+      "output_fluid": "fluoroketone-hot",
+      "icon_col": 24,
       "icon_row": 0
     }
   ],
@@ -30501,7 +30540,7 @@
         "en": "Transport belt"
       },
       "speed": 0.03125,
-      "icon_col": 15,
+      "icon_col": 17,
       "icon_row": 1
     },
     {
@@ -30528,7 +30567,7 @@
         "en": "Turbo transport belt"
       },
       "speed": 0.125,
-      "icon_col": 18,
+      "icon_col": 20,
       "icon_row": 1
     }
   ],
@@ -30986,8 +31025,8 @@
         }
       ],
       "order": "a-b-b",
-      "icon_col": 26,
-      "icon_row": 0
+      "icon_col": 0,
+      "icon_row": 1
     },
     {
       "key": "copper-ore",
@@ -31040,7 +31079,7 @@
         }
       ],
       "order": "a-b-b",
-      "icon_col": 12,
+      "icon_col": 14,
       "icon_row": 1
     },
     {
@@ -31060,7 +31099,7 @@
       "required_fluid": "sulfuric-acid",
       "fluid_amount": 10,
       "order": "a-b-e",
-      "icon_col": 19,
+      "icon_col": 21,
       "icon_row": 1
     },
     {
@@ -31097,7 +31136,7 @@
         }
       ],
       "order": "a-b-b",
-      "icon_col": 17,
+      "icon_col": 19,
       "icon_row": 1
     },
     {
@@ -31134,7 +31173,7 @@
       ],
       "infinite": true,
       "order": "b",
-      "icon_col": 14,
+      "icon_col": 16,
       "icon_row": 1
     },
     {
@@ -31152,7 +31191,7 @@
         }
       ],
       "order": "a-b-c",
-      "icon_col": 7,
+      "icon_col": 9,
       "icon_row": 1
     },
     {
@@ -31170,7 +31209,7 @@
         }
       ],
       "order": "c",
-      "icon_col": 0,
+      "icon_col": 2,
       "icon_row": 1
     },
     {
@@ -31216,7 +31255,7 @@
           "max": 1000
         }
       ],
-      "icon_col": 16,
+      "icon_col": 18,
       "icon_row": 1
     },
     {
@@ -31234,7 +31273,7 @@
           "amount": 50
         }
       ],
-      "icon_col": 20,
+      "icon_col": 22,
       "icon_row": 1
     },
     {
@@ -31252,8 +31291,8 @@
           "amount": 50
         }
       ],
-      "icon_col": 27,
-      "icon_row": 0
+      "icon_col": 1,
+      "icon_row": 1
     }
   ],
   "surface_properties": [
@@ -31449,12 +31488,12 @@
     "extra": {
       "clock": {
         "name": "time",
-        "icon_col": 21,
+        "icon_col": 23,
         "icon_row": 1
       },
       "slot_icon_module": {
         "name": "no module",
-        "icon_col": 22,
+        "icon_col": 24,
         "icon_row": 1
       },
       "electricity": {
@@ -31468,7 +31507,7 @@
         "icon_row": 26
       }
     },
-    "hash": "88b74b5eee728e670374b12f86499304",
+    "hash": "fca72c91f3147a7b19a0f0f3e9d50570",
     "width": 896,
     "height": 864
   }

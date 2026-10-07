@@ -155,6 +155,27 @@ export interface DatasetReactor extends NamedPrototype {
     energy_source: EnergySource
 }
 
+/** A fusion reactor: turns a coolant into plasma, using electricity and fuel. */
+export interface DatasetFusionReactor extends NamedPrototype {
+    /** Electric power in W. */
+    power_input: number
+    /** Fluid units per second. */
+    fluid_usage: number
+    input_fluid: string
+    output_fluid: string
+    burner: EnergySource
+}
+
+/** A fusion generator: turns plasma into electricity and hot coolant. */
+export interface DatasetFusionGenerator extends NamedPrototype {
+    /** Electric output in W at full plasma flow. */
+    max_power_output: number
+    /** Fluid units per second. */
+    fluid_usage: number
+    input_fluid: string
+    output_fluid: string
+}
+
 export interface DatasetBoiler extends NamedPrototype {
     energy_consumption: number
     energy_source: EnergySource
@@ -282,6 +303,8 @@ export interface Dataset {
     generators: DatasetGenerator[]
     solar_panels: DatasetSolarPanel[]
     reactors: DatasetReactor[]
+    fusion_reactors: DatasetFusionReactor[]
+    fusion_generators: DatasetFusionGenerator[]
     belts: DatasetBelt[]
     beacon: DatasetBeacon
     modules: DatasetModule[]

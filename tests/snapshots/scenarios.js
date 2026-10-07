@@ -24,6 +24,7 @@ export const SCENARIOS = [
     ["gleba", "#items=agricultural-science-pack:r:60&planet=gleba"],
     ["fulgora", "#items=electromagnetic-science-pack:r:60&planet=fulgora"],
     ["aquilo", "#items=cryogenic-science-pack:r:60&planet=aquilo"],
+    ["aquilo-fusion-power", "#items=cryogenic-science-pack:r:60&planet=aquilo&enable=fusion-generator-power"],
     ["aquilo-heating", "#items=cryogenic-science-pack:r:60&planet=aquilo&enable=heating-tower-heat"],
     ["nauvis-vulcanus", "#items=low-density-structure:r:60&planet=nauvis,vulcanus"],
     ["space-platform", "#items=space-science-pack:r:60&planet=space-platform"],

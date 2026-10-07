@@ -113,6 +113,35 @@ export function addPowerRecipes(data: Dataset, items: Map<string, Item>, recipes
         }))
     }
 
+    // Fusion generators fix the energy of one plasma unit: their full output over their plasma flow.
+    for (const g of data.fusion_generators) {
+        const plasmaEnergy = Rational.from_float(g.max_power_output).div(Rational.from_float_approximate(g.fluid_usage))
+        const key = `${g.key}-power`
+        recipes.set(key, new GeneratorRecipe(
+            key, g.localized_name.en, g, powerCategory(g.key), Rational.from_float_approximate(g.fluid_usage).reciprocate(),
+            [new Ingredient(item(g.input_fluid), one)],
+            [new Ingredient(electricity, plasmaEnergy.div(ELECTRICITY_UNIT)), new Ingredient(item(g.output_fluid), one)],
+        ))
+
+        // The reactor burns fuel for the energy of the plasma it makes, besides its electric power.
+        for (const r of data.fusion_reactors.filter(d => d.output_fluid === g.input_fluid)) {
+            const category = r.burner.fuel_categories?.[0] ?? r.burner.fuel_category
+            const fuel = data.fuel.find(f => category !== undefined && f.categories.includes(category))
+            if (fuel === undefined) {
+                throw new Error(`no fuel for ${r.key}`)
+            }
+            const flow = Rational.from_float_approximate(r.fluid_usage)
+            const fuelPerSecond = flow.mul(plasmaEnergy).div(Rational.from_float_approximate(r.burner.effectivity ?? 1)).div(Rational.from_float(fuel.value))
+            const reactorKey = `${r.key}-plasma`
+            recipes.set(reactorKey, new Recipe({
+                key: reactorKey, name: r.localized_name.en, order: undefined, icon_col: r.icon_col, icon_row: r.icon_row, allowProductivity: false,
+                categories: [powerCategory(r.key)], time: one,
+                ingredients: [new Ingredient(item(r.input_fluid), flow), new Ingredient(item(fuel.item_key), fuelPerSecond)],
+                products: [new Ingredient(item(r.output_fluid), flow)],
+            }))
+        }
+    }
+
     const defaults = new Map(data.surface_properties.map(p => [p.name, p.default_value]))
     for (const panel of data.solar_panels) {
         for (const planet of data.planets) {
