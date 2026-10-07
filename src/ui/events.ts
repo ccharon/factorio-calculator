@@ -21,6 +21,7 @@ import type { DisplayFormat } from "../state/align.ts"
 import { spec } from "../state/factory.ts"
 import { renderTotals } from "../visualize/visualize.ts"
 import { readRational } from "./number-input.ts"
+import { focusFirstResource } from "./priority-view.ts"
 import { setTitle } from "./settings.ts"
 
 export const TAB_NAMES = ["totals", "graph", "resources", "settings", "faq", "about", "debug"] as const
@@ -245,6 +246,6 @@ export function resourceKeyHandler(event: KeyboardEvent): void {
     const focus = document.activeElement
     if (arrow && resourcesVisible && (focus === null || focus === document.body || focus.matches("div.tabs button"))) {
         event.preventDefault()
-        spec.priority.focusFirst()
+        focusFirstResource()
     }
 }

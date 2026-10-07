@@ -170,9 +170,9 @@ Also: modernize CSS (custom properties already partly used by `color.js`), keybo
 
 ## Phase 6a: Module structure
 
-1. Move `src/core/sort.ts` out of `core` (it is a general helper used mostly by the UI), or drop it where plain `Array.sort` reads as well.
-2. Merge `src/core/matrix.ts` into `src/core/simplex.ts`; only the simplex uses it.
-3. Move the DOM part of `src/state/priority.ts` (the Resources tab view and its drag and keyboard handling) into `src/ui/`; the priority levels stay in `src/state/`.
+1. Done: `sorted()` stays in `src/core/` (the data layer needs it; `localeCompare` would order game order strings differently).
+2. Done: `Matrix` lives in `src/core/simplex.ts`.
+3. Done: `src/state/priority.ts` is the model, `src/ui/priority-view.ts` renders it on every `spec.display()` with keyed joins. URL weights of listed recipes are applied (they were ignored).
 4. Split `src/state/factory.ts`: energy (fuel, electricity, heat) and building groups into modules of their own, the DOM parts of targets (`addTarget`, `removeTarget`) into `src/ui/`. `FactorySpecification` stays as the state that implements the context interfaces.
 5. Keep `Rational`: exact fractions keep the simplex free of tolerances and the snapshot tests exact.
 

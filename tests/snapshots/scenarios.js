@@ -31,6 +31,8 @@ export const SCENARIOS = [
     ["nauvis-quality", "#items=processing-unit:r:60&planet=nauvis&dm=s3&db=s3:s3&dbc=4&qm=rare&qd=legendary&qb=epic"],
     ["nauvis-ignore", "#items=advanced-circuit:r:60&planet=nauvis&ignore=electronic-circuit"],
     ["nauvis-disable", "#items=plastic-bar:r:600&planet=nauvis&disable=advanced-oil-processing"],
+    ["nauvis-priority-weight", "#items=plastic-bar:r:600&planet=nauvis&priority=water=10;crude-oil=100000"],
+    ["nauvis-priority-level", "#items=plastic-bar:r:600&planet=nauvis&priority=water=10;coal=100;crude-oil=10"],
     ["nauvis-mining-productivity", "#items=iron-gear-wheel:r:600&planet=nauvis&mprod=50"],
     ["nauvis-building-target", "#items=rocket-part:f:2&planet=nauvis"],
     ["nauvis-sciences", "#items=automation-science-pack:r:60,logistic-science-pack:r:60,chemical-science-pack:r:60&planet=nauvis"],

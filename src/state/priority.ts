@@ -12,121 +12,29 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
-// Resource priorities: which raw resources the solver prefers. The Resources tab edits them by
-// drag and drop.
+// Resource priorities: which raw resources the solver prefers. src/ui/priority-view.ts shows and
+// edits them in the Resources tab.
 
-import * as d3 from "d3"
 import type { Rational } from "../core/rational.ts"
 import type { RecipeLike } from "../data/recipe.ts"
-import { spec } from "./factory.ts"
-import { iconOf } from "../ui/icons.ts"
-import { readRational } from "../ui/number-input.ts"
-
-type Div<T> = d3.Selection<HTMLDivElement, T, null, undefined>
 
 /** Recipe weights of one priority level. Used to build and compare priority lists. */
 export type PriorityLevelMap = ReadonlyMap<RecipeLike, Rational>
 
-/** A resource recipe in the priority list, with its weight and its element in the Resources tab. */
-class Resource {
-    level: PriorityLevel | null = null
+/** A resource recipe in the priority list with its weight. */
+export class Resource {
     readonly recipe: RecipeLike
     weight: Rational
-    readonly div: Div<undefined>
 
     constructor(recipe: RecipeLike, weight: Rational) {
         this.recipe = recipe
         this.weight = weight
-
-        this.div = d3.create("div").classed("resource", true).on("dragstart", (event: DragEvent) => {
-            if (this.level) {
-                // The icon is a transparent image with the sprite as background, so the browser's own drag image is empty.
-                event.dataTransfer?.setDragImage(this.div.node() as HTMLDivElement, 24, 24)
-                const list = this.level.list
-                list.dragItem = this
-                // Chrome cancels the drag if the source loses its pointer events during dragstart.
-                setTimeout(() => {
-                    this.div.classed("dragged", true)
-                    list.div.classed("dragging", true)
-                })
-            }
-        }).on("dragend", () => {
-            this.div.classed("dragged", false)
-            if (this.level) {
-                this.level.list.div.classed("dragging", false)
-                this.level.list.dragItem = null
-            }
-        })
-
-        // The icon takes the keyboard focus: left and right select another resource, up and down move this one.
-        // It is no <button>, because Chrome does not drag an image inside a button.
-        const icon = this.div.append(() => iconOf(this.recipe).make(48))
-        icon.attr("tabindex", 0).attr("role", "button").attr("aria-keyshortcuts", "ArrowLeft ArrowRight ArrowUp ArrowDown")
-        icon.on("keydown", (event: KeyboardEvent) => {
-            const list = this.level?.list
-            const node = icon.node() as HTMLImageElement
-            if (list === undefined) {
-                return
-            }
-            if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
-                event.preventDefault()
-                list.focusNeighbour(node, event.key === "ArrowLeft" ? -1 : 1)
-            } else if (event.key === "ArrowUp" || event.key === "ArrowDown") {
-                event.preventDefault()
-                list.moveStep(this, event.key === "ArrowUp" ? -1 : 1)
-                node.focus()
-                spec.updateSolution()
-            }
-        })
-        this.div.append("input").attr("type", "text").attr("size", 4).attr("value", this.weight.toString()).on("change", (event: Event) => {
-            const weight = readRational(event.target as HTMLInputElement)
-            if (weight !== null) {
-                this.weight = weight
-                this.level?.insertSorted(this)
-                spec.updateSolution()
-            }
-        })
-    }
-
-    /** Removes this resource from its level. An empty level is removed too. */
-    remove(): void {
-        const level = this.level
-        if (level === null) {
-            return
-        }
-        const i = level.resources.indexOf(this)
-        if (i !== -1) {
-            level.resources.splice(i, 1)
-        }
-        this.div.remove()
-        if (level.isEmpty()) {
-            level.remove()
-        }
-        this.level = null
     }
 }
 
 /** One priority level: resources the solver treats as equally valuable, weighted among each other. */
-class PriorityLevel {
+export class PriorityLevel {
     readonly resources: Resource[] = []
-    /** Divider element before this level, absent for the first level. */
-    middle: Div<PriorityLevel> | null = null
-    readonly list: PriorityList
-    readonly div: Div<PriorityLevel>
-
-    constructor(list: PriorityList) {
-        this.list = list
-        this.div = d3.create("div").datum<PriorityLevel>(this).classed("resource-tier", true)
-        list.dropTarget(this.div, () => {
-            if (list.dragItem && list.dragItem.level !== this) {
-                this.insertSorted(list.dragItem)
-            }
-        })
-    }
-
-    [Symbol.iterator](): Iterator<Resource> {
-        return this.resources[Symbol.iterator]()
-    }
 
     /** Returns whether this level contains exactly the recipes and weights of m. */
     equalMap(m: PriorityLevelMap): boolean {
@@ -136,61 +44,20 @@ class PriorityLevel {
         return this.resources.every(({ recipe, weight }) => m.get(recipe)?.equal(weight) ?? false)
     }
 
-    /** Removes this empty level and its divider. Throws if the level is not empty. */
-    remove(): void {
-        if (this.resources.length !== 0) {
-            throw new Error("cannot remove non-empty PriorityLevel")
-        }
-        this.middle?.remove()
-        this.middle = null
-        this.div.remove()
-        this.list.removeEmptyLevels()
+    [Symbol.iterator](): Iterator<Resource> {
+        return this.resources[Symbol.iterator]()
     }
 
-    /** Returns whether the level has no resources. */
-    isEmpty(): boolean {
-        return this.resources.length === 0
-    }
-
-    /** Moves resource into this level, sorted by weight. Its old level is removed if left empty. */
+    /** Adds resource, sorted by weight. Resources of equal weight keep their order. */
     insertSorted(resource: Resource): void {
-        if (resource.level === this && this.resources.length === 1) {
-            return
-        }
-
-        resource.remove()
-        resource.level = this
-        const node = this.div.node() as HTMLDivElement
-        const resourceNode = resource.div.node() as HTMLDivElement
-        for (let i = 0; i < this.resources.length; i++) {
-            const r = this.resources[i]
-            if (r !== undefined && resource.weight.less(r.weight)) {
-                this.resources.splice(i, 0, resource)
-                node.insertBefore(resourceNode, r.div.node())
-                return
-            }
-        }
-
-        this.resources.push(resource)
-        node.appendChild(resourceNode)
+        const i = this.resources.findIndex(r => resource.weight.less(r.weight))
+        this.resources.splice(i === -1 ? this.resources.length : i, 0, resource)
     }
 }
 
-/** The priority levels of all resource recipes, rendered into the Resources tab. */
+/** The priority levels of all resource recipes, most preferred first. */
 export class PriorityList {
-    private priorities: PriorityLevel[] = []
-    /** The resource being dragged, or null. */
-    dragItem: Resource | null = null
-    readonly div: d3.Selection<HTMLElement, unknown, HTMLElement, unknown>
-
-    constructor() {
-        this.div = d3.select<HTMLElement, unknown>("#resource_settings")
-        this.renderEmpty()
-    }
-
-    [Symbol.iterator](): Iterator<PriorityLevel> {
-        return this.priorities[Symbol.iterator]()
-    }
+    private levels: PriorityLevel[] = []
 
     /** Creates a priority list with one level per map entry. */
     static fromArray(a: readonly PriorityLevelMap[]): PriorityList {
@@ -204,13 +71,17 @@ export class PriorityList {
         return p
     }
 
-    /** Moves the given recipes into the given levels, adding levels and recipes as needed. */
+    [Symbol.iterator](): Iterator<PriorityLevel> {
+        return this.levels[Symbol.iterator]()
+    }
+
+    /** Moves the given recipes into the given levels with the given weights, adding levels and recipes as needed. */
     applyArray(a: readonly PriorityLevelMap[]): void {
         a.forEach((m, i) => {
-            while (this.priorities.length < i + 1) {
+            while (this.levels.length < i + 1) {
                 this.addPriorityBefore(null)
             }
-            const level = this.priorities[i]
+            const level = this.levels[i]
             if (level === undefined) {
                 return
             }
@@ -219,57 +90,37 @@ export class PriorityList {
                 if (resource === null) {
                     this.addRecipe(recipe, weight, level)
                 } else {
+                    // Empty levels are removed only at the end, so that the indexes of a stay valid.
+                    this.detach(resource)
+                    resource.weight = weight
                     level.insertSorted(resource)
                 }
             }
         })
+        this.removeEmptyLevels()
     }
 
     /** Returns whether the list has exactly these levels, recipes and weights. */
     equalArray(a: readonly PriorityLevelMap[]): boolean {
-        return a.length === this.priorities.length && a.every((m, i) => this.priorities[i]?.equalMap(m) ?? false)
+        return a.length === this.levels.length && a.every((m, i) => this.levels[i]?.equalMap(m) ?? false)
     }
 
-    /** Creates a new level before level, or at the end if level is null. Returns the new level. */
+    /** Creates an empty level before level, or at the end if level is null. Returns the new level. */
     addPriorityBefore(level: PriorityLevel | null): PriorityLevel {
-        const listNode = this.div.node() as HTMLElement
-        const newLevel = new PriorityLevel(this)
-        let successorNode: Node | null = null
-        let isFirst = false
-        if (level === null) {
-            this.priorities.push(newLevel)
-            successorNode = listNode.lastChild
-            isFirst = this.priorities.length === 1
-        } else {
-            const i = this.priorities.indexOf(level)
-            if (i !== -1) {
-                this.priorities.splice(i, 0, newLevel)
-                isFirst = i === 0
-                successorNode = isFirst ? level.div.node() : level.middle?.node() ?? null
-            }
-        }
-
-        if (!isFirst) {
-            newLevel.middle = this.makeMiddle(newLevel)
-            listNode.insertBefore(newLevel.middle.node() as HTMLDivElement, successorNode)
-        }
-        listNode.insertBefore(newLevel.div.node() as HTMLDivElement, successorNode)
-        if (isFirst && level !== null) {
-            level.middle = this.makeMiddle(level)
-            listNode.insertBefore(level.middle.node() as HTMLDivElement, successorNode)
-        }
-
+        const newLevel = new PriorityLevel()
+        const i = level === null ? -1 : this.levels.indexOf(level)
+        this.levels.splice(i === -1 ? this.levels.length : i, 0, newLevel)
         return newLevel
     }
 
     /** Returns the most preferred level, or null if the list is empty. */
     getFirstLevel(): PriorityLevel | null {
-        return this.priorities[0] ?? null
+        return this.levels[0] ?? null
     }
 
     /** Returns the least preferred level, or null if the list is empty. */
     getLastLevel(): PriorityLevel | null {
-        return this.priorities[this.priorities.length - 1] ?? null
+        return this.levels[this.levels.length - 1] ?? null
     }
 
     /** Adds recipe with weight to level. */
@@ -279,113 +130,82 @@ export class PriorityList {
 
     /** Returns the entry of recipe, or null if the list does not contain it. */
     getResource(recipe: RecipeLike): Resource | null {
-        for (const level of this.priorities) {
-            for (const resource of level.resources) {
-                if (resource.recipe === recipe) {
-                    return resource
-                }
+        for (const level of this.levels) {
+            const resource = level.resources.find(r => r.recipe === recipe)
+            if (resource !== undefined) {
+                return resource
             }
         }
         return null
     }
 
-    /** Removes recipe from the list. */
+    /** Returns the level that contains resource, or null. */
+    levelOf(resource: Resource): PriorityLevel | null {
+        return this.levels.find(level => level.resources.includes(resource)) ?? null
+    }
+
+    /** Removes recipe from the list. An empty level is removed too. */
     removeRecipe(recipe: RecipeLike): void {
-        this.getResource(recipe)?.remove()
+        const resource = this.getResource(recipe)
+        if (resource !== null) {
+            this.detach(resource)
+            this.removeEmptyLevels()
+        }
+    }
+
+    /** Moves resource into level, sorted by weight. A level left empty is removed. */
+    moveTo(resource: Resource, level: PriorityLevel): void {
+        this.detach(resource)
+        level.insertSorted(resource)
+        this.removeEmptyLevels()
+    }
+
+    /** Moves resource into a new level of its own before level, or at the end if level is null. */
+    moveToNewLevel(resource: Resource, level: PriorityLevel | null): void {
+        this.moveTo(resource, this.addPriorityBefore(level))
+    }
+
+    /** Changes the weight of resource and sorts it into its level again. */
+    setWeight(resource: Resource, weight: Rational): void {
+        const level = this.levelOf(resource)
+        resource.weight = weight
+        if (level !== null) {
+            this.moveTo(resource, level)
+        }
     }
 
     /**
-     * Moves resource one step towards the less valuable end (direction -1) or the more valuable end (1).
+     * Moves resource one step towards the most preferred end (direction -1) or the least preferred end (1).
      * A resource that shares its level first gets a level of its own, the next step joins the neighbouring level.
      */
     moveStep(resource: Resource, direction: -1 | 1): void {
-        const level = resource.level
+        const level = this.levelOf(resource)
         if (level === null) {
             return
         }
 
-        const i = this.priorities.indexOf(level)
+        const i = this.levels.indexOf(level)
         if (level.resources.length > 1) {
-            const successor = direction === -1 ? level : this.priorities[i + 1] ?? null
-            this.addPriorityBefore(successor).insertSorted(resource)
+            this.moveToNewLevel(resource, direction === -1 ? level : this.levels[i + 1] ?? null)
         } else {
-            this.priorities[i + direction]?.insertSorted(resource)
+            const neighbour = this.levels[i + direction]
+            if (neighbour !== undefined) {
+                this.moveTo(resource, neighbour)
+            }
         }
     }
 
-    /** Focuses the resource icon before (direction -1) or after (1) icon in the list. */
-    focusNeighbour(icon: Element, direction: -1 | 1): void {
-        const icons = this.div.selectAll<HTMLImageElement, unknown>("img[tabindex]").nodes()
-        icons[icons.indexOf(icon as HTMLImageElement) + direction]?.focus()
-    }
-
-    /** Focuses the first resource icon in the list. */
-    focusFirst(): void {
-        this.div.select<HTMLImageElement>("img[tabindex]").node()?.focus()
-    }
-
-    /** Removes all levels and renders the two end markers. */
-    renderEmpty(): void {
-        this.div.selectAll("*").remove()
-
-        const less = this.div.append("div").classed("resource-tier bookend", true)
-        this.dropTarget(less, () => {
-            if (this.dragItem) {
-                this.addPriorityBefore(this.priorities[0] ?? null).insertSorted(this.dragItem)
+    // Takes resource out of its level and leaves the level in place, even if empty.
+    private detach(resource: Resource): void {
+        for (const level of this.levels) {
+            const i = level.resources.indexOf(resource)
+            if (i !== -1) {
+                level.resources.splice(i, 1)
             }
-        })
-        less.append("span").text("less valuable")
-
-        const more = this.div.append("div").classed("resource-tier bookend", true)
-        this.dropTarget(more, () => {
-            if (this.dragItem) {
-                this.addPriorityBefore(null).insertSorted(this.dragItem)
-            }
-        })
-        more.append("span").text("more valuable")
-    }
-
-    /** Drops empty levels and removes the divider before the new first level. */
-    removeEmptyLevels(): void {
-        const newLevels = this.priorities.filter(level => !level.isEmpty())
-        const first = newLevels[0]
-        if (first?.middle) {
-            first.middle.remove()
-            first.middle = null
         }
-        this.priorities = newLevels
     }
 
-    /** Makes selection accept dropped resources. drop runs on a drop, then the solution updates. */
-    dropTarget<T>(selection: d3.Selection<HTMLDivElement, T, HTMLElement | null, unknown>, drop: () => void): void {
-        selection.on("dragover", (event: DragEvent) => {
-            event.preventDefault()
-        }).on("dragenter", (event: DragEvent) => {
-            (event.currentTarget as HTMLElement).classList.add("highlight")
-        }).on("dragleave", (event: DragEvent) => {
-            if (event.target === event.currentTarget) {
-                (event.currentTarget as HTMLElement).classList.remove("highlight")
-            }
-        }).on("drop", (event: DragEvent) => {
-            if (this.dragItem === null) {
-                return
-            }
-            event.preventDefault()
-            ;(event.currentTarget as HTMLElement).classList.remove("highlight")
-            drop()
-            this.dragItem = null
-            spec.updateSolution()
-        })
-    }
-
-    // Creates the divider placed before level.
-    private makeMiddle(level: PriorityLevel): Div<PriorityLevel> {
-        const middle = d3.create("div").datum(level).classed("middle", true)
-        this.dropTarget(middle, () => {
-            if (this.dragItem) {
-                this.addPriorityBefore(level).insertSorted(this.dragItem)
-            }
-        })
-        return middle
+    private removeEmptyLevels(): void {
+        this.levels = this.levels.filter(level => level.resources.length > 0)
     }
 }

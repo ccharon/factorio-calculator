@@ -29,6 +29,7 @@ import { DISABLED_RECIPE_PREFIX, ELECTRICITY, ELECTRICITY_UNIT, HEAT, Ingredient
 import { renderDebug } from "../ui/debug.ts"
 import { displayItems } from "../ui/display.ts"
 import { currentTab } from "../ui/events.ts"
+import { renderPriorities } from "../ui/priority-view.ts"
 import { BuildTarget } from "../ui/target.ts"
 import { reapTooltips } from "../ui/tooltip.ts"
 import { renderTotals } from "../visualize/visualize.ts"
@@ -898,6 +899,7 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
             target.getRate()
         }
         displayItems(this, this.lastTotals)
+        renderPriorities(this.priority)
         if (currentTab === "graph") {
             renderTotals(this.lastTotals, this.ignore)
         }

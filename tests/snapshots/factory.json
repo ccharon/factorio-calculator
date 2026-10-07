@@ -2992,6 +2992,230 @@
     ],
     "surplus": []
   },
+  "nauvis-priority-weight": {
+    "fragment": "#items=plastic-bar:r:600&planet=nauvis&priority=water=10;crude-oil=100000",
+    "recipes": [
+      {
+        "key": "(output)",
+        "rate": "1",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "coal",
+        "rate": "1580/67",
+        "building": "electric-mining-drill",
+        "count": "3160/67",
+        "fuel": "electric",
+        "power": "284400000/67"
+      },
+      {
+        "key": "coal-liquefaction",
+        "rate": "120/67",
+        "building": "oil-refinery",
+        "count": "600/67",
+        "fuel": "electric",
+        "power": "260442000/67"
+      },
+      {
+        "key": "electricity",
+        "rate": "32859/2680",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "heavy-oil-cracking",
+        "rate": "195/67",
+        "building": "chemical-plant",
+        "count": "390/67",
+        "fuel": "electric",
+        "power": "84714000/67"
+      },
+      {
+        "key": "light-oil-cracking",
+        "rate": "275/67",
+        "building": "chemical-plant",
+        "count": "550/67",
+        "fuel": "electric",
+        "power": "119721000/67"
+      },
+      {
+        "key": "plastic-bar",
+        "rate": "5",
+        "building": "chemical-plant",
+        "count": "5",
+        "fuel": "electric",
+        "power": "1085000"
+      },
+      {
+        "key": "steam",
+        "rate": "100/67",
+        "building": "boiler",
+        "count": "100/67",
+        "fuel": "chemical",
+        "power": "180000000/67"
+      },
+      {
+        "key": "water",
+        "rate": "14700/67",
+        "building": "offshore-pump",
+        "count": "49/268",
+        "fuel": "electric",
+        "power": "0"
+      }
+    ],
+    "items": [
+      {
+        "key": "coal",
+        "rate": "1580/67"
+      },
+      {
+        "key": "electricity",
+        "rate": "32859/2680"
+      },
+      {
+        "key": "heavy-oil",
+        "rate": "10800/67"
+      },
+      {
+        "key": "light-oil",
+        "rate": "8250/67"
+      },
+      {
+        "key": "petroleum-gas",
+        "rate": "100"
+      },
+      {
+        "key": "plastic-bar",
+        "rate": "10"
+      },
+      {
+        "key": "steam",
+        "rate": "6000/67"
+      },
+      {
+        "key": "water",
+        "rate": "14700/67"
+      }
+    ],
+    "surplus": []
+  },
+  "nauvis-priority-level": {
+    "fragment": "#items=plastic-bar:r:600&planet=nauvis&priority=water=10;coal=100;crude-oil=10",
+    "recipes": [
+      {
+        "key": "(output)",
+        "rate": "1",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "coal",
+        "rate": "1580/67",
+        "building": "electric-mining-drill",
+        "count": "3160/67",
+        "fuel": "electric",
+        "power": "284400000/67"
+      },
+      {
+        "key": "coal-liquefaction",
+        "rate": "120/67",
+        "building": "oil-refinery",
+        "count": "600/67",
+        "fuel": "electric",
+        "power": "260442000/67"
+      },
+      {
+        "key": "electricity",
+        "rate": "32859/2680",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "heavy-oil-cracking",
+        "rate": "195/67",
+        "building": "chemical-plant",
+        "count": "390/67",
+        "fuel": "electric",
+        "power": "84714000/67"
+      },
+      {
+        "key": "light-oil-cracking",
+        "rate": "275/67",
+        "building": "chemical-plant",
+        "count": "550/67",
+        "fuel": "electric",
+        "power": "119721000/67"
+      },
+      {
+        "key": "plastic-bar",
+        "rate": "5",
+        "building": "chemical-plant",
+        "count": "5",
+        "fuel": "electric",
+        "power": "1085000"
+      },
+      {
+        "key": "steam",
+        "rate": "100/67",
+        "building": "boiler",
+        "count": "100/67",
+        "fuel": "chemical",
+        "power": "180000000/67"
+      },
+      {
+        "key": "water",
+        "rate": "14700/67",
+        "building": "offshore-pump",
+        "count": "49/268",
+        "fuel": "electric",
+        "power": "0"
+      }
+    ],
+    "items": [
+      {
+        "key": "coal",
+        "rate": "1580/67"
+      },
+      {
+        "key": "electricity",
+        "rate": "32859/2680"
+      },
+      {
+        "key": "heavy-oil",
+        "rate": "10800/67"
+      },
+      {
+        "key": "light-oil",
+        "rate": "8250/67"
+      },
+      {
+        "key": "petroleum-gas",
+        "rate": "100"
+      },
+      {
+        "key": "plastic-bar",
+        "rate": "10"
+      },
+      {
+        "key": "steam",
+        "rate": "6000/67"
+      },
+      {
+        "key": "water",
+        "rate": "14700/67"
+      }
+    ],
+    "surplus": []
+  },
   "nauvis-mining-productivity": {
     "fragment": "#items=iron-gear-wheel:r:600&planet=nauvis&mprod=50",
     "recipes": [
