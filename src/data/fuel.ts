@@ -11,10 +11,8 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
-import * as d3 from "d3"
 import { Rational } from "../core/rational.ts"
-import { energyString } from "../ui/energy.ts"
-import { Icon, type IconSource } from "../ui/icon.ts"
+import type { IconSource } from "./icon-source.ts"
 import type { Dataset } from "./dataset.ts"
 import type { Item } from "./item.ts"
 import { requireItem } from "./recipe.ts"
@@ -29,7 +27,6 @@ export class Fuel implements IconSource {
     readonly value: Rational
     readonly icon_col: number
     readonly icon_row: number
-    readonly icon: Icon
 
     constructor(item: Item, categories: Iterable<string>, value: Rational) {
         this.key = item.key
@@ -39,23 +36,6 @@ export class Fuel implements IconSource {
         this.value = value
         this.icon_col = item.icon_col
         this.icon_row = item.icon_row
-        this.icon = new Icon(this)
-    }
-
-    /** Returns the fuel value such as "4 MJ". */
-    valueString(): string {
-        return energyString(this.value)
-    }
-
-    /** Returns a tooltip element with the fuel value. */
-    renderTooltip(): HTMLDivElement {
-        const t = d3.create("div").classed("frame", true)
-        const header = t.append("h3")
-        header.append(() => this.icon.make(32, true))
-        header.node()?.append(this.name)
-        t.append("b").text("Energy: ")
-        t.node()?.append(this.valueString())
-        return t.node() as HTMLDivElement
     }
 }
 

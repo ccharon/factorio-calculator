@@ -1,6 +1,6 @@
 // Technologies that raise the productivity of single recipes, such as steel plate productivity.
 import { Rational, zero } from "../core/rational.ts"
-import { Icon, type IconSource } from "../ui/icon.ts"
+import type { IconSource } from "./icon-source.ts"
 import type { Dataset } from "./dataset.ts"
 import type { Recipe } from "./recipe.ts"
 
@@ -15,7 +15,6 @@ export class ProductivityResearch implements IconSource {
     readonly effects: ReadonlyMap<Recipe, Rational>
     readonly icon_col: number
     readonly icon_row: number
-    readonly icon: Icon
 
     constructor(key: string, name: string, order: string, maxLevel: number | null, effects: ReadonlyMap<Recipe, Rational>, col: number, row: number) {
         this.key = key
@@ -25,7 +24,6 @@ export class ProductivityResearch implements IconSource {
         this.effects = effects
         this.icon_col = col
         this.icon_row = row
-        this.icon = new Icon(this)
     }
 
     /** Returns the productivity bonus of recipe at level, or zero if the technology does not affect it. */

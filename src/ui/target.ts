@@ -18,6 +18,7 @@ import type { Item } from "../data/item.ts"
 import type { Recipe } from "../data/recipe.ts"
 import { spec } from "../state/factory.ts"
 import { addInputs, makeDropdown } from "./dropdown.ts"
+import { iconOf } from "./icons.ts"
 
 const SELECTED_INPUT = "selected"
 
@@ -150,7 +151,7 @@ export class BuildTarget {
             spec.updateSolution()
         })
         const dropdownNode = dropdown.node() ?? undefined
-        itemLabel.append(d => d.icon.make(32, false, dropdownNode))
+        itemLabel.append(d => iconOf(d).make(32, false, dropdownNode))
 
         const orbitLabel = element.append("label").classed("orbit-toggle", true).attr("title", "Launch the item into orbit.")
         const orbitInput = orbitLabel.append("input").attr("type", "checkbox").on("change", () => {
@@ -161,7 +162,7 @@ export class BuildTarget {
         this.orbitInput = orbitInput.node() as HTMLInputElement
         const rocket = spec.items.get("rocket-silo")
         if (rocket !== undefined) {
-            orbitLabel.append(() => rocket.icon.make(24, true))
+            orbitLabel.append(() => iconOf(rocket).make(24, true))
         }
         this.updateOrbitInput()
         targetCount++
@@ -243,7 +244,7 @@ export class BuildTarget {
         })
 
         const dropdownNode = dropdown.node() ?? undefined
-        labels.append(d => d.icon.make(32, false, dropdownNode))
+        labels.append(d => iconOf(d).make(32, false, dropdownNode))
         recipeSelectorCount++
         this.recipeSelector.append("span").text(" \u00d7 ")
     }

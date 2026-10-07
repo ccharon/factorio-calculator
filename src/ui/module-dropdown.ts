@@ -17,6 +17,7 @@ import type * as d3 from "d3"
 import type { Module } from "../data/module.ts"
 import { addInputs, makeDropdown } from "./dropdown.ts"
 import { getSprite } from "./icon.ts"
+import { iconOf } from "./icons.ts"
 
 /** One choice in a module dropdown. */
 export interface ModuleInput {
@@ -58,11 +59,11 @@ export function moduleDropdown<GElement extends HTMLElement, Datum, PElement ext
         const label = addInputs(s, d => d.cell.name, d => d.checked(), d => d.choose())
         label.append(function (d) {
             if (d.module === null) {
-                return getSprite("slot_icon_module").icon.make(32)
+                return iconOf(getSprite("slot_icon_module")).make(32)
             }
             // The tooltip goes next to the whole dropdown, not the icon.
             const dropdownNode = this.parentElement?.parentElement?.parentElement ?? undefined
-            return d.module.icon.make(32, false, dropdownNode)
+            return iconOf(d.module).make(32, false, dropdownNode)
         })
         return s
     }, update => {

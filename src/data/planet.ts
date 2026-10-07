@@ -11,7 +11,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
-import { Icon, type IconSource } from "../ui/icon.ts"
+import type { IconSource } from "./icon-source.ts"
 import type { Dataset } from "./dataset.ts"
 import type { Building } from "./building.ts"
 import type { Recipe } from "./recipe.ts"
@@ -29,7 +29,6 @@ export class Planet implements IconSource {
     readonly disable: Set<Recipe> = new Set()
     readonly icon_col: number
     readonly icon_row: number
-    readonly icon: Icon
 
     constructor(key: string, name: string, order: string, col: number, row: number, resources: ReadonlySet<Recipe>, properties: ReadonlyMap<string, number>) {
         this.key = key
@@ -39,7 +38,6 @@ export class Planet implements IconSource {
         this.properties = properties
         this.icon_col = col
         this.icon_row = row
-        this.icon = new Icon(this)
     }
 
     /**

@@ -11,9 +11,8 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
-import * as d3 from "d3"
 import { Rational, zero, one } from "../core/rational.ts"
-import { Icon, type IconSource, getSprite } from "../ui/icon.ts"
+import type { IconSource } from "./icon-source.ts"
 import type { Dataset, DatasetProduct, DatasetRecipe, SurfaceConditionData } from "./dataset.ts"
 import type { Item } from "./item.ts"
 
@@ -97,7 +96,6 @@ export interface RecipeLike extends RecipeNode, IconSource {
     readonly key: string
     /** Crafting categories. Every building with one of them can craft the recipe. Empty for recipes without a building. */
     readonly categories: readonly string[]
-    readonly icon: Icon
     isResource(): boolean
     isDisable(): boolean
 }
@@ -143,7 +141,8 @@ export class Recipe implements RecipeLike {
     readonly maximumProductivity: Rational | null
     readonly icon_col: number
     readonly icon_row: number
-    readonly icon: Icon
+    /** Alt text of the icon: the name of the first product unless the options set one. */
+    readonly iconName: string
     /** Priority level in the Resources tab, for recipes that extract resources. */
     defaultPriority: number | undefined
     /** Weight within its priority level, for recipes that extract resources. */
@@ -170,7 +169,7 @@ export class Recipe implements RecipeLike {
         this.maximumProductivity = options.maximumProductivity ?? null
         this.icon_col = options.icon_col
         this.icon_row = options.icon_row
-        this.icon = new Icon(this, options.iconName ?? this.products[0]?.item.name)
+        this.iconName = options.iconName ?? this.products[0]?.item.name ?? options.name
     }
 
     /** Returns the ingredients including fuel. */
@@ -218,49 +217,6 @@ export class Recipe implements RecipeLike {
     isDisable(): boolean {
         return false
     }
-
-    /** Returns a tooltip element with products, crafting time and ingredients. */
-    renderTooltip(extra?: Node): HTMLDivElement {
-        const t = d3.create("div").classed("frame recipe", true).datum(this)
-        const header = t.append("h3")
-        header.append(() => this.icon.make(32, true))
-
-        let name = this.name
-        const first = this.products[0]
-        if (this.products.length === 1 && first !== undefined && first.item.name === this.name && one.less(first.amount)) {
-            name = `${first.amount.toDecimal()} \u00d7 ${name}`
-        }
-        header.node()?.append("\u00A0" + name)
-
-        if (extra) {
-            t.node()?.append(extra)
-        }
-
-        const node = t.node() as HTMLDivElement
-        if (this.ingredients.length === 0) {
-            return node
-        }
-
-        if (this.products.length > 1 || first?.item.name !== this.name) {
-            const productLine = t.append("div")
-            productLine.append("span").text("Products:")
-            const product = productLine.append("span").selectAll("span").data(this.products).join("span")
-            product.append("span").text("\u00A0")
-            const prodIcon = product.append("div").classed("product", true)
-            prodIcon.append(d => d.item.icon.make(32, true))
-            prodIcon.append("span").classed("count", true).text(d => d.amount.toDecimal())
-        }
-
-        const time = t.append("div")
-        time.append("div").classed("product", true).append(() => getSprite("clock").icon.make(32, true))
-        time.append("span").text("\u00A0" + this.time.toDecimal())
-
-        const ingredient = t.append("div").selectAll("div").data(this.ingredients).join("div")
-        ingredient.append("div").classed("product", true).append(d => d.item.icon.make(32, true))
-        ingredient.append("span").text(d => `\u00A0${d.amount.toDecimal()} \u00d7 ${d.item.name}`)
-
-        return node
-    }
 }
 
 export const DISABLED_RECIPE_PREFIX = "D-"
@@ -277,7 +233,6 @@ export class DisabledRecipe implements RecipeLike {
     readonly products: Ingredient[]
     readonly icon_col: number
     readonly icon_row: number
-    readonly icon: Icon
 
     constructor(item: Item) {
         this.key = DISABLED_RECIPE_PREFIX + item.key
@@ -285,7 +240,6 @@ export class DisabledRecipe implements RecipeLike {
         this.products = [new Ingredient(item, one)]
         this.icon_col = item.icon_col
         this.icon_row = item.icon_row
-        this.icon = new Icon(this)
     }
 
     /** Returns no ingredients. The item appears from nothing. */

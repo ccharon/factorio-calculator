@@ -11,8 +11,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
-import * as d3 from "d3"
-import { Icon, type IconSource } from "../ui/icon.ts"
+import type { IconSource } from "./icon-source.ts"
 import type { Dataset } from "./dataset.ts"
 import { DisabledRecipe, type Recipe, type RecipeLike } from "./recipe.ts"
 
@@ -30,7 +29,6 @@ export class Item implements IconSource {
     readonly uses: Recipe[] = []
     readonly icon_col: number
     readonly icon_row: number
-    readonly icon: Icon
     readonly group: string
     readonly subgroup: string
     readonly order: string
@@ -49,7 +47,6 @@ export class Item implements IconSource {
         this.phase = phase
         this.icon_col = col
         this.icon_row = row
-        this.icon = new Icon(this)
         this.group = group
         this.subgroup = subgroup
         this.order = order
@@ -70,26 +67,6 @@ export class Item implements IconSource {
     /** Registers a recipe that uses this item. */
     addUse(recipe: Recipe): void {
         this.uses.push(recipe)
-    }
-
-    /**
-     * Returns a tooltip element. Items with a single recipe of the same name show the recipe.
-     *
-     * @param extra - Optional content appended below the header.
-     */
-    renderTooltip(extra?: Node): HTMLDivElement {
-        const only = this.recipes[0]
-        if (this.recipes.length === 1 && only !== undefined && only.name === this.name) {
-            return only.renderTooltip(extra)
-        }
-        const t = d3.create("div").classed("frame", true)
-        const header = t.append("h3")
-        header.append(() => this.icon.make(32, true))
-        header.node()?.append(this.name)
-        if (extra) {
-            t.node()?.append(extra)
-        }
-        return t.node() as HTMLDivElement
     }
 }
 

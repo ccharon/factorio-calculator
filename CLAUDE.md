@@ -78,9 +78,9 @@ The dataset format is defined in `src/data/dataset.schema.json`. `tests/dataset.
 |------|-------|
 | Entry point | `index.html`, `src/main.ts` |
 | Core math and solver, no DOM | `src/core/`: `rational.ts`, `matrix.ts`, `simplex.ts`, `solve.ts` (with the `SolverContext` interface), `cycle.ts`, `totals.ts`, `sort.ts` |
-| Game data loading | `src/data/`: `dataset.ts` (types of the dataset JSON), `dataset.schema.json`, `item.ts`, `recipe.ts`, `building.ts`, `module.ts`, `belt.ts`, `fuel.ts`, `planet.ts`, `research.ts` (recipe productivity technologies), `cargo.ts` (items in orbit and launch recipes), `group.ts`, `groups.ts` |
+| Game data loading | `src/data/`: `dataset.ts` (types of the dataset JSON), `dataset.schema.json`, `item.ts`, `recipe.ts`, `building.ts`, `module.ts`, `belt.ts`, `fuel.ts`, `planet.ts`, `research.ts` (recipe productivity technologies), `cargo.ts` (items in orbit and launch recipes), `icon-source.ts`, `group.ts`, `groups.ts` |
 | State and URL settings | `src/state/`: `factory.ts` (`FactorySpecification`, global `spec`), `fragment.ts` (writes the settings string), `url-codec.ts` (parses and compresses the URL fragment), `priority.ts`, `align.ts` (number formatting) |
-| UI | `src/ui/`: `display.ts`, `target.ts`, `settings.ts`, `dropdown.ts`, `module-dropdown.ts`, `tooltip.ts`, `events.ts`, `icon.ts`, `energy.ts`, `color.ts`, `debug.ts` |
+| UI | `src/ui/`: `display.ts`, `target.ts`, `settings.ts`, `dropdown.ts`, `module-dropdown.ts`, `tooltip.ts`, `events.ts`, `icon.ts`, `icons.ts` (`iconOf()` and the tooltips of game objects), `energy.ts`, `color.ts`, `debug.ts` |
 | Visualizer | `src/visualize/`: `visualize.ts` (builds the graph), `graph.ts` (graph types, colors, node rendering), `sankey.ts`, `sankey-layout.ts` (adapted d3-sankey layout, BSD-3), `boxline.ts` (dagre), `circlepath.ts` |
 | Styles | `src/styles/` |
 | Static files | `public/`: dataset, sprite sheet, SVG icons, favicon. Copied unchanged into `dist/`. |
@@ -91,6 +91,7 @@ Key facts:
 - All math uses exact rationals (`src/core/rational.ts`). Never use floats in solver code. Convert data values with `Rational.from_float_approximate`.
 - Every setting must be handled in three places: its `render*` function in `src/ui/settings.ts`, serialization in `src/state/fragment.ts`, and the default constant. Shared URLs must keep working.
 - `spec` is a module-level singleton, also exposed as `window.spec` for debugging.
+- `src/data/` and `src/core/` must not import `src/ui/`, `src/state/` or `src/visualize/` and must not use the DOM. `tests/layering.test.js` enforces it. Settings reach them through context interfaces (`RecipeContext`, `BuildingContext`, `SolverContext`), which `FactorySpecification` implements. Icons and tooltips come from `iconOf()` in `src/ui/icons.ts`.
 - Recipes in 2.1 have a `categories` list. Recipes that the same set of buildings can craft share a `BuildingGroup` (`src/state/factory.ts`). Its key is the building keys joined with `+`, and the `buildings` URL setting stores `<group key>:<building key>` per changed group. The default building comes from the category that most recipes of the group list first.
 - Buildings and recipes have surface conditions. A building works if it works on at least one selected planet. A planet disables recipes that no working building can craft.
 - Product amounts in the dataset are expected values with probabilities and `extra_count_fraction` applied. `ignored_by_productivity` is the expected part that productivity does not multiply. `Ingredient.productAmount()` applies productivity, and `spec.getProdEffect()` applies the recipe's productivity cap.

@@ -11,11 +11,8 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
-import * as d3 from "d3"
 import { Rational, zero, one } from "../core/rational.ts"
-import { spec } from "../state/factory.ts"
-import { powerRepr } from "../ui/energy.ts"
-import { Icon, type IconSource } from "../ui/icon.ts"
+import type { IconSource } from "./icon-source.ts"
 import type { Dataset, DatasetMachine } from "./dataset.ts"
 import type { Item } from "./item.ts"
 import type { ModuleSpec } from "./module.ts"
@@ -50,25 +47,6 @@ export interface BuildingOptions {
     conditions?: readonly SurfaceCondition[]
 }
 
-function header(obj: IconSource & { icon: Icon }): d3.Selection<HTMLDivElement, undefined, null, undefined> {
-    const t = d3.create("div").classed("frame", true)
-    const h = t.append("h3")
-    h.append(() => obj.icon.make(32, true))
-    h.node()?.append(obj.name)
-    return t
-}
-
-function addLine(t: d3.Selection<HTMLDivElement, undefined, null, undefined>, label: string, value: string): void {
-    const line = t.append("div")
-    line.append("b").text(label)
-    line.append("span").text(value)
-}
-
-function formatPower(power: Rational): string {
-    const { power: value, suffix } = powerRepr(power)
-    return `${value.toDecimal(0)} ${suffix}`
-}
-
 /** A machine that crafts recipes, such as an assembler or furnace. Base class for miners, pumps and the rocket silo. */
 export class Building implements IconSource {
     readonly key: string
@@ -82,7 +60,6 @@ export class Building implements IconSource {
     readonly conditions: readonly SurfaceCondition[]
     readonly icon_col: number
     readonly icon_row: number
-    readonly icon: Icon
 
     constructor(options: BuildingOptions) {
         this.key = options.key
@@ -96,7 +73,6 @@ export class Building implements IconSource {
         this.conditions = options.conditions ?? []
         this.icon_col = options.icon_col
         this.icon_row = options.icon_row
-        this.icon = new Icon(this)
     }
 
     /** Returns whether the building has one of the crafting categories of recipe. */
@@ -142,23 +118,10 @@ export class Building implements IconSource {
     drain(): Rational {
         return this.power.div(thirty)
     }
-
-    /** Returns a tooltip element with power, crafting speed and module slots. */
-    renderTooltip(): HTMLDivElement {
-        const t = header(this)
-        addLine(t, "Energy consumption: ", formatPower(this.power))
-        addLine(t, "Crafting speed: ", this.speed.toDecimal())
-        addLine(t, "Module slots: ", String(this.moduleSlots))
-        return t.node() as HTMLDivElement
-    }
 }
 
-/** A building that exists only for the calculator, such as the boiler converting water. Its tooltip shows only the name. */
-class PseudoBuilding extends Building {
-    /** Returns a tooltip element with the name only. */
-    override renderTooltip(): HTMLDivElement {
-        return header(this).node() as HTMLDivElement
-    }
+/** A building that exists only for the calculator, such as the boiler converting water. */
+export class PseudoBuilding extends Building {
 }
 
 /** A mining drill. Its rate depends on mining speed and the resource's mining time. */
@@ -193,19 +156,10 @@ export class Miner extends Building {
     override prodEffect(context: BuildingContext): Rational {
         return context.miningProd
     }
-
-    /** Returns a tooltip element with power, mining speed and module slots. */
-    override renderTooltip(): HTMLDivElement {
-        const t = header(this)
-        addLine(t, "Energy consumption: ", formatPower(this.power))
-        addLine(t, "Mining speed: ", this.miningSpeed.toDecimal())
-        addLine(t, "Module slots: ", String(this.moduleSlots))
-        return t.node() as HTMLDivElement
-    }
 }
 
 /** An offshore pump. It uses no power and takes no modules. */
-class OffshorePump extends Building {
+export class OffshorePump extends Building {
     /** Fluid units per second. */
     readonly pumpingSpeed: Rational
 
@@ -225,13 +179,6 @@ class OffshorePump extends Building {
     /** Returns fluid units pumped per second. */
     override getRecipeRate(_context: BuildingContext, _recipe: Recipe): Rational {
         return this.pumpingSpeed
-    }
-
-    /** Returns a tooltip element with the pumping speed. */
-    override renderTooltip(): HTMLDivElement {
-        const t = header(this)
-        addLine(t, "Pumping speed: ", `${spec.format.rate(this.pumpingSpeed)}/${spec.format.rateName}`)
-        return t.node() as HTMLDivElement
     }
 }
 

@@ -15,33 +15,28 @@ limitations under the License.*/
 
 import * as d3 from "d3"
 import type { SpriteSheetData } from "../data/dataset.ts"
+import type { IconSource } from "../data/icon-source.ts"
 import { Tooltip } from "./tooltip.ts"
 
 export const PX_WIDTH = 32
 export const PX_HEIGHT = 32
 
-/** Anything that has an icon: an item, recipe, building, belt, planet and so on. */
-export interface IconSource {
-    readonly name: string
-    readonly icon_col: number
-    readonly icon_row: number
-    /** If present, hovering the icon shows this content as a tooltip. */
-    renderTooltip?(): Node
-}
 
 /** The icon of one object in the sprite sheet. */
 export class Icon {
     /** Alt text of the image. */
     readonly name: string
     readonly obj: IconSource
+    private readonly tooltip: (() => Node) | null
 
     /**
      * @param obj - The object the icon represents.
-     * @param name - Alt text. Defaults to obj.name.
+     * @param tooltip - Returns the tooltip content. Without it, the image gets a title attribute.
      */
-    constructor(obj: IconSource, name?: string) {
-        this.name = name ?? obj.name
+    constructor(obj: IconSource, tooltip: (() => Node) | null = null) {
+        this.name = obj.iconName ?? obj.name
         this.obj = obj
+        this.tooltip = tooltip
     }
 
     /**
@@ -66,11 +61,10 @@ export class Icon {
         }
         img.style("background-position", `${x}px ${y}px`)
 
-        const obj = this.obj
-        if (!suppressTooltip && obj.renderTooltip) {
-            new Tooltip(img.node() as HTMLImageElement, () => obj.renderTooltip?.() ?? new Text(obj.name), target)
+        if (!suppressTooltip && this.tooltip !== null) {
+            new Tooltip(img.node() as HTMLImageElement, this.tooltip, target)
         } else {
-            img.attr("title", obj.name)
+            img.attr("title", this.obj.name)
         }
 
         img.attr("alt", this.name)
@@ -100,13 +94,11 @@ class Sprite implements IconSource {
     readonly name: string
     readonly icon_col: number
     readonly icon_row: number
-    readonly icon: Icon
 
     constructor(name: string, col: number, row: number) {
         this.name = name
         this.icon_col = col
         this.icon_row = row
-        this.icon = new Icon(this)
     }
 }
 

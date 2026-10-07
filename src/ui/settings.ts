@@ -21,6 +21,7 @@ import * as d3 from "d3"
 import { Rational, zero } from "../core/rational.ts"
 import { sorted } from "../core/sort.ts"
 import type { Building } from "../data/building.ts"
+import type { IconSource } from "../data/icon-source.ts"
 import type { Fuel } from "../data/fuel.ts"
 import { getRecipeGroups } from "../data/groups.ts"
 import { type Module, moduleRows, shortModules } from "../data/module.ts"
@@ -37,8 +38,8 @@ import {
     DEFAULT_TAB, clickTab, DEFAULT_VISUALIZER, visualizerType, setVisualizerType, DEFAULT_RENDER, visualizerRender, setVisualizerRender,
     visualizerDirection, getDefaultVisDirection, setVisualizerDirection,
 } from "./events.ts"
-import type { Icon } from "./icon.ts"
 import { type ModuleCell, type ModuleInput, moduleDropdown } from "./module-dropdown.ts"
+import { iconOf } from "./icons.ts"
 
 const hundred = Rational.from_float(100)
 
@@ -312,7 +313,7 @@ function renderResearch(settings: Settings): void {
     const div = d3.select("#research_selector")
     div.selectAll("*").remove()
     const entries = div.selectAll<HTMLSpanElement, ProductivityResearch>("span").data(sorted(spec.research, r => r.order)).join("span").classed("research", true)
-    entries.append(d => d.icon.make(32))
+    entries.append(d => iconOf(d).make(32))
     const input = entries.append("input").attr("type", "number").attr("min", 0).attr("step", 1).attr("max", d => d.maxLevel)
     input.property("value", d => spec.researchLevels.get(d) ?? 0).on("change", function (_event: Event, d: ProductivityResearch) {
         const level = parseLevel(d, this.value)
@@ -367,9 +368,8 @@ function renderColorScheme(settings: Settings): void {
 
 // radio buttons with icons
 
-interface RadioChoice {
+interface RadioChoice extends IconSource {
     readonly key: string
-    readonly icon: Icon
 }
 
 let radioInput = 0
@@ -391,7 +391,7 @@ function radioSetting<G extends HTMLElement, T extends RadioChoice, D>(
             const span = d3.select(this)
             const input = span.append("input").attr("id", id).attr("type", "radio").attr("name", groupName).attr("value", choice.key)
             input.property("checked", checked(choice, d)).property("disabled", disabled(choice)).on("change", () => onchange(choice, d))
-            span.append("label").attr("for", id).append(() => choice.icon.make(32))
+            span.append("label").attr("for", id).append(() => iconOf(choice).make(32))
         })
     })
 }
@@ -674,7 +674,7 @@ function renderRecipes(settings: Settings): void {
     if (havePlanets) {
         const planetToggles = planetDiv.selectAll<HTMLDivElement, Planet>("div").data(sorted(spec.planets.values(), p => p.order)).join("div")
         planetToggles.classed("toggle", true).classed("selected", d => spec.selectedPlanets.has(d)).on("click", clickPlanet)
-        planetToggles.append(d => d.icon.make(32))
+        planetToggles.append(d => iconOf(d).make(32))
     }
 
     // Only recipes that compete with another recipe for a product get a toggle.
@@ -691,7 +691,7 @@ function renderRecipes(settings: Settings): void {
     const toggleRows = div.selectAll<HTMLDivElement, Recipe[]>("div").data(groups).join("div").classed("toggle-row", true)
     const toggles = toggleRows.selectAll<HTMLDivElement, Recipe>("div").data(d => d).join("div")
     toggles.classed("toggle recipe", true).classed("selected", d => !spec.disable.has(d)).on("click", clickRecipeToggle)
-    toggles.append(d => d.icon.make(32))
+    toggles.append(d => iconOf(d).make(32))
 }
 
 // resource priority

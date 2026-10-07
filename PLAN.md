@@ -130,7 +130,7 @@ Comes before the model changes, so phases 4 to 6 are written once, in the new st
 4. Done. Fuels have the 2.1 `fuel_categories` list. Each burner building burns the selected fuel of its category (`spec.getFuel()`), and settings show one fuel row per category with a choice. `fuel=` holds a list of fuel keys.
 5. Done. Items carry their runtime weight. Every launchable item has an item in orbit (`<key>-in-orbit`) and a launch recipe that takes ⌊lift weight / item weight⌋ items and the rocket parts of one launch. Targets have a switch that selects the item in orbit.
 
-## Phase 4a: Layering of `src/data/`
+## Phase 4a: Layering of `src/data/` (done)
 
 `src/data/` must not import `src/ui/` or `src/state/`. Today the data classes create `Icon` objects, build tooltip DOM in `renderTooltip()`, format energy with `ui/energy.ts`, and read the global `spec` (`Recipe.gives()`, fuel, building tooltips).
 
@@ -171,10 +171,10 @@ Rewrite README per the writing rules, update changelog, keep CLAUDE.md current.
 
 ## Handoff (state at the end of the last session)
 
-Branch `develop`. Phase 3 and phase 4 is done. Last pushed commit: `9f83958`. Later commits are local only.
+Branch `develop`. Phase 3 and phases 4 and 4a are done. Last pushed commit: `9f83958`. Later commits are local only.
 
 Next steps:
 
-1. Phase 4a.
+1. Phase 5, step 1.
 
 Helper scripts (ignored by git) in `.port/`: `port.cjs` writes a TS file with the old license header and rewrites imports; `blank2.cjs` inserts empty lines before anchor lines.

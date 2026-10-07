@@ -18,7 +18,8 @@ import type { Item } from "../data/item.ts"
 import { isRecipeLike, type RecipeLike, type RecipeNode, type Ingredient } from "../data/recipe.ts"
 import type { Rational } from "../core/rational.ts"
 import { spec } from "../state/factory.ts"
-import { PX_WIDTH, PX_HEIGHT, spriteSheet, type IconSource } from "../ui/icon.ts"
+import type { IconSource } from "../data/icon-source.ts"
+import { PX_WIDTH, PX_HEIGHT, spriteSheet } from "../ui/icon.ts"
 import type { CirclePath, Point } from "./circlepath.ts"
 
 export const colorList: readonly string[] = [

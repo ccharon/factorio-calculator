@@ -18,6 +18,7 @@ import * as d3 from "d3"
 import { Rational } from "../core/rational.ts"
 import type { RecipeLike } from "../data/recipe.ts"
 import { spec } from "./factory.ts"
+import { iconOf } from "../ui/icons.ts"
 
 type Div<T> = d3.Selection<HTMLDivElement, T, null, undefined>
 
@@ -44,7 +45,7 @@ class Resource {
             this.level?.list.div.classed("dragging", false)
         })
 
-        this.div.append(() => this.recipe.icon.make(48))
+        this.div.append(() => iconOf(this.recipe).make(48))
         this.div.append("input").attr("type", "text").attr("size", 4).attr("value", this.weight.toString()).on("change", (event: Event) => {
             this.weight = Rational.from_string((event.target as HTMLInputElement).value)
             this.level?.insertSorted(this)

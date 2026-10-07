@@ -28,8 +28,10 @@ import { spec } from "../state/factory.ts"
 import { formatSettings } from "../state/fragment.ts"
 import { powerRepr } from "./energy.ts"
 import { toggleIgnoreHandler } from "./events.ts"
-import { Icon, type IconSource } from "./icon.ts"
+import type { IconSource } from "../data/icon-source.ts"
+import { Icon } from "./icon.ts"
 import { type ModuleCell, type ModuleInput as DropdownInput, moduleDropdown } from "./module-dropdown.ts"
+import { iconOf, renderItemTooltip } from "./icons.ts"
 
 const hundred = Rational.from_float(100)
 
@@ -51,7 +53,7 @@ interface Header {
 /** One line of an item's breakdown: an ingredient flow into a producer, or the item's flow into a consumer. */
 interface BreakdownRow {
     readonly item: Item
-    readonly recipe: RecipeNode & { readonly icon: Icon }
+    readonly recipe: RecipeNode & IconSource
     /** Items per second. */
     readonly rate: Rational
     readonly building: Building | null
@@ -276,28 +278,9 @@ function toggleBreakdownHandler(event: Event): void {
     bdRow.classList.toggle("breakdown-open", open)
 }
 
-/** Item icon of a table row. Its tooltip adds a hint about ignoring the item. */
-class ItemIcon implements IconSource {
-    readonly item: Item
-    readonly name: string
-    readonly icon_col: number
-    readonly icon_row: number
-    readonly icon: Icon
-    private readonly extra = d3.create("span")
-
-    constructor(item: Item, text: string) {
-        this.item = item
-        this.name = item.name
-        this.icon_col = item.icon_col
-        this.icon_row = item.icon_row
-        this.icon = new Icon(this)
-        this.extra.text(text)
-    }
-
-    /** Returns the item tooltip with the hint. */
-    renderTooltip(): HTMLDivElement {
-        return this.item.renderTooltip(this.extra.node() ?? undefined)
-    }
+// Returns the icon of a table row item. Its tooltip adds a hint about ignoring the item.
+function itemRowIcon(item: Item, hint: string): HTMLImageElement {
+    return new Icon(item, () => renderItemTooltip(item, d3.create("span").text(hint).node() ?? undefined)).make(32)
 }
 
 function pipeIcon(): HTMLImageElement {
@@ -400,14 +383,14 @@ function renderBreakdowns(itemRows: RowSelection, totalCols: number): void {
     row.classed("breakdown-row", true).classed("breakdown-first-output", d => d.divider)
 
     const icons = row.append("td")
-    icons.append(d => d.recipe.icon.make(32)).classed("item-icon", true)
+    icons.append(d => iconOf(d.recipe).make(32)).classed("item-icon", true)
     svgIcon(icons, "usage-arrow", [18, 16], "images/icons.svg#rightarrow")
-    icons.append(d => d.item.icon.make(32)).classed("item-icon", true)
+    icons.append(d => iconOf(d.item).make(32)).classed("item-icon", true)
     row.append("td").classed("right-align", true).append("tt").classed("item-rate pad-right", true).text(d => spec.format.alignRate(d.rate))
 
     const beltRow = row.filter(d => d.item.phase === "solid")
     const beltCell = beltRow.append("td")
-    beltCell.append(() => spec.belt.icon.make(32))
+    beltCell.append(() => iconOf(spec.belt).make(32))
     beltCell.append("span").text(" \u00d7")
     const beltCount = beltRow.append("td").classed("right-align", true).append("tt").classed("belt-count pad-right", true)
     beltCount.text(d => spec.format.alignCount(d.rate.div(spec.belt.rate)))
@@ -417,7 +400,7 @@ function renderBreakdowns(itemRows: RowSelection, totalCols: number): void {
     pipeRow.append("td")
 
     const buildingCell = row.append("td").filter(d => d.building !== null).classed("building", true)
-    buildingCell.append(d => buildingOf(d).icon.make(32))
+    buildingCell.append(d => iconOf(buildingOf(d)).make(32))
     buildingCell.append("span").text(" \u00d7")
     const count = row.append("td").filter(d => d.count !== null).classed("building pad-right", true).append("tt")
     count.text(d => d.count === null ? "" : spec.format.alignCount(d.count))
@@ -465,7 +448,7 @@ export function displayItems(context: FactorySpecification, totals: Totals | nul
     itemIcon.selectAll("img").remove()
     const itemImage = itemIcon.append(d => {
         const ignored = spec.ignore.has(itemOf(d))
-        return new ItemIcon(itemOf(d), ignored ? "(Click to unignore.)" : "(Click to ignore.)").icon.make(32)
+        return itemRowIcon(itemOf(d), ignored ? "(Click to unignore.)" : "(Click to ignore.)")
     })
     itemImage.classed("ignore", d => spec.ignore.has(itemOf(d))).on("click", (event: Event, d: DisplayRow) => toggleIgnoreHandler(event, { item: itemOf(d) }))
 
@@ -476,7 +459,7 @@ export function displayItems(context: FactorySpecification, totals: Totals | nul
     const beltRow = itemRow.filter(d => itemOf(d).phase === "solid")
     const beltIcon = beltRow.selectAll<HTMLTableCellElement, DisplayRow>("td.belt-icon").classed("pad-right", false).attr("colspan", 1)
     beltIcon.selectAll("*").remove()
-    beltIcon.append(() => spec.belt.icon.make(32))
+    beltIcon.append(() => iconOf(spec.belt).make(32))
     beltIcon.append("span").text(" \u00d7")
     const beltCount = beltRow.selectAll("td.belt-count-cell").classed("hide", false).selectAll<HTMLElement, DisplayRow>("tt.belt-count")
     beltCount.text(d => spec.format.alignCount(spec.getBeltCount(rateOf(totals.items, itemOf(d)))))
@@ -491,9 +474,9 @@ export function displayItems(context: FactorySpecification, totals: Totals | nul
     const buildingCell = buildingRow.selectAll<HTMLTableCellElement, DisplayRow>("td.building-icon")
     buildingCell.selectAll("*").remove()
     const buildingExtra = buildingCell.filter(d => !d.single)
-    buildingExtra.append(d => recipeOf(d).icon.make(32))
+    buildingExtra.append(d => iconOf(recipeOf(d)).make(32))
     buildingExtra.append("span").text(":")
-    buildingCell.append(d => buildingOf(d).icon.make(32))
+    buildingCell.append(d => iconOf(buildingOf(d)).make(32))
     buildingCell.append("span").text(" \u00d7")
     const buildingCount = buildingRow.selectAll<HTMLElement, DisplayRow>("tt.building-count")
     buildingCount.text(d => spec.format.alignCount(spec.getCount(recipeOf(d), rateOf(totals.rates, recipeOf(d)))))
@@ -513,7 +496,7 @@ export function displayItems(context: FactorySpecification, totals: Totals | nul
     const fuelRow = buildingRow.filter(d => buildingOf(d).fuel !== null)
     const fuelIcon = fuelRow.selectAll<HTMLTableCellElement, DisplayRow>(".fuel-icon")
     fuelIcon.selectAll("*").remove()
-    fuelIcon.append(d => fuelOf(d).icon.make(32))
+    fuelIcon.append(d => iconOf(fuelOf(d)).make(32))
     fuelIcon.append("span").text(" \u00d7 ")
     fuelRow.selectAll<HTMLElement, DisplayRow>("tt.power").text(d => `${spec.format.alignRate(powerOf(d).div(fuelOf(d).value))}/${spec.format.rateName}`)
 

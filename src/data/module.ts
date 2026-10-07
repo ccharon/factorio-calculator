@@ -11,22 +11,15 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
-import * as d3 from "d3"
 import { Rational, zero, one } from "../core/rational.ts"
 import { sorted } from "../core/sort.ts"
-import { Icon, type IconSource } from "../ui/icon.ts"
+import type { IconSource } from "./icon-source.ts"
 import type { Building, BuildingContext } from "./building.ts"
 import type { Dataset } from "./dataset.ts"
 import type { Item } from "./item.ts"
 import { requireItem, type Recipe } from "./recipe.ts"
 
-const hundred = Rational.from_float(100)
 const minimumPower = Rational.from_floats(1, 5)
-
-function percent(x: Rational): string {
-    const sign = x.less(zero) ? "" : "+"
-    return `${sign}${x.mul(hundred).toDecimal()}%`
-}
 
 /** A module item with the effects the calculator models: speed, productivity and power. */
 export class Module implements IconSource {
@@ -40,7 +33,6 @@ export class Module implements IconSource {
     readonly power: Rational
     readonly icon_col: number
     readonly icon_row: number
-    readonly icon: Icon
     private short: string
 
     constructor(item: Item, category: string, productivity: Rational, speed: Rational, power: Rational) {
@@ -53,7 +45,6 @@ export class Module implements IconSource {
         this.power = power
         this.icon_col = item.icon_col
         this.icon_row = item.icon_row
-        this.icon = new Icon(this)
         // First and last letter of the key, such as "s3" for speed-module-3.
         this.short = this.key.charAt(0) + this.key.charAt(this.key.length - 1)
     }
@@ -81,30 +72,6 @@ export class Module implements IconSource {
     /** Returns whether the module has a productivity effect. */
     hasProdEffect(): boolean {
         return !this.productivity.isZero()
-    }
-
-    /** Returns a tooltip element with the module effects. */
-    renderTooltip(): HTMLDivElement {
-        const t = d3.create("div").classed("frame", true)
-        const header = t.append("h3")
-        header.append(() => this.icon.make(32, true))
-        header.node()?.append(this.name)
-
-        const effects: [string, Rational][] = [
-            ["Energy consumption: ", this.power],
-            ["Speed: ", this.speed],
-            ["Productivity: ", this.productivity],
-        ]
-        for (const [label, value] of effects) {
-            if (value.isZero()) {
-                continue
-            }
-            const line = t.append("div")
-            line.append("b").text(label)
-            line.append("span").text(percent(value))
-        }
-
-        return t.node() as HTMLDivElement
     }
 }
 
