@@ -30,7 +30,19 @@
         "args": "none"
       }
     ],
-    "no-redeclare": "error"
+    "no-redeclare": "error",
+    "typescript/no-explicit-any": "error",
+    "typescript/no-non-null-assertion": "error",
+    "typescript/consistent-type-imports": "error",
+    "typescript/explicit-function-return-type": [
+      "error",
+      {
+        "allowExpressions": true,
+        "allowTypedFunctionExpressions": true
+      }
+    ],
+    "typescript/explicit-module-boundary-types": "error",
+    "typescript/prefer-readonly": "error"
   },
   "overrides": [
     {

@@ -16,7 +16,7 @@ import dagre from "@dagrejs/dagre"
 
 import { spec } from "../state/factory.js"
 import { colorList, iconSize, getColorMaps, renderNode, imageViewBox } from "./graph.js"
-import { sheetHash, sheetWidth, sheetHeight } from "../ui/icon.js"
+import { spriteSheet } from "../ui/icon.ts"
 import { graphClickHandler, graphMouseOverHandler, graphMouseLeaveHandler } from "./visualize.js"
 
 
@@ -169,9 +169,9 @@ export function renderBoxGraph({nodes, links}, direction, ignore, callback) {
         .attr("width", iconSize)
         .attr("height", iconSize)
         .append("image")
-            .attr("xlink:href", "images/sprite-sheet-" + sheetHash + ".png")
-            .attr("width", sheetWidth)
-            .attr("height", sheetHeight)
+            .attr("xlink:href", `images/sprite-sheet-${spriteSheet().hash}.png`)
+            .attr("width", spriteSheet().width)
+            .attr("height", spriteSheet().height)
     edgeLabels.append("text")
         .attr("x", d => {
             let edge = d.label

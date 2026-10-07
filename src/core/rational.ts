@@ -15,9 +15,9 @@ limitations under the License.*/
 // Parses an integer string. Accepts surrounding whitespace, a sign, and exponent notation
 // such as "1e3", which BigInt() rejects.
 function parseInteger(s: string): bigint {
-    const exponent = /^\s*([+-]?\d+)[eE]\+?(\d+)\s*$/.exec(s)
-    if (exponent) {
-        return BigInt(exponent[1]) * 10n ** BigInt(exponent[2])
+    const exponent = /^\s*(?<mantissa>[+-]?\d+)[eE]\+?(?<power>\d+)\s*$/.exec(s)?.groups
+    if (exponent?.["mantissa"] !== undefined && exponent["power"] !== undefined) {
+        return BigInt(exponent["mantissa"]) * 10n ** BigInt(exponent["power"])
     }
     return BigInt(s)
 }

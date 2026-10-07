@@ -16,7 +16,7 @@ import * as d3 from "d3"
 import { CirclePath, makeCurve } from "./circlepath.js"
 import { spec } from "../state/factory.js"
 import { colorList, iconSize, getColorMaps, renderNode, imageViewBox } from "./graph.js"
-import { sheetHash, sheetWidth, sheetHeight } from "../ui/icon.js"
+import { spriteSheet } from "../ui/icon.ts"
 import { one } from "../core/rational.ts"
 import { graphClickHandler, graphMouseOverHandler, graphMouseLeaveHandler } from "./visualize.js"
 
@@ -219,9 +219,9 @@ export function renderSankey(data, direction, ignore) {
             .attr("width", iconSize/2)
             .attr("height", iconSize/2)
     linkIcon.append("image")
-        .attr("xlink:href", "images/sprite-sheet-" + sheetHash + ".png")
-        .attr("width", sheetWidth)
-        .attr("height", sheetHeight)
+        .attr("xlink:href", `images/sprite-sheet-${spriteSheet().hash}.png`)
+        .attr("width", spriteSheet().width)
+        .attr("height", spriteSheet().height)
     if (direction === "down") {
         linkIcon
             .attr("x", d => d.y0 - iconSize/4 + 0.25)

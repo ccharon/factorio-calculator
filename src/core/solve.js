@@ -13,10 +13,10 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 
 import { getCycleRecipes } from "./cycle.js"
-import { Matrix } from "./matrix.js"
+import { Matrix } from "./matrix.ts"
 import { Rational, minusOne, zero, one } from "./rational.ts"
-import { Ingredient } from "../data/recipe.js"
-import { simplex } from "./simplex.js"
+import { Ingredient } from "../data/recipe.ts"
+import { simplex } from "./simplex.ts"
 import { Totals } from "./totals.js"
 
 // Terminating nodes of a solution-graph.

@@ -16,10 +16,11 @@ import { DEFAULT_RATE, DEFAULT_RATE_PRECISION, DEFAULT_COUNT_PRECISION, DEFAULT_
 import { colorSchemes } from "./color.js"
 import { DEFAULT_TAB, clickTab, DEFAULT_VISUALIZER, visualizerType, setVisualizerType, DEFAULT_RENDER, visualizerRender, setVisualizerRender, visualizerDirection, getDefaultVisDirection, setVisualizerDirection } from "./events.js"
 import { spec, DEFAULT_PLANET, DEFAULT_BELT, DEFAULT_FUEL } from "../state/factory.js"
-import { getRecipeGroups } from "../data/groups.js"
-import { shortModules, moduleRows, moduleDropdown } from "../data/module.js"
+import { getRecipeGroups } from "../data/groups.ts"
+import { shortModules, moduleRows } from "../data/module.ts"
+import { moduleDropdown } from "./module-dropdown.js"
 import { Rational, zero } from "../core/rational.ts"
-import { sorted } from "../core/sort.js"
+import { sorted } from "../core/sort.ts"
 
 // There are several things going on with this control flow. Settings should
 // work like this:

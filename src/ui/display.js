@@ -15,22 +15,12 @@ import * as d3 from "d3"
 import { toggleIgnoreHandler } from "./events.js"
 import { spec } from "../state/factory.js"
 import { formatSettings } from "../state/fragment.js"
-import { getRecipeGroups, topoSort } from "../data/groups.js"
-import { Icon } from "./icon.js"
-import { moduleRows, moduleDropdown } from "../data/module.js"
+import { getRecipeGroups, topoSort } from "../data/groups.ts"
+import { Icon } from "./icon.ts"
+import { moduleRows } from "../data/module.ts"
+import { moduleDropdown } from "./module-dropdown.js"
+import { powerRepr } from "./energy.ts"
 import { Rational, zero, one } from "../core/rational.ts"
-
-let powerSuffixes = ["\u00A0W", "kW", "MW", "GW", "TW", "PW"]
-
-export function powerRepr(x) {
-    let thousand = Rational.from_float(1000)
-    let i = 0
-    while (thousand.less(x) && i < powerSuffixes.length - 1) {
-        x = x.div(thousand)
-        i++
-    }
-    return {power: x, suffix: powerSuffixes[i]}
-}
 
 function alignPower(x) {
     let {power, suffix} = powerRepr(x)

@@ -97,6 +97,13 @@ Key facts:
 ## Conventions
 
 - TypeScript and Vite, no UI framework. Every library comes from npm and is imported. No `<script>` tags for libraries, no inline scripts or event handler attributes in HTML.
+- TypeScript rules for `src/` and new code:
+  - No `any`, no non-null assertions (`!`), no `@ts-ignore`. Use `unknown` and narrow it, or write the type.
+  - Explicit types on exported functions, public methods, class fields and module-level variables. Local variables may rely on inference when the initializer makes the type obvious.
+  - Data from outside the program (dataset JSON, URL settings) is typed through interfaces in `src/data/dataset.ts` and `src/state/`, and checked where it enters.
+  - `import type` for type-only imports. Imports of ported files use the `.ts` extension.
+  - `readonly` for fields that never change after construction.
+  - Compiler options are strict, including `noUncheckedIndexedAccess`. A missing map or array entry is handled explicitly, usually by throwing an `Error` with the missing key.
 - Files in `src/` are JavaScript until their phase 3 port to TypeScript. Type-aware lint rules that need types are relaxed for `src/**/*.js` in `.oxlintrc.json`.
 - 4-space indentation, no semicolons, double quotes. Match the surrounding file.
 - Chrome is the only browser for testing: the Chrome extension for visual checks, `puppeteer-core` with the installed Chrome for automated checks.

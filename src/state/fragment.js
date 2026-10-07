@@ -17,7 +17,7 @@ import { DEFAULT_TAB, currentTab, DEFAULT_VISUALIZER, visualizerType, DEFAULT_RE
 import { spec, DEFAULT_BELT, DEFAULT_FUEL } from "./factory.js"
 import { Rational } from "../core/rational.ts"
 import { DEFAULT_TITLE, DEFAULT_COLOR_SCHEME, colorScheme } from "../ui/settings.js"
-import { sorted } from "../core/sort.js"
+import { sorted } from "../core/sort.ts"
 
 function getModuleKey(module) {
     let moduleKey

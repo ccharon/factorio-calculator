@@ -12,7 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
 import * as d3 from "d3"
-import { PX_WIDTH, PX_HEIGHT, sheetHash, sheetWidth, sheetHeight } from "../ui/icon.js"
+import { PX_WIDTH, PX_HEIGHT, spriteSheet } from "../ui/icon.ts"
 
 // Code common between the Sankey and boxline visualizations.
 
@@ -139,9 +139,9 @@ export function renderNode(rects, nodeMargin, justification, recipeColors, ignor
         .attr("height", iconSize)
         .append("image")
             .classed("ignore", d => ignore.has(d.recipe))
-            .attr("xlink:href", "images/sprite-sheet-" + sheetHash + ".png")
-            .attr("width", sheetWidth)
-            .attr("height", sheetHeight)
+            .attr("xlink:href", `images/sprite-sheet-${spriteSheet().hash}.png`)
+            .attr("width", spriteSheet().width)
+            .attr("height", spriteSheet().height)
     // node text (building count, or plain rate if no building)
     labeledNode.append("text")
         .attr("x", d => d.labelX + nodeMargin + iconSize + (d.building === null ? 0 : colonWidth + iconSize) /*+ 5*/)
@@ -168,7 +168,7 @@ export function renderNode(rects, nodeMargin, justification, recipeColors, ignor
         .attr("width", iconSize)
         .attr("height", iconSize)
         .append("image")
-            .attr("xlink:href", "images/sprite-sheet-" + sheetHash + ".png")
-            .attr("width", sheetWidth)
-            .attr("height", sheetHeight)
+            .attr("xlink:href", `images/sprite-sheet-${spriteSheet().hash}.png`)
+            .attr("width", spriteSheet().width)
+            .attr("height", spriteSheet().height)
 }
