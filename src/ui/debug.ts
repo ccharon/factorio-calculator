@@ -15,7 +15,7 @@ limitations under the License.*/
 // Debug tab: shows the simplex tableau of the last solve before and after solving.
 
 import * as d3 from "d3"
-import type { Matrix } from "../core/matrix.ts"
+import type { Matrix } from "../core/simplex.ts"
 import type { TableauMetadata } from "../core/solve.ts"
 import { spec } from "../state/factory.ts"
 import { iconOf } from "./icons.ts"

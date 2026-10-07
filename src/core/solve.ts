@@ -18,9 +18,8 @@ limitations under the License.*/
 import type { Item } from "../data/item.ts"
 import { Ingredient, type RecipeLike, type RecipeNode } from "../data/recipe.ts"
 import { type CycleContext, getCycleRecipes } from "./cycle.ts"
-import { Matrix } from "./matrix.ts"
 import { Rational, minusOne, zero, one } from "./rational.ts"
-import { simplex } from "./simplex.ts"
+import { Matrix, simplex } from "./simplex.ts"
 import { Totals, type TotalsContext } from "./totals.ts"
 
 /** A requested output: an item rate, optionally forced through one recipe. */

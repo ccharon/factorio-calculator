@@ -529,7 +529,7 @@ function renderFuel(settings: Settings): void {
 
     // One row per fuel category that a burner building uses and that offers a choice.
     const used = new Set(Array.from(spec.buildingKeys.values(), b => b.fuel).filter(c => c !== null))
-    const categories = sorted(Array.from(used).filter(c => spec.fuelsOf(c).length > 1), c => c)
+    const categories = Array.from(used).filter(c => spec.fuelsOf(c).length > 1).sort()
     const div = d3.select("#fuel_selector")
     div.selectAll("*").remove()
     const rows = div.selectAll<HTMLDivElement, string>("div").data(categories).join("div").classed("radio-setting", true)
