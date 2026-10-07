@@ -174,10 +174,17 @@ Rewrite README per the writing rules, update changelog, keep CLAUDE.md current.
 
 ## Handoff (state at the end of the last session)
 
-Branch `develop`. Phase 3 and phases 4 and 4a are done. Last pushed commit: `9f83958`. Later commits are local only.
+Branch `develop`, everything committed and pushed. Phases 0 to 5 are done (phase 5 with global quality only).
 
 Next steps:
 
-1. Phase 6.
+1. Phase 6 (robustness and security). Check first which rows of its table earlier phases already covered (CSP, inline handlers, vendored libraries, URL parsing with try/catch), then do the rest.
+2. Later, from phase 5: quality per recipe, recycling loops for a target quality, reactor neighbour bonus.
+3. Phase 7: README and changelog.
 
-Helper scripts (ignored by git) in `.port/`: `port.cjs` writes a TS file with the old license header and rewrites imports; `blank2.cjs` inserts empty lines before anchor lines.
+Working notes:
+
+- Game data: `npm run build-data -- --factorio /home/christian/Spiele/factorio --keep` keeps the dump; later runs can use `--dump <dir>`. Runtime values (item weights, daytime, quality speeds and module effects) come from the helper mod in `tools/lib/factorio.js`.
+- After every result change: `npm run snapshot:record`, then compare old and new `tests/snapshots/factory.json` per scenario before committing.
+- Browser checks with JS queries, screenshots only when the layout changed.
+- Stop the dev server with `pkill -u $(id -u) -f "node.*[v]ite"`; a plain `node.*vite` pattern also matches the calling shell.
