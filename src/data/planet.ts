@@ -15,7 +15,7 @@ import type { IconSource } from "./icon-source.ts"
 import type { Dataset } from "./dataset.ts"
 import type { Building } from "./building.ts"
 import { GeneratorRecipe, SolarRecipe } from "./power.ts"
-import { ELECTRICITY, type Recipe } from "./recipe.ts"
+import { ELECTRICITY, HEAT, type Recipe } from "./recipe.ts"
 
 /** A planet or space surface with its resources and surface properties. */
 export class Planet implements IconSource {
@@ -26,17 +26,20 @@ export class Planet implements IconSource {
     readonly resources: ReadonlySet<Recipe>
     /** Surface property values, including defaults for properties the planet does not set. */
     readonly properties: ReadonlyMap<string, number>
+    /** True if buildings freeze here without heat. */
+    readonly requiresHeating: boolean
     /** Recipes that are disabled while only this planet is selected. Generators are always among them until the user enables them. */
     readonly disable: Set<Recipe> = new Set()
     readonly icon_col: number
     readonly icon_row: number
 
-    constructor(key: string, name: string, order: string, col: number, row: number, resources: ReadonlySet<Recipe>, properties: ReadonlyMap<string, number>) {
+    constructor(key: string, name: string, order: string, col: number, row: number, resources: ReadonlySet<Recipe>, properties: ReadonlyMap<string, number>, requiresHeating: boolean) {
         this.key = key
         this.name = name
         this.order = order
         this.resources = resources
         this.properties = properties
+        this.requiresHeating = requiresHeating
         this.icon_col = col
         this.icon_row = row
     }
@@ -48,7 +51,7 @@ export class Planet implements IconSource {
     allows(recipe: Recipe, buildings: readonly Building[]): boolean {
         if (recipe.isResource()) {
             // Electricity comes from outside the factory on every surface.
-            return this.resources.has(recipe) || recipe.key === ELECTRICITY
+            return this.resources.has(recipe) || recipe.key === ELECTRICITY || recipe.key === HEAT
         }
         if (recipe instanceof SolarRecipe && recipe.planet !== this.key) {
             return false
@@ -79,6 +82,12 @@ function traverseRecycling(recipe: Recipe, found: Set<Recipe>): void {
     }
 }
 
+// Generators and heat sources stay disabled until the user enables them, because a free source
+// such as solar power would always win.
+function isEnergySource(recipe: Recipe): boolean {
+    return recipe instanceof GeneratorRecipe || (!recipe.isResource() && recipe.products.some(p => p.item.key === HEAT))
+}
+
 /** Creates all planets and space surfaces by key, each with the set of recipes it disables. */
 export function getPlanets(data: Dataset, recipes: ReadonlyMap<string, Recipe>, buildings: readonly Building[]): Map<string, Planet> {
     const planets = new Map<string, Planet>()
@@ -101,9 +110,9 @@ export function getPlanets(data: Dataset, recipes: ReadonlyMap<string, Recipe>, 
             properties.set(name, d.surface_properties[name] ?? default_value)
         }
 
-        const planet = new Planet(d.key, d.localized_name.en, d.order, d.icon_col, d.icon_row, resources, properties)
+        const planet = new Planet(d.key, d.localized_name.en, d.order, d.icon_col, d.icon_row, resources, properties, d.requires_heating)
         for (const recipe of recipes.values()) {
-            if (!planet.allows(recipe, buildings) || isRecycling(recipe) || recipe instanceof GeneratorRecipe) {
+            if (!planet.allows(recipe, buildings) || isRecycling(recipe) || isEnergySource(recipe)) {
                 planet.disable.add(recipe)
             }
         }

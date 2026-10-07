@@ -23,7 +23,7 @@ import type { Item } from "../data/item.ts"
 import { type Module, type ModuleDefaults, ModuleSpec } from "../data/module.ts"
 import type { Planet } from "../data/planet.ts"
 import type { ProductivityResearch } from "../data/research.ts"
-import { DISABLED_RECIPE_PREFIX, ELECTRICITY, ELECTRICITY_UNIT, Ingredient, Recipe, type RecipeContext, type RecipeLike, type RecipeNode } from "../data/recipe.ts"
+import { DISABLED_RECIPE_PREFIX, ELECTRICITY, ELECTRICITY_UNIT, HEAT, Ingredient, Recipe, type RecipeContext, type RecipeLike, type RecipeNode } from "../data/recipe.ts"
 import { renderDebug } from "../ui/debug.ts"
 import { displayItems } from "../ui/display.ts"
 import { currentTab } from "../ui/events.ts"
@@ -255,32 +255,45 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
 
     /**
      * Returns the fuel or electricity the building of recipe uses per craft, or an empty list.
-     * Electricity includes module effects and the idle drain of the buildings in use.
+     * Electricity includes module effects and the idle drain of the buildings in use. On planets that
+     * require heating, buildings also use heat.
      */
     getEnergyIngredients(recipe: Recipe): Ingredient[] {
         const building = this.getBuilding(recipe)
         const baseRate = this.getRecipeRate(recipe)
-        if (building === null || baseRate === null || building.power.isZero()) {
+        if (building === null || baseRate === null) {
             return []
+        }
+        const heating = this.requiresHeating() && !building.heatingEnergy.isZero()
+            ? [new Ingredient(this.heat, building.heatingEnergy.div(baseRate).div(ELECTRICITY_UNIT))]
+            : []
+        if (building.power.isZero()) {
+            return heating
         }
 
         // craft/s and J/s give J/craft. Divided by J/item, that is items per craft.
         if (building.fuel !== null) {
             const fuel = this.getFuel(building.fuel)
-            return [new Ingredient(fuel.item, building.power.div(baseRate).div(fuel.value))]
+            return [new Ingredient(fuel.item, building.power.div(baseRate).div(fuel.value)), ...heating]
         }
         const powerEffect = this.getModuleSpec(recipe)?.powerEffect() ?? one
         const watts = building.power.mul(powerEffect).add(building.drain())
-        return [new Ingredient(this.electricity, watts.div(baseRate).div(ELECTRICITY_UNIT))]
+        return [new Ingredient(this.electricity, watts.div(baseRate).div(ELECTRICITY_UNIT)), ...heating]
     }
 
-    /** Returns the fuel item or electricity that the building of recipe uses, or null. */
-    getEnergyItem(recipe: RecipeLike): Item | null {
-        const building = this.getBuilding(recipe)
-        if (building === null || building.power.isZero()) {
-            return null
-        }
-        return building.fuel === null ? this.electricity : this.getFuel(building.fuel).item
+    /** Returns whether buildings need heat: every selected planet requires heating. */
+    requiresHeating(): boolean {
+        return this.selectedPlanets.size > 0 && Array.from(this.selectedPlanets).every(p => p.requiresHeating)
+    }
+
+    /** Returns the fuel, electricity and heat that the building of recipe uses. */
+    getEnergyItems(recipe: RecipeLike): Item[] {
+        return recipe instanceof Recipe ? this.getEnergyIngredients(recipe).map(ing => ing.item) : []
+    }
+
+    /** The abstract item for heat, in MJ. */
+    get heat(): Item {
+        return required(this.items.get(HEAT) ?? null, "heat")
     }
 
     /** The abstract item for electric energy, in joules. */
@@ -543,8 +556,8 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
     /** Returns the enabled recipes for item, plus its DisabledRecipe if the item is disabled or ignored. */
     getRecipes(item: Item): RecipeLike[] {
         let recipes = item.recipes.filter(recipe => !this.disable.has(recipe))
-        // Electricity comes from outside only while no generator is enabled.
-        if (item.key === ELECTRICITY && recipes.some(r => !r.isResource())) {
+        // Electricity and heat come from outside only while no source of them is enabled.
+        if ((item.key === ELECTRICITY || item.key === HEAT) && recipes.some(r => !r.isResource())) {
             recipes = recipes.filter(r => !r.isResource())
         }
         if (this.isItemDisabled(item) || this.ignore.has(item)) {

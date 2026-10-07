@@ -22,7 +22,7 @@ import type { Fuel } from "../data/fuel.ts"
 import { getRecipeGroups, topoSort } from "../data/groups.ts"
 import type { Item } from "../data/item.ts"
 import { type Module, type ModuleSpec, moduleRows } from "../data/module.ts"
-import { ELECTRICITY, ELECTRICITY_UNIT, type RecipeLike, type RecipeNode, isRecipeLike } from "../data/recipe.ts"
+import { ELECTRICITY, ELECTRICITY_UNIT, HEAT, type RecipeLike, type RecipeNode, isRecipeLike } from "../data/recipe.ts"
 import type { FactorySpecification } from "../state/factory.ts"
 import { spec } from "../state/factory.ts"
 import { formatSettings } from "../state/fragment.ts"
@@ -40,9 +40,9 @@ function alignPower(x: Rational): string {
     return `${spec.format.alignCount(power)} ${suffix}`
 }
 
-// Returns the rate of item for the table. Electricity shows as power.
+// Returns the rate of item for the table. Electricity and heat show as power.
 function alignItemRate(item: Item, rate: Rational): string {
-    return item.key === ELECTRICITY ? alignPower(rate.mul(ELECTRICITY_UNIT)) : spec.format.alignRate(rate)
+    return item.key === ELECTRICITY || item.key === HEAT ? alignPower(rate.mul(ELECTRICITY_UNIT)) : spec.format.alignRate(rate)
 }
 
 function rateOf<K>(map: ReadonlyMap<K, Rational> | undefined, key: K): Rational {

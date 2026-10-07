@@ -103,6 +103,16 @@ export function addPowerRecipes(data: Dataset, items: Map<string, Item>, recipes
         ))
     }
 
+    for (const r of data.reactors.filter(d => d.key !== "nuclear-reactor")) {
+        // The reactor turns its fuel consumption into heat at its effectivity.
+        const heat = Rational.from_float(r.consumption).mul(Rational.from_float_approximate(r.energy_source.effectivity ?? 1))
+        const key = `${r.key}-heat`
+        recipes.set(key, new Recipe({
+            key, name: r.localized_name.en, order: undefined, icon_col: r.icon_col, icon_row: r.icon_row, allowProductivity: false,
+            categories: [powerCategory(r.key)], time: one, ingredients: [], products: [new Ingredient(item(HEAT), heat.div(ELECTRICITY_UNIT))],
+        }))
+    }
+
     const defaults = new Map(data.surface_properties.map(p => [p.name, p.default_value]))
     for (const panel of data.solar_panels) {
         for (const planet of data.planets) {

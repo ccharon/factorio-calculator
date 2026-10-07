@@ -2161,7 +2161,7 @@
     "surplus": []
   },
   "nauvis-nuclear-power": {
-    "fragment": "#items=processing-unit:r:60&planet=nauvis&enable=steam-turbine-power",
+    "fragment": "#items=processing-unit:r:60&planet=nauvis&enable=steam-turbine-power,nuclear-reactor-cycle",
     "recipes": [
       {
         "key": "(output)",
@@ -4255,6 +4255,14 @@
         "power": "2350000"
       },
       {
+        "key": "heat",
+        "rate": "257809/125000",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
         "key": "holmium-plate",
         "rate": "53/250",
         "building": "assembling-machine-2",
@@ -4357,6 +4365,10 @@
         "rate": "6"
       },
       {
+        "key": "heat",
+        "rate": "257809/125000"
+      },
+      {
         "key": "holmium-ore",
         "rate": "53/625"
       },
@@ -4409,6 +4421,391 @@
       {
         "key": "ammonia",
         "rate": "1964/125"
+      },
+      {
+        "key": "molten-copper",
+        "rate": "53/75"
+      }
+    ]
+  },
+  "aquilo-heating": {
+    "fragment": "#items=cryogenic-science-pack:r:60&planet=aquilo&enable=heating-tower-heat",
+    "recipes": [
+      {
+        "key": "(output)",
+        "rate": "1",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "(surplus)",
+        "rate": "1",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "D-biter-egg",
+        "rate": "515618/2137825",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "D-calcite",
+        "rate": "53/28125",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "D-holmium-ore",
+        "rate": "53/625",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "D-lava",
+        "rate": "212/225",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "advanced-oil-processing",
+        "rate": "5413989/106891250",
+        "building": "oil-refinery",
+        "count": "5413989/21378250",
+        "fuel": "electric",
+        "power": "10292683520/85513"
+      },
+      {
+        "key": "ammoniacal-solution",
+        "rate": "387005381/10689125",
+        "building": "offshore-pump",
+        "count": "387005381/12826950000",
+        "fuel": "electric",
+        "power": "0"
+      },
+      {
+        "key": "ammoniacal-solution-separation",
+        "rate": "387005381/534456250",
+        "building": "chemical-plant",
+        "count": "387005381/534456250",
+        "fuel": "electric",
+        "power": "68009859008/427565"
+      },
+      {
+        "key": "burnt-spoilage",
+        "rate": "30679271/32067375",
+        "building": "biochamber",
+        "count": "61358542/10689125",
+        "fuel": "nutrients",
+        "power": "245434168000/85513"
+      },
+      {
+        "key": "coal-synthesis",
+        "rate": "30679271/106891250",
+        "building": "chemical-plant",
+        "count": "30679271/53445625",
+        "fuel": "electric",
+        "power": "10906826056/85513"
+      },
+      {
+        "key": "crude-oil",
+        "rate": "2319519/427565",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "cryogenic-science-pack",
+        "rate": "1",
+        "building": "cryogenic-plant",
+        "count": "10",
+        "fuel": "electric",
+        "power": "15500000"
+      },
+      {
+        "key": "electricity",
+        "rate": "148325372413607/7215159375000",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "fluorine-vent",
+        "rate": "3",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "fluoroketone",
+        "rate": "3/50",
+        "building": "cryogenic-plant",
+        "count": "3/10",
+        "fuel": "electric",
+        "power": "500000"
+      },
+      {
+        "key": "fluoroketone-cooling",
+        "rate": "3/5",
+        "building": "cryogenic-plant",
+        "count": "3/2",
+        "fuel": "electric",
+        "power": "2350000"
+      },
+      {
+        "key": "heating-tower-heat",
+        "rate": "30679271/1068912500",
+        "building": "heating-tower",
+        "count": "30679271/1068912500",
+        "fuel": "chemical",
+        "power": "98173667200/85513"
+      },
+      {
+        "key": "holmium-plate",
+        "rate": "53/250",
+        "building": "assembling-machine-2",
+        "count": "106/375",
+        "fuel": "electric",
+        "power": "47400"
+      },
+      {
+        "key": "holmium-solution",
+        "rate": "53/1250",
+        "building": "chemical-plant",
+        "count": "53/125",
+        "fuel": "electric",
+        "power": "96040"
+      },
+      {
+        "key": "ice-melting",
+        "rate": "66331631/106891250",
+        "building": "chemical-plant",
+        "count": "66331631/106891250",
+        "fuel": "electric",
+        "power": "11742305008/85513"
+      },
+      {
+        "key": "light-oil-cracking",
+        "rate": "16241967/213782500",
+        "building": "chemical-plant",
+        "count": "16241967/106891250",
+        "fuel": "electric",
+        "power": "3327241456/85513"
+      },
+      {
+        "key": "lithium",
+        "rate": "53/250",
+        "building": "chemical-plant",
+        "count": "106/25",
+        "fuel": "electric",
+        "power": "925400"
+      },
+      {
+        "key": "lithium-brine",
+        "rate": "53/5",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "lithium-plate",
+        "rate": "1",
+        "building": "electric-furnace",
+        "count": "16/5",
+        "fuel": "electric",
+        "power": "600000"
+      },
+      {
+        "key": "molten-copper-from-lava",
+        "rate": "53/28125",
+        "building": "foundry",
+        "count": "212/28125",
+        "fuel": "electric",
+        "power": "919600/9"
+      },
+      {
+        "key": "nutrients-from-biter-egg",
+        "rate": "515618/2137825",
+        "building": "biochamber",
+        "count": "515618/2137825",
+        "fuel": "nutrients",
+        "power": "10312360000/85513"
+      },
+      {
+        "key": "nutrients-spoilage",
+        "rate": "61358542/10689125",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "solid-fuel-from-ammonia",
+        "rate": "3/50",
+        "building": "chemical-plant",
+        "count": "3/100",
+        "fuel": "electric",
+        "power": "13300"
+      },
+      {
+        "key": "sulfur",
+        "rate": "30679271/213782500",
+        "building": "chemical-plant",
+        "count": "30679271/213782500",
+        "fuel": "electric",
+        "power": "3175649764/85513"
+      }
+    ],
+    "items": [
+      {
+        "key": "ammonia",
+        "rate": "387005381/10689125"
+      },
+      {
+        "key": "ammoniacal-solution",
+        "rate": "387005381/10689125"
+      },
+      {
+        "key": "biter-egg",
+        "rate": "515618/2137825"
+      },
+      {
+        "key": "calcite",
+        "rate": "53/28125"
+      },
+      {
+        "key": "carbon",
+        "rate": "30679271/21378250"
+      },
+      {
+        "key": "coal",
+        "rate": "30679271/106891250"
+      },
+      {
+        "key": "crude-oil",
+        "rate": "2319519/427565"
+      },
+      {
+        "key": "cryogenic-science-pack",
+        "rate": "1"
+      },
+      {
+        "key": "electricity",
+        "rate": "148325372413607/7215159375000"
+      },
+      {
+        "key": "fluorine",
+        "rate": "3"
+      },
+      {
+        "key": "fluoroketone-cold",
+        "rate": "6"
+      },
+      {
+        "key": "fluoroketone-hot",
+        "rate": "6"
+      },
+      {
+        "key": "heat",
+        "rate": "30679271/10689125"
+      },
+      {
+        "key": "heavy-oil",
+        "rate": "5413989/4275650"
+      },
+      {
+        "key": "holmium-ore",
+        "rate": "53/625"
+      },
+      {
+        "key": "holmium-plate",
+        "rate": "53/250"
+      },
+      {
+        "key": "holmium-solution",
+        "rate": "106/25"
+      },
+      {
+        "key": "ice",
+        "rate": "387005381/106891250"
+      },
+      {
+        "key": "lava",
+        "rate": "212/225"
+      },
+      {
+        "key": "light-oil",
+        "rate": "48725901/21378250"
+      },
+      {
+        "key": "lithium",
+        "rate": "53/50"
+      },
+      {
+        "key": "lithium-brine",
+        "rate": "53/5"
+      },
+      {
+        "key": "lithium-plate",
+        "rate": "1"
+      },
+      {
+        "key": "molten-copper",
+        "rate": "53/75"
+      },
+      {
+        "key": "nutrients",
+        "rate": "3093708/427565"
+      },
+      {
+        "key": "petroleum-gas",
+        "rate": "92037813/21378250"
+      },
+      {
+        "key": "solid-fuel",
+        "rate": "3/50"
+      },
+      {
+        "key": "spoilage",
+        "rate": "61358542/10689125"
+      },
+      {
+        "key": "stone",
+        "rate": "53/1250"
+      },
+      {
+        "key": "sulfur",
+        "rate": "30679271/106891250"
+      },
+      {
+        "key": "water",
+        "rate": "132663262/10689125"
+      }
+    ],
+    "surplus": [
+      {
+        "key": "ammonia",
+        "rate": "464026137/21378250"
+      },
+      {
+        "key": "heavy-oil",
+        "rate": "5413989/4275650"
       },
       {
         "key": "molten-copper",

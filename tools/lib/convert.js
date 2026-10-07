@@ -243,6 +243,7 @@ export function convert(raw, localeFiles, version, runtime) {
         module_slots: p.module_slots ?? 0,
         allowed_effects: p.allowed_effects === undefined ? undefined : asArray(p.allowed_effects),
         surface_conditions: surfaceConditions(p),
+        heating_energy: p.heating_energy === undefined ? undefined : parseEnergy(p.heating_energy, "W"),
         icon_ref: `entity/${p.name}`,
     })
 
@@ -412,6 +413,7 @@ export function convert(raw, localeFiles, version, runtime) {
             order: p.order ?? "",
             surface_properties: p.surface_properties ?? {},
             solar_factor: solarFactor(runtime.daytime?.[p.name]),
+            requires_heating: p.entities_require_heating ?? false,
             resources: {
                 resource,
                 offshore: [...new Set(tiles.map(t => raw.tile[t]?.fluid).filter(Boolean))].sort(compareStrings),
@@ -429,6 +431,7 @@ export function convert(raw, localeFiles, version, runtime) {
             order: s.order ?? "",
             surface_properties: s.surface_properties ?? {},
             solar_factor: solarFactor(undefined),
+            requires_heating: false,
             resources: { resource: [], offshore: [], plants: [], asteroid: [...asteroidChunks].sort(compareStrings) },
             icon_ref: `surface/${s.name}`,
         })

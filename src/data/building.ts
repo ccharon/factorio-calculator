@@ -46,6 +46,8 @@ export interface BuildingOptions {
     fuel: string | null
     /** Surface properties the building needs to work, such as pressure for burner machines. */
     conditions?: readonly SurfaceCondition[]
+    /** Heat in W that keeps the building from freezing on planets that require heating. */
+    heatingEnergy?: Rational
 }
 
 /** A machine that crafts recipes, such as an assembler or furnace. Base class for miners, pumps and the rocket silo. */
@@ -59,6 +61,8 @@ export class Building implements IconSource {
     readonly power: Rational
     readonly fuel: string | null
     readonly conditions: readonly SurfaceCondition[]
+    /** Heat in W that keeps the building from freezing on planets that require heating. */
+    readonly heatingEnergy: Rational
     readonly icon_col: number
     readonly icon_row: number
 
@@ -72,6 +76,7 @@ export class Building implements IconSource {
         this.power = options.power
         this.fuel = options.fuel
         this.conditions = options.conditions ?? []
+        this.heatingEnergy = options.heatingEnergy ?? zero
         this.icon_col = options.icon_col
         this.icon_row = options.icon_row
     }
@@ -249,7 +254,7 @@ function fuelCategory(d: DatasetMachine): string | null {
     return d.energy_source?.type === "burner" ? d.energy_source.fuel_category ?? "chemical" : null
 }
 
-function machineOptions(d: DatasetMachine): Pick<BuildingOptions, "key" | "name" | "icon_col" | "icon_row" | "moduleSlots" | "power" | "fuel" | "conditions"> {
+function machineOptions(d: DatasetMachine): Pick<BuildingOptions, "key" | "name" | "icon_col" | "icon_row" | "moduleSlots" | "power" | "fuel" | "conditions" | "heatingEnergy"> {
     return {
         key: d.key,
         name: d.localized_name.en,
@@ -259,6 +264,7 @@ function machineOptions(d: DatasetMachine): Pick<BuildingOptions, "key" | "name"
         power: Rational.from_float_approximate(d.energy_usage ?? 0),
         fuel: fuelCategory(d),
         conditions: surfaceConditions(d.surface_conditions),
+        heatingEnergy: Rational.from_float_approximate(d.heating_energy ?? 0),
     }
 }
 
@@ -296,6 +302,14 @@ export function getBuildings(data: Dataset, items: ReadonlyMap<string, Item>): B
     }
     for (const d of data.solar_panels) {
         buildings.push(new PseudoBuilding({ ...iconOptions(d), categories: [powerCategory(d.key)], speed: one, prodBonus: zero, moduleSlots: 0, power: zero, fuel: null }))
+    }
+    // Reactors other than the nuclear reactor, such as the heating tower, burn fuel into heat.
+    for (const d of data.reactors.filter(r => r.key !== "nuclear-reactor")) {
+        const fuel = d.energy_source.fuel_categories?.[0] ?? d.energy_source.fuel_category ?? null
+        buildings.push(new Building({
+            ...iconOptions(d), categories: [powerCategory(d.key)], speed: one, prodBonus: zero, moduleSlots: 0,
+            power: Rational.from_float(d.consumption), fuel,
+        }))
     }
     for (const d of data.boilers.filter(b => b.energy_source.type === "heat")) {
         buildings.push(new PseudoBuilding({ ...iconOptions(d), categories: [HEAT_EXCHANGE_CATEGORY], speed: one, prodBonus: zero, moduleSlots: 0, power: zero, fuel: null }))

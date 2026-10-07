@@ -29747,6 +29747,7 @@
         "consumption",
         "pollution"
       ],
+      "heating_energy": 100000,
       "crafting_categories": [
         "crafting",
         "advanced-crafting"
@@ -29776,6 +29777,7 @@
         "pollution",
         "quality"
       ],
+      "heating_energy": 100000,
       "crafting_categories": [
         "crafting",
         "advanced-crafting",
@@ -29806,6 +29808,7 @@
         "pollution",
         "quality"
       ],
+      "heating_energy": 100000,
       "crafting_categories": [
         "crafting",
         "advanced-crafting",
@@ -29835,6 +29838,7 @@
         "productivity",
         "pollution"
       ],
+      "heating_energy": 200000,
       "crafting_categories": [
         "oil-processing"
       ],
@@ -29863,6 +29867,7 @@
         "pollution",
         "quality"
       ],
+      "heating_energy": 100000,
       "crafting_categories": [
         "chemistry"
       ],
@@ -29891,6 +29896,7 @@
         "pollution",
         "quality"
       ],
+      "heating_energy": 100000,
       "crafting_categories": [
         "centrifuging"
       ],
@@ -29924,6 +29930,7 @@
         "pollution",
         "quality"
       ],
+      "heating_energy": 100000,
       "crafting_categories": [
         "organic"
       ],
@@ -29959,6 +29966,7 @@
           "max": 0
         }
       ],
+      "heating_energy": 200000,
       "crafting_categories": [
         "crushing"
       ],
@@ -29987,6 +29995,7 @@
         "pollution",
         "quality"
       ],
+      "heating_energy": 300000,
       "crafting_categories": [
         "metallurgy"
       ],
@@ -30049,6 +30058,7 @@
         "pollution",
         "quality"
       ],
+      "heating_energy": 100000,
       "crafting_categories": [
         "electromagnetics"
       ],
@@ -30077,6 +30087,7 @@
         "pollution",
         "quality"
       ],
+      "heating_energy": 100000,
       "crafting_categories": [
         "cryogenics"
       ],
@@ -30142,6 +30153,7 @@
         "pollution",
         "quality"
       ],
+      "heating_energy": 100000,
       "crafting_categories": [
         "smelting"
       ],
@@ -30206,6 +30218,7 @@
         "pollution",
         "quality"
       ],
+      "heating_energy": 100000,
       "crafting_categories": [
         "recycling"
       ],
@@ -30238,6 +30251,7 @@
           "min": 1
         }
       ],
+      "heating_energy": 300000,
       "crafting_categories": [
         "rocket-building"
       ],
@@ -30261,6 +30275,7 @@
         }
       },
       "module_slots": 3,
+      "heating_energy": 100000,
       "mining_speed": 0.5,
       "resource_categories": [
         "basic-solid"
@@ -30294,6 +30309,7 @@
           "min": 10
         }
       ],
+      "heating_energy": 50000,
       "mining_speed": 0.25,
       "resource_categories": [
         "basic-solid"
@@ -30321,6 +30337,7 @@
         "productivity",
         "pollution"
       ],
+      "heating_energy": 50000,
       "mining_speed": 1,
       "resource_categories": [
         "basic-fluid"
@@ -30342,6 +30359,7 @@
         }
       },
       "module_slots": 4,
+      "heating_energy": 200000,
       "mining_speed": 2.5,
       "resource_categories": [
         "basic-solid",
@@ -30765,6 +30783,7 @@
           "max": 2000
         }
       ],
+      "heating_energy": 100000,
       "radius": 3,
       "plots": 48,
       "icon_col": 0,
@@ -30782,6 +30801,7 @@
         "day-night-cycle": 25200
       },
       "solar_factor": 0.7,
+      "requires_heating": false,
       "resources": {
         "resource": [
           "coal",
@@ -30814,6 +30834,7 @@
         "gravity": 40
       },
       "solar_factor": 0.7,
+      "requires_heating": false,
       "resources": {
         "resource": [
           "calcite",
@@ -30844,6 +30865,7 @@
         "gravity": 20
       },
       "solar_factor": 0.7,
+      "requires_heating": false,
       "resources": {
         "resource": [
           "stone"
@@ -30874,6 +30896,7 @@
         "gravity": 8
       },
       "solar_factor": 0.7,
+      "requires_heating": false,
       "resources": {
         "resource": [
           "scrap"
@@ -30902,6 +30925,7 @@
         "gravity": 15
       },
       "solar_factor": 0.7,
+      "requires_heating": true,
       "resources": {
         "resource": [
           "crude-oil",
@@ -30930,6 +30954,7 @@
         "day-night-cycle": 0
       },
       "solar_factor": 1,
+      "requires_heating": false,
       "resources": {
         "resource": [],
         "offshore": [],

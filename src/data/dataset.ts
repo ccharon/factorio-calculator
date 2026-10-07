@@ -105,6 +105,8 @@ export interface DatasetMachine extends NamedPrototype {
     module_slots: number
     allowed_effects?: EffectName[]
     surface_conditions?: SurfaceConditionData[]
+    /** Heat in W that keeps the machine from freezing on planets that require heating. */
+    heating_energy?: number
 }
 
 export interface DatasetCraftingMachine extends DatasetMachine {
@@ -202,6 +204,8 @@ export interface DatasetPlanet extends NamedPrototype {
     surface_properties: Record<string, number>
     /** Average light level over a day, between 0 and 1. Solar panels produce this share of their peak. */
     solar_factor: number
+    /** True if entities freeze here without heat, as on Aquilo. */
+    requires_heating: boolean
     resources: PlanetResources
 }
 

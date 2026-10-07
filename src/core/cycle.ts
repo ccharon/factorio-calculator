@@ -18,13 +18,13 @@ import type { RecipeContext, RecipeLike } from "../data/recipe.ts"
 
 /** What cycle detection needs from the factory state. */
 export interface CycleContext extends RecipeContext {
-    /** Returns the fuel item or electricity that the building of recipe uses, or null. */
-    getEnergyItem(recipe: RecipeLike): Item | null
+    /** Returns the fuel, electricity and heat that the building of recipe uses. */
+    getEnergyItems(recipe: RecipeLike): Item[]
 }
 
 // Recipes in the set whose building burns item as fuel.
 function getFuelConsumers(context: CycleContext, recipes: ReadonlySet<RecipeLike>, item: Item): RecipeLike[] {
-    return Array.from(recipes).filter(recipe => context.getEnergyItem(recipe) === item)
+    return Array.from(recipes).filter(recipe => context.getEnergyItems(recipe).includes(item))
 }
 
 // Returns the recipes in the set that produce an ingredient of recipe, or with invert, that

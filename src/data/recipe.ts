@@ -537,7 +537,7 @@ export function getRecipes(data: Dataset, items: Map<string, Item>): Map<string,
         ingredients: [new Ingredient(item("uranium-fuel-cell"), one)],
         products: [
             new Ingredient(item("depleted-uranium-fuel-cell"), one),
-            new Ingredient(item(HEAT), Rational.from_float(cellValue).div(ELECTRICITY_UNIT)),
+            new Ingredient(item(HEAT), Rational.from_float(cellValue).mul(Rational.from_float_approximate(reactorDef.energy_source.effectivity ?? 1)).div(ELECTRICITY_UNIT)),
         ],
     }))
 
@@ -619,9 +619,10 @@ export function getRecipes(data: Dataset, items: Map<string, Item>): Map<string,
         recipes.set(r.key, r)
     }
 
-    // Electricity comes from outside the factory. It has no priority, so it costs nothing and does
+    // Electricity and heat come from outside the factory. They have no priority, so it costs nothing and does
     // not change which recipes the solver picks.
     recipes.set(ELECTRICITY, new ResourceRecipe(item(ELECTRICITY), undefined, undefined))
+    recipes.set(HEAT, new ResourceRecipe(item(HEAT), undefined, undefined))
 
     // Items that nothing produces become resources. Items that nothing produces or uses are removed.
     for (const [itemKey, it] of Array.from(items)) {
