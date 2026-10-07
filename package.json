@@ -9,14 +9,14 @@
     "start": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "oxlint && node tools/check-dom-sinks.js",
+    "lint": "oxlint && node tools/check-dom-sinks.ts",
     "typecheck": "tsc",
     "test": "vitest run",
     "check": "npm run lint && npm run typecheck && npm test && npm run build",
-    "build-data": "node tools/build-data.js",
-    "test:browser": "node tests/browser/smoke.js",
-    "snapshot:check": "node tests/browser/snapshot.js check",
-    "snapshot:record": "node tests/browser/snapshot.js record"
+    "build-data": "node tools/build-data.ts",
+    "test:browser": "node tests/browser/smoke.ts",
+    "snapshot:check": "node tests/browser/snapshot.ts check",
+    "snapshot:record": "node tests/browser/snapshot.ts record"
   },
   "devDependencies": {
     "@types/d3": "^7.4.3",

@@ -208,7 +208,7 @@ Notes on phase 6: drag and drop in the Resources tab cannot be tested automatica
 
 Working notes:
 
-- Game data: `npm run build-data -- --factorio /home/christian/Spiele/factorio --keep` keeps the dump; later runs can use `--dump <dir>`. Runtime values (item weights, daytime, quality speeds and module effects) come from the helper mod in `tools/lib/factorio.js`.
+- Game data: `npm run build-data -- --factorio /home/christian/Spiele/factorio --keep` keeps the dump; later runs can use `--dump <dir>`. Runtime values (item weights, daytime, quality speeds and module effects) come from the helper mod in `tools/lib/factorio.ts`.
 - After every result change: `npm run snapshot:record`, then compare old and new `tests/snapshots/factory.json` per scenario before committing.
 - Browser checks with JS queries, screenshots only when the layout changed.
 - Stop the dev server with `pkill -u $(id -u) -f "node.*[v]ite"` in a Bash call of its own; the pattern also matches a calling shell whose command contains `node` and `vite`.

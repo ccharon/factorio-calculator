@@ -49,7 +49,7 @@ function setStatus(text: string): void {
     }
 }
 
-// Checks the top-level shape of the dataset. tests/dataset.test.js validates the full schema.
+// Checks the top-level shape of the dataset. tests/dataset.test.ts validates the full schema.
 function isDataset(value: unknown): value is Dataset {
     if (typeof value !== "object" || value === null) {
         return false

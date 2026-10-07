@@ -27,7 +27,7 @@ for (const layer of LAYERS) {
     for (const file of readdirSync(dir).filter(f => f.endsWith(".ts"))) {
         test(`src/${layer}/${file} imports no UI or state and uses no DOM`, () => {
             const lines = readFileSync(new URL(file, dir), "utf8").split("\n")
-            const bad = lines.map((line, i) => [i + 1, line]).filter(([, line]) => FORBIDDEN_IMPORT.test(line) || DOM.test(line))
+            const bad = lines.map((line, i): [number, string] => [i + 1, line]).filter(([, line]) => FORBIDDEN_IMPORT.test(line) || DOM.test(line))
             assert.deepEqual(bad, [])
         })
     }

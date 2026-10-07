@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 
 // Types of the dataset JSON in public/data/. They mirror src/data/dataset.schema.json, which
-// tests/dataset.test.js validates every dataset against. Energy is in J, power in W.
+// tests/dataset.test.ts validates every dataset against. Energy is in J, power in W.
 
 /** English display name of a prototype. */
 export interface LocalizedName {

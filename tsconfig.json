@@ -28,12 +28,13 @@
     "noUnusedParameters": true,
     "noPropertyAccessFromIndexSignature": true,
     "useUnknownInCatchVariables": true,
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true
   },
   "include": [
     "src",
     "tests",
     "tools",
-    "vite.config.js"
+    "vite.config.ts"
   ]
 }

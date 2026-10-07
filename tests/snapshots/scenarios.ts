@@ -15,7 +15,7 @@ limitations under the License.*/
 // URL scenarios for the factory snapshot. Each one is loaded as a calculator URL fragment.
 // Target rates are per minute unless the scenario sets another rate.
 
-export const SCENARIOS = [
+export const SCENARIOS: readonly (readonly [name: string, fragment: string])[] = [
     ["default", ""],
     ["nauvis-processing-unit", "#items=processing-unit:r:60&planet=nauvis"],
     ["nauvis-modules-beacons", "#items=processing-unit:r:60&planet=nauvis&dm=p3&db=s3:s3&dbc=8"],

@@ -13,34 +13,64 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 
 // Records or checks the factory snapshot: the solver result of every scenario in
-// tests/snapshots/scenarios.js, read from window.spec in headless Chrome.
+// tests/snapshots/scenarios.ts, read from window.spec in headless Chrome.
 // All numbers are exact rationals as strings, so any change in a result shows up.
 //
-// Usage: node tests/browser/snapshot.js record|check [--dist]
+// Usage: node tests/browser/snapshot.ts record|check [--dist]
 
 import { readFileSync, writeFileSync } from "node:fs"
 import { isDeepStrictEqual } from "node:util"
-import { SCENARIOS } from "../snapshots/scenarios.js"
-import { openCalculator, startBrowser } from "./browser.js"
+import { SCENARIOS } from "../snapshots/scenarios.ts"
+import { openCalculator, startBrowser } from "./browser.ts"
 
 const SNAPSHOT = new URL("../snapshots/factory.json", import.meta.url)
 const mode = process.argv[2]
 if (mode !== "record" && mode !== "check") {
-    console.error("usage: snapshot.js record|check [--dist]")
+    console.error("usage: snapshot.ts record|check [--dist]")
     process.exit(2)
 }
 
-// Runs inside the page. Sorted by key so the output does not depend on Map order.
-function readSolution() {
+/** The rate of one item. */
+interface ItemEntry {
+    readonly key: string
+    readonly rate: string
+}
+
+/** The rate, building count and power of one recipe. */
+interface RecipeEntry extends ItemEntry {
+    readonly building: string | null
+    readonly count: string
+    readonly fuel: string | null
+    readonly power: string
+}
+
+/** The solution of one scenario, with exact rationals as strings. */
+interface Solution {
+    readonly recipes: RecipeEntry[]
+    readonly items: ItemEntry[]
+    readonly surplus: ItemEntry[]
+}
+
+/** The recorded result of one scenario. */
+interface ScenarioResult extends Solution {
+    readonly fragment: string
+}
+
+// Runs inside the page, so it can use nothing outside its body. Sorted by key so the output does
+// not depend on Map order.
+function readSolution(): Solution {
     const spec = window.spec
     const totals = spec.lastTotals
-    const byKey = (a, b) => (a.key < b.key ? -1 : a.key > b.key ? 1 : 0)
-    const recipes = [...totals.rates].map(([recipe, rate]) => {
+    if (totals === null) {
+        throw new Error("no solution")
+    }
+    const byKey = (a: ItemEntry, b: ItemEntry): number => (a.key < b.key ? -1 : a.key > b.key ? 1 : 0)
+    const recipes = [...totals.rates].map(([recipe, rate]): RecipeEntry => {
         const building = spec.getBuilding(recipe)
         const { fuel, power } = spec.getPowerUsage(recipe, rate)
         return {
             // The solver's output and surplus nodes have a name but no key.
-            key: recipe.key ?? `(${recipe.name})`,
+            key: "key" in recipe && typeof recipe.key === "string" ? recipe.key : `(${recipe.name})`,
             rate: rate.toString(),
             building: building ? building.key : null,
             count: spec.getCount(recipe, rate).toString(),
@@ -54,14 +84,14 @@ function readSolution() {
 }
 
 // Lists the first entries that differ, by list and key, such as "recipes iron-plate".
-function describeDifference(expected, actual) {
+function describeDifference(expected: ScenarioResult | undefined, actual: ScenarioResult | undefined): string {
     if (expected === undefined || actual === undefined) {
         return expected === undefined ? " (new scenario)" : " (missing scenario)"
     }
-    const differences = []
-    for (const list of ["recipes", "items", "surplus"]) {
-        const before = new Map(expected[list].map(entry => [entry.key, entry]))
-        const after = new Map(actual[list].map(entry => [entry.key, entry]))
+    const differences: string[] = []
+    for (const list of ["recipes", "items", "surplus"] as const) {
+        const before = new Map<string, ItemEntry>(expected[list].map(entry => [entry.key, entry]))
+        const after = new Map<string, ItemEntry>(actual[list].map(entry => [entry.key, entry]))
         for (const key of new Set([...before.keys(), ...after.keys()])) {
             if (!isDeepStrictEqual(before.get(key), after.get(key))) {
                 differences.push(`${list} ${key}`)
@@ -73,8 +103,8 @@ function describeDifference(expected, actual) {
 }
 
 const { base, browser, close } = await startBrowser({ dist: process.argv.includes("--dist") })
-const results = {}
-const errors = []
+const results: Record<string, ScenarioResult> = {}
+const errors: string[] = []
 try {
     for (const [name, fragment] of SCENARIOS) {
         const { page, errors: pageErrors } = await openCalculator(browser, base, fragment)
@@ -90,7 +120,7 @@ if (mode === "record") {
     writeFileSync(SNAPSHOT, JSON.stringify(results, null, 2) + "\n")
     console.log(`recorded ${Object.keys(results).length} scenarios`)
 } else {
-    const expected = JSON.parse(readFileSync(SNAPSHOT, "utf8"))
+    const expected = JSON.parse(readFileSync(SNAPSHOT, "utf8")) as Record<string, ScenarioResult>
     for (const name of new Set([...Object.keys(expected), ...Object.keys(results)])) {
         if (!isDeepStrictEqual(expected[name], results[name])) {
             errors.push(`${name}: result differs from snapshot${describeDifference(expected[name], results[name])}`)

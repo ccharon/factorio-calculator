@@ -14,7 +14,7 @@ limitations under the License.*/
 
 // Generates public/data/space-age-<version>.json and the matching sprite sheet from a local Factorio install.
 //
-// Usage: node tools/build-data.js --factorio <dir> [--dump <script-output dir>] [--keep]
+// Usage: node tools/build-data.ts --factorio <dir> [--dump <script-output dir>] [--keep]
 //   --factorio  Factorio installation (or set FACTORIO_DIR).
 //   --dump      Reuse an existing dump instead of running the game.
 //   --keep      Keep the temporary dump directory and print its path.
@@ -24,15 +24,15 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { fileURLToPath } from "node:url"
 import { parseArgs } from "node:util"
-import { convert } from "./lib/convert.js"
-import { dumpGameData, gameVersion, readDump } from "./lib/factorio.js"
-import { buildSpriteSheet } from "./lib/sprites.js"
+import { convert } from "./lib/convert.ts"
+import { dumpGameData, gameVersion, readDump } from "./lib/factorio.ts"
+import { buildSpriteSheet } from "./lib/sprites.ts"
 
-const ROOT = fileURLToPath(new URL("..", import.meta.url))
+const ROOT: string = fileURLToPath(new URL("..", import.meta.url))
 
 const { values: args } = parseArgs({
     options: {
-        factorio: { type: "string", default: process.env.FACTORIO_DIR },
+        factorio: { type: "string", default: process.env["FACTORIO_DIR"] },
         dump: { type: "string" },
         keep: { type: "boolean", default: false },
     },
@@ -42,7 +42,7 @@ if (!args.factorio) {
     process.exit(2)
 }
 
-let workDir = null
+let workDir: string | null = null
 let outputDir = args.dump
 if (!outputDir) {
     workDir = mkdtempSync(join(tmpdir(), "factorio-dump-"))
@@ -52,8 +52,7 @@ if (!outputDir) {
 try {
     const version = gameVersion(args.factorio)
     const { raw, locale, runtime } = readDump(outputDir)
-    const dataset = convert(raw, locale, version, runtime)
-    const { png, hash } = await buildSpriteSheet(dataset, outputDir, join(args.factorio, "data"))
+    const { png, hash, dataset } = await buildSpriteSheet(convert(raw, locale, version, runtime), outputDir, join(args.factorio, "data"))
 
     const sheetPath = join(ROOT, "public", "images", `sprite-sheet-${hash}.png`)
     const dataPath = join(ROOT, "public", "data", `space-age-${version}.json`)

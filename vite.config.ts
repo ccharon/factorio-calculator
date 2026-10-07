@@ -35,7 +35,7 @@ export default defineConfig({
         port: 8000,
     },
     test: {
-        include: ["tests/**/*.test.{js,ts}"],
+        include: ["tests/**/*.test.ts"],
         environment: "node",
     },
 })

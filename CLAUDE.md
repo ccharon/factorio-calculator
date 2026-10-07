@@ -25,12 +25,12 @@ Node 25 or newer (the tests use `Uint8Array.toBase64`).
 
 | Command | Effect |
 |---------|--------|
-| `npm run lint` | Oxlint with type-aware rules (`.oxlintrc.json`), then `tools/check-dom-sinks.js`, which fails on `innerHTML`, `.html()`, `eval` and similar in `src/`. |
+| `npm run lint` | Oxlint with type-aware rules (`.oxlintrc.json`), then `tools/check-dom-sinks.ts`, which fails on `innerHTML`, `.html()`, `eval` and similar in `src/`. |
 | `npm run typecheck` | `tsc` (TypeScript 7) with `tsconfig.json`. |
-| `npm test` | Vitest: `tests/**/*.test.{js,ts}`. Known defects are marked with `test.fails`. |
+| `npm test` | Vitest: `tests/**/*.test.ts`. Known defects are marked with `test.fails`. |
 | `npm run check` | Lint, type check, tests and build. Run before every commit. |
 | `npm run test:browser` | Loads the page in a separate headless Chrome (`/usr/bin/google-chrome-stable`, override with `CHROME`) via `puppeteer-core`, prints the factory table and fails on JS errors. Takes `--dist` and an optional URL fragment. |
-| `npm run snapshot:check` | Solves every scenario in `tests/snapshots/scenarios.js` in headless Chrome and compares the exact results with `tests/snapshots/factory.json`. Fails on any difference. `--dist` tests the production build. |
+| `npm run snapshot:check` | Solves every scenario in `tests/snapshots/scenarios.ts` in headless Chrome and compares the exact results with `tests/snapshots/factory.json`. Fails on any difference. `--dist` tests the production build. |
 | `npm run snapshot:record` | Rewrites `tests/snapshots/factory.json`. Only run it when a result change is intended, and review the diff. |
 
 Oxlint JS plugins are alpha and are not used.
@@ -54,7 +54,7 @@ Dependabot (`.github/dependabot.yml`) opens weekly npm and action updates agains
 | Prototype data (Lua) | `data/base`, `data/space-age`, `data/quality`, `data/recycler` |
 | Changelog | `data/changelog.txt` |
 
-Do not modify the game directory. `tools/build-data.js` only reads it.
+Do not modify the game directory. `tools/build-data.ts` only reads it.
 
 ## Updating game data
 
@@ -62,7 +62,7 @@ Do not modify the game directory. `tools/build-data.js` only reads it.
 npm run build-data -- --factorio /home/christian/Spiele/factorio
 ```
 
-The script runs the game headless with a temporary config and mod directory: `--dump-data`, `--dump-icon-sprites` and `--dump-prototype-locale`, then `--create` with a helper mod (`calculator-dump`, written by `tools/lib/factorio.js`) that writes values the game computes at runtime, such as item weights, to `calculator-dump.json`. It writes `public/data/space-age-<version>.json` and `public/images/sprite-sheet-<hash>.png`. Afterwards, point `DATASET` in `src/main.ts` to the new file, delete the old dataset and sprite sheet, and run `npm run check`.
+The script runs the game headless with a temporary config and mod directory: `--dump-data`, `--dump-icon-sprites` and `--dump-prototype-locale`, then `--create` with a helper mod (`calculator-dump`, written by `tools/lib/factorio.ts`) that writes values the game computes at runtime, such as item weights, to `calculator-dump.json`. It writes `public/data/space-age-<version>.json` and `public/images/sprite-sheet-<hash>.png`. Afterwards, point `DATASET` in `src/main.ts` to the new file, delete the old dataset and sprite sheet, and run `npm run check`.
 
 | Option | Effect |
 |--------|--------|
@@ -70,7 +70,7 @@ The script runs the game headless with a temporary config and mod directory: `--
 | `--dump <dir>` | Reuse an existing `script-output` directory instead of running the game. |
 | `--keep` | Keep the temporary dump and print its path. |
 
-The dataset format is defined in `src/data/dataset.schema.json`. `tests/dataset.test.js` validates every `public/data/space-age-*.json` against it and checks that all item references resolve. Change the schema, `tools/lib/convert.js` and the loaders together.
+The dataset format is defined in `src/data/dataset.schema.json`. `tests/dataset.test.ts` validates every `public/data/space-age-*.json` against it and checks that all item references resolve. Change the schema, `tools/lib/convert.ts` and the loaders together.
 
 ## Architecture
 
@@ -80,18 +80,18 @@ The dataset format is defined in `src/data/dataset.schema.json`. `tests/dataset.
 | Core math and solver, no DOM | `src/core/`: `rational.ts`, `simplex.ts` (with the `Matrix` tableau), `solve.ts` (with the `SolverContext` interface), `cycle.ts`, `totals.ts`, `sort.ts` |
 | Game data loading | `src/data/`: `dataset.ts` (types of the dataset JSON), `dataset.schema.json`, `item.ts`, `recipe.ts`, `building.ts`, `module.ts`, `belt.ts`, `fuel.ts`, `planet.ts`, `research.ts` (recipe productivity technologies), `cargo.ts` (items in orbit and launch recipes), `power.ts` (generator, solar and heat exchanger recipes), `quality.ts`, `icon-source.ts`, `group.ts`, `groups.ts` |
 | State and URL settings | `src/state/`: `factory.ts` (`FactorySpecification`, global `spec`), `building-groups.ts`, `energy.ts` (fuel, electricity and heat per craft, power use), `fuel-choice.ts`, `fragment.ts` (writes the settings string), `url-codec.ts` (parses and compresses the URL fragment), `priority.ts` (resource priority levels, no DOM), `align.ts` (number formatting) |
-| UI | `src/ui/`: `display.ts`, `target.ts`, `settings.ts`, `priority-view.ts` (Resources tab), `dropdown.ts`, `module-dropdown.ts`, `tooltip.ts`, `events.ts`, `number-input.ts` (validated number fields), `icon.ts`, `icons.ts` (`iconOf()` and the tooltips of game objects), `energy.ts`, `color.ts`, `debug.ts` |
+| UI | `src/ui/`: `display.ts`, `target.ts`, `settings.ts`, `priority-view.ts` (Resources tab), `dropdown.ts`, `module-dropdown.ts`, `tooltip.ts`, `events.ts`, `number-input.ts` (validated number fields), `quality-dropdown.ts` (quality column of the factory table), `warnings.ts` (ignored URL settings), `icon.ts`, `icons.ts` (`iconOf()` and the tooltips of game objects), `energy.ts`, `color.ts`, `debug.ts` |
 | Visualizer | `src/visualize/`: `visualize.ts` (builds the graph), `graph.ts` (graph types, colors, node rendering), `sankey.ts`, `sankey-layout.ts` (adapted d3-sankey layout, BSD-3), `boxline.ts` (dagre), `circlepath.ts` |
 | Styles | `src/styles/` |
 | Static files | `public/`: dataset, sprite sheet, SVG icons, favicon. Copied unchanged into `dist/`. |
-| Data generation | `tools/build-data.js` (CLI), `tools/lib/factorio.js` (runs the game), `tools/lib/convert.js` (data.raw to dataset), `tools/lib/sprites.js` (sprite sheet, uses `sharp`) |
+| Data generation | `tools/build-data.ts` (CLI), `tools/lib/factorio.ts` (runs the game), `tools/lib/convert.ts` (data.raw to dataset), `tools/lib/sprites.ts` (sprite sheet, uses `sharp`) |
 
 Key facts:
 
 - All math uses exact rationals (`src/core/rational.ts`). Never use floats in solver code. Convert data values with `Rational.from_float_approximate`.
 - Every setting must be handled in three places: its `render*` function in `src/ui/settings.ts`, serialization in `src/state/fragment.ts`, and the default constant. Shared URLs must keep working.
 - `spec` is a module-level singleton, also exposed as `window.spec` for debugging.
-- `src/data/` and `src/core/` must not import `src/ui/`, `src/state/` or `src/visualize/` and must not use the DOM. `tests/layering.test.js` enforces it. Settings reach them through context interfaces (`RecipeContext`, `BuildingContext`, `SolverContext`), which `FactorySpecification` implements. Icons and tooltips come from `iconOf()` in `src/ui/icons.ts`.
+- `src/data/` and `src/core/` must not import `src/ui/`, `src/state/` or `src/visualize/` and must not use the DOM. `tests/layering.test.ts` enforces it. Settings reach them through context interfaces (`RecipeContext`, `BuildingContext`, `SolverContext`), which `FactorySpecification` implements. Icons and tooltips come from `iconOf()` in `src/ui/icons.ts`.
 - Recipes in 2.1 have a `categories` list. Recipes that the same set of buildings can craft share a `BuildingGroup` (`src/state/building-groups.ts`). Its key is the building keys joined with `+`, and the `buildings` URL setting stores `<group key>:<building key>` per changed group. The default building comes from the category that most recipes of the group list first.
 - Buildings and recipes have surface conditions. A building works if it works on at least one selected planet. A planet disables recipes that no working building can craft.
 - Product amounts in the dataset are expected values with probabilities and `extra_count_fraction` applied. `ignored_by_productivity` is the expected part that productivity does not multiply. `Ingredient.productAmount()` applies productivity, and `spec.getProdEffect()` applies the recipe's productivity cap.
@@ -100,14 +100,14 @@ Key facts:
 
 - File headers: files with Kirk McDonald's (or Mike Bostock's) copyright keep it, with `Copyright 2026 Christian Charon` as the next line. Every other source file starts with `/*Copyright 2026 Christian Charon` and the Apache 2.0 notice, as in `src/data/power.ts`.
 - TypeScript and Vite, no UI framework. Every library comes from npm and is imported. No `<script>` tags for libraries, no inline scripts or event handler attributes in HTML.
-- TypeScript rules for `src/` and new code:
+- TypeScript rules for all code:
   - No `any`, no non-null assertions (`!`), no `@ts-ignore`. Use `unknown` and narrow it, or write the type.
   - Explicit types on exported functions, public methods, class fields and module-level variables. Local variables may rely on inference when the initializer makes the type obvious.
   - Data from outside the program (dataset JSON, URL settings) is typed through interfaces in `src/data/dataset.ts` and `src/state/`, and checked where it enters.
   - `import type` for type-only imports. Imports of ported files use the `.ts` extension.
   - `readonly` for fields that never change after construction.
   - Compiler options are strict, including `noUncheckedIndexedAccess`. A missing map or array entry is handled explicitly, usually by throwing an `Error` with the missing key.
-- All files in `src/` are TypeScript (`allowJs` is off). Tests and tools stay JavaScript.
+- All code is TypeScript (`allowJs` is off), including tests, tools and `vite.config.ts`. Node runs the tools and browser tests directly, so they use only erasable type syntax (`erasableSyntaxOnly`): no enums, namespaces or parameter properties.
 - 4-space indentation, no semicolons, double quotes. Match the surrounding file.
 - Lines may be up to 160 characters. Do not wrap for an 80-column limit.
 - Method chains (d3 selections, array pipelines) stay on one line as long as they fit in 160 characters. Break a chain only when it is longer, and then one call per line.

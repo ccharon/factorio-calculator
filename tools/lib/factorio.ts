@@ -17,17 +17,18 @@ limitations under the License.*/
 import { execFileSync } from "node:child_process"
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
+import type { LocaleFiles, RawData, RuntimeData } from "./raw.ts"
 
 // Mods that make up Space Age. The dump runs with exactly these enabled.
-export const SPACE_AGE_MODS = ["base", "elevated-rails", "quality", "recycler", "space-age"]
+export const SPACE_AGE_MODS: readonly string[] = ["base", "elevated-rails", "quality", "recycler", "space-age"]
 
 /**
  * Finds the Factorio executable inside an installation directory.
  *
- * @param {string} factorioDir - Root of the installation, containing bin/ and data/.
- * @returns {string} Path to the executable.
+ * @param factorioDir - Root of the installation, containing bin/ and data/.
+ * @returns Path to the executable.
  */
-export function findExecutable(factorioDir) {
+export function findExecutable(factorioDir: string): string {
     for (const arch of ["arm64", "x64"]) {
         const path = join(factorioDir, "bin", arch, "factorio")
         if (existsSync(path)) {
@@ -40,17 +41,20 @@ export function findExecutable(factorioDir) {
 /**
  * Reads the game version from the base mod's info.json.
  *
- * @param {string} factorioDir
- * @returns {string} Version such as "2.1.21".
+ * @returns Version such as "2.1.21".
  */
-export function gameVersion(factorioDir) {
-    return JSON.parse(readFileSync(join(factorioDir, "data", "base", "info.json"), "utf8")).version
+export function gameVersion(factorioDir: string): string {
+    const info: unknown = JSON.parse(readFileSync(join(factorioDir, "data", "base", "info.json"), "utf8"))
+    if (typeof info !== "object" || info === null || !("version" in info) || typeof info.version !== "string") {
+        throw new Error(`no version in ${factorioDir}/data/base/info.json`)
+    }
+    return info.version
 }
 
 // A mod whose control script writes values that the game computes at runtime, such as item weights.
-const DUMP_MOD = "calculator-dump"
-const DUMP_FILE = "calculator-dump.json"
-const DUMP_MOD_FILES = {
+const DUMP_MOD: string = "calculator-dump"
+const DUMP_FILE: string = "calculator-dump.json"
+const DUMP_MOD_FILES: Readonly<Record<string, string>> = {
     "info.json": JSON.stringify({ name: DUMP_MOD, version: "1.0.0", title: "Calculator dump", author: "factorio-calculator", factorio_version: "2.1", dependencies: ["space-age"] }),
     "control.lua": `script.on_init(function()
     local weights = {}
@@ -93,7 +97,7 @@ end)
 `,
 }
 
-function writeModList(modDir, extra) {
+function writeModList(modDir: string, extra: readonly string[]): void {
     writeFileSync(join(modDir, "mod-list.json"), JSON.stringify({
         mods: [...SPACE_AGE_MODS, ...extra].map(name => ({ name, enabled: true })),
     }))
@@ -105,11 +109,11 @@ function writeModList(modDir, extra) {
  * a separate config file points the write path into workDir, and a separate mod directory
  * enables only the Space Age mods.
  *
- * @param {string} factorioDir - Root of the installation.
- * @param {string} workDir - Empty directory for config, mod list and output.
- * @returns {string} The script-output directory.
+ * @param factorioDir - Root of the installation.
+ * @param workDir - Empty directory for config, mod list and output.
+ * @returns The script-output directory.
  */
-export function dumpGameData(factorioDir, workDir) {
+export function dumpGameData(factorioDir: string, workDir: string): string {
     const modDir = join(workDir, "mods")
     const writeDir = join(workDir, "write")
     mkdirSync(modDir, { recursive: true })
@@ -138,19 +142,26 @@ export function dumpGameData(factorioDir, workDir) {
     return join(writeDir, "script-output")
 }
 
+/** The parsed output of dumpGameData(). */
+export interface GameDump {
+    readonly raw: RawData
+    readonly locale: LocaleFiles
+    readonly runtime: RuntimeData
+}
+
 /**
  * Reads data.raw and all locale files from a script-output directory.
  *
- * @param {string} outputDir - Directory produced by dumpGameData().
- * @returns {{raw: Object, locale: Object<string, Object>, runtime: Object}} runtime holds item_weights, daytime, qualities, crafting_speeds, max_energy_usage and module_effects.
+ * @param outputDir - Directory produced by dumpGameData().
  */
-export function readDump(outputDir) {
-    const raw = JSON.parse(readFileSync(join(outputDir, "data-raw-dump.json"), "utf8"))
-    const runtime = JSON.parse(readFileSync(join(outputDir, DUMP_FILE), "utf8"))
-    const locale = {}
+export function readDump(outputDir: string): GameDump {
+    // The game writes these files, so they have the shapes in raw.ts. The dataset schema test checks the result.
+    const raw = JSON.parse(readFileSync(join(outputDir, "data-raw-dump.json"), "utf8")) as RawData
+    const runtime = JSON.parse(readFileSync(join(outputDir, DUMP_FILE), "utf8")) as RuntimeData
+    const locale: Record<string, LocaleFiles[string]> = {}
     for (const file of readdirSync(outputDir)) {
         if (file.endsWith("-locale.json")) {
-            locale[file.slice(0, -"-locale.json".length)] = JSON.parse(readFileSync(join(outputDir, file), "utf8"))
+            locale[file.slice(0, -"-locale.json".length)] = JSON.parse(readFileSync(join(outputDir, file), "utf8")) as LocaleFiles[string]
         }
     }
     return { raw, locale, runtime }

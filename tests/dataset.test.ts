@@ -16,6 +16,7 @@ import assert from "node:assert/strict"
 import { existsSync, readFileSync, readdirSync } from "node:fs"
 import { test } from "vitest"
 import Ajv2020 from "ajv/dist/2020.js"
+import type { Dataset } from "../src/data/dataset.ts"
 
 const dataDir = new URL("../public/data/", import.meta.url)
 const schema = JSON.parse(readFileSync(new URL("../src/data/dataset.schema.json", import.meta.url), "utf8"))
@@ -23,7 +24,8 @@ const validate = new Ajv2020({ allErrors: true }).compile(schema)
 const files = readdirSync(dataDir).filter(f => /^space-age-.*\.json$/.test(f))
 
 for (const file of files) {
-    const data = JSON.parse(readFileSync(new URL(file, dataDir), "utf8"))
+    // The schema test below checks that the file has this shape.
+    const data = JSON.parse(readFileSync(new URL(file, dataDir), "utf8")) as Dataset
     const itemKeys = new Set(data.items.map(i => i.key))
 
     test(`${file} matches the dataset schema`, () => {
@@ -31,8 +33,8 @@ for (const file of files) {
     })
 
     test(`${file} references only known items`, () => {
-        const missing = new Set()
-        const check = key => itemKeys.has(key) || missing.add(key)
+        const missing = new Set<string>()
+        const check = (key: string): boolean => itemKeys.has(key) || missing.add(key).has(key)
         for (const r of data.recipes) {
             r.ingredients.forEach(i => check(i.name))
             r.results.forEach(p => check(p.name))

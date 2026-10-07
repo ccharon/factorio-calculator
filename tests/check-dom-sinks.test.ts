@@ -14,7 +14,7 @@ limitations under the License.*/
 
 import assert from "node:assert/strict"
 import { test } from "vitest"
-import { findSinks } from "../tools/check-dom-sinks.js"
+import { findSinks } from "../tools/check-dom-sinks.ts"
 
 test("finds HTML and code sinks with their line numbers", () => {
     const source = [

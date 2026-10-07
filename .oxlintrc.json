@@ -50,7 +50,7 @@
       "files": [
         "tests/**",
         "tools/**",
-        "vite.config.js"
+        "vite.config.ts"
       ],
       "env": {
         "node": true

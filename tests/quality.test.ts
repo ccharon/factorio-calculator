@@ -17,40 +17,47 @@ import { test } from "vitest"
 import { Rational, zero } from "../src/core/rational.ts"
 import { Quality, qualityDistribution } from "../src/data/quality.ts"
 
-const r = s => Rational.from_string(s)
+const r = (s: string): Rational => Rational.from_string(s)
 
 // The qualities of 2.1: every raise has next_probability 1, every further raise chain_probability 0.1.
-function qualities() {
+function qualities(): Quality[] {
     const keys = ["normal", "uncommon", "rare", "epic", "legendary"]
     const list = keys.map((key, i) => new Quality(key, key, i, 0, 0, i < 4 ? r("1") : zero, i < 4 ? r("1/10") : zero))
     list.forEach((q, i) => { q.next = list[i + 1] ?? null })
     return list
 }
 
-function shares(distribution) {
+function shares(distribution: Map<Quality, Rational>): Record<string, string> {
     return Object.fromEntries(Array.from(distribution, ([q, share]) => [q.key, share.toString()]))
 }
 
+// Returns the quality at index i of the 2.1 qualities.
+function quality(i: number): Quality {
+    const q = qualities()[i]
+    if (q === undefined) {
+        throw new Error(`no quality ${i}`)
+    }
+    return q
+}
+
 test("qualityDistribution chains raises with chain_probability", () => {
-    const [normal] = qualities()
+    const normal = quality(0)
     assert.deepEqual(shares(qualityDistribution(normal, r("1/10"))), {
         normal: "9/10", uncommon: "9/100", rare: "9/1000", epic: "9/10000", legendary: "1/10000",
     })
 })
 
 test("qualityDistribution keeps the quality without a positive effect", () => {
-    const [normal] = qualities()
+    const normal = quality(0)
     assert.deepEqual(shares(qualityDistribution(normal, zero)), { normal: "1" })
     assert.deepEqual(shares(qualityDistribution(normal, r("-1/100"))), { normal: "1" })
 })
 
 test("qualityDistribution starts at the ingredient quality and ends at the highest", () => {
-    const list = qualities()
-    assert.deepEqual(shares(qualityDistribution(list[3], r("1/4"))), { epic: "3/4", legendary: "1/4" })
-    assert.deepEqual(shares(qualityDistribution(list[4], r("1/4"))), { legendary: "1" })
+    assert.deepEqual(shares(qualityDistribution(quality(3), r("1/4"))), { epic: "3/4", legendary: "1/4" })
+    assert.deepEqual(shares(qualityDistribution(quality(4), r("1/4"))), { legendary: "1" })
 })
 
 test("qualityDistribution limits the raise chance to 1", () => {
-    const list = qualities()
-    assert.deepEqual(shares(qualityDistribution(list[3], r("3"))), { epic: "0", legendary: "1" })
+    assert.deepEqual(shares(qualityDistribution(quality(3), r("3"))), { epic: "0", legendary: "1" })
 })

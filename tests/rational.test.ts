@@ -16,7 +16,7 @@ import assert from "node:assert/strict"
 import { test } from "vitest"
 import { Rational, zero, one, oneThird, twoThirds } from "../src/core/rational.ts"
 
-const r = s => Rational.from_string(s)
+const r = (s: string): Rational => Rational.from_string(s)
 
 test("reduces fractions and normalizes the sign", () => {
     assert.equal(r("6/8").toString(), "3/4")

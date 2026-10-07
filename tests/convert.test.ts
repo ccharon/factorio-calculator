@@ -14,7 +14,8 @@ limitations under the License.*/
 
 import assert from "node:assert/strict"
 import { test } from "vitest"
-import { convert, normalizeProduct } from "../tools/lib/convert.js"
+import { convert, normalizeProduct } from "../tools/lib/convert.ts"
+import type { RawData } from "../tools/lib/raw.ts"
 
 test("normalizeProduct folds probabilities into the expected amount", () => {
     assert.deepEqual(normalizeProduct({ type: "item", name: "a", amount: 2 }), { type: "item", name: "a", amount: 2 })
@@ -35,7 +36,7 @@ test("normalizeProduct applies the probability to the part ignored by productivi
 })
 
 // Smallest data.raw that exercises every section of convert().
-function minimalRaw() {
+function minimalRaw(): RawData {
     return {
         "item-group": { intermediate: { name: "intermediate", order: "c" } },
         "item-subgroup": {
@@ -106,11 +107,18 @@ function minimalRaw() {
             },
         },
         "surface-property": { pressure: { name: "pressure", default_value: 1000 } },
-        "utility-constants": { default: { default_rocket_lift_weight: 1000000 } },
+        "utility-constants": { default: { name: "default", default_rocket_lift_weight: 1000000 } },
         "utility-sprites": {
-            default: { clock: { filename: "__core__/clock.png" }, empty_module_slot: { filename: "__core__/slot.png" } },
+            default: { name: "default", clock: { filename: "__core__/clock.png" }, empty_module_slot: { filename: "__core__/slot.png" } },
         },
     }
+}
+
+// Returns list[i], or fails the test if it is missing.
+function at<T>(list: readonly T[], i: number): T {
+    const x = list[i]
+    assert.ok(x !== undefined, `no entry ${i}`)
+    return x
 }
 
 test("convert builds every dataset section", () => {
@@ -118,18 +126,18 @@ test("convert builds every dataset section", () => {
     assert.equal(d.version, "2.1.0")
     assert.deepEqual(d.items.map(i => i.key), ["coal", "iron-ore", "iron-plate", "seed", "water"])
     assert.deepEqual(d.recipes.map(r => r.key), ["iron-plate"])
-    assert.equal(d.recipes[0].localized_name.en, "Iron plate")
-    assert.equal(d.recipes[0].order, "b", "order falls back to the main product")
+    assert.equal(at(d.recipes, 0).localized_name.en, "Iron plate")
+    assert.equal(at(d.recipes, 0).order, "b", "order falls back to the main product")
     assert.deepEqual(d.fuel, [{ item_key: "coal", categories: ["chemical"], value: 4000000 }])
     assert.equal(d.rocket_lift_weight, 1000000)
-    assert.equal(d.items.find(i => i.key === "coal").weight, 2000)
+    assert.equal(d.items.find(i => i.key === "coal")?.weight, 2000)
     assert.deepEqual(d.spoilage, [{ from_item: "seed", to_item: "coal", time: 60 }])
-    assert.equal(d.fluids[0].heat_capacity, 2000)
-    assert.equal(d.crafting_machines[0].energy_usage, 90000)
-    assert.equal(d.crafting_machines[0].energy_source.fuel_category, "chemical")
-    assert.deepEqual(d.planets[0].resources, { resource: ["iron-ore"], offshore: ["water"], plants: ["bush"], asteroid: [] })
-    assert.deepEqual(d.planets[1].resources.asteroid, ["ice-chunk", "rock-chunk"])
-    assert.deepEqual(d.resources[0].results, [{ type: "item", name: "iron-ore", amount: 1 }])
-    assert.equal(d.plants[0].seed, "seed")
-    assert.equal(d.sprites.extra.clock.icon_ref, "file:__core__/clock.png")
+    assert.equal(at(d.fluids, 0).heat_capacity, 2000)
+    assert.equal(at(d.crafting_machines, 0).energy_usage, 90000)
+    assert.equal(at(d.crafting_machines, 0).energy_source?.fuel_category, "chemical")
+    assert.deepEqual(at(d.planets, 0).resources, { resource: ["iron-ore"], offshore: ["water"], plants: ["bush"], asteroid: [] })
+    assert.deepEqual(at(d.planets, 1).resources.asteroid, ["ice-chunk", "rock-chunk"])
+    assert.deepEqual(at(d.resources, 0).results, [{ type: "item", name: "iron-ore", amount: 1 }])
+    assert.equal(at(d.plants, 0).seed, "seed")
+    assert.equal(d.sprites.extra["clock"]?.icon_ref, "file:__core__/clock.png")
 })

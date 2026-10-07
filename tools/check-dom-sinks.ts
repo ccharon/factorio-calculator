@@ -14,15 +14,15 @@ limitations under the License.*/
 
 // Fails if source files use DOM APIs that parse strings as HTML or code. The UI builds all
 // elements through d3 or the DOM API, so data values never reach an HTML parser.
-// Usage: node tools/check-dom-sinks.js
+// Usage: node tools/check-dom-sinks.ts
 
 import { readFileSync, readdirSync } from "node:fs"
 import { join, relative } from "node:path"
 import { fileURLToPath } from "node:url"
 
-const ROOT = fileURLToPath(new URL("..", import.meta.url))
+const ROOT: string = fileURLToPath(new URL("..", import.meta.url))
 
-const SINKS = [
+const SINKS: readonly (readonly [RegExp, string])[] = [
     [/\.innerHTML\b/, "innerHTML"],
     [/\.outerHTML\b/, "outerHTML"],
     [/\binsertAdjacentHTML\b/, "insertAdjacentHTML"],
@@ -34,24 +34,24 @@ const SINKS = [
     [/\bset(Timeout|Interval)\s*\(\s*["'`]/, "string timer callback"],
 ]
 
-/**
- * Returns all .js and .ts files below dir.
- *
- * @param {string} dir
- * @returns {string[]}
- */
-export function sourceFiles(dir) {
+/** A line of source code that uses a forbidden sink. */
+export interface Finding {
+    readonly line: number
+    readonly sink: string
+}
+
+/** Returns all .js and .ts files below dir. */
+export function sourceFiles(dir: string): string[] {
     return readdirSync(dir, { withFileTypes: true, recursive: true }).filter(e => e.isFile() && /\.(js|ts)$/.test(e.name)).map(e => join(e.parentPath, e.name))
 }
 
 /**
  * Returns one finding per line that contains a forbidden sink.
  *
- * @param {string} source - File content.
- * @returns {{line: number, sink: string}[]}
+ * @param source - File content.
  */
-export function findSinks(source) {
-    const findings = []
+export function findSinks(source: string): Finding[] {
+    const findings: Finding[] = []
     source.split("\n").forEach((text, i) => {
         for (const [pattern, sink] of SINKS) {
             if (pattern.test(text)) {

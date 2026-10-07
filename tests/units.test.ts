@@ -14,7 +14,7 @@ limitations under the License.*/
 
 import assert from "node:assert/strict"
 import { test } from "vitest"
-import { parseEnergy, roundFloat } from "../tools/lib/units.js"
+import { parseEnergy, roundFloat } from "../tools/lib/units.ts"
 
 test("parses power and energy with SI prefixes", () => {
     assert.equal(parseEnergy("75kW", "W"), 75000)
