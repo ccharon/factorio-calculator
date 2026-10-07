@@ -16,6 +16,7 @@ import * as d3 from "d3"
 import { type Rational, zero, one } from "../core/rational.ts"
 import type { ItemGroups } from "../data/group.ts"
 import type { Item } from "../data/item.ts"
+import type { Quality } from "../data/quality.ts"
 import type { Recipe } from "../data/recipe.ts"
 import { spec } from "../state/factory.ts"
 import { addInputs, makeDropdown } from "./dropdown.ts"
@@ -95,6 +96,7 @@ const DEFAULT_ITEM_KEY = "advanced-circuit"
 
 let targetCount = 0
 let recipeSelectorCount = 0
+let qualitySelectorCount = 0
 
 /**
  * A build target: an item with a rate or a building count, shown as a row of controls at the
@@ -122,6 +124,7 @@ export class BuildTarget {
     /** Checked if the target is the item launched into orbit. */
     readonly orbitInput: HTMLInputElement
     private readonly recipeSelector: d3.Selection<HTMLSpanElement, undefined, null, undefined>
+    private readonly qualitySelector: d3.Selection<HTMLSpanElement, undefined, null, undefined>
 
     constructor(index: number, itemKey: string, item: Item, itemGroups: ItemGroups) {
         this.index = index
@@ -150,12 +153,18 @@ export class BuildTarget {
         const group = dropdown.selectAll<HTMLDivElement, Item[][]>("div").data(itemGroups).join("div")
         group.filter((_d, i) => i > 0).append("hr")
         const items = group.selectAll<HTMLDivElement, Item[]>("div").data(d => d).join("div").selectAll<HTMLSpanElement, Item>("span").data(d => d).join("span")
-        const itemLabel = addInputs(items, `target-${targetCount}`, d => d === (item.ground ?? item), chosen => {
-            this.setItem(this.orbitInput.checked && chosen.orbit !== null ? chosen.orbit : chosen)
+        const itemLabel = addInputs(items, `target-${targetCount}`, d => d === (item.ground ?? item).base, chosen => {
+            // The new item keeps the quality of the old one where it has that quality.
+            const quality = this.item.quality
+            const atQuality = quality === null ? chosen : chosen.variant(quality)
+            this.setItem(this.orbitInput.checked && chosen.orbit !== null ? chosen.orbit : atQuality)
             spec.updateSolution()
         })
         const dropdownNode = dropdown.node() ?? undefined
         itemLabel.append(d => iconOf(d).make(32, false, dropdownNode))
+
+        this.qualitySelector = element.append("span").classed("target-quality", true)
+        this.displayQuality()
 
         const orbitLabel = element.append("label").classed("orbit-toggle", true).attr("title", "Launch the item into orbit.")
         const orbitInput = orbitLabel.append("input").attr("type", "checkbox").on("change", () => {
@@ -203,7 +212,26 @@ export class BuildTarget {
         this.itemKey = item.key
         this.item = item
         this.updateOrbitInput()
+        this.displayQuality()
         this.displayRecipes()
+    }
+
+    // Shows the quality choice of the target item. Items without quality, such as fluids and items in orbit, have none.
+    private displayQuality(): void {
+        this.qualitySelector.selectAll("*").remove()
+        const base = this.item.base
+        if (base.variants.size === 0) {
+            return
+        }
+
+        const normal = spec.qualities[0]
+        const dropdown = makeDropdown(this.qualitySelector)
+        const choices = dropdown.selectAll<HTMLSpanElement, Quality>("span").data(spec.qualities).join("span")
+        const labels = addInputs(choices, `target-quality-${qualitySelectorCount++}`, quality => (this.item.quality ?? normal) === quality, quality => {
+            this.setItem(base.variant(quality))
+            spec.updateSolution()
+        })
+        labels.attr("title", quality => quality.name).append(quality => iconOf(quality).make(24, true))
     }
 
     // The switch is on for items in orbit and disabled for items that cannot be launched.
@@ -323,7 +351,7 @@ export class BuildTarget {
 
 /** Adds a build target for itemKey, or for the default item, to spec and to the page. Returns the target. */
 export function addTarget(itemKey: string = DEFAULT_ITEM_KEY): BuildTarget {
-    const item = spec.items.get(itemKey)
+    const item = spec.findItem(itemKey)
     if (item === undefined) {
         throw new Error(`unknown item: ${itemKey}`)
     }

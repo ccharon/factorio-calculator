@@ -110,7 +110,7 @@ function renderTargets(settings: Settings): void {
 
     for (const targetString of targets) {
         const [itemKey = "", type, value = "", recipeKey] = targetString.split(":")
-        if (!spec.items.has(itemKey)) {
+        if (spec.findItem(itemKey) === undefined) {
             warn("unknown item", itemKey)
             continue
         }
@@ -118,7 +118,7 @@ function renderTargets(settings: Settings): void {
         if (type === "f") {
             let recipe: Recipe | null = null
             if (recipeKey !== undefined) {
-                recipe = spec.recipes.get(recipeKey) ?? null
+                recipe = spec.findRecipe(recipeKey) ?? null
                 if (recipe === null) {
                     warn("unknown recipe", recipeKey)
                     continue
@@ -164,7 +164,7 @@ function renderModules(settings: Settings): void {
     for (const recipeSetting of splitList(settings.get("modules"))) {
         const [buildingModuleSettings = "", beaconSettings] = recipeSetting.split(";")
         const [recipeKey = "", ...moduleKeyList] = buildingModuleSettings.split(":")
-        const recipe = spec.recipes.get(recipeKey)
+        const recipe = spec.findRecipe(recipeKey)
         if (recipe === undefined) {
             warn("unknown recipe", recipeKey)
             continue
@@ -508,7 +508,7 @@ function renderQuality(settings: Settings): void {
     // Recipe qualities as recipe:machine:module:beacon, with empty fields for the global quality.
     for (const entry of splitList(settings.get("rq"))) {
         const [key = "", ...qualityKeys] = entry.split(":")
-        const recipe = spec.recipes.get(key)
+        const recipe = spec.findRecipe(key)
         if (recipe === undefined) {
             warn("unknown recipe", key)
             continue

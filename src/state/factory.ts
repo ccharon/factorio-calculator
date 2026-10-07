@@ -567,6 +567,28 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
         return this.initModuleSpec(recipe, this.getBuilding(recipe))
     }
 
+    /** Returns the item with key, which may name a variant as "<item>@<quality>". */
+    findItem(key: string): Item | undefined {
+        const [baseKey = "", qualityKey] = key.split("@")
+        const item = this.items.get(baseKey)
+        const quality = this.qualities.find(q => q.key === qualityKey)
+        if (qualityKey === undefined || item === undefined) {
+            return item
+        }
+        return quality === undefined ? undefined : item.variants.get(quality)
+    }
+
+    /** Returns the recipe with key, which may name a variant as "<recipe>@<quality>". */
+    findRecipe(key: string): Recipe | undefined {
+        const [baseKey = "", qualityKey] = key.split("@")
+        const recipe = this.recipes.get(baseKey)
+        const quality = this.qualities.find(q => q.key === qualityKey)
+        if (qualityKey === undefined || recipe === undefined) {
+            return recipe
+        }
+        return quality === undefined ? undefined : recipe.variants.get(quality)
+    }
+
     /** Returns the quality of the given kind for recipe: its own setting, or the global one. */
     getQuality(recipe: Recipe, kind: QualityKind): Quality {
         return this.recipeQuality.get(recipe)?.get(kind) ?? this.globalQuality.get(kind) ?? NORMAL_QUALITY
