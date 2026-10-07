@@ -114,6 +114,8 @@ export class BuildTarget {
     readonly buildingInput: HTMLInputElement
     readonly rateLabel: HTMLLabelElement
     readonly rateInput: HTMLInputElement
+    /** Checked if the target is the item launched into orbit. */
+    readonly orbitInput: HTMLInputElement
     private readonly recipeSelector: d3.Selection<HTMLSpanElement, undefined, null, undefined>
 
     constructor(index: number, itemKey: string, item: Item, itemGroups: ItemGroups) {
@@ -143,14 +145,25 @@ export class BuildTarget {
         const group = dropdown.selectAll<HTMLDivElement, Item[][]>("div").data(itemGroups).join("div")
         group.filter((_d, i) => i > 0).append("hr")
         const items = group.selectAll<HTMLDivElement, Item[]>("div").data(d => d).join("div").selectAll<HTMLSpanElement, Item>("span").data(d => d).join("span")
-        const itemLabel = addInputs(items, `target-${targetCount}`, d => d === item, chosen => {
-            this.itemKey = chosen.key
-            this.item = chosen
-            this.displayRecipes()
+        const itemLabel = addInputs(items, `target-${targetCount}`, d => d === (item.ground ?? item), chosen => {
+            this.setItem(this.orbitInput.checked && chosen.orbit !== null ? chosen.orbit : chosen)
             spec.updateSolution()
         })
         const dropdownNode = dropdown.node() ?? undefined
         itemLabel.append(d => d.icon.make(32, false, dropdownNode))
+
+        const orbitLabel = element.append("label").classed("orbit-toggle", true).attr("title", "Launch the item into orbit.")
+        const orbitInput = orbitLabel.append("input").attr("type", "checkbox").on("change", () => {
+            const ground = this.item.ground ?? this.item
+            this.setItem(this.orbitInput.checked && ground.orbit !== null ? ground.orbit : ground)
+            spec.updateSolution()
+        })
+        this.orbitInput = orbitInput.node() as HTMLInputElement
+        const rocket = spec.items.get("rocket-silo")
+        if (rocket !== undefined) {
+            orbitLabel.append(() => rocket.icon.make(24, true))
+        }
+        this.updateOrbitInput()
         targetCount++
 
         this.buildingLabel = element.append("label").classed(SELECTED_INPUT, true).text(" Buildings: ").node() as HTMLLabelElement
@@ -178,6 +191,21 @@ export class BuildTarget {
         this.rateInput = rateInput.node() as HTMLInputElement
 
         this.displayRecipes()
+    }
+
+    // Sets the target item and shows the recipes and the orbit switch for it.
+    private setItem(item: Item): void {
+        this.itemKey = item.key
+        this.item = item
+        this.updateOrbitInput()
+        this.displayRecipes()
+    }
+
+    // The switch is on for items in orbit and disabled for items that cannot be launched.
+    private updateOrbitInput(): void {
+        const ground = this.item.ground ?? this.item
+        this.orbitInput.checked = this.item.ground !== null
+        this.orbitInput.disabled = ground.orbit === null
     }
 
     /** Updates the rate label to the displayed time unit. */

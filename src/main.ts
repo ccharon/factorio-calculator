@@ -18,6 +18,7 @@ import "./styles/calc.css"
 import "./styles/dropdown.css"
 import { getBelts } from "./data/belt.ts"
 import { getBuildings } from "./data/building.ts"
+import { addRocketCargo } from "./data/cargo.ts"
 import type { Dataset } from "./data/dataset.ts"
 import { getFuel } from "./data/fuel.ts"
 import { getItemGroups } from "./data/group.ts"
@@ -71,6 +72,7 @@ function loadData(data: Dataset, settings: Settings): void {
     setStatus(data.version)
     const items = getItems(data)
     const recipes = getRecipes(data, items)
+    addRocketCargo(data, items, recipes)
     const buildings = getBuildings(data, items)
     const planets = getPlanets(data, recipes, buildings)
     const modules = getModules(data, items)

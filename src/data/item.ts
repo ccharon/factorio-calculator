@@ -36,8 +36,14 @@ export class Item implements IconSource {
     readonly order: string
     /** Produces the item from nothing when its recipes are disabled or it is ignored. */
     readonly disableRecipe: DisabledRecipe
+    /** Weight in grams, or null for fluids and abstract items. */
+    readonly weight: number | null
+    /** The pseudo item for this item launched into orbit, or null if it cannot be launched. Set by addRocketCargo(). */
+    orbit: Item | null = null
+    /** For an item in orbit, the item that was launched. Null for all other items. */
+    ground: Item | null = null
 
-    constructor(key: string, name: string, col: number, row: number, phase: Phase, group: string, subgroup: string, order: string) {
+    constructor(key: string, name: string, col: number, row: number, phase: Phase, group: string, subgroup: string, order: string, weight: number | null = null) {
         this.key = key
         this.name = name
         this.phase = phase
@@ -48,6 +54,7 @@ export class Item implements IconSource {
         this.subgroup = subgroup
         this.order = order
         this.disableRecipe = new DisabledRecipe(this)
+        this.weight = weight
     }
 
     /** Returns the producing recipes plus the DisabledRecipe. */
@@ -91,7 +98,7 @@ export function getItems(data: Dataset): Map<string, Item> {
     const items = new Map<string, Item>()
     for (const d of data.items) {
         const phase: Phase = d.type === "fluid" ? "fluid" : "solid"
-        items.set(d.key, new Item(d.key, d.localized_name.en, d.icon_col, d.icon_row, phase, d.group, d.subgroup, d.order))
+        items.set(d.key, new Item(d.key, d.localized_name.en, d.icon_col, d.icon_row, phase, d.group, d.subgroup, d.order, d.weight ?? null))
     }
 
     const reactor = items.get("nuclear-reactor")

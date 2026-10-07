@@ -110,9 +110,11 @@ function compact(obj) {
  * @param {Object} raw - Parsed data-raw-dump.json.
  * @param {Object} localeFiles - Parsed *-locale.json files keyed by kind.
  * @param {string} version - Game version string, such as "2.1.21".
+ * @param {{item_weights: Object<string, number>}} runtime - Values the game computes at runtime,
+ *     from the helper mod in tools/lib/factorio.js. Weights are in grams.
  * @returns {Object} Dataset matching src/data/dataset.schema.json, with icon_ref placeholders.
  */
-export function convert(raw, localeFiles, version) {
+export function convert(raw, localeFiles, version, runtime) {
     const locale = new Locale(localeFiles)
     const subgroups = raw["item-subgroup"]
 
@@ -149,6 +151,7 @@ export function convert(raw, localeFiles, version) {
             subgroup,
             order: p.order ?? "",
             stack_size: p.stack_size,
+            weight: runtime.item_weights[p.name],
             icon_ref: `item/${p.name}`,
         }))
         if (p.fuel_value !== undefined && parseEnergy(p.fuel_value, "J") > 0) {
@@ -428,6 +431,7 @@ export function convert(raw, localeFiles, version) {
         plants,
         surface_properties,
         recipe_productivity,
+        rocket_lift_weight: raw["utility-constants"].default.default_rocket_lift_weight,
         sprites,
     }
 }

@@ -37,8 +37,8 @@ if (!outputDir) {
 
 try {
     const version = gameVersion(args.factorio)
-    const { raw, locale } = readDump(outputDir)
-    const dataset = convert(raw, locale, version)
+    const { raw, locale, runtime } = readDump(outputDir)
+    const dataset = convert(raw, locale, version, runtime)
     const { png, hash } = await buildSpriteSheet(dataset, outputDir, join(args.factorio, "data"))
 
     const sheetPath = join(ROOT, "public", "images", `sprite-sheet-${hash}.png`)

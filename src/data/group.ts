@@ -22,6 +22,10 @@ export type ItemGroups = Item[][][]
 export function getItemGroups(items: ReadonlyMap<string, Item>, data: Dataset): ItemGroups {
     const groupMap = new Map<string, Map<string, Item[]>>()
     for (const item of items.values()) {
+        // Items in orbit are chosen through the orbit switch of a target.
+        if (item.ground !== null) {
+            continue
+        }
         let group = groupMap.get(item.group)
         if (group === undefined) {
             group = new Map()

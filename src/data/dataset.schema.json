@@ -8,7 +8,7 @@
   "required": [
     "version", "groups", "items", "fluids", "fuel", "spoilage", "recipes", "crafting_machines",
     "rocket_silo", "mining_drills", "offshore_pumps", "boilers", "belts", "beacon", "modules",
-    "agricultural_tower", "planets", "resources", "plants", "surface_properties", "recipe_productivity", "sprites"
+    "agricultural_tower", "planets", "resources", "plants", "surface_properties", "recipe_productivity", "rocket_lift_weight", "sprites"
   ],
   "properties": {
     "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$", "description": "Game version the data was dumped from." },
@@ -40,6 +40,7 @@
           "subgroup": { "type": "string" },
           "order": { "type": "string" },
           "stack_size": { "type": "integer", "minimum": 1 },
+          "weight": { "type": "number", "minimum": 0, "description": "Weight in grams, which limits rocket cargo." },
           "icon_col": { "$ref": "#/$defs/iconIndex" },
           "icon_row": { "$ref": "#/$defs/iconIndex" }
         }
@@ -241,6 +242,7 @@
         "unevaluatedProperties": false
       }
     },
+    "rocket_lift_weight": { "type": "number", "exclusiveMinimum": 0, "description": "Rocket cargo capacity in grams." },
     "recipe_productivity": {
       "description": "Technologies that raise the productivity of recipes per level.",
       "type": "array",

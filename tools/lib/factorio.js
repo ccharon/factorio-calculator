@@ -33,8 +33,30 @@ export function gameVersion(factorioDir) {
     return JSON.parse(readFileSync(join(factorioDir, "data", "base", "info.json"), "utf8")).version
 }
 
+// A mod whose control script writes values that the game computes at runtime, such as item weights.
+const DUMP_MOD = "calculator-dump"
+const DUMP_FILE = "calculator-dump.json"
+const DUMP_MOD_FILES = {
+    "info.json": JSON.stringify({ name: DUMP_MOD, version: "1.0.0", title: "Calculator dump", author: "factorio-calculator", factorio_version: "2.1", dependencies: ["space-age"] }),
+    "control.lua": `script.on_init(function()
+    local weights = {}
+    for name, item in pairs(prototypes.item) do
+        weights[name] = item.weight
+    end
+    helpers.write_file("${DUMP_FILE}", helpers.table_to_json({ item_weights = weights }))
+end)
+`,
+}
+
+function writeModList(modDir, extra) {
+    writeFileSync(join(modDir, "mod-list.json"), JSON.stringify({
+        mods: [...SPACE_AGE_MODS, ...extra].map(name => ({ name, enabled: true })),
+    }))
+}
+
 /**
- * Runs the three dump commands into workDir/write/script-output. The game directory is only read:
+ * Runs the three dump commands into workDir/write/script-output, then creates a map with a helper
+ * mod that writes runtime values to calculator-dump.json there. The game directory is only read:
  * a separate config file points the write path into workDir, and a separate mod directory
  * enables only the Space Age mods.
  *
@@ -50,9 +72,7 @@ export function dumpGameData(factorioDir, workDir) {
 
     const config = join(workDir, "config.ini")
     writeFileSync(config, `[path]\nread-data=${join(factorioDir, "data")}\nwrite-data=${writeDir}\n`)
-    writeFileSync(join(modDir, "mod-list.json"), JSON.stringify({
-        mods: SPACE_AGE_MODS.map(name => ({ name, enabled: true })),
-    }))
+    writeModList(modDir, [])
 
     const exe = findExecutable(factorioDir)
     // The dump flags cannot be combined in one run.
@@ -61,6 +81,15 @@ export function dumpGameData(factorioDir, workDir) {
         execFileSync(exe, ["-c", config, "--mod-directory", modDir, flag], { stdio: ["ignore", "ignore", "inherit"] })
     }
 
+    // Runtime values exist only in a running game. Creating a map runs the helper mod's on_init.
+    console.log("factorio --create")
+    mkdirSync(join(modDir, DUMP_MOD), { recursive: true })
+    for (const [name, content] of Object.entries(DUMP_MOD_FILES)) {
+        writeFileSync(join(modDir, DUMP_MOD, name), content)
+    }
+    writeModList(modDir, [DUMP_MOD])
+    execFileSync(exe, ["-c", config, "--mod-directory", modDir, "--create", join(workDir, "dump.zip")], { stdio: ["ignore", "ignore", "inherit"] })
+
     return join(writeDir, "script-output")
 }
 
@@ -68,15 +97,16 @@ export function dumpGameData(factorioDir, workDir) {
  * Reads data.raw and all locale files from a script-output directory.
  *
  * @param {string} outputDir - Directory produced by dumpGameData().
- * @returns {{raw: Object, locale: Object<string, Object>}}
+ * @returns {{raw: Object, locale: Object<string, Object>, runtime: {item_weights: Object<string, number>}}}
  */
 export function readDump(outputDir) {
     const raw = JSON.parse(readFileSync(join(outputDir, "data-raw-dump.json"), "utf8"))
+    const runtime = JSON.parse(readFileSync(join(outputDir, DUMP_FILE), "utf8"))
     const locale = {}
     for (const file of readdirSync(outputDir)) {
         if (file.endsWith("-locale.json")) {
             locale[file.slice(0, -"-locale.json".length)] = JSON.parse(readFileSync(join(outputDir, file), "utf8"))
         }
     }
-    return { raw, locale }
+    return { raw, locale, runtime }
 }

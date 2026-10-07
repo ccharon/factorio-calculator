@@ -209,6 +209,7 @@
       "subgroup": "energy",
       "order": "e[accumulator]-a[accumulator]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 12,
       "icon_row": 2
     },
@@ -222,6 +223,7 @@
       "subgroup": "logistic-network",
       "order": "b[storage]-c[active-provider-chest]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 13,
       "icon_row": 2
     },
@@ -235,6 +237,7 @@
       "subgroup": "intermediate-product",
       "order": "b[circuits]-b[advanced-circuit]",
       "stack_size": 200,
+      "weight": 1000,
       "icon_col": 14,
       "icon_row": 2
     },
@@ -248,6 +251,7 @@
       "subgroup": "science-pack",
       "order": "i",
       "stack_size": 200,
+      "weight": 1000,
       "icon_col": 15,
       "icon_row": 2
     },
@@ -261,6 +265,7 @@
       "subgroup": "agriculture",
       "order": "a[agricultural-tower]",
       "stack_size": 20,
+      "weight": 50000,
       "icon_col": 0,
       "icon_row": 0
     },
@@ -298,6 +303,7 @@
       "subgroup": "circuit-network",
       "order": "c[combinators]-a[arithmetic-combinator]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 16,
       "icon_row": 2
     },
@@ -311,6 +317,7 @@
       "subgroup": "terrain",
       "order": "c[landfill]-d[artificial-jellynut-soil]",
       "stack_size": 100,
+      "weight": 14750,
       "icon_col": 17,
       "icon_row": 2
     },
@@ -324,6 +331,7 @@
       "subgroup": "terrain",
       "order": "c[landfill]-b[artificial-yumako-soil]",
       "stack_size": 100,
+      "weight": 14750,
       "icon_col": 18,
       "icon_row": 2
     },
@@ -337,6 +345,7 @@
       "subgroup": "ammo",
       "order": "d[explosive-cannon-shell]-d[artillery]",
       "stack_size": 1,
+      "weight": 100000,
       "icon_col": 19,
       "icon_row": 2
     },
@@ -350,6 +359,7 @@
       "subgroup": "spawnables",
       "order": "b[turret]-d[artillery-turret]-b[remote]",
       "stack_size": 1,
+      "weight": 0,
       "icon_col": 20,
       "icon_row": 2
     },
@@ -363,6 +373,7 @@
       "subgroup": "turret",
       "order": "b[turret]-d[artillery-turret]-a[turret]",
       "stack_size": 10,
+      "weight": 200000,
       "icon_col": 21,
       "icon_row": 2
     },
@@ -376,6 +387,7 @@
       "subgroup": "train-transport",
       "order": "c[rolling-stock]-d[artillery-wagon]",
       "stack_size": 5,
+      "weight": 531666,
       "icon_col": 22,
       "icon_row": 2
     },
@@ -389,6 +401,7 @@
       "subgroup": "gun",
       "order": "z[artillery]-a[cannon]",
       "stack_size": 1,
+      "weight": 100,
       "icon_col": 23,
       "icon_row": 2
     },
@@ -402,6 +415,7 @@
       "subgroup": "production-machine",
       "order": "a[assembling-machine-1]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 1,
       "icon_row": 0
     },
@@ -415,6 +429,7 @@
       "subgroup": "production-machine",
       "order": "b[assembling-machine-2]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 2,
       "icon_row": 0
     },
@@ -428,6 +443,7 @@
       "subgroup": "production-machine",
       "order": "c[assembling-machine-3]",
       "stack_size": 50,
+      "weight": 40000,
       "icon_col": 3,
       "icon_row": 0
     },
@@ -441,6 +457,7 @@
       "subgroup": "space-platform",
       "order": "d[asteroid-collector]",
       "stack_size": 10,
+      "weight": 100000,
       "icon_col": 24,
       "icon_row": 2
     },
@@ -454,6 +471,7 @@
       "subgroup": "ammo",
       "order": "d[rocket-launcher]-d[atomic-bomb]",
       "stack_size": 10,
+      "weight": 1500000,
       "icon_col": 25,
       "icon_row": 2
     },
@@ -467,6 +485,7 @@
       "subgroup": "science-pack",
       "order": "a[automation-science-pack]",
       "stack_size": 200,
+      "weight": 1000,
       "icon_col": 26,
       "icon_row": 2
     },
@@ -480,6 +499,7 @@
       "subgroup": "intermediate-product",
       "order": "a[basic-intermediates]-d[empty-barrel]",
       "stack_size": 10,
+      "weight": 5000,
       "icon_col": 27,
       "icon_row": 2
     },
@@ -493,6 +513,7 @@
       "subgroup": "raw-material",
       "order": "b[chemistry]-d[battery]",
       "stack_size": 200,
+      "weight": 2500,
       "icon_col": 0,
       "icon_row": 3
     },
@@ -506,6 +527,7 @@
       "subgroup": "equipment",
       "order": "b[battery]-a[battery-equipment]",
       "stack_size": 20,
+      "weight": 50000,
       "icon_col": 1,
       "icon_row": 3
     },
@@ -519,6 +541,7 @@
       "subgroup": "equipment",
       "order": "b[battery]-b[battery-equipment-mk2]",
       "stack_size": 20,
+      "weight": 100000,
       "icon_col": 2,
       "icon_row": 3
     },
@@ -532,6 +555,7 @@
       "subgroup": "equipment",
       "order": "b[battery]-c[battery-equipment-mk3]",
       "stack_size": 20,
+      "weight": 200000,
       "icon_col": 3,
       "icon_row": 3
     },
@@ -545,6 +569,7 @@
       "subgroup": "module",
       "order": "a[beacon]",
       "stack_size": 20,
+      "weight": 50000,
       "icon_col": 4,
       "icon_row": 3
     },
@@ -558,6 +583,7 @@
       "subgroup": "utility-equipment",
       "order": "c[belt-immunity]-a[belt-immunity]",
       "stack_size": 20,
+      "weight": 50000,
       "icon_col": 5,
       "icon_row": 3
     },
@@ -571,6 +597,7 @@
       "subgroup": "energy-pipe-distribution",
       "order": "a[energy]-c[big-electric-pole]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 6,
       "icon_row": 3
     },
@@ -584,6 +611,7 @@
       "subgroup": "extraction-machine",
       "order": "a[items]-c[big-mining-drill]",
       "stack_size": 20,
+      "weight": 50000,
       "icon_col": 4,
       "icon_row": 0
     },
@@ -597,6 +625,7 @@
       "subgroup": "agriculture",
       "order": "b[biochamber]",
       "stack_size": 20,
+      "weight": 50000,
       "icon_col": 5,
       "icon_row": 0
     },
@@ -610,6 +639,7 @@
       "subgroup": "agriculture-products",
       "order": "a[organic-processing]-b[bioflux]",
       "stack_size": 100,
+      "weight": 1000,
       "icon_col": 7,
       "icon_row": 3
     },
@@ -623,6 +653,7 @@
       "subgroup": "production-machine",
       "order": "z[z-biolab]",
       "stack_size": 5,
+      "weight": 1000000,
       "icon_col": 8,
       "icon_row": 3
     },
@@ -636,6 +667,7 @@
       "subgroup": "agriculture-products",
       "order": "c[eggs]-a[biter-egg]",
       "stack_size": 100,
+      "weight": 2000,
       "icon_col": 9,
       "icon_row": 3
     },
@@ -649,6 +681,7 @@
       "subgroup": "tool",
       "order": "c[automated-construction]-a[blueprint]",
       "stack_size": 1,
+      "weight": 100,
       "icon_col": 10,
       "icon_row": 3
     },
@@ -662,6 +695,7 @@
       "subgroup": "tool",
       "order": "c[automated-construction]-d[blueprint-book]",
       "stack_size": 1,
+      "weight": 100,
       "icon_col": 11,
       "icon_row": 3
     },
@@ -675,6 +709,7 @@
       "subgroup": "energy",
       "order": "b[steam-power]-a[boiler]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 6,
       "icon_row": 0
     },
@@ -688,6 +723,7 @@
       "subgroup": "other",
       "order": "a[items]-c[bottomless-chest]",
       "stack_size": 10,
+      "weight": 100,
       "icon_col": 12,
       "icon_row": 3
     },
@@ -701,6 +737,7 @@
       "subgroup": "logistic-network",
       "order": "b[storage]-d[buffer-chest]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 13,
       "icon_row": 3
     },
@@ -714,6 +751,7 @@
       "subgroup": "inserter",
       "order": "f[bulk-inserter]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 14,
       "icon_row": 3
     },
@@ -727,6 +765,7 @@
       "subgroup": "other",
       "order": "t[item]-o[burner-generator]",
       "stack_size": 10,
+      "weight": 100,
       "icon_col": 15,
       "icon_row": 3
     },
@@ -740,6 +779,7 @@
       "subgroup": "inserter",
       "order": "a[burner-inserter]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 16,
       "icon_row": 3
     },
@@ -753,6 +793,7 @@
       "subgroup": "extraction-machine",
       "order": "a[items]-a[burner-mining-drill]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 7,
       "icon_row": 0
     },
@@ -766,6 +807,7 @@
       "subgroup": "vulcanus-processes",
       "order": "a[melting]-a[calcite]",
       "stack_size": 50,
+      "weight": 2000,
       "icon_col": 8,
       "icon_row": 0
     },
@@ -779,6 +821,7 @@
       "subgroup": "ammo",
       "order": "d[cannon-shell]-a[basic]",
       "stack_size": 100,
+      "weight": 20000,
       "icon_col": 17,
       "icon_row": 3
     },
@@ -792,6 +835,7 @@
       "subgroup": "agriculture",
       "order": "z[biter-nest]",
       "stack_size": 1,
+      "weight": 1000000,
       "icon_col": 9,
       "icon_row": 0
     },
@@ -805,6 +849,7 @@
       "subgroup": "ammo",
       "order": "d[rocket-launcher]-d[capture]",
       "stack_size": 10,
+      "weight": 100000,
       "icon_col": 18,
       "icon_row": 3
     },
@@ -818,6 +863,7 @@
       "subgroup": "transport",
       "order": "b[personal-transport]-a[car]",
       "stack_size": 1,
+      "weight": 1000000,
       "icon_col": 19,
       "icon_row": 3
     },
@@ -831,6 +877,7 @@
       "subgroup": "raw-material",
       "order": "b[chemistry]-f[carbon]",
       "stack_size": 50,
+      "weight": 1000,
       "icon_col": 20,
       "icon_row": 3
     },
@@ -844,6 +891,7 @@
       "subgroup": "agriculture-products",
       "order": "a[organic-products]-e[carbon-fiber]",
       "stack_size": 100,
+      "weight": 2000,
       "icon_col": 21,
       "icon_row": 3
     },
@@ -857,6 +905,7 @@
       "subgroup": "space-material",
       "order": "b[carbonic]-e[chunk]",
       "stack_size": 1,
+      "weight": 100000,
       "icon_col": 22,
       "icon_row": 3
     },
@@ -870,6 +919,7 @@
       "subgroup": "space-interactors",
       "order": "c-b[cargo-bay]",
       "stack_size": 10,
+      "weight": 100000,
       "icon_col": 23,
       "icon_row": 3
     },
@@ -883,6 +933,7 @@
       "subgroup": "space-interactors",
       "order": "c-a[cargo-landing-pad]",
       "stack_size": 1,
+      "weight": 1000000,
       "icon_col": 24,
       "icon_row": 3
     },
@@ -896,6 +947,7 @@
       "subgroup": "train-transport",
       "order": "c[rolling-stock]-b[cargo-wagon]",
       "stack_size": 5,
+      "weight": 200000,
       "icon_col": 25,
       "icon_row": 3
     },
@@ -909,6 +961,7 @@
       "subgroup": "production-machine",
       "order": "f[centrifuge]",
       "stack_size": 10,
+      "weight": 662500,
       "icon_col": 10,
       "icon_row": 0
     },
@@ -922,6 +975,7 @@
       "subgroup": "production-machine",
       "order": "e[chemical-plant]",
       "stack_size": 10,
+      "weight": 100000,
       "icon_col": 11,
       "icon_row": 0
     },
@@ -935,6 +989,7 @@
       "subgroup": "science-pack",
       "order": "d[chemical-science-pack]",
       "stack_size": 200,
+      "weight": 1000,
       "icon_col": 26,
       "icon_row": 3
     },
@@ -948,6 +1003,7 @@
       "subgroup": "terrain",
       "order": "d[cliff-explosives]",
       "stack_size": 20,
+      "weight": 50000,
       "icon_col": 27,
       "icon_row": 3
     },
@@ -961,6 +1017,7 @@
       "subgroup": "capsule",
       "order": "a[grenade]-b[cluster]",
       "stack_size": 100,
+      "weight": 40000,
       "icon_col": 0,
       "icon_row": 4
     },
@@ -974,6 +1031,7 @@
       "subgroup": "raw-resource",
       "order": "b[coal]",
       "stack_size": 50,
+      "weight": 2000,
       "icon_col": 12,
       "icon_row": 0
     },
@@ -987,6 +1045,7 @@
       "subgroup": "science-pack",
       "order": "y",
       "stack_size": 100000,
+      "weight": 100,
       "icon_col": 1,
       "icon_row": 4
     },
@@ -1000,6 +1059,7 @@
       "subgroup": "gun",
       "order": "b[shotgun]-a[combat]",
       "stack_size": 5,
+      "weight": 200000,
       "icon_col": 2,
       "icon_row": 4
     },
@@ -1013,6 +1073,7 @@
       "subgroup": "terrain",
       "order": "b[concrete]-a[plain]",
       "stack_size": 100,
+      "weight": 10000,
       "icon_col": 3,
       "icon_row": 4
     },
@@ -1026,6 +1087,7 @@
       "subgroup": "circuit-network",
       "order": "c[combinators]-d[constant-combinator]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 4,
       "icon_row": 4
     },
@@ -1039,6 +1101,7 @@
       "subgroup": "logistic-network",
       "order": "a[robot]-b[construction-robot]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 5,
       "icon_row": 4
     },
@@ -1052,6 +1115,7 @@
       "subgroup": "agriculture-processes",
       "order": "b[agriculture]-d[bacteria]-c[copper-bacteria]",
       "stack_size": 50,
+      "weight": 1000,
       "icon_col": 6,
       "icon_row": 4
     },
@@ -1065,6 +1129,7 @@
       "subgroup": "intermediate-product",
       "order": "a[basic-intermediates]-c[copper-cable]",
       "stack_size": 200,
+      "weight": 250,
       "icon_col": 7,
       "icon_row": 4
     },
@@ -1078,6 +1143,7 @@
       "subgroup": "raw-resource",
       "order": "f[copper-ore]",
       "stack_size": 50,
+      "weight": 2000,
       "icon_col": 13,
       "icon_row": 0
     },
@@ -1091,6 +1157,7 @@
       "subgroup": "raw-material",
       "order": "a[smelting]-b[copper-plate]",
       "stack_size": 100,
+      "weight": 1000,
       "icon_col": 8,
       "icon_row": 4
     },
@@ -1104,6 +1171,7 @@
       "subgroup": "spawnables",
       "order": "",
       "stack_size": 1,
+      "weight": 0,
       "icon_col": 9,
       "icon_row": 4
     },
@@ -1117,6 +1185,7 @@
       "subgroup": "tool",
       "order": "c[automated-construction]-x",
       "stack_size": 1,
+      "weight": 0,
       "icon_col": 10,
       "icon_row": 4
     },
@@ -1142,6 +1211,7 @@
       "subgroup": "barrel",
       "order": "a[fluid]-b[oil]-a[crude-oil]",
       "stack_size": 10,
+      "weight": 10000,
       "icon_col": 11,
       "icon_row": 4
     },
@@ -1155,6 +1225,7 @@
       "subgroup": "space-platform",
       "order": "e[crusher]",
       "stack_size": 10,
+      "weight": 100000,
       "icon_col": 15,
       "icon_row": 0
     },
@@ -1168,6 +1239,7 @@
       "subgroup": "production-machine",
       "order": "h[cryogenic-plant]",
       "stack_size": 20,
+      "weight": 200000,
       "icon_col": 16,
       "icon_row": 0
     },
@@ -1181,6 +1253,7 @@
       "subgroup": "science-pack",
       "order": "k",
       "stack_size": 200,
+      "weight": 1000,
       "icon_col": 12,
       "icon_row": 4
     },
@@ -1194,6 +1267,7 @@
       "subgroup": "tool",
       "order": "c[automated-construction]-x",
       "stack_size": 1,
+      "weight": 0,
       "icon_col": 13,
       "icon_row": 4
     },
@@ -1207,6 +1281,7 @@
       "subgroup": "circuit-network",
       "order": "c[combinators]-b[decider-combinator]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 14,
       "icon_row": 4
     },
@@ -1220,6 +1295,7 @@
       "subgroup": "tool",
       "order": "c[automated-construction]-b[deconstruction-planner]",
       "stack_size": 1,
+      "weight": 100,
       "icon_col": 15,
       "icon_row": 4
     },
@@ -1233,6 +1309,7 @@
       "subgroup": "capsule",
       "order": "d[defender]-b[capsule]",
       "stack_size": 100,
+      "weight": 10000,
       "icon_col": 16,
       "icon_row": 4
     },
@@ -1246,6 +1323,7 @@
       "subgroup": "uranium-processing",
       "order": "b[uranium-products]-b[depleted-uranium-fuel-cell]",
       "stack_size": 50,
+      "weight": 100000,
       "icon_col": 17,
       "icon_row": 4
     },
@@ -1259,6 +1337,7 @@
       "subgroup": "capsule",
       "order": "f[destroyer]-b[capsule]",
       "stack_size": 100,
+      "weight": 40000,
       "icon_col": 18,
       "icon_row": 4
     },
@@ -1272,6 +1351,7 @@
       "subgroup": "military-equipment",
       "order": "b[active-defense]-b[discharge-defense-equipment]-a[equipment]",
       "stack_size": 20,
+      "weight": 233333,
       "icon_col": 19,
       "icon_row": 4
     },
@@ -1285,6 +1365,7 @@
       "subgroup": "spawnables",
       "order": "b[active-defense]-b[discharge-defense-equipment]-b[remote]",
       "stack_size": 1,
+      "weight": 0,
       "icon_col": 20,
       "icon_row": 4
     },
@@ -1298,6 +1379,7 @@
       "subgroup": "circuit-network",
       "order": "s[display-panel]",
       "stack_size": 10,
+      "weight": 100000,
       "icon_col": 21,
       "icon_row": 4
     },
@@ -1311,6 +1393,7 @@
       "subgroup": "capsule",
       "order": "e[distractor]-b[capsule]",
       "stack_size": 100,
+      "weight": 20000,
       "icon_col": 22,
       "icon_row": 4
     },
@@ -1324,6 +1407,7 @@
       "subgroup": "module",
       "order": "c[efficiency]-a[efficiency-module-1]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 23,
       "icon_row": 4
     },
@@ -1337,6 +1421,7 @@
       "subgroup": "module",
       "order": "c[efficiency]-b[efficiency-module-2]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 24,
       "icon_row": 4
     },
@@ -1350,6 +1435,7 @@
       "subgroup": "module",
       "order": "c[efficiency]-c[efficiency-module-3]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 25,
       "icon_row": 4
     },
@@ -1363,6 +1449,7 @@
       "subgroup": "other",
       "order": "a[electric-energy-interface]-b[electric-energy-interface]",
       "stack_size": 50,
+      "weight": 100,
       "icon_col": 26,
       "icon_row": 4
     },
@@ -1376,6 +1463,7 @@
       "subgroup": "other",
       "order": "a[electric-energy-interface]-b[electric-energy-interface-equipment]",
       "stack_size": 1,
+      "weight": 250000,
       "icon_col": 27,
       "icon_row": 4
     },
@@ -1389,6 +1477,7 @@
       "subgroup": "intermediate-product",
       "order": "c[advanced-intermediates]-b[electric-engine-unit]",
       "stack_size": 50,
+      "weight": 2500,
       "icon_col": 0,
       "icon_row": 5
     },
@@ -1402,6 +1491,7 @@
       "subgroup": "smelting-machine",
       "order": "c[electric-furnace]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 17,
       "icon_row": 0
     },
@@ -1415,6 +1505,7 @@
       "subgroup": "extraction-machine",
       "order": "a[items]-b[electric-mining-drill]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 18,
       "icon_row": 0
     },
@@ -1440,6 +1531,7 @@
       "subgroup": "production-machine",
       "order": "g[electromagnetic-plant]",
       "stack_size": 20,
+      "weight": 200000,
       "icon_col": 19,
       "icon_row": 0
     },
@@ -1453,6 +1545,7 @@
       "subgroup": "science-pack",
       "order": "j",
       "stack_size": 200,
+      "weight": 1000,
       "icon_col": 1,
       "icon_row": 5
     },
@@ -1466,6 +1559,7 @@
       "subgroup": "intermediate-product",
       "order": "b[circuits]-a[electronic-circuit]",
       "stack_size": 200,
+      "weight": 500,
       "icon_col": 2,
       "icon_row": 5
     },
@@ -1479,6 +1573,7 @@
       "subgroup": "module",
       "order": "z[meta]-a[empty-module-slot]",
       "stack_size": 1,
+      "weight": 100,
       "icon_col": 3,
       "icon_row": 5
     },
@@ -1492,6 +1587,7 @@
       "subgroup": "military-equipment",
       "order": "a[shield]-a[energy-shield-equipment]",
       "stack_size": 20,
+      "weight": 50000,
       "icon_col": 4,
       "icon_row": 5
     },
@@ -1505,6 +1601,7 @@
       "subgroup": "military-equipment",
       "order": "a[shield]-b[energy-shield-equipment-mk2]",
       "stack_size": 20,
+      "weight": 100000,
       "icon_col": 5,
       "icon_row": 5
     },
@@ -1518,6 +1615,7 @@
       "subgroup": "intermediate-product",
       "order": "c[advanced-intermediates]-a[engine-unit]",
       "stack_size": 50,
+      "weight": 2500,
       "icon_col": 6,
       "icon_row": 5
     },
@@ -1531,6 +1629,7 @@
       "subgroup": "utility-equipment",
       "order": "d[exoskeleton]-a[exoskeleton-equipment]",
       "stack_size": 20,
+      "weight": 79166,
       "icon_col": 7,
       "icon_row": 5
     },
@@ -1544,6 +1643,7 @@
       "subgroup": "ammo",
       "order": "d[cannon-shell]-c[explosive]",
       "stack_size": 100,
+      "weight": 20000,
       "icon_col": 8,
       "icon_row": 5
     },
@@ -1557,6 +1657,7 @@
       "subgroup": "ammo",
       "order": "d[rocket-launcher]-b[explosive]",
       "stack_size": 100,
+      "weight": 40000,
       "icon_col": 9,
       "icon_row": 5
     },
@@ -1570,6 +1671,7 @@
       "subgroup": "ammo",
       "order": "d[explosive-cannon-shell]-c[uranium]",
       "stack_size": 100,
+      "weight": 40000,
       "icon_col": 10,
       "icon_row": 5
     },
@@ -1583,6 +1685,7 @@
       "subgroup": "raw-material",
       "order": "b[chemistry]-e[explosives]",
       "stack_size": 50,
+      "weight": 2000,
       "icon_col": 11,
       "icon_row": 5
     },
@@ -1596,6 +1699,7 @@
       "subgroup": "belt",
       "order": "d[loader]-c[express-loader]",
       "stack_size": 50,
+      "weight": 100,
       "icon_col": 12,
       "icon_row": 5
     },
@@ -1609,6 +1713,7 @@
       "subgroup": "belt",
       "order": "c[splitter]-c[express-splitter]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 13,
       "icon_row": 5
     },
@@ -1622,6 +1727,7 @@
       "subgroup": "belt",
       "order": "a[transport-belt]-c[express-transport-belt]",
       "stack_size": 100,
+      "weight": 10000,
       "icon_col": 20,
       "icon_row": 0
     },
@@ -1635,6 +1741,7 @@
       "subgroup": "belt",
       "order": "b[underground-belt]-c[express-underground-belt]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 14,
       "icon_row": 5
     },
@@ -1648,6 +1755,7 @@
       "subgroup": "inserter",
       "order": "d[fast-inserter]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 15,
       "icon_row": 5
     },
@@ -1661,6 +1769,7 @@
       "subgroup": "belt",
       "order": "d[loader]-b[fast-loader]",
       "stack_size": 50,
+      "weight": 100,
       "icon_col": 16,
       "icon_row": 5
     },
@@ -1674,6 +1783,7 @@
       "subgroup": "belt",
       "order": "c[splitter]-b[fast-splitter]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 17,
       "icon_row": 5
     },
@@ -1687,6 +1797,7 @@
       "subgroup": "belt",
       "order": "a[transport-belt]-b[fast-transport-belt]",
       "stack_size": 100,
+      "weight": 10000,
       "icon_col": 21,
       "icon_row": 0
     },
@@ -1700,6 +1811,7 @@
       "subgroup": "belt",
       "order": "b[underground-belt]-b[fast-underground-belt]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 18,
       "icon_row": 5
     },
@@ -1713,6 +1825,7 @@
       "subgroup": "ammo",
       "order": "a[basic-clips]-a[firearm-magazine]",
       "stack_size": 100,
+      "weight": 10000,
       "icon_col": 19,
       "icon_row": 5
     },
@@ -1726,6 +1839,7 @@
       "subgroup": "equipment",
       "order": "a[energy-source]-b[fission-reactor]",
       "stack_size": 20,
+      "weight": 250000,
       "icon_col": 27,
       "icon_row": 4
     },
@@ -1739,6 +1853,7 @@
       "subgroup": "gun",
       "order": "e[flamethrower]",
       "stack_size": 5,
+      "weight": 200000,
       "icon_col": 20,
       "icon_row": 5
     },
@@ -1752,6 +1867,7 @@
       "subgroup": "ammo",
       "order": "e[flamethrower]",
       "stack_size": 100,
+      "weight": 10000,
       "icon_col": 21,
       "icon_row": 5
     },
@@ -1765,6 +1881,7 @@
       "subgroup": "turret",
       "order": "b[turret]-c[flamethrower-turret]",
       "stack_size": 50,
+      "weight": 50000,
       "icon_col": 22,
       "icon_row": 5
     },
@@ -1778,6 +1895,7 @@
       "subgroup": "train-transport",
       "order": "c[rolling-stock]-c[fluid-wagon]",
       "stack_size": 5,
+      "weight": 200000,
       "icon_col": 23,
       "icon_row": 5
     },
@@ -1815,6 +1933,7 @@
       "subgroup": "barrel",
       "order": "b[new-fluid]-e[aquilo]-e[fluoroketone-cold]",
       "stack_size": 10,
+      "weight": 10000,
       "icon_col": 24,
       "icon_row": 5
     },
@@ -1840,6 +1959,7 @@
       "subgroup": "barrel",
       "order": "b[new-fluid]-e[aquilo]-d[fluoroketone-hot]",
       "stack_size": 10,
+      "weight": 10000,
       "icon_col": 25,
       "icon_row": 5
     },
@@ -1853,6 +1973,7 @@
       "subgroup": "intermediate-product",
       "order": "c[advanced-intermediates]-c[flying-robot-frame]",
       "stack_size": 50,
+      "weight": 6666.666656494141,
       "icon_col": 26,
       "icon_row": 5
     },
@@ -1866,6 +1987,7 @@
       "subgroup": "terrain",
       "order": "c[landfill]-g[foundation]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 27,
       "icon_row": 5
     },
@@ -1879,6 +2001,7 @@
       "subgroup": "smelting-machine",
       "order": "d[foundry]",
       "stack_size": 20,
+      "weight": 200000,
       "icon_col": 23,
       "icon_row": 0
     },
@@ -1892,6 +2015,7 @@
       "subgroup": "energy",
       "order": "g[fusion-energy]-b[generator]",
       "stack_size": 5,
+      "weight": 200000,
       "icon_col": 0,
       "icon_row": 6
     },
@@ -1917,6 +2041,7 @@
       "subgroup": "aquilo-processes",
       "order": "c[lithium]-d[fusion-power-cell]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 1,
       "icon_row": 6
     },
@@ -1930,6 +2055,7 @@
       "subgroup": "energy",
       "order": "g[fusion-energy]-a[reactor]",
       "stack_size": 1,
+      "weight": 1000000,
       "icon_col": 2,
       "icon_row": 6
     },
@@ -1943,6 +2069,7 @@
       "subgroup": "equipment",
       "order": "a[energy-source]-c[fusion-reactor]",
       "stack_size": 20,
+      "weight": 1000000,
       "icon_col": 3,
       "icon_row": 6
     },
@@ -1956,6 +2083,7 @@
       "subgroup": "defensive-structure",
       "order": "a[wall]-b[gate]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 4,
       "icon_row": 6
     },
@@ -1969,6 +2097,7 @@
       "subgroup": "spawnables",
       "order": "",
       "stack_size": 1,
+      "weight": 0,
       "icon_col": 5,
       "icon_row": 6
     },
@@ -1982,6 +2111,7 @@
       "subgroup": "capsule",
       "order": "a[grenade]-a[normal]",
       "stack_size": 100,
+      "weight": 10000,
       "icon_col": 6,
       "icon_row": 6
     },
@@ -1995,6 +2125,7 @@
       "subgroup": "turret",
       "order": "b[turret]-a[gun-turret]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 7,
       "icon_row": 6
     },
@@ -2008,6 +2139,7 @@
       "subgroup": "terrain",
       "order": "b[concrete]-b[hazard]",
       "stack_size": 100,
+      "weight": 10000,
       "icon_col": 8,
       "icon_row": 6
     },
@@ -2021,6 +2153,7 @@
       "subgroup": "energy",
       "order": "f[nuclear-energy]-c[heat-exchanger]",
       "stack_size": 50,
+      "weight": 40000,
       "icon_col": 24,
       "icon_row": 0
     },
@@ -2034,6 +2167,7 @@
       "subgroup": "other",
       "order": "b[heat-interface]",
       "stack_size": 20,
+      "weight": 100,
       "icon_col": 9,
       "icon_row": 6
     },
@@ -2047,6 +2181,7 @@
       "subgroup": "energy",
       "order": "f[nuclear-energy]-b[heat-pipe]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 10,
       "icon_row": 6
     },
@@ -2060,6 +2195,7 @@
       "subgroup": "environmental-protection",
       "order": "c[heating-tower]",
       "stack_size": 20,
+      "weight": 100000,
       "icon_col": 11,
       "icon_row": 6
     },
@@ -2073,6 +2209,7 @@
       "subgroup": "armor",
       "order": "b[heavy-armor]",
       "stack_size": 1,
+      "weight": 1000000,
       "icon_col": 12,
       "icon_row": 6
     },
@@ -2098,6 +2235,7 @@
       "subgroup": "barrel",
       "order": "a[fluid]-b[oil]-d[heavy-oil]",
       "stack_size": 10,
+      "weight": 10000,
       "icon_col": 13,
       "icon_row": 6
     },
@@ -2111,6 +2249,7 @@
       "subgroup": "fulgora-processes",
       "order": "b[holmium]-a[holmium-ore]",
       "stack_size": 50,
+      "weight": 2000,
       "icon_col": 14,
       "icon_row": 6
     },
@@ -2124,6 +2263,7 @@
       "subgroup": "fulgora-processes",
       "order": "b[holmium]-c[holmium-plate]",
       "stack_size": 100,
+      "weight": 1000,
       "icon_col": 15,
       "icon_row": 6
     },
@@ -2149,6 +2289,7 @@
       "subgroup": "raw-resource",
       "order": "j[ice]",
       "stack_size": 50,
+      "weight": 1000,
       "icon_col": 16,
       "icon_row": 6
     },
@@ -2162,6 +2303,7 @@
       "subgroup": "terrain",
       "order": "c[landfill]-f[ice-platform]",
       "stack_size": 100,
+      "weight": 10000,
       "icon_col": 17,
       "icon_row": 6
     },
@@ -2175,6 +2317,7 @@
       "subgroup": "other",
       "order": "c[item]-o[infinity-cargo-wagon]",
       "stack_size": 5,
+      "weight": 100,
       "icon_col": 18,
       "icon_row": 6
     },
@@ -2188,6 +2331,7 @@
       "subgroup": "other",
       "order": "c[item]-o[infinity-chest]",
       "stack_size": 10,
+      "weight": 100,
       "icon_col": 19,
       "icon_row": 6
     },
@@ -2201,6 +2345,7 @@
       "subgroup": "other",
       "order": "d[item]-o[infinity-pipe]",
       "stack_size": 10,
+      "weight": 100,
       "icon_col": 20,
       "icon_row": 6
     },
@@ -2214,6 +2359,7 @@
       "subgroup": "inserter",
       "order": "b[inserter]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 21,
       "icon_row": 6
     },
@@ -2227,6 +2373,7 @@
       "subgroup": "agriculture-processes",
       "order": "b[agriculture]-d[bacteria]-a[iron-bacteria]",
       "stack_size": 50,
+      "weight": 1000,
       "icon_col": 22,
       "icon_row": 6
     },
@@ -2240,6 +2387,7 @@
       "subgroup": "storage",
       "order": "a[items]-b[iron-chest]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 23,
       "icon_row": 6
     },
@@ -2253,6 +2401,7 @@
       "subgroup": "intermediate-product",
       "order": "a[basic-intermediates]-a[iron-gear-wheel]",
       "stack_size": 100,
+      "weight": 1000,
       "icon_col": 24,
       "icon_row": 6
     },
@@ -2266,6 +2415,7 @@
       "subgroup": "raw-resource",
       "order": "e[iron-ore]",
       "stack_size": 50,
+      "weight": 2000,
       "icon_col": 25,
       "icon_row": 0
     },
@@ -2279,6 +2429,7 @@
       "subgroup": "raw-material",
       "order": "a[smelting]-a[iron-plate]",
       "stack_size": 100,
+      "weight": 1000,
       "icon_col": 25,
       "icon_row": 6
     },
@@ -2292,6 +2443,7 @@
       "subgroup": "intermediate-product",
       "order": "a[basic-intermediates]-b[iron-stick]",
       "stack_size": 100,
+      "weight": 500,
       "icon_col": 26,
       "icon_row": 6
     },
@@ -2305,6 +2457,7 @@
       "subgroup": "agriculture-products",
       "order": "a[organic-processing]-d[jelly]",
       "stack_size": 100,
+      "weight": 500,
       "icon_col": 27,
       "icon_row": 6
     },
@@ -2318,6 +2471,7 @@
       "subgroup": "agriculture-processes",
       "order": "b[agriculture]-b[jellynut]",
       "stack_size": 50,
+      "weight": 1000,
       "icon_col": 0,
       "icon_row": 7
     },
@@ -2331,6 +2485,7 @@
       "subgroup": "agriculture-processes",
       "order": "a[seeds]-b[jellynut-seed]",
       "stack_size": 10,
+      "weight": 10000,
       "icon_col": 1,
       "icon_row": 7
     },
@@ -2344,6 +2499,7 @@
       "subgroup": "production-machine",
       "order": "z[lab]",
       "stack_size": 10,
+      "weight": 100000,
       "icon_col": 2,
       "icon_row": 7
     },
@@ -2357,6 +2513,7 @@
       "subgroup": "defensive-structure",
       "order": "f[land-mine]",
       "stack_size": 100,
+      "weight": 10000,
       "icon_col": 3,
       "icon_row": 7
     },
@@ -2370,6 +2527,7 @@
       "subgroup": "terrain",
       "order": "c[landfill]-a[dirt]",
       "stack_size": 100,
+      "weight": 50000,
       "icon_col": 4,
       "icon_row": 7
     },
@@ -2383,6 +2541,7 @@
       "subgroup": "space-interactors",
       "order": "c-c[landing-pad-unloading-bay]",
       "stack_size": 10,
+      "weight": 200000,
       "icon_col": 5,
       "icon_row": 7
     },
@@ -2396,6 +2555,7 @@
       "subgroup": "other",
       "order": "b[items]-b[lane-splitter]",
       "stack_size": 50,
+      "weight": 10000,
       "icon_col": 6,
       "icon_row": 7
     },
@@ -2409,6 +2569,7 @@
       "subgroup": "turret",
       "order": "b[turret]-b[laser-turret]",
       "stack_size": 50,
+      "weight": 40000,
       "icon_col": 7,
       "icon_row": 7
     },
@@ -2434,6 +2595,7 @@
       "subgroup": "armor",
       "order": "a[light-armor]",
       "stack_size": 1,
+      "weight": 1000000,
       "icon_col": 8,
       "icon_row": 7
     },
@@ -2459,6 +2621,7 @@
       "subgroup": "barrel",
       "order": "a[fluid]-b[oil]-c[light-oil]",
       "stack_size": 10,
+      "weight": 10000,
       "icon_col": 9,
       "icon_row": 7
     },
@@ -2472,6 +2635,7 @@
       "subgroup": "environmental-protection",
       "order": "b[lightning-collector]",
       "stack_size": 20,
+      "weight": 50000,
       "icon_col": 10,
       "icon_row": 7
     },
@@ -2485,6 +2649,7 @@
       "subgroup": "environmental-protection",
       "order": "a[lightning-rod]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 11,
       "icon_row": 7
     },
@@ -2498,6 +2663,7 @@
       "subgroup": "other",
       "order": "b[items]-b[linked-belt]",
       "stack_size": 10,
+      "weight": 100,
       "icon_col": 12,
       "icon_row": 7
     },
@@ -2511,6 +2677,7 @@
       "subgroup": "other",
       "order": "a[items]-a[linked-chest]",
       "stack_size": 10,
+      "weight": 100,
       "icon_col": 13,
       "icon_row": 7
     },
@@ -2524,6 +2691,7 @@
       "subgroup": "aquilo-processes",
       "order": "c[lithium]-a[lithium]",
       "stack_size": 50,
+      "weight": 4000,
       "icon_col": 14,
       "icon_row": 7
     },
@@ -2549,6 +2717,7 @@
       "subgroup": "aquilo-processes",
       "order": "c[lithium]-b[lithium-plate]",
       "stack_size": 100,
+      "weight": 2000,
       "icon_col": 15,
       "icon_row": 7
     },
@@ -2562,6 +2731,7 @@
       "subgroup": "belt",
       "order": "d[loader]-a[basic-loader]",
       "stack_size": 50,
+      "weight": 100,
       "icon_col": 16,
       "icon_row": 7
     },
@@ -2575,6 +2745,7 @@
       "subgroup": "train-transport",
       "order": "c[rolling-stock]-a[locomotive]",
       "stack_size": 5,
+      "weight": 200000,
       "icon_col": 17,
       "icon_row": 7
     },
@@ -2588,6 +2759,7 @@
       "subgroup": "logistic-network",
       "order": "a[robot]-a[logistic-robot]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 18,
       "icon_row": 7
     },
@@ -2601,6 +2773,7 @@
       "subgroup": "science-pack",
       "order": "b[logistic-science-pack]",
       "stack_size": 200,
+      "weight": 1000,
       "icon_col": 19,
       "icon_row": 7
     },
@@ -2614,6 +2787,7 @@
       "subgroup": "inserter",
       "order": "c[long-handed-inserter]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 20,
       "icon_row": 7
     },
@@ -2627,6 +2801,7 @@
       "subgroup": "intermediate-product",
       "order": "d[rocket-parts]-a[low-density-structure]",
       "stack_size": 50,
+      "weight": 5000,
       "icon_col": 21,
       "icon_row": 7
     },
@@ -2652,6 +2827,7 @@
       "subgroup": "barrel",
       "order": "a[fluid]-b[oil]-e[lubricant]",
       "stack_size": 10,
+      "weight": 10000,
       "icon_col": 22,
       "icon_row": 7
     },
@@ -2665,6 +2841,7 @@
       "subgroup": "armor",
       "order": "f[mech-armor]",
       "stack_size": 1,
+      "weight": 1000000,
       "icon_col": 23,
       "icon_row": 7
     },
@@ -2678,6 +2855,7 @@
       "subgroup": "energy-pipe-distribution",
       "order": "a[energy]-b[medium-electric-pole]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 24,
       "icon_row": 7
     },
@@ -2691,6 +2869,7 @@
       "subgroup": "space-material",
       "order": "a[metallic]-e[chunk]",
       "stack_size": 1,
+      "weight": 100000,
       "icon_col": 25,
       "icon_row": 7
     },
@@ -2704,6 +2883,7 @@
       "subgroup": "science-pack",
       "order": "h",
       "stack_size": 200,
+      "weight": 1000,
       "icon_col": 26,
       "icon_row": 7
     },
@@ -2717,6 +2897,7 @@
       "subgroup": "science-pack",
       "order": "c[military-science-pack]",
       "stack_size": 200,
+      "weight": 1000,
       "icon_col": 27,
       "icon_row": 7
     },
@@ -2730,6 +2911,7 @@
       "subgroup": "armor",
       "order": "c[modular-armor]",
       "stack_size": 1,
+      "weight": 1000000,
       "icon_col": 0,
       "icon_row": 8
     },
@@ -2767,6 +2949,7 @@
       "subgroup": "utility-equipment",
       "order": "f[night-vision]-a[night-vision-equipment]",
       "stack_size": 20,
+      "weight": 50000,
       "icon_col": 1,
       "icon_row": 8
     },
@@ -2780,6 +2963,7 @@
       "subgroup": "other",
       "order": "",
       "stack_size": 1,
+      "weight": 100,
       "icon_col": 2,
       "icon_row": 8
     },
@@ -2793,6 +2977,7 @@
       "subgroup": "uranium-processing",
       "order": "r[uranium-processing]-e[nuclear-fuel]",
       "stack_size": 1,
+      "weight": 100000,
       "icon_col": 3,
       "icon_row": 8
     },
@@ -2806,6 +2991,7 @@
       "subgroup": "energy",
       "order": "f[nuclear-energy]-a[reactor]",
       "stack_size": 10,
+      "weight": 1000000,
       "icon_col": 4,
       "icon_row": 8
     },
@@ -2819,6 +3005,7 @@
       "subgroup": "agriculture-processes",
       "order": "c[nutrients]-b[nutrients]",
       "stack_size": 100,
+      "weight": 500,
       "icon_col": 5,
       "icon_row": 8
     },
@@ -2832,6 +3019,7 @@
       "subgroup": "extraction-machine",
       "order": "b[fluids]-a[offshore-pump]",
       "stack_size": 20,
+      "weight": 50000,
       "icon_col": 0,
       "icon_row": 1
     },
@@ -2845,6 +3033,7 @@
       "subgroup": "production-machine",
       "order": "d[refinery]",
       "stack_size": 10,
+      "weight": 100000,
       "icon_col": 1,
       "icon_row": 1
     },
@@ -2858,6 +3047,7 @@
       "subgroup": "other",
       "order": "b[items]-o[one-way-valve]",
       "stack_size": 10,
+      "weight": 100,
       "icon_col": 6,
       "icon_row": 8
     },
@@ -2871,6 +3061,7 @@
       "subgroup": "other",
       "order": "b[items]-o[overflow-valve]",
       "stack_size": 10,
+      "weight": 100,
       "icon_col": 7,
       "icon_row": 8
     },
@@ -2884,6 +3075,7 @@
       "subgroup": "terrain",
       "order": "c[landfill]-e[overgrowth-jellynut-soil]",
       "stack_size": 100,
+      "weight": 67250,
       "icon_col": 8,
       "icon_row": 8
     },
@@ -2897,6 +3089,7 @@
       "subgroup": "terrain",
       "order": "c[landfill]-c[overgrowth-yumako-soil]",
       "stack_size": 100,
+      "weight": 67250,
       "icon_col": 9,
       "icon_row": 8
     },
@@ -2910,6 +3103,7 @@
       "subgroup": "space-material",
       "order": "c[oxide]-e[chunk]",
       "stack_size": 1,
+      "weight": 100000,
       "icon_col": 10,
       "icon_row": 8
     },
@@ -2923,6 +3117,7 @@
       "subgroup": "logistic-network",
       "order": "b[storage]-c[passive-provider-chest]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 11,
       "icon_row": 8
     },
@@ -2936,6 +3131,7 @@
       "subgroup": "agriculture-products",
       "order": "c[eggs]-b[pentapod-egg]",
       "stack_size": 20,
+      "weight": 5000,
       "icon_col": 12,
       "icon_row": 8
     },
@@ -2949,6 +3145,7 @@
       "subgroup": "military-equipment",
       "order": "b[active-defense]-a[personal-laser-defense-equipment]",
       "stack_size": 20,
+      "weight": 200000,
       "icon_col": 13,
       "icon_row": 8
     },
@@ -2962,6 +3159,7 @@
       "subgroup": "utility-equipment",
       "order": "e[robotics]-a[personal-roboport-equipment]",
       "stack_size": 20,
+      "weight": 106250,
       "icon_col": 14,
       "icon_row": 8
     },
@@ -2975,6 +3173,7 @@
       "subgroup": "utility-equipment",
       "order": "e[robotics]-b[personal-roboport-mk2-equipment]",
       "stack_size": 20,
+      "weight": 373958,
       "icon_col": 15,
       "icon_row": 8
     },
@@ -3000,6 +3199,7 @@
       "subgroup": "barrel",
       "order": "a[fluid]-b[oil]-b[petroleum-gas]",
       "stack_size": 10,
+      "weight": 10000,
       "icon_col": 16,
       "icon_row": 8
     },
@@ -3013,6 +3213,7 @@
       "subgroup": "ammo",
       "order": "a[basic-clips]-b[piercing-rounds-magazine]",
       "stack_size": 100,
+      "weight": 20000,
       "icon_col": 17,
       "icon_row": 8
     },
@@ -3026,6 +3227,7 @@
       "subgroup": "ammo",
       "order": "b[shotgun]-b[piercing]",
       "stack_size": 100,
+      "weight": 20000,
       "icon_col": 18,
       "icon_row": 8
     },
@@ -3039,6 +3241,7 @@
       "subgroup": "energy-pipe-distribution",
       "order": "a[pipe]-a[pipe]",
       "stack_size": 100,
+      "weight": 5000,
       "icon_col": 19,
       "icon_row": 8
     },
@@ -3052,6 +3255,7 @@
       "subgroup": "energy-pipe-distribution",
       "order": "a[pipe]-b[pipe-to-ground]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 20,
       "icon_row": 8
     },
@@ -3065,6 +3269,7 @@
       "subgroup": "gun",
       "order": "a[basic-clips]-a[pistol]",
       "stack_size": 5,
+      "weight": 100,
       "icon_col": 21,
       "icon_row": 8
     },
@@ -3078,6 +3283,7 @@
       "subgroup": "raw-material",
       "order": "b[chemistry]-b[plastic-bar]",
       "stack_size": 100,
+      "weight": 500,
       "icon_col": 22,
       "icon_row": 8
     },
@@ -3091,6 +3297,7 @@
       "subgroup": "capsule",
       "order": "b[poison-capsule]",
       "stack_size": 100,
+      "weight": 10000,
       "icon_col": 23,
       "icon_row": 8
     },
@@ -3104,6 +3311,7 @@
       "subgroup": "armor",
       "order": "d[power-armor]",
       "stack_size": 1,
+      "weight": 1000000,
       "icon_col": 24,
       "icon_row": 8
     },
@@ -3117,6 +3325,7 @@
       "subgroup": "armor",
       "order": "e[power-armor-mk2]",
       "stack_size": 1,
+      "weight": 1000000,
       "icon_col": 25,
       "icon_row": 8
     },
@@ -3130,6 +3339,7 @@
       "subgroup": "circuit-network",
       "order": "d[other]-a[power-switch]",
       "stack_size": 10,
+      "weight": 100000,
       "icon_col": 26,
       "icon_row": 8
     },
@@ -3143,6 +3353,7 @@
       "subgroup": "intermediate-product",
       "order": "b[circuits]-c[processing-unit]",
       "stack_size": 100,
+      "weight": 3333.3333282470703,
       "icon_col": 27,
       "icon_row": 8
     },
@@ -3156,6 +3367,7 @@
       "subgroup": "science-pack",
       "order": "e[production-science-pack]",
       "stack_size": 200,
+      "weight": 1000,
       "icon_col": 0,
       "icon_row": 9
     },
@@ -3169,6 +3381,7 @@
       "subgroup": "module",
       "order": "c[productivity]-a[productivity-module-1]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 1,
       "icon_row": 9
     },
@@ -3182,6 +3395,7 @@
       "subgroup": "module",
       "order": "c[productivity]-b[productivity-module-2]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 2,
       "icon_row": 9
     },
@@ -3195,6 +3409,7 @@
       "subgroup": "module",
       "order": "c[productivity]-c[productivity-module-3]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 3,
       "icon_row": 9
     },
@@ -3208,6 +3423,7 @@
       "subgroup": "circuit-network",
       "order": "d[other]-b[programmable-speaker]",
       "stack_size": 10,
+      "weight": 100000,
       "icon_col": 4,
       "icon_row": 9
     },
@@ -3221,6 +3437,7 @@
       "subgroup": "space-material",
       "order": "d[promethium]-e[chunk]",
       "stack_size": 1,
+      "weight": 100000,
       "icon_col": 5,
       "icon_row": 9
     },
@@ -3234,6 +3451,7 @@
       "subgroup": "science-pack",
       "order": "l",
       "stack_size": 200,
+      "weight": 1000,
       "icon_col": 6,
       "icon_row": 9
     },
@@ -3247,6 +3465,7 @@
       "subgroup": "other",
       "order": "a[items]-a[proxy-container]",
       "stack_size": 10,
+      "weight": 100,
       "icon_col": 7,
       "icon_row": 9
     },
@@ -3260,6 +3479,7 @@
       "subgroup": "energy-pipe-distribution",
       "order": "b[pipe]-c[pump]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 8,
       "icon_row": 9
     },
@@ -3273,6 +3493,7 @@
       "subgroup": "extraction-machine",
       "order": "b[fluids]-b[pumpjack]",
       "stack_size": 20,
+      "weight": 50000,
       "icon_col": 2,
       "icon_row": 1
     },
@@ -3286,6 +3507,7 @@
       "subgroup": "module",
       "order": "d[quality]-a[quality-module-1]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 9,
       "icon_row": 9
     },
@@ -3299,6 +3521,7 @@
       "subgroup": "module",
       "order": "d[quality]-b[quality-module-2]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 10,
       "icon_row": 9
     },
@@ -3312,6 +3535,7 @@
       "subgroup": "module",
       "order": "d[quality]-c[quality-module-3]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 11,
       "icon_row": 9
     },
@@ -3325,6 +3549,7 @@
       "subgroup": "aquilo-processes",
       "order": "c[lithium]-c[quantum-processor]",
       "stack_size": 100,
+      "weight": 5000,
       "icon_col": 12,
       "icon_row": 9
     },
@@ -3338,6 +3563,7 @@
       "subgroup": "defensive-structure",
       "order": "d[radar]-a[radar]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 13,
       "icon_row": 9
     },
@@ -3351,6 +3577,7 @@
       "subgroup": "train-transport",
       "order": "a[rail]-a[rail]",
       "stack_size": 100,
+      "weight": 10000,
       "icon_col": 14,
       "icon_row": 9
     },
@@ -3364,6 +3591,7 @@
       "subgroup": "train-transport",
       "order": "b[train-automation]-c[rail-chain-signal]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 15,
       "icon_row": 9
     },
@@ -3377,6 +3605,7 @@
       "subgroup": "train-transport",
       "order": "a[rail]-b[rail-ramp]",
       "stack_size": 10,
+      "weight": 500000,
       "icon_col": 16,
       "icon_row": 9
     },
@@ -3390,6 +3619,7 @@
       "subgroup": "train-transport",
       "order": "b[train-automation]-b[rail-signal]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 17,
       "icon_row": 9
     },
@@ -3403,6 +3633,7 @@
       "subgroup": "train-transport",
       "order": "a[rail]-c[rail-support]",
       "stack_size": 20,
+      "weight": 200000,
       "icon_col": 18,
       "icon_row": 9
     },
@@ -3416,6 +3647,7 @@
       "subgroup": "gun",
       "order": "a[basic-clips]-h[railgun]",
       "stack_size": 1,
+      "weight": 1000000,
       "icon_col": 19,
       "icon_row": 9
     },
@@ -3429,6 +3661,7 @@
       "subgroup": "ammo",
       "order": "e[railgun-ammo]-a[basic]",
       "stack_size": 10,
+      "weight": 200000,
       "icon_col": 20,
       "icon_row": 9
     },
@@ -3442,6 +3675,7 @@
       "subgroup": "turret",
       "order": "b[turret]-g[railgun-turret]-a[turret]",
       "stack_size": 10,
+      "weight": 1000000,
       "icon_col": 21,
       "icon_row": 9
     },
@@ -3455,6 +3689,7 @@
       "subgroup": "raw-resource",
       "order": "h[raw-fish]",
       "stack_size": 100,
+      "weight": 3333.3333282470703,
       "icon_col": 22,
       "icon_row": 9
     },
@@ -3468,6 +3703,7 @@
       "subgroup": "smelting-machine",
       "order": "d[recycler]",
       "stack_size": 20,
+      "weight": 100000,
       "icon_col": 3,
       "icon_row": 1
     },
@@ -3481,6 +3717,7 @@
       "subgroup": "spawnables",
       "order": "",
       "stack_size": 1,
+      "weight": 0,
       "icon_col": 23,
       "icon_row": 9
     },
@@ -3494,6 +3731,7 @@
       "subgroup": "terrain",
       "order": "b[concrete]-c[refined]",
       "stack_size": 100,
+      "weight": 10000,
       "icon_col": 24,
       "icon_row": 9
     },
@@ -3507,6 +3745,7 @@
       "subgroup": "terrain",
       "order": "b[concrete]-d[refined-hazard]",
       "stack_size": 100,
+      "weight": 10000,
       "icon_col": 25,
       "icon_row": 9
     },
@@ -3520,6 +3759,7 @@
       "subgroup": "tool",
       "order": "b[repair]-a[repair-pack]",
       "stack_size": 100,
+      "weight": 10000,
       "icon_col": 26,
       "icon_row": 9
     },
@@ -3533,6 +3773,7 @@
       "subgroup": "logistic-network",
       "order": "b[storage]-e[requester-chest]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 27,
       "icon_row": 9
     },
@@ -3546,6 +3787,7 @@
       "subgroup": "logistic-network",
       "order": "c[signal]-a[roboport]",
       "stack_size": 10,
+      "weight": 100000,
       "icon_col": 0,
       "icon_row": 10
     },
@@ -3559,6 +3801,7 @@
       "subgroup": "ammo",
       "order": "d[rocket-launcher]-a[basic]",
       "stack_size": 100,
+      "weight": 40000,
       "icon_col": 1,
       "icon_row": 10
     },
@@ -3572,6 +3815,7 @@
       "subgroup": "intermediate-product",
       "order": "d[rocket-parts]-b[rocket-fuel]",
       "stack_size": 20,
+      "weight": 10000,
       "icon_col": 2,
       "icon_row": 10
     },
@@ -3585,6 +3829,7 @@
       "subgroup": "gun",
       "order": "d[rocket-launcher]",
       "stack_size": 5,
+      "weight": 200000,
       "icon_col": 3,
       "icon_row": 10
     },
@@ -3598,6 +3843,7 @@
       "subgroup": "space-interactors",
       "order": "b[rocket-part]",
       "stack_size": 5,
+      "weight": 20000,
       "icon_col": 4,
       "icon_row": 10
     },
@@ -3611,6 +3857,7 @@
       "subgroup": "space-interactors",
       "order": "a[rocket-silo]",
       "stack_size": 1,
+      "weight": 10000000,
       "icon_col": 4,
       "icon_row": 1
     },
@@ -3624,6 +3871,7 @@
       "subgroup": "turret",
       "order": "b[turret]-e[rocket-turret]-a[turret]",
       "stack_size": 10,
+      "weight": 100000,
       "icon_col": 5,
       "icon_row": 10
     },
@@ -3637,6 +3885,7 @@
       "subgroup": "science-pack",
       "order": "zz[science]",
       "stack_size": 1,
+      "weight": 100,
       "icon_col": 6,
       "icon_row": 10
     },
@@ -3650,6 +3899,7 @@
       "subgroup": "fulgora-processes",
       "order": "a[scrap]-a[scrap]",
       "stack_size": 50,
+      "weight": 2000,
       "icon_col": 5,
       "icon_row": 1
     },
@@ -3663,6 +3913,7 @@
       "subgroup": "other",
       "order": "e[automated-construction]-a[blueprint]",
       "stack_size": 1,
+      "weight": 100,
       "icon_col": 10,
       "icon_row": 3
     },
@@ -3676,6 +3927,7 @@
       "subgroup": "circuit-network",
       "order": "c[combinators]-c[selector-combinator]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 7,
       "icon_row": 10
     },
@@ -3689,6 +3941,7 @@
       "subgroup": "gun",
       "order": "b[shotgun]-a[basic]",
       "stack_size": 5,
+      "weight": 200000,
       "icon_col": 8,
       "icon_row": 10
     },
@@ -3702,6 +3955,7 @@
       "subgroup": "ammo",
       "order": "b[shotgun]-a[basic]",
       "stack_size": 100,
+      "weight": 10000,
       "icon_col": 9,
       "icon_row": 10
     },
@@ -3715,6 +3969,7 @@
       "subgroup": "other",
       "order": "s[simple-entity-with-force]-f[simple-entity-with-force]",
       "stack_size": 50,
+      "weight": 100,
       "icon_col": 10,
       "icon_row": 10
     },
@@ -3728,6 +3983,7 @@
       "subgroup": "other",
       "order": "s[simple-entity-with-owner]-o[simple-entity-with-owner]",
       "stack_size": 50,
+      "weight": 100,
       "icon_col": 11,
       "icon_row": 10
     },
@@ -3741,6 +3997,7 @@
       "subgroup": "capsule",
       "order": "c[slowdown-capsule]",
       "stack_size": 100,
+      "weight": 10000,
       "icon_col": 12,
       "icon_row": 10
     },
@@ -3754,6 +4011,7 @@
       "subgroup": "energy-pipe-distribution",
       "order": "a[energy]-a[small-electric-pole]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 13,
       "icon_row": 10
     },
@@ -3767,6 +4025,7 @@
       "subgroup": "circuit-network",
       "order": "a[light]-a[small-lamp]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 14,
       "icon_row": 10
     },
@@ -3780,6 +4039,7 @@
       "subgroup": "energy",
       "order": "d[solar-panel]-a[solar-panel]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 15,
       "icon_row": 10
     },
@@ -3793,6 +4053,7 @@
       "subgroup": "equipment",
       "order": "a[energy-source]-a[solar-panel]",
       "stack_size": 20,
+      "weight": 50000,
       "icon_col": 16,
       "icon_row": 10
     },
@@ -3806,6 +4067,7 @@
       "subgroup": "raw-material",
       "order": "b[chemistry]-a[solid-fuel]",
       "stack_size": 50,
+      "weight": 1000,
       "icon_col": 17,
       "icon_row": 10
     },
@@ -3819,6 +4081,7 @@
       "subgroup": "space-platform",
       "order": "a[space-platform-foundation]",
       "stack_size": 100,
+      "weight": 20000,
       "icon_col": 18,
       "icon_row": 10
     },
@@ -3832,6 +4095,7 @@
       "subgroup": "space-related",
       "order": "",
       "stack_size": 1,
+      "weight": 1000000,
       "icon_col": 19,
       "icon_row": 10
     },
@@ -3845,6 +4109,7 @@
       "subgroup": "space-rocket",
       "order": "b[space-platform-starter-pack]",
       "stack_size": 1,
+      "weight": 1000000,
       "icon_col": 20,
       "icon_row": 10
     },
@@ -3858,6 +4123,7 @@
       "subgroup": "science-pack",
       "order": "g[space-science-pack]",
       "stack_size": 200,
+      "weight": 1000,
       "icon_col": 21,
       "icon_row": 10
     },
@@ -3871,6 +4137,7 @@
       "subgroup": "module",
       "order": "a[speed]-a[speed-module-1]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 22,
       "icon_row": 10
     },
@@ -3884,6 +4151,7 @@
       "subgroup": "module",
       "order": "a[speed]-b[speed-module-2]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 23,
       "icon_row": 10
     },
@@ -3897,6 +4165,7 @@
       "subgroup": "module",
       "order": "a[speed]-c[speed-module-3]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 24,
       "icon_row": 10
     },
@@ -3910,6 +4179,7 @@
       "subgroup": "transport",
       "order": "b[personal-transport]-c[spidertron]-a[spider]",
       "stack_size": 1,
+      "weight": 1000000,
       "icon_col": 25,
       "icon_row": 10
     },
@@ -3923,6 +4193,7 @@
       "subgroup": "spawnables",
       "order": "",
       "stack_size": 1,
+      "weight": 0,
       "icon_col": 26,
       "icon_row": 10
     },
@@ -3936,6 +4207,7 @@
       "subgroup": "gun",
       "order": "z[spider]-a[rocket-launcher]",
       "stack_size": 1,
+      "weight": 100,
       "icon_col": 3,
       "icon_row": 10
     },
@@ -3949,6 +4221,7 @@
       "subgroup": "gun",
       "order": "z[spider]-a[rocket-launcher]",
       "stack_size": 1,
+      "weight": 100,
       "icon_col": 3,
       "icon_row": 10
     },
@@ -3962,6 +4235,7 @@
       "subgroup": "gun",
       "order": "z[spider]-a[rocket-launcher]",
       "stack_size": 1,
+      "weight": 100,
       "icon_col": 3,
       "icon_row": 10
     },
@@ -3975,6 +4249,7 @@
       "subgroup": "gun",
       "order": "z[spider]-a[rocket-launcher]",
       "stack_size": 1,
+      "weight": 100,
       "icon_col": 3,
       "icon_row": 10
     },
@@ -3988,6 +4263,7 @@
       "subgroup": "belt",
       "order": "c[splitter]-a[splitter]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 27,
       "icon_row": 10
     },
@@ -4001,6 +4277,7 @@
       "subgroup": "agriculture-processes",
       "order": "c[nutrients]-a[spoilage]",
       "stack_size": 200,
+      "weight": 500,
       "icon_col": 0,
       "icon_row": 11
     },
@@ -4014,6 +4291,7 @@
       "subgroup": "inserter",
       "order": "h[stack-inserter]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 1,
       "icon_row": 11
     },
@@ -4039,6 +4317,7 @@
       "subgroup": "energy",
       "order": "b[steam-power]-b[steam-engine]",
       "stack_size": 10,
+      "weight": 100000,
       "icon_col": 15,
       "icon_row": 3
     },
@@ -4052,6 +4331,7 @@
       "subgroup": "energy",
       "order": "f[nuclear-energy]-d[steam-turbine]",
       "stack_size": 10,
+      "weight": 100000,
       "icon_col": 2,
       "icon_row": 11
     },
@@ -4065,6 +4345,7 @@
       "subgroup": "storage",
       "order": "a[items]-c[steel-chest]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 10,
       "icon_row": 10
     },
@@ -4078,6 +4359,7 @@
       "subgroup": "smelting-machine",
       "order": "b[steel-furnace]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 6,
       "icon_row": 1
     },
@@ -4091,6 +4373,7 @@
       "subgroup": "raw-material",
       "order": "a[smelting]-c[steel-plate]",
       "stack_size": 100,
+      "weight": 2500,
       "icon_col": 3,
       "icon_row": 11
     },
@@ -4104,6 +4387,7 @@
       "subgroup": "raw-resource",
       "order": "d[stone]",
       "stack_size": 50,
+      "weight": 2000,
       "icon_col": 7,
       "icon_row": 1
     },
@@ -4117,6 +4401,7 @@
       "subgroup": "terrain",
       "order": "a[stone-brick]",
       "stack_size": 100,
+      "weight": 2000,
       "icon_col": 4,
       "icon_row": 11
     },
@@ -4130,6 +4415,7 @@
       "subgroup": "smelting-machine",
       "order": "a[stone-furnace]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 8,
       "icon_row": 1
     },
@@ -4143,6 +4429,7 @@
       "subgroup": "defensive-structure",
       "order": "a[stone-wall]-a[stone-wall]",
       "stack_size": 100,
+      "weight": 10000,
       "icon_col": 5,
       "icon_row": 11
     },
@@ -4156,6 +4443,7 @@
       "subgroup": "logistic-network",
       "order": "b[storage]-c[storage-chest]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 6,
       "icon_row": 11
     },
@@ -4169,6 +4457,7 @@
       "subgroup": "storage",
       "order": "b[fluid]-a[storage-tank]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 7,
       "icon_row": 11
     },
@@ -4182,6 +4471,7 @@
       "subgroup": "gun",
       "order": "a[basic-clips]-b[submachine-gun]",
       "stack_size": 5,
+      "weight": 200000,
       "icon_col": 8,
       "icon_row": 11
     },
@@ -4195,6 +4485,7 @@
       "subgroup": "energy-pipe-distribution",
       "order": "a[energy]-d[substation]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 9,
       "icon_row": 11
     },
@@ -4208,6 +4499,7 @@
       "subgroup": "raw-material",
       "order": "b[chemistry]-c[sulfur]",
       "stack_size": 50,
+      "weight": 1000,
       "icon_col": 10,
       "icon_row": 11
     },
@@ -4233,6 +4525,7 @@
       "subgroup": "barrel",
       "order": "a[fluid]-b[oil]-f[sulfuric-acid]",
       "stack_size": 10,
+      "weight": 10000,
       "icon_col": 11,
       "icon_row": 11
     },
@@ -4246,6 +4539,7 @@
       "subgroup": "fulgora-processes",
       "order": "b[holmium]-f[supercapacitor]",
       "stack_size": 100,
+      "weight": 2000,
       "icon_col": 12,
       "icon_row": 11
     },
@@ -4259,6 +4553,7 @@
       "subgroup": "fulgora-processes",
       "order": "b[holmium]-d[superconductor]",
       "stack_size": 200,
+      "weight": 1000,
       "icon_col": 13,
       "icon_row": 11
     },
@@ -4272,6 +4567,7 @@
       "subgroup": "transport",
       "order": "b[personal-transport]-b[tank]",
       "stack_size": 1,
+      "weight": 1000000,
       "icon_col": 14,
       "icon_row": 11
     },
@@ -4285,6 +4581,7 @@
       "subgroup": "gun",
       "order": "z[tank]-a[cannon]",
       "stack_size": 1,
+      "weight": 100,
       "icon_col": 23,
       "icon_row": 2
     },
@@ -4298,6 +4595,7 @@
       "subgroup": "gun",
       "order": "b[flamethrower]-b[tank-flamethrower]",
       "stack_size": 1,
+      "weight": 100,
       "icon_col": 20,
       "icon_row": 5
     },
@@ -4311,6 +4609,7 @@
       "subgroup": "gun",
       "order": "a[basic-clips]-b[tank-machine-gun]",
       "stack_size": 1,
+      "weight": 100,
       "icon_col": 8,
       "icon_row": 11
     },
@@ -4324,6 +4623,7 @@
       "subgroup": "ammo",
       "order": "e[railgun-ammo]-a[basic]",
       "stack_size": 100,
+      "weight": 10000,
       "icon_col": 15,
       "icon_row": 11
     },
@@ -4337,6 +4637,7 @@
       "subgroup": "turret",
       "order": "b[turret]-f[tesla-turret]-a[turret]",
       "stack_size": 10,
+      "weight": 100000,
       "icon_col": 16,
       "icon_row": 11
     },
@@ -4350,6 +4651,7 @@
       "subgroup": "gun",
       "order": "a[basic-clips]-h[teslagun]",
       "stack_size": 5,
+      "weight": 200000,
       "icon_col": 17,
       "icon_row": 11
     },
@@ -4363,6 +4665,7 @@
       "subgroup": "space-platform",
       "order": "f[thruster]",
       "stack_size": 10,
+      "weight": 200000,
       "icon_col": 18,
       "icon_row": 11
     },
@@ -4400,6 +4703,7 @@
       "subgroup": "utility-equipment",
       "order": "g[toolbelt]-a[night-vision-equipment]",
       "stack_size": 20,
+      "weight": 50000,
       "icon_col": 19,
       "icon_row": 11
     },
@@ -4413,6 +4717,7 @@
       "subgroup": "other",
       "order": "b[items]-o[top-up-valve]",
       "stack_size": 10,
+      "weight": 100,
       "icon_col": 20,
       "icon_row": 11
     },
@@ -4426,6 +4731,7 @@
       "subgroup": "train-transport",
       "order": "b[train-automation]-a[train-stop]",
       "stack_size": 10,
+      "weight": 100000,
       "icon_col": 21,
       "icon_row": 11
     },
@@ -4439,6 +4745,7 @@
       "subgroup": "belt",
       "order": "a[transport-belt]-a[transport-belt]",
       "stack_size": 100,
+      "weight": 10000,
       "icon_col": 10,
       "icon_row": 1
     },
@@ -4452,6 +4759,7 @@
       "subgroup": "nauvis-agriculture",
       "order": "a[seeds]-b[tree-seed]",
       "stack_size": 10,
+      "weight": 10000,
       "icon_col": 22,
       "icon_row": 11
     },
@@ -4465,6 +4773,7 @@
       "subgroup": "vulcanus-processes",
       "order": "c[tungsten]-b[tungsten-carbide]",
       "stack_size": 50,
+      "weight": 2000,
       "icon_col": 23,
       "icon_row": 11
     },
@@ -4478,6 +4787,7 @@
       "subgroup": "vulcanus-processes",
       "order": "c[tungsten]-a[tungsten-ore]",
       "stack_size": 50,
+      "weight": 10000,
       "icon_col": 12,
       "icon_row": 1
     },
@@ -4491,6 +4801,7 @@
       "subgroup": "vulcanus-processes",
       "order": "c[tungsten]-c[tungsten-plate]",
       "stack_size": 50,
+      "weight": 4000,
       "icon_col": 24,
       "icon_row": 11
     },
@@ -4504,6 +4815,7 @@
       "subgroup": "belt",
       "order": "d[loader]-d[turbo-loader]",
       "stack_size": 50,
+      "weight": 100,
       "icon_col": 25,
       "icon_row": 11
     },
@@ -4517,6 +4829,7 @@
       "subgroup": "belt",
       "order": "c[splitter]-d[turbo-splitter]",
       "stack_size": 50,
+      "weight": 40000,
       "icon_col": 26,
       "icon_row": 11
     },
@@ -4530,6 +4843,7 @@
       "subgroup": "belt",
       "order": "a[transport-belt]-d[turbo-transport-belt]",
       "stack_size": 100,
+      "weight": 20000,
       "icon_col": 13,
       "icon_row": 1
     },
@@ -4543,6 +4857,7 @@
       "subgroup": "belt",
       "order": "b[underground-belt]-d[turbo-underground-belt]",
       "stack_size": 50,
+      "weight": 40000,
       "icon_col": 27,
       "icon_row": 11
     },
@@ -4556,6 +4871,7 @@
       "subgroup": "belt",
       "order": "b[underground-belt]-a[underground-belt]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 0,
       "icon_row": 12
     },
@@ -4569,6 +4885,7 @@
       "subgroup": "tool",
       "order": "c[automated-construction]-c[upgrade-planner]",
       "stack_size": 1,
+      "weight": 100,
       "icon_col": 1,
       "icon_row": 12
     },
@@ -4582,6 +4899,7 @@
       "subgroup": "uranium-processing",
       "order": "a[uranium-processing]-b[uranium-235]",
       "stack_size": 100,
+      "weight": 50000,
       "icon_col": 2,
       "icon_row": 12
     },
@@ -4595,6 +4913,7 @@
       "subgroup": "uranium-processing",
       "order": "a[uranium-processing]-c[uranium-238]",
       "stack_size": 100,
+      "weight": 50000,
       "icon_col": 3,
       "icon_row": 12
     },
@@ -4608,6 +4927,7 @@
       "subgroup": "ammo",
       "order": "d[cannon-shell]-c[uranium]",
       "stack_size": 100,
+      "weight": 40000,
       "icon_col": 4,
       "icon_row": 12
     },
@@ -4621,6 +4941,7 @@
       "subgroup": "uranium-processing",
       "order": "b[uranium-products]-a[uranium-fuel-cell]",
       "stack_size": 50,
+      "weight": 100000,
       "icon_col": 5,
       "icon_row": 12
     },
@@ -4634,6 +4955,7 @@
       "subgroup": "raw-resource",
       "order": "g[uranium-ore]",
       "stack_size": 50,
+      "weight": 5000,
       "icon_col": 14,
       "icon_row": 1
     },
@@ -4647,6 +4969,7 @@
       "subgroup": "ammo",
       "order": "a[basic-clips]-c[uranium-rounds-magazine]",
       "stack_size": 100,
+      "weight": 40000,
       "icon_col": 6,
       "icon_row": 12
     },
@@ -4660,6 +4983,7 @@
       "subgroup": "science-pack",
       "order": "f[utility-science-pack]",
       "stack_size": 200,
+      "weight": 1000,
       "icon_col": 7,
       "icon_row": 12
     },
@@ -4673,6 +4997,7 @@
       "subgroup": "gun",
       "order": "a[basic-clips]-b[vehicle-machine-gun]",
       "stack_size": 1,
+      "weight": 100,
       "icon_col": 8,
       "icon_row": 11
     },
@@ -4698,6 +5023,7 @@
       "subgroup": "barrel",
       "order": "a[fluid]-a[water]-a[water]",
       "stack_size": 10,
+      "weight": 10000,
       "icon_col": 8,
       "icon_row": 12
     },
@@ -4711,6 +5037,7 @@
       "subgroup": "raw-resource",
       "order": "a[wood]",
       "stack_size": 100,
+      "weight": 2000,
       "icon_col": 9,
       "icon_row": 12
     },
@@ -4724,6 +5051,7 @@
       "subgroup": "storage",
       "order": "a[items]-a[wooden-chest]",
       "stack_size": 50,
+      "weight": 20000,
       "icon_col": 11,
       "icon_row": 10
     },
@@ -4737,6 +5065,7 @@
       "subgroup": "agriculture-processes",
       "order": "b[agriculture]-a[yumako]",
       "stack_size": 50,
+      "weight": 1000,
       "icon_col": 10,
       "icon_row": 12
     },
@@ -4750,6 +5079,7 @@
       "subgroup": "agriculture-products",
       "order": "a[organic-processing]-c[yumako-mash]",
       "stack_size": 100,
+      "weight": 500,
       "icon_col": 11,
       "icon_row": 12
     },
@@ -4763,6 +5093,7 @@
       "subgroup": "agriculture-processes",
       "order": "a[seeds]-a[yumako-seed]",
       "stack_size": 10,
+      "weight": 10000,
       "icon_col": 12,
       "icon_row": 12
     }
@@ -30994,6 +31325,7 @@
       "icon_row": 26
     }
   ],
+  "rocket_lift_weight": 1000000,
   "sprites": {
     "extra": {
       "clock": {

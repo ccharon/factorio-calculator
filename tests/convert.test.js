@@ -86,6 +86,7 @@ function minimalRaw() {
             },
         },
         "surface-property": { pressure: { name: "pressure", default_value: 1000 } },
+        "utility-constants": { default: { default_rocket_lift_weight: 1000000 } },
         "utility-sprites": {
             default: { clock: { filename: "__core__/clock.png" }, empty_module_slot: { filename: "__core__/slot.png" } },
         },
@@ -93,13 +94,15 @@ function minimalRaw() {
 }
 
 test("convert builds every dataset section", () => {
-    const d = convert(minimalRaw(), { recipe: { names: { "iron-plate": "Iron plate" } } }, "2.1.0")
+    const d = convert(minimalRaw(), { recipe: { names: { "iron-plate": "Iron plate" } } }, "2.1.0", { item_weights: { coal: 2000 } })
     assert.equal(d.version, "2.1.0")
     assert.deepEqual(d.items.map(i => i.key), ["coal", "iron-ore", "iron-plate", "seed", "water"])
     assert.deepEqual(d.recipes.map(r => r.key), ["iron-plate"])
     assert.equal(d.recipes[0].localized_name.en, "Iron plate")
     assert.equal(d.recipes[0].order, "b", "order falls back to the main product")
     assert.deepEqual(d.fuel, [{ item_key: "coal", categories: ["chemical"], value: 4000000 }])
+    assert.equal(d.rocket_lift_weight, 1000000)
+    assert.equal(d.items.find(i => i.key === "coal").weight, 2000)
     assert.deepEqual(d.spoilage, [{ from_item: "seed", to_item: "coal", time: 60 }])
     assert.equal(d.fluids[0].heat_capacity, 2000)
     assert.equal(d.crafting_machines[0].energy_usage, 90000)

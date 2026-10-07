@@ -10,6 +10,7 @@ export const SCENARIOS = [
     ["nauvis-kovarex-productivity", "#items=uranium-235:r:60&planet=nauvis&modules=kovarex-enrichment-process:p3:p3"],
     ["vulcanus-productivity-cap", "#items=steel-plate:r:600&planet=vulcanus&rprod=steel-plate-productivity:25&modules=casting-steel:p3:p3:p3:p3"],
     ["nauvis-research", "#items=processing-unit:r:60&planet=nauvis&rprod=processing-unit-productivity:3"],
+    ["nauvis-rocket-cargo", "#items=processing-unit-in-orbit:r:600&planet=nauvis"],
     ["nauvis-ignore", "#items=advanced-circuit:r:60&planet=nauvis&ignore=electronic-circuit"],
     ["nauvis-disable", "#items=plastic-bar:r:600&planet=nauvis&disable=advanced-oil-processing"],
     ["nauvis-mining-productivity", "#items=iron-gear-wheel:r:600&planet=nauvis&mprod=50"],

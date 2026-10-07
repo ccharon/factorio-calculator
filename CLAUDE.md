@@ -62,7 +62,7 @@ Do not modify the game directory. `tools/build-data.js` only reads it.
 npm run build-data -- --factorio /home/christian/Spiele/factorio
 ```
 
-The script runs the game three times headless (`--dump-data`, `--dump-icon-sprites`, `--dump-prototype-locale`) with a temporary config and mod directory. It writes `public/data/space-age-<version>.json` and `public/images/sprite-sheet-<hash>.png`. Afterwards, point `DATASET` in `src/main.ts` to the new file, delete the old dataset and sprite sheet, and run `npm run check`.
+The script runs the game headless with a temporary config and mod directory: `--dump-data`, `--dump-icon-sprites` and `--dump-prototype-locale`, then `--create` with a helper mod (`calculator-dump`, written by `tools/lib/factorio.js`) that writes values the game computes at runtime, such as item weights, to `calculator-dump.json`. It writes `public/data/space-age-<version>.json` and `public/images/sprite-sheet-<hash>.png`. Afterwards, point `DATASET` in `src/main.ts` to the new file, delete the old dataset and sprite sheet, and run `npm run check`.
 
 | Option | Effect |
 |--------|--------|
@@ -78,7 +78,7 @@ The dataset format is defined in `src/data/dataset.schema.json`. `tests/dataset.
 |------|-------|
 | Entry point | `index.html`, `src/main.ts` |
 | Core math and solver, no DOM | `src/core/`: `rational.ts`, `matrix.ts`, `simplex.ts`, `solve.ts` (with the `SolverContext` interface), `cycle.ts`, `totals.ts`, `sort.ts` |
-| Game data loading | `src/data/`: `dataset.ts` (types of the dataset JSON), `dataset.schema.json`, `item.ts`, `recipe.ts`, `building.ts`, `module.ts`, `belt.ts`, `fuel.ts`, `planet.ts`, `research.ts` (recipe productivity technologies), `group.ts`, `groups.ts` |
+| Game data loading | `src/data/`: `dataset.ts` (types of the dataset JSON), `dataset.schema.json`, `item.ts`, `recipe.ts`, `building.ts`, `module.ts`, `belt.ts`, `fuel.ts`, `planet.ts`, `research.ts` (recipe productivity technologies), `cargo.ts` (items in orbit and launch recipes), `group.ts`, `groups.ts` |
 | State and URL settings | `src/state/`: `factory.ts` (`FactorySpecification`, global `spec`), `fragment.ts` (writes the settings string), `url-codec.ts` (parses and compresses the URL fragment), `priority.ts`, `align.ts` (number formatting) |
 | UI | `src/ui/`: `display.ts`, `target.ts`, `settings.ts`, `dropdown.ts`, `module-dropdown.ts`, `tooltip.ts`, `events.ts`, `icon.ts`, `energy.ts`, `color.ts`, `debug.ts` |
 | Visualizer | `src/visualize/`: `visualize.ts` (builds the graph), `graph.ts` (graph types, colors, node rendering), `sankey.ts`, `sankey-layout.ts` (adapted d3-sankey layout, BSD-3), `boxline.ts` (dagre), `circlepath.ts` |

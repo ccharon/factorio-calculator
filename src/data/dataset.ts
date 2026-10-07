@@ -59,6 +59,8 @@ export interface DatasetItem extends NamedPrototype {
     subgroup: string
     order: string
     stack_size?: number
+    /** Weight in grams, which limits rocket cargo. */
+    weight?: number
 }
 
 export interface DatasetFluid {
@@ -254,5 +256,7 @@ export interface Dataset {
     plants: DatasetPlant[]
     surface_properties: DatasetSurfaceProperty[]
     recipe_productivity: DatasetRecipeProductivity[]
+    /** Rocket cargo capacity in grams. */
+    rocket_lift_weight: number
     sprites: SpriteSheetData
 }
