@@ -11,13 +11,11 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
-import { makeDropdown, addInputs } from "./dropdown.js"
 import { toggleIgnoreHandler } from "./events.js"
 import { spec } from "./factory.js"
 import { formatSettings } from "./fragment.js"
 import { getRecipeGroups, topoSort } from "./groups.js"
 import { Icon } from "./icon.js"
-import { useLegacyCalculation } from "./init.js"
 import { moduleRows, moduleDropdown } from "./module.js"
 import { Rational, zero, one } from "./rational.js"
 
@@ -69,7 +67,6 @@ class BreakdownRow {
 
 function getBreakdown(item, totals) {
     let rows = []
-    let uses = []
     let found = false
     // The top half of the breakdown gives every ingredient used by every
     // recipe that produced the given item. If a given ingredient is produced
@@ -280,7 +277,6 @@ class DisplayGroup {
         }
         let len = Math.max(items.length, recipes.length)
         setlen(this.rows, len, () => new DisplayRow())
-        let hundred = Rational.from_float(100)
         for (let i = 0; i < len; i++) {
             let row = this.rows[i]
             let item = items[i] || null
@@ -377,72 +373,6 @@ class ItemIcon {
     }
 }
 
-// All this pipe stuff is legacy code, irrelevant as of 2.0, but we might as
-// well keep it around for legacy datasets.
-
-// For pipe segment of the given length, returns maximum throughput as fluid/s.
-function pipeThroughput(length) {
-    let R = Rational.from_float
-    if (length.equal(zero)) {
-        // A length of zero represents a solid line of pumps.
-        return R(12000)
-    } else if (length.less(R(198))) {
-        let numerator = R(50).mul(length).add(R(150))
-        let denominator = R(3).mul(length).sub(one)
-        return numerator.div(denominator).mul(R(60))
-    } else {
-        return R(60*4000).div(R(39).add(length))
-    }
-}
-
-// Throughput at which pipe length equation changes.
-let pipeThreshold = Rational.from_floats(4000, 236)
-
-// For fluid throughput in fluid/s, returns maximum length of pipe that can
-// support it.
-function pipeLength(throughput) {
-    let R = Rational.from_float
-    throughput = throughput.div(R(60))
-    if (R(200).less(throughput)) {
-        return null
-    } else if (R(100).less(throughput)) {
-        return zero
-    } else if (pipeThreshold.less(throughput)) {
-        let numerator = throughput.add(R(150))
-        let denominator = R(3).mul(throughput).sub(R(50))
-        return numerator.div(denominator)
-    } else {
-        return R(4000).div(throughput).sub(R(39))
-    }
-}
-
-// Just hardcode this. It used to be a setting, but now it's defunct.
-let minPipeLength = Rational.from_float(17)
-let maxPipeThroughput = pipeThroughput(minPipeLength)
-
-function pipeValues(rate) {
-    let pipes = rate.div(maxPipeThroughput).ceil()
-    let perPipeRate = rate.div(pipes)
-    let length = pipeLength(perPipeRate).floor()
-    return {pipes: pipes, length: length}
-}
-
-function pipeText(rate) {
-    if (!useLegacyCalculation) {
-        return ""
-    }
-    if (rate.equal(zero)) {
-        return " \u00d7 0"
-    }
-    let {pipes, length} = pipeValues(rate)
-    let pipeString = ""
-    if (one.less(pipes)) {
-        pipeString += " \u00d7 " + pipes.toDecimal(0)
-    }
-    pipeString += " \u2264 " + length.toDecimal(0)
-    return pipeString
-}
-
 class PipeIcon {
     constructor() {
         let item = spec.items.get("pipe")
@@ -521,7 +451,7 @@ export function displayItems(spec, totals) {
                 .append("tt")
                     .classed("surplus-rate", true)
             // cell 5: belt icon
-            let beltCell = row.append("td")
+            row.append("td")
                 .classed("item pad belt-icon", true)
             // cell 6: belt count
             row.append("td")
@@ -530,7 +460,7 @@ export function displayItems(spec, totals) {
                     .classed("belt-count", true)
 
             // cell 7: building icon
-            let buildingCell = row.append("td")
+            row.append("td")
                 .classed("pad building building-icon leftmost right-align", true)
             // cell 8: building count
             row.append("td")
@@ -539,7 +469,7 @@ export function displayItems(spec, totals) {
                     .classed("building-count", true)
 
             // cell 9: modules
-            let moduleCell = row.append("td")
+            row.append("td")
                 .classed("pad building module module-cell", true)
 
             // cell 10: beacons
@@ -635,8 +565,6 @@ export function displayItems(spec, totals) {
         .attr("colspan", 2)
     pipeIcon.selectAll("*").remove()
     pipeIcon.append(d => new PipeIcon().icon.make(32))
-    pipeIcon.append("tt")
-        .text(d => pipeText(totals.items.get(d.item)))
     pipeRow.selectAll("td.belt-count-cell")
         .classed("hide", true)
         .selectAll("tt.belt-count")
@@ -673,7 +601,7 @@ export function displayItems(spec, totals) {
     fuelRow.selectAll("tt.power")
         .text(d => {
             let rate = totals.rates.get(d.recipe)
-            let {fuel, power} = spec.getPowerUsage(d.recipe, rate)
+            let {power} = spec.getPowerUsage(d.recipe, rate)
             return `${spec.format.alignRate(power.div(spec.fuel.value))}/${spec.format.rateName}`
         })
     let electricRow = buildingRow.filter(d => d.building.fuel === null)
@@ -682,7 +610,7 @@ export function displayItems(spec, totals) {
     electricRow.selectAll("tt.power")
         .text(d => {
             let rate = totals.rates.get(d.recipe)
-            let {fuel, power} = spec.getPowerUsage(d.recipe, rate)
+            let {power} = spec.getPowerUsage(d.recipe, rate)
             totalPower = totalPower.add(power)
             return alignPower(power)
         })

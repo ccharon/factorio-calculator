@@ -134,8 +134,6 @@ export function changeVisDir(event) {
     spec.display()
 }
 
-// Number of SVG coordinate points per zoom level.
-const ZOOM_SCALE = 100
 // Number of distinct zoom "steps."
 const MAX_SCALE = 10
 // Aspect ratio of visualizer display.
@@ -169,7 +167,7 @@ export function installSVGEvents(svg) {
     }
     // The size and position of the viewport with diagram centered and zoomed
     // all the way out.
-    let [origX, origY, origWidth, origHeight] = [x, y, width, height]
+    let [origWidth, origHeight] = [width, height]
     // Place the graph at the top of the viewport by default; this will get
     // clamped.
     y = diagramY

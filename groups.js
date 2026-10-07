@@ -93,7 +93,7 @@ export function getRecipeGroups(recipes) {
         }
     }
     let groupObjects = new Set()
-    for (let [r, group] of groups) {
+    for (let group of groups.values()) {
         groupObjects.add(group)
     }
     return groupObjects

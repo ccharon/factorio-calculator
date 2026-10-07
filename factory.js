@@ -18,7 +18,7 @@ import { currentTab } from "./events.js"
 import { formatSettings } from "./fragment.js"
 import { ModuleSpec } from "./module.js"
 import { PriorityList } from "./priority.js"
-import { Rational, zero, half, one } from "./rational.js"
+import { Rational, zero, one } from "./rational.js"
 import { DISABLED_RECIPE_PREFIX } from "./recipe.js"
 import { solve } from "./solve.js"
 import { BuildTarget } from "./target.js"
@@ -346,7 +346,7 @@ class FactorySpecification {
     }
     getDefaultPriorityArray() {
         let a = []
-        for (let [recipeKey, recipe] of this.recipes) {
+        for (let recipe of this.recipes.values()) {
             if (recipe.defaultPriority !== undefined) {
                 let pri = recipe.defaultPriority
                 while (a.length < pri + 1) {
@@ -472,7 +472,7 @@ class FactorySpecification {
     // the given collection of items.
     getRecipeGraph(items) {
         let graph = new Set()
-        for (let [item, rate] of items) {
+        for (let [item] of items) {
             this._getItemGraph(item, graph)
         }
         return graph
@@ -516,7 +516,7 @@ class FactorySpecification {
         }
     }
     populateModuleSpec(totals) {
-        for (let [recipe, rate] of totals.rates) {
+        for (let recipe of totals.rates.keys()) {
             let building = this.getBuilding(recipe)
             this.initModuleSpec(recipe, building)
         }
@@ -586,7 +586,7 @@ class FactorySpecification {
         this.defaultBeacon[i] = module
     }
     setDefaultBeaconCount(count) {
-        for (let [recipe, moduleSpec] of this.spec) {
+        for (let moduleSpec of this.spec.values()) {
             if (moduleSpec.beaconCount.equal(this.defaultBeaconCount)) {
                 moduleSpec.beaconCount = count
             }

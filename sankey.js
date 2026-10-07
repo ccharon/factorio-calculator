@@ -33,12 +33,10 @@ function selfPath(d) {
     let y0 = d.y0
     let x1 = d.source.x1
     let y1 = d.source.y1 + d.width/2 + 10
-    let r1 = (y1 - y0) / 2
     let x2 = d.target.x0
     let y2 = d.target.y1 + d.width/2 + 10
     let x3 = d.target.x0
     let y3 = d.y1
-    let r2 = (y3 - y2) / 2
     return new CirclePath(1, 0, [
         {x: x0, y: y0},
         {x: x1, y: y1},

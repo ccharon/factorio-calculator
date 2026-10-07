@@ -511,14 +511,10 @@ export function getRecipes(data, items) {
         ))
     }
     let offshoreItems = new Set()
-    if (data.planets) {
-        for (let planet of data.planets) {
-            for (let key of planet.resources.offshore) {
-                offshoreItems.add(key)
-            }
+    for (let planet of data.planets) {
+        for (let key of planet.resources.offshore) {
+            offshoreItems.add(key)
         }
-    } else {
-        offshoreItems.add("water")
     }
     for (let key of offshoreItems) {
         let item = items.get(key)

@@ -249,7 +249,7 @@ export class BuildTarget {
     }
     getRate() {
         this.setRateLabel()
-        let rate = zero
+        let rate
         let recipe = this.recipe
         if ((recipe === null || recipe.category === null) && this.changedBuilding) {
             this.rateChanged()

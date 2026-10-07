@@ -63,8 +63,6 @@ function renderMatrix(d, A, m) {
 }
 
 export function renderDebug() {
-    let debugTab = d3.select("#debug_tab")
-
     let lastTableau = d3.select("#debug_tableau")
     lastTableau.selectChildren().remove()
     let lastSolution = d3.select("#debug_solution")

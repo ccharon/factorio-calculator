@@ -13,9 +13,6 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 import { Icon } from "./icon.js"
 
-class SurfaceProperty {
-}
-
 class Planet {
     constructor(key, name, order, col, row, resources, properties) {
         this.key = key
@@ -72,10 +69,6 @@ function traverseRecycling(recipe, found) {
 }
 
 export function getPlanets(data, recipes) {
-    if (!data.planets) {
-        // For legacy 1.1 datasets.
-        return null
-    }
     defaultProperties = new Map()
     for (let {name, default_value} of data.surface_properties) {
         defaultProperties.set(name, default_value)

@@ -19,7 +19,7 @@ export function getItemGroups(items, data) {
     // {groupName: {subgroupName: [item]}}
     let itemGroupMap = new Map()
     //for (var itemName in items) {
-    for (let [itemKey, item] of items) {
+    for (let item of items.values()) {
         let group = itemGroupMap.get(item.group)
         if (group === undefined) {
             group = new Map()

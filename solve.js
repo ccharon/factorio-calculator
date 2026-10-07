@@ -125,7 +125,7 @@ Rows:
 
 export function solve(spec, fullOutputs) {
     let outputs = new Map()
-    for (let {item, rate, recipe} of fullOutputs) {
+    for (let {item, rate} of fullOutputs) {
         rate = rate.add(outputs.get(item) || zero)
         outputs.set(item, rate)
     }
@@ -197,7 +197,7 @@ export function solve(spec, fullOutputs) {
             }
         }
     }
-    for (let [item, recipe] of maxPriorityRecipes) {
+    for (let recipe of maxPriorityRecipes.values()) {
         recipes.add(recipe)
     }
     for (let recipe of recipes) {
@@ -304,7 +304,7 @@ export function solve(spec, fullOutputs) {
     for (let p of spec.priority) {
         let N = zero
         let minWeight = null
-        for (let {recipe, weight} of p) {
+        for (let {weight} of p) {
             if (minWeight === null || weight.less(minWeight)) {
                 minWeight = weight
             }
@@ -320,7 +320,7 @@ export function solve(spec, fullOutputs) {
             P = P.mul(cost_ratio).mul(N)
         }
     }
-    for (let [item, recipe] of maxPriorityRecipes) {
+    for (let recipe of maxPriorityRecipes.values()) {
         A.setIndex(recipeRows.get(recipe), columns - 1, P)
     }
 

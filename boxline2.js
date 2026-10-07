@@ -91,7 +91,6 @@ export function renderBoxGraph({nodes, links}, direction, ignore, callback) {
         link.points = dagreEdge.points
     }
 
-    let {width, height} = g.graph()
     let svg = d3.select("svg#graph")
         .classed("sankey", false)
         //.attr("viewBox", `-25,-25,${width+50},${height+50}`)

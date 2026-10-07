@@ -13,8 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 import { makeDropdown, addInputs } from "./dropdown.js"
 import { Icon, sprites } from "./icon.js"
-import { useLegacyCalculation } from "./init.js"
-import { Rational, zero, half, one } from "./rational.js"
+import { Rational, zero, one } from "./rational.js"
 import { sorted } from "./sort.js"
 
 let hundred = Rational.from_float(100)
@@ -174,6 +173,14 @@ export class ModuleSpec {
     setBeaconCount(count) {
         this.beaconCount = count
     }
+    // Total transmission strength of all beacons affecting one building.
+    beaconMultiplier() {
+        if (this.beaconCount.isZero()) {
+            return zero
+        }
+        let i = Math.min(this.beaconCount.ceil().toFloat(), beaconProfile.length) - 1
+        return this.beaconCount.mul(beaconEffect).mul(beaconProfile[i])
+    }
     speedEffect() {
         let speed = one
         for (let module of this.modules) {
@@ -187,15 +194,7 @@ export class ModuleSpec {
                 if (module === null) {
                     continue
                 }
-                let beacon = module.speed.mul(this.beaconCount).mul(beaconEffect)
-                if (!useLegacyCalculation) {
-                    let i = this.beaconCount.ceil().toFloat() - 1
-                    if (i >= beaconProfile.length) {
-                        i = beaconProfile.length - 1
-                    }
-                    beacon = beacon.mul(beaconProfile[i])
-                }
-                speed = speed.add(beacon)
+                speed = speed.add(module.speed.mul(this.beaconMultiplier()))
             }
         }
         return speed
@@ -224,15 +223,7 @@ export class ModuleSpec {
                 if (module === null) {
                     continue
                 }
-                let beacon = module.power.mul(this.beaconCount).mul(beaconEffect)
-                if (!useLegacyCalculation) {
-                    let i = this.beaconCount.ceil().toFloat() - 1
-                    if (i >= beaconProfile.length) {
-                        i = beaconProfile.length - 1
-                    }
-                    beacon = beacon.mul(beaconProfile[i])
-                }
-                power = power.add(beacon)
+                power = power.add(module.power.mul(this.beaconMultiplier()))
             }
         }
         let minimum = Rational.from_floats(1, 5)
@@ -290,13 +281,6 @@ export function getModules(data, items) {
         shortModules.set(shortName, module)
     }
     beaconEffect = Rational.from_float_approximate(data.beacon.distribution_effectivity)
-    if (useLegacyCalculation) {
-        beaconProfile = null
-    } else {
-        beaconProfile = []
-        for (let x of data.beacon.profile) {
-            beaconProfile.push(Rational.from_float_approximate(x))
-        }
-    }
+    beaconProfile = data.beacon.profile.map(x => Rational.from_float_approximate(x))
     return modules
 }

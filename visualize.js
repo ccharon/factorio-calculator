@@ -15,7 +15,7 @@ import { renderBoxGraph } from "./boxline2.js"
 import { visualizerType, visualizerRender, visualizerDirection, installSVGEvents } from "./events.js"
 import { spec } from "./factory.js"
 import { iconSize, colonWidth } from "./graph.js"
-import { zero, one } from "./rational.js"
+import { zero } from "./rational.js"
 import { renderSankey } from "./sankey.js"
 
 let clickedNode = null
@@ -156,14 +156,11 @@ class GraphNode {
 }
 
 function makeGraph(totals, ignore) {
-    let outputs = []
-    let rates = new Map()
-
     let nodes = []
     let nodeMap = new Map()
 
     for (let [recipe, rate] of totals.rates) {
-        let node = null
+        let node
         if (recipe.isReal()) {
             let building = spec.getBuilding(recipe)
             let count = spec.getCount(recipe, rate)

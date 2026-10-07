@@ -13,7 +13,6 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 import { Icon } from "./icon.js"
 import { DisabledRecipe } from "./recipe.js"
-import { Totals } from "./totals.js"
 
 export class Item {
     constructor(key, name, col, row, phase, group, subgroup, order) {

@@ -163,16 +163,6 @@ function fromFrame(tx, ty, x, y) {
     return toFrame(tx, -ty, x, y)
 }
 
-function frameSlope(tx, ty, x1, y1, x2, y2) {
-    let dx = x2 - x1
-    let dy = y2 - y1
-    let [fx, fy] = toFrame(tx, ty, dx, dy)
-    if (fx === 0) {
-        return null
-    }
-    return fy/fx
-}
-
 function linePath(tx, ty, x1, y1, x2, y2) {
     return new CirclePath(tx, ty, [
         {x: x1, y: y1},
@@ -248,50 +238,6 @@ function doubleArcAdjustPath(tx, ty, x1, y1, x2, y2, width) {
             {x: p2x, y: p2y},
             {x: p3x, y: p3y},
             {x: p4x, y: p4y},
-            {x: x2, y: y2},
-    ])
-}
-
-function lineAdjustPath(tx, ty, x1, y1, x2, y2, width) {
-    let dx = x2 - x1
-    let dy = y2 - y1
-    let [fx, fy] = toFrame(tx, ty, dx, dy)
-    let T
-    if (fy > 0) {
-        // Curving to right.
-        T = R
-    } else {
-        // Curving to left.
-        T = L
-    }
-    let [nx, ny] = T(tx, ty)
-    // radius of both circles
-    let r = width/2 + MIN_RADIUS
-    // center points of both circles
-    let r1x = x1 + nx*r
-    let r1y = y1 + ny*r
-    let r2x = x2 - nx*r
-    let r2y = y2 - ny*r
-    // center point of whole curve
-    let cx = (x1 + x2) / 2
-    let cy = (y1 + y2) / 2
-    // distance between circle center and curve center
-    let d = Math.sqrt((cx - r1x)**2 + (cy - r1y)**2)
-    // unit vector from circle center to curve center
-    let ax = (cx - r1x) / d
-    let ay = (cy - r1y) / d
-    // normal pointing towards inflection point
-    let [bx, by] = T(-ax, -ay)
-    // A wee spot o' trig.
-    let d1 = r**2/d
-    let h = r**2 - Math.sqrt(r**2 - r**4/d**2)
-    let px = ax*d1 + bx*h
-    let py = ay*d1 + by*h
-
-    return new CirclePath([
-            {x: x1, y: y1},
-            {x: r1x + px, y: r1y + py},
-            {x: r2x - px, y: r2y - py},
             {x: x2, y: y2},
     ])
 }

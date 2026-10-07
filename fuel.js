@@ -72,7 +72,7 @@ export function getFuel(data, items) {
         }
         f.push(fuel)
     }
-    for (let [categoryKey, category] of fuelCategories) {
+    for (let category of fuelCategories.values()) {
         category.sort(function(a, b) {
             if (a.value.less(b.value)) {
                 return -1

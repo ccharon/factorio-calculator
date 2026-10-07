@@ -186,13 +186,14 @@ export class Rational {
         if (i === -1) {
             return Rational.from_decimal(s)
         }
-        var j = s.indexOf("+")
-        var q = bigInt(s.slice(i + 1))
+        let j = s.indexOf("+")
+        let q = bigInt(s.slice(i + 1))
+        let p
         if (j !== -1) {
-            var integer = bigInt(s.slice(0, j))
-            var p = bigInt(s.slice(j + 1, i)).plus(integer.times(q))
+            let integer = bigInt(s.slice(0, j))
+            p = bigInt(s.slice(j + 1, i)).plus(integer.times(q))
         } else {
-            var p = bigInt(s.slice(0, i))
+            p = bigInt(s.slice(0, i))
         }
         return new Rational(p, q)
     }
