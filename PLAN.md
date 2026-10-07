@@ -168,6 +168,13 @@ A01, A02, A07 and A10 do not apply: no server, no authentication, no secrets, no
 
 Also: modernize CSS (custom properties already partly used by `color.js`), keyboard access for dropdowns and toggles, `<button>` instead of clickable `<div>`.
 
+## Phase 6a: Module structure
+
+1. Move `src/core/sort.ts` out of `core` (it is a general helper used mostly by the UI), or drop it where plain `Array.sort` reads as well.
+2. Merge `src/core/matrix.ts` into `src/core/simplex.ts`; only the simplex uses it.
+3. Split `src/state/factory.ts`: energy (fuel, electricity, heat) and building groups into modules of their own, the DOM parts of targets (`addTarget`, `removeTarget`) into `src/ui/`. `FactorySpecification` stays as the state that implements the context interfaces.
+4. Keep `Rational`: exact fractions keep the simplex free of tolerances and the snapshot tests exact.
+
 ## Phase 7: Documentation
 
 Rewrite README per the writing rules, update changelog, keep CLAUDE.md current.
@@ -181,7 +188,8 @@ Next steps:
 0. File headers, one commit, first thing next session: files with Kirk McDonald's header keep it and get a second line `Copyright 2026 Christian Charon` below it. Files without a header (new files such as `src/data/power.ts`, `quality.ts`, `cargo.ts`, `research.ts`, `icons.ts`, `warnings.ts`) get `/*Copyright 2026 Christian Charon` plus the Apache 2.0 text. Add the rule to CLAUDE.md (Conventions).
 1. Phase 6 (robustness and security), in progress. Done: CSP meta tag in the build (Vite plugin in `vite.config.js`), ignored URL settings shown on the page (`src/ui/warnings.ts`), custom code replaced by standard means (stable `Array.sort` in `sorted()`, native base64, `d3.zoom` for the visualizer, popover and CSS anchor positioning for tooltips; `@floating-ui/dom` removed). Negative numbers in URL settings are rejected with a visible warning. Open, in this order, one commit each: (a) keyboard access with `<button>` instead of clickable `<div>` (planet and recipe toggles, priority list); (b) icon dropdowns as popovers (`src/ui/dropdown.ts`, removes the clicker overlay and spacer; check target and module dropdown layout); (c) review of the remaining custom code (`src/state/align.ts` number formatting, `src/state/priority.ts`). Ask before adding any dependency.
 2. Later, from phase 5: quality per recipe, recycling loops for a target quality, reactor neighbour bonus.
-3. Phase 7: README and changelog.
+3. Phase 6a: module structure (see its section).
+4. Phase 7: README and changelog.
 
 Working notes:
 
