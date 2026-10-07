@@ -63,7 +63,7 @@ Each phase ends in a working calculator and its own commits.
 1. Done: `package.json`, `eslint.config.js` with `eslint-plugin-no-unsanitized`, `node --test`, tests for `rational.js`.
 2. Fix the 60 lint errors. Real bugs among them: `spec` used without import in `belt.js` and `building.js`, undefined `recipes` in `debug.js`, undefined `minusOne` and `Exception` in `simplex.js`.
 3. Unit tests for `fragment.js` (round trip, malformed input) and the solver on small recipe sets. `fragment.js` first needs its parsing split from the DOM code.
-4. Golden tests: fixed URL hashes with expected building counts, recorded before the refactors. They run through `tests/browser/smoke.js` (`puppeteer-core` with the installed Chrome), so they need no Chrome extension.
+4. Snapshot tests: fixed URL hashes with their building counts, recorded before the refactors. They run through `tests/browser/smoke.js` (`puppeteer-core` with the installed Chrome), so they need no Chrome extension.
 
 ## Phase 1: Cleanup to Space Age 2.1 scope
 
@@ -89,7 +89,7 @@ Done. `npm run build-data` generates `data/space-age-2.1.21.json` and the sprite
 
 Comes before the model changes, so phases 4 to 6 are written once, in the new structure. The migration must not change any result.
 
-1. Golden tests: record building counts, rates and power for about 15 URL scenarios across all planets with the current code. They run against the old and the new build.
+1. Snapshot tests: record building counts, rates and power for about 15 URL scenarios across all planets with the current code. The recorded output is the expected result for the new build.
 2. Branches and CI: rename `master` to `main`, create `develop`. `check.yml` runs lint, type check, tests and build on `develop` and pull requests. `deploy.yml` builds `main` and force-pushes `dist/` as the root of an orphan `dist` branch. Dependabot keeps npm packages current.
 3. Project layout:
 
@@ -118,7 +118,7 @@ Comes before the model changes, so phases 4 to 6 are written once, in the new st
    | `pako.min.js` | Native `CompressionStream("deflate-raw")`. URL parsing becomes async. |
 
 5. Tooling: Vitest replaces `node --test`. `tsc --noEmit` in strict mode and typescript-eslint run in `npm run check`. `tools/serve.js` goes away, `npm start` runs the Vite dev server.
-6. Port order: `core` first with strict types and the existing unit tests, then `data`, `state`, `ui`, `visualize`. Each step keeps the golden tests green.
+6. Port order: `core` first with strict types and the existing unit tests, then `data`, `state`, `ui`, `visualize`. Each step keeps the snapshot tests green.
 7. Delete the root-level JS files, `calc.html`, `third_party/` and `d3-sankey/`. Update README and CLAUDE.md.
 
 ## Phase 4: Core model for 2.1
