@@ -18,7 +18,10 @@ import { Rational, zero, one } from "./rational.js"
 
 let thirty = Rational.from_float(30)
 
+// A machine that crafts recipes, such as an assembler or furnace. Base class for miners, pumps
+// and the rocket silo.
 class Building {
+    // power is the working power in W. fuel is the fuel category of a burner machine, or null.
     constructor(key, name, col, row, categories, speed, prodBonus, moduleSlots, power, fuel) {
         this.key = key
         this.name = name
@@ -33,15 +36,18 @@ class Building {
         this.icon_row = row
         this.icon = new Icon(this)
     }
+    // Orders buildings from slowest to fastest. Module slots break ties.
     less(other) {
         if (!this.speed.equal(other.speed)) {
             return this.speed.less(other.speed)
         }
         return this.moduleSlots < other.moduleSlots
     }
+    // Returns the number of buildings needed to run recipe at rate crafts per second.
     getCount(spec, recipe, rate) {
         return rate.div(this.getRecipeRate(spec, recipe))
     }
+    // Returns crafts per second of one building, including module and beacon speed effects.
     getRecipeRate(spec, recipe) {
         let modules = spec.getModuleSpec(recipe)
         let speedEffect
@@ -52,15 +58,19 @@ class Building {
         }
         return recipe.time.reciprocate().mul(this.speed).mul(speedEffect)
     }
+    // Returns whether modules and beacons can affect this building.
     canBeacon() {
         return this.moduleSlots > 0
     }
+    // Returns the built-in productivity bonus, such as 0.5 for the foundry.
     prodEffect(spec) {
         return this.prodBonus
     }
+    // Returns the idle drain of one electric building, which is 1/30 of its working power.
     drain() {
         return this.power.div(thirty)
     }
+    // Returns a tooltip element with power, crafting speed and module slots.
     renderTooltip() {
         let self = this
         let t = d3.create("div")
@@ -88,17 +98,21 @@ class Building {
     }
 }
 
+// A mining drill. Its rate depends on mining speed and the resource's mining time.
 class Miner extends Building {
     constructor(key, name, col, row, categories, miningSpeed, moduleSlots, power, fuel) {
         super(key, name, col, row, categories, zero, zero, moduleSlots, power, fuel)
         this.miningSpeed = miningSpeed
     }
+    // Orders drills by mining speed.
     less(other) {
         return this.miningSpeed.less(other.miningSpeed)
     }
+    // Mining drills have no idle drain.
     drain() {
         return zero
     }
+    // Returns resource units mined per second by one drill.
     getRecipeRate(spec, recipe) {
         let modules = spec.getModuleSpec(recipe)
         let speedEffect
@@ -109,9 +123,11 @@ class Miner extends Building {
         }
         return this.miningSpeed.div(recipe.miningTime).mul(speedEffect)
     }
+    // Returns the mining productivity research bonus.
     prodEffect(spec) {
         return spec.miningProd
     }
+    // Returns a tooltip element with power, mining speed and module slots.
     renderTooltip() {
         let self = this
         let t = d3.create("div")
@@ -139,17 +155,21 @@ class Miner extends Building {
     }
 }
 
+// An offshore pump. It uses no power and takes no modules.
 class OffshorePump extends Building {
     constructor(key, name, col, row, pumpingSpeed) {
         super(key, name, col, row, ["offshore-pumping"], zero, zero, 0, zero, null)
         this.pumpingSpeed = pumpingSpeed
     }
+    // Orders pumps by pumping speed.
     less(other) {
         return this.pumpingSpeed.less(other.pumpingSpeed)
     }
+    // Returns fluid units pumped per second.
     getRecipeRate(spec, recipe) {
         return this.pumpingSpeed
     }
+    // Returns a tooltip element with the pumping speed.
     renderTooltip() {
         let self = this
         let t = d3.create("div")
@@ -168,6 +188,8 @@ class OffshorePump extends Building {
 
 let rocketLaunchDuration = Rational.from_floats(2434, 60)
 
+// Returns rocket parts per second and launches per second of one silo. Both include the time
+// the silo pauses for each launch.
 function launchRate(spec) {
     let partRecipe = spec.recipes.get("rocket-part")
     let partFactory = spec.getBuilding(partRecipe)
@@ -176,7 +198,7 @@ function launchRate(spec) {
     // The base rate at which the silo can make rocket parts.
     let rate = Building.prototype.getRecipeRate.call(partFactory, spec, partRecipe)
     // Number of times to complete the rocket part recipe per launch.
-    let perLaunch = Rational.from_float(100).div(gives)
+    let perLaunch = partFactory.partsRequired.div(gives)
     // Total length of time required to launch a rocket.
     let time = perLaunch.div(rate).add(rocketLaunchDuration)
     let launchRate = time.reciprocate()
@@ -184,13 +206,17 @@ function launchRate(spec) {
     return {part: partRate, launch: launchRate}
 }
 
+// Pseudo-building for the rocket launch recipe.
 class RocketLaunch extends Building {
+    // Returns launches per second.
     getRecipeRate(spec, recipe) {
         return launchRate(spec).launch
     }
 }
 
+// The rocket silo building rocket parts. Its rate includes the pause for each launch.
 class RocketSilo extends Building {
+    // Returns rocket parts per second.
     getRecipeRate(spec, recipe) {
         return launchRate(spec).part
     }
@@ -206,6 +232,8 @@ function renderTooltipBase() {
     return t.node()
 }
 
+// Creates all buildings from the dataset, plus pseudo-buildings for the nuclear reactor,
+// the boiler and the rocket launch.
 export function getBuildings(data, items) {
     let buildings = []
     let reactorDef = items.get("nuclear-reactor")
@@ -285,7 +313,7 @@ export function getBuildings(data, items) {
         ))
     }
     for (let d of data.rocket_silo) {
-        buildings.push(new RocketSilo(
+        let silo = new RocketSilo(
             d.key,
             d.localized_name.en,
             d.icon_col,
@@ -296,7 +324,9 @@ export function getBuildings(data, items) {
             d.module_slots,
             Rational.from_float_approximate(d.energy_usage),
             null
-        ))
+        )
+        silo.partsRequired = Rational.from_float(d.rocket_parts_required)
+        buildings.push(silo)
     }
     for (let d of data.offshore_pumps) {
         // Pumping speed is given in units/tick.

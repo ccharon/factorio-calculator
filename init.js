@@ -11,6 +11,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
+// Entry point: loads the dataset and renders the calculator from the URL settings.
 import { getBelts } from "./belt.js"
 import { getBuildings } from "./building.js"
 import { spec } from "./factory.js"
@@ -24,10 +25,12 @@ import { getPlanets } from "./planet.js"
 import { getRecipes } from "./recipe.js"
 import { renderSettings } from "./settings.js"
 
-const DATASET = "data/space-age-2.0.55.json"
+const DATASET = "data/space-age-2.1.21.json"
 
+// Loads the dataset, builds the game model and renders all settings and the solution.
 function loadData(settings) {
     d3.json(DATASET, {cache: "reload"}).then(function(data) {
+        d3.select("#data_version").text(data.version)
         let items = getItems(data)
         let recipes = getRecipes(data, items)
         let planets = getPlanets(data, recipes)
@@ -45,6 +48,7 @@ function loadData(settings) {
     })
 }
 
+// Called once on page load.
 export function init() {
     let settings = loadSettings(window.location.hash)
     loadData(settings)

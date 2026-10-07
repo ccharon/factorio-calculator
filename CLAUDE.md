@@ -26,7 +26,7 @@ Node 20 or newer, dev only. Nothing from `node_modules` is shipped to the browse
 
 | Command | Effect |
 |---------|--------|
-| `npm install` | Installs ESLint and plugins. |
+| `npm install` | Installs the dev tools: ESLint, ajv, sharp, puppeteer-core. |
 | `npm run lint` | ESLint over all project JS. `third_party/`, `d3-sankey/` and `posts/` are excluded. |
 | `npm test` | Runs `tests/**/*.test.js` with `node --test`. |
 | `npm run check` | Lint and tests. Run before every commit. |
@@ -44,17 +44,23 @@ Node 20 or newer, dev only. Nothing from `node_modules` is shipped to the browse
 | Prototype data (Lua) | `data/base`, `data/space-age`, `data/quality`, `data/recycler` |
 | Changelog | `data/changelog.txt` |
 
-Do not modify the game directory. Dump into the scratchpad with a separate config and mod directory:
+Do not modify the game directory. `tools/build-data.js` only reads it.
+
+## Updating game data
 
 ```text
-S=<scratchpad>/fdump
-mkdir -p $S/mods $S/write
-printf '[path]\nread-data=/home/christian/Spiele/factorio/data\nwrite-data=%s/write\n' $S > $S/config.ini
-echo '{"mods":[{"name":"base","enabled":true},{"name":"elevated-rails","enabled":true},{"name":"quality","enabled":true},{"name":"recycler","enabled":true},{"name":"space-age","enabled":true}]}' > $S/mods/mod-list.json
-/home/christian/Spiele/factorio/bin/arm64/factorio -c $S/config.ini --mod-directory $S/mods --dump-data
+npm run build-data -- --factorio /home/christian/Spiele/factorio
 ```
 
-Output: `$S/write/script-output/data-raw-dump.json` (about 30 MB, full `data.raw`). Other useful flags: `--dump-icon-sprites`, `--dump-prototype-locale`.
+The script runs the game three times headless (`--dump-data`, `--dump-icon-sprites`, `--dump-prototype-locale`) with a temporary config and mod directory. It writes `data/space-age-<version>.json` and `images/sprite-sheet-<hash>.png`. Afterwards, point `DATASET` in `init.js` to the new file, delete the old dataset and sprite sheet, and run `npm run check`.
+
+| Option | Effect |
+|--------|--------|
+| `--factorio <dir>` | Game installation. Defaults to `FACTORIO_DIR`. |
+| `--dump <dir>` | Reuse an existing `script-output` directory instead of running the game. |
+| `--keep` | Keep the temporary dump and print its path. |
+
+The dataset format is defined in `data/schema.json`. `tests/dataset.test.js` validates every `data/space-age-*.json` against it and checks that all item references resolve. Change the schema, `tools/lib/convert.js` and the loaders together.
 
 ## Architecture
 
@@ -66,21 +72,27 @@ Output: `$S/write/script-output/data-raw-dump.json` (about 30 MB, full `data.raw
 | Settings and URL state | `settings.js` (render from settings map), `fragment.js` (serialize/parse URL hash) |
 | UI | `display.js`, `target.js`, `totals.js`, `dropdown.js`, `tooltip.js`, `events.js`, `align.js`, `color.js` |
 | Visualizer | `visualize.js`, `sankey.js`, `boxline2.js`, `d3-sankey/` |
-| Data generation | `tools/` (Node, see plan phase 2) |
-| Datasets | `data/*.json`, matching `images/sprite-sheet-<hash>.png` |
+| Data generation | `tools/build-data.js` (CLI), `tools/lib/factorio.js` (runs the game), `tools/lib/convert.js` (data.raw to dataset), `tools/lib/sprites.js` (sprite sheet, uses `sharp`) |
+| Datasets | `data/space-age-<version>.json`, `data/schema.json`, matching `images/sprite-sheet-<hash>.png` |
 
 Key facts:
 
 - All math uses exact rationals (`rational.js` on top of `BigInteger.min.js`). Never use floats in solver code. Convert data values with `Rational.from_float_approximate`.
 - Every setting must be handled in three places: its `render*` function in `settings.js`, serialization in `fragment.js`, and the default constant. Shared URLs must keep working.
 - `spec` is a module-level singleton, also exposed as `window.spec` for debugging.
-- Recipes in 2.1 have a `categories` list. The 2.0 `category` field and the combined `x-or-y` categories no longer exist.
+- Recipes in 2.1 have a `categories` list. The 2.0 `category` field and the combined `x-or-y` categories no longer exist. The loader uses only the first category until phase 3 of `PLAN.md`.
+- Product amounts in the dataset are expected values with probabilities and `extra_count_fraction` applied. `ignored_by_productivity` marks the part that productivity does not multiply.
 
 ## Conventions
 
 - Plain ES modules, no bundler, no framework. Third-party code lives in `third_party/` and is loaded via `<script>` tags.
 - 4-space indentation, no semicolons, double quotes. Match the surrounding file.
 - Chrome is the only browser for testing: the Chrome extension for visual checks, `puppeteer-core` with the installed Chrome for automated checks.
+- Documentation comments in every new or edited file:
+  - Every class gets a comment above it that says what it represents.
+  - Every exported function and every public method gets a comment above it that says what it does, its non-obvious parameters and what it returns.
+  - A file without classes gets a short comment at the top that says what the module is for.
+  - Add missing comments when you touch existing code. Code and comments must stay readable for a human reader.
 - Build DOM with d3 or `document.createElement` and `.text()`/`textContent`. Never use `innerHTML`, `.html()` or string-built markup with data values.
 - Commit messages: short imperative subject ending with a period, like the existing history.
 - Commit at every milestone (finished plan phase or step), after `npm run check` passes.

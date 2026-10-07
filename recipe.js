@@ -15,6 +15,7 @@ import { spec } from "./factory.js"
 import { Icon, sprites } from "./icon.js"
 import { Rational, zero, one } from "./rational.js"
 
+// An amount of an item that a recipe uses or produces per craft. amount is a Rational.
 export class Ingredient {
     constructor(item, amount) {
         this.item = item
@@ -22,6 +23,7 @@ export class Ingredient {
     }
 }
 
+// A surface property range that a recipe requires, such as pressure between 1000 and 1000.
 class SurfaceCondition {
     constructor(property, min, max) {
         this.property = property
@@ -30,6 +32,7 @@ class SurfaceCondition {
     }
 }
 
+// A crafting recipe. Also the base class for pseudo-recipes such as mining and pumping.
 class Recipe {
     constructor(key, name, order, col, row, allow_prod, category, time, ingredients, products, conditions) {
         this.key = key
@@ -56,6 +59,7 @@ class Recipe {
         this.icon_row = row
         this.icon = new Icon(this, products[0].item.name)
     }
+    // Returns the fuel a burner building burns per craft as an extra ingredient, or an empty list.
     fuelIngredient() {
         let building = spec.getBuilding(this)
         if (building === null || building.fuel === null || building.fuel !== "chemical") {
@@ -72,9 +76,11 @@ class Recipe {
         let fuelAmount = perCraftEnergy.div(spec.fuel.value)
         return [new Ingredient(spec.fuel.item, fuelAmount)]
     }
+    // Returns the ingredients including fuel.
     getIngredients() {
         return this.ingredients.concat(this.fuelIngredient())
     }
+    // Returns the amount of item produced per craft, including productivity.
     gives(item) {
         let prodEffect = spec.getProdEffect(this).sub(one)
         for (let ing of this.products) {
@@ -103,19 +109,24 @@ class Recipe {
         }
         return zero
     }
+    // Returns whether one craft produces more of item than it uses.
     isNetProducer(item) {
         let amount = this.gives(item)
         return zero.less(amount.sub(this.uses(item)))
     }
+    // Returns whether this recipe extracts a raw resource. Resources appear in the Resources tab.
     isResource() {
         return false
     }
+    // Returns true for game recipes and false for the solver's output and surplus nodes.
     isReal() {
         return true
     }
+    // Returns whether this is the DisabledRecipe of an item.
     isDisable() {
         return false
     }
+    // Returns a tooltip element with products, crafting time and ingredients.
     renderTooltip(extra) {
         let self = this
         let t = d3.create("div")
@@ -184,9 +195,11 @@ export class DisabledRecipe {
         this.icon_row = item.icon_row
         this.icon = new Icon(this)
     }
+    // Returns no ingredients. The item appears from nothing.
     getIngredients() {
         return this.ingredients
     }
+    // Returns one unit of the item, or null for any other item.
     gives(item) {
         for (let ing of this.products) {
             if (ing.item === item) {
@@ -195,17 +208,21 @@ export class DisabledRecipe {
         }
         return null
     }
+    // Returns false. Disabled items are not resources.
     isResource() {
         return false
     }
+    // Returns true. The visualizer shows disabled items as nodes.
     isReal() {
         return true
     }
+    // Marks this as the DisabledRecipe of an item.
     isDisable() {
         return true
     }
 }
 
+// Creates a Recipe from a dataset entry. Returns null if an ingredient is not a known item.
 function makeRecipe(data, items, d) {
     let time = Rational.from_float_approximate(d.energy_required)
     let products = []
@@ -238,7 +255,8 @@ function makeRecipe(data, items, d) {
         d.icon_col,
         d.icon_row,
         d.allow_productivity,
-        d.category,
+        // Machine selection uses one category per recipe: the first in the list.
+        d.categories[0],
         time,
         ingredients,
         products,
@@ -246,6 +264,7 @@ function makeRecipe(data, items, d) {
     )
 }
 
+// Pseudo-recipe for an item that no recipe produces. It supplies the item at a fixed priority.
 class ResourceRecipe extends Recipe {
     constructor(item, category, priority, weight) {
         super(
@@ -264,11 +283,13 @@ class ResourceRecipe extends Recipe {
         this.defaultPriority = priority
         this.defaultWeight = weight
     }
+    // Items without a recipe appear in the Resources tab.
     isResource() {
         return true
     }
 }
 
+// Pseudo-recipe that turns an item into its spoil result.
 class SpoilageRecipe extends Recipe {
     constructor(from_item, to_item) {
         let key = `${from_item.key}-spoilage`
@@ -289,6 +310,7 @@ class SpoilageRecipe extends Recipe {
     }
 }
 
+// Pseudo-recipe for growing a plant from its seed.
 class PlantRecipe extends Recipe {
     constructor(key, name, order, col, row, seed, results, conditions) {
         super(
@@ -310,11 +332,13 @@ class PlantRecipe extends Recipe {
             this.defaultWeight = Rational.from_float(100)
         }
     }
+    // Plants without surface conditions count as resources.
     isResource() {
         return this.conditions.length === 0
     }
 }
 
+// Pseudo-recipe for mining a solid resource with a mining drill.
 class MiningRecipe extends Recipe {
     constructor(key, name, order, col, row, category, miningTime, ingredients, products) {
         if (!ingredients) {
@@ -326,12 +350,14 @@ class MiningRecipe extends Recipe {
         this.defaultPriority = 1
         this.defaultWeight = Rational.from_float(100)
     }
+    // Mined resources appear in the Resources tab.
     isResource() {
         return true
     }
 }
 
-// XXX: Still a hack.
+// Pseudo-recipe for a fluid resource such as crude oil. It has no building, so the calculator
+// shows no pumpjack count.
 class PumpjackRecipe extends Recipe {
     constructor(key, name, col, row, category, product) {
         super(
@@ -350,11 +376,13 @@ class PumpjackRecipe extends Recipe {
         this.defaultPriority = 1
         this.defaultWeight = Rational.from_float(100)
     }
+    // Fluid resources appear in the Resources tab.
     isResource() {
         return true
     }
 }
 
+// Pseudo-recipe for pumping a fluid from a lake or ocean.
 class OffshorePumpRecipe extends Recipe {
     //constructor(key, name, order, col, row, allow_prod, category, time, ingredients, products) {
     constructor(key, name, order, col, row, product) {
@@ -363,11 +391,13 @@ class OffshorePumpRecipe extends Recipe {
         this.defaultPriority = 0
         this.defaultWeight = Rational.from_float(100)
     }
+    // Pumped fluids appear in the Resources tab.
     isResource() {
         return true
     }
 }
 
+// Returns water used and steam produced per second by one boiler.
 function getSteam(data) {
     let R = Rational.from_float
     let boilerDef
@@ -401,6 +431,8 @@ function getSteam(data) {
     return [waterRate, steamRate]
 }
 
+// Creates all recipes from the dataset, plus pseudo-recipes for mining, pumping, plants,
+// spoilage, the nuclear reactor and the boiler. Removes items that no recipe produces or uses.
 export function getRecipes(data, items) {
     let hundred = Rational.from_float(100)
     let recipes = new Map()

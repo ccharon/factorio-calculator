@@ -74,6 +74,8 @@ Done. Lint passes. Chrome check on the 2.0.55 Space Age dataset shows no console
 
 ## Phase 2: Data pipeline
 
+Done. `npm run build-data` generates `data/space-age-2.1.21.json` and the sprite sheet. `data/schema.json` defines the format. Known limitations until phase 3: the loader uses only the first recipe category, and burner machines always burn the preferred chemical fuel.
+
 1. New `tools/build-data.js`: runs Factorio `--dump-data` and `--dump-icon-sprites` against the local install, writes `data/space-age-<version>.json` and the sprite sheet. Uses `sharp` for scaling and compositing icons.
 2. Read localized names from `--dump-prototype-locale`.
 3. Normalize in the script: power strings to numbers, product amounts including `extra_count_fraction`, `amount_min/max`, both probability types.
