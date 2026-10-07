@@ -62,7 +62,7 @@ Do not modify the game directory. `tools/build-data.js` only reads it.
 npm run build-data -- --factorio /home/christian/Spiele/factorio
 ```
 
-The script runs the game three times headless (`--dump-data`, `--dump-icon-sprites`, `--dump-prototype-locale`) with a temporary config and mod directory. It writes `public/data/space-age-<version>.json` and `public/images/sprite-sheet-<hash>.png`. Afterwards, point `DATASET` in `src/main.js` to the new file, delete the old dataset and sprite sheet, and run `npm run check`.
+The script runs the game three times headless (`--dump-data`, `--dump-icon-sprites`, `--dump-prototype-locale`) with a temporary config and mod directory. It writes `public/data/space-age-<version>.json` and `public/images/sprite-sheet-<hash>.png`. Afterwards, point `DATASET` in `src/main.ts` to the new file, delete the old dataset and sprite sheet, and run `npm run check`.
 
 | Option | Effect |
 |--------|--------|
@@ -76,20 +76,20 @@ The dataset format is defined in `src/data/dataset.schema.json`. `tests/dataset.
 
 | Area | Files |
 |------|-------|
-| Entry point | `index.html`, `src/main.js` |
+| Entry point | `index.html`, `src/main.ts` |
 | Core math and solver, no DOM | `src/core/`: `rational.ts`, `matrix.ts`, `simplex.ts`, `solve.ts` (with the `SolverContext` interface), `cycle.ts`, `totals.ts`, `sort.ts` |
 | Game data loading | `src/data/`: `dataset.ts` (types of the dataset JSON), `dataset.schema.json`, `item.ts`, `recipe.ts`, `building.ts`, `module.ts`, `belt.ts`, `fuel.ts`, `planet.ts`, `group.ts`, `groups.ts` |
 | State and URL settings | `src/state/`: `factory.ts` (`FactorySpecification`, global `spec`), `fragment.ts` (writes the settings string), `url-codec.ts` (parses and compresses the URL fragment), `priority.ts`, `align.ts` (number formatting) |
-| UI | `src/ui/`: `display.js`, `target.js`, `settings.js`, `dropdown.js`, `module-dropdown.js`, `tooltip.ts`, `events.js`, `icon.ts`, `energy.ts`, `color.js`, `debug.js` |
-| Visualizer | `src/visualize/`: `visualize.js`, `sankey.js`, `boxline.js`, `graph.js`, `circlepath.js`, `d3-sankey/` (modified copy of d3-sankey) |
+| UI | `src/ui/`: `display.ts`, `target.ts`, `settings.ts`, `dropdown.ts`, `module-dropdown.ts`, `tooltip.ts`, `events.ts`, `icon.ts`, `energy.ts`, `color.ts`, `debug.ts` |
+| Visualizer | `src/visualize/`: `visualize.ts` (builds the graph), `graph.ts` (graph types, colors, node rendering), `sankey.ts`, `sankey-layout.ts` (adapted d3-sankey layout, BSD-3), `boxline.ts` (dagre), `circlepath.ts` |
 | Styles | `src/styles/` |
 | Static files | `public/`: dataset, sprite sheet, SVG icons, favicon. Copied unchanged into `dist/`. |
 | Data generation | `tools/build-data.js` (CLI), `tools/lib/factorio.js` (runs the game), `tools/lib/convert.js` (data.raw to dataset), `tools/lib/sprites.js` (sprite sheet, uses `sharp`) |
 
 Key facts:
 
-- All math uses exact rationals (`src/core/rational.js`). Never use floats in solver code. Convert data values with `Rational.from_float_approximate`.
-- Every setting must be handled in three places: its `render*` function in `src/ui/settings.js`, serialization in `src/state/fragment.js`, and the default constant. Shared URLs must keep working.
+- All math uses exact rationals (`src/core/rational.ts`). Never use floats in solver code. Convert data values with `Rational.from_float_approximate`.
+- Every setting must be handled in three places: its `render*` function in `src/ui/settings.ts`, serialization in `src/state/fragment.ts`, and the default constant. Shared URLs must keep working.
 - `spec` is a module-level singleton, also exposed as `window.spec` for debugging.
 - Recipes in 2.1 have a `categories` list. The 2.0 `category` field and the combined `x-or-y` categories no longer exist. The loader uses only the first category until phase 4 of `PLAN.md`.
 - Product amounts in the dataset are expected values with probabilities and `extra_count_fraction` applied. `ignored_by_productivity` marks the part that productivity does not multiply.
@@ -104,7 +104,7 @@ Key facts:
   - `import type` for type-only imports. Imports of ported files use the `.ts` extension.
   - `readonly` for fields that never change after construction.
   - Compiler options are strict, including `noUncheckedIndexedAccess`. A missing map or array entry is handled explicitly, usually by throwing an `Error` with the missing key.
-- Files in `src/` are JavaScript until their phase 3 port to TypeScript. Type-aware lint rules that need types are relaxed for `src/**/*.js` in `.oxlintrc.json`.
+- All files in `src/` are TypeScript (`allowJs` is off). Tests and tools stay JavaScript.
 - 4-space indentation, no semicolons, double quotes. Match the surrounding file.
 - Lines may be up to 160 characters. Do not wrap for an 80-column limit.
 - Method chains (d3 selections, array pipelines) stay on one line as long as they fit in 160 characters. Break a chain only when it is longer, and then one call per line.

@@ -18,7 +18,7 @@ import { Rational } from "../core/rational.ts"
 import type { Item } from "../data/item.ts"
 import type { DisplayFormat } from "../state/align.ts"
 import { spec } from "../state/factory.ts"
-import { renderTotals } from "../visualize/visualize.js"
+import { renderTotals } from "../visualize/visualize.ts"
 import { setTitle } from "./settings.ts"
 
 export const TAB_NAMES = ["totals", "graph", "resources", "settings", "faq", "about", "debug"] as const

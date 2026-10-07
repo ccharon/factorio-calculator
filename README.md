@@ -35,7 +35,7 @@ npm run build-data -- --factorio /path/to/factorio
 | `--dump` | path | none | Reuse an existing `script-output` directory instead of running the game. |
 | `--keep` | flag | off | Keep the temporary dump directory. |
 
-The script writes `public/data/space-age-<version>.json` and `public/images/sprite-sheet-<hash>.png`. The format is defined in `src/data/dataset.schema.json`. Set `DATASET` in `src/main.js` to the new file.
+The script writes `public/data/space-age-<version>.json` and `public/images/sprite-sheet-<hash>.png`. The format is defined in `src/data/dataset.schema.json`. Set `DATASET` in `src/main.ts` to the new file.
 
 ## Checks
 

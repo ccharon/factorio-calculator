@@ -55,22 +55,6 @@
       "env": {
         "node": true
       }
-    },
-    {
-      "files": [
-        "src/visualize/d3-sankey/**"
-      ],
-      "rules": {
-        "unicorn/no-new-array": "off"
-      }
-    },
-    {
-      "files": [
-        "src/**/*.js"
-      ],
-      "rules": {
-        "typescript/restrict-template-expressions": "off"
-      }
     }
   ]
 }
