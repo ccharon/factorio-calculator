@@ -178,18 +178,18 @@ Also: modernize CSS (custom properties already partly used by `color.js`), keybo
 
 ## Phase 7: Documentation
 
-Rewrite README per the writing rules, update changelog, keep CLAUDE.md current.
+Done: README, FAQ and About describe the current feature set and limitations. No changelog; the git history serves as one.
 
 ## Handoff (state at the end of the last session)
 
-Branch `develop`, everything committed and pushed. Phases 0 to 5 are done (phase 5 with global quality only).
+Branch `develop`, everything committed, not pushed. Phases 0 to 7 and 6a are done; phase 5 has global quality only.
 
 Next steps:
 
-1. Phase 6 (robustness and security), done: CSP meta tag in the build (Vite plugin in `vite.config.js`), ignored URL settings shown on the page (`src/ui/warnings.ts`), custom code replaced by standard means (stable `Array.sort` in `sorted()`, native base64, `d3.zoom` for the visualizer, popover and CSS anchor positioning for tooltips; `@floating-ui/dom` removed). Negative numbers in URL settings are rejected with a visible warning. Keyboard access: planet and recipe toggles are `<button>` with `aria-pressed`; priority list icons are focusable images (a `<button>` blocks dragging in Chrome), arrow keys select and move them. Drag and drop cannot be tested automatically (neither the Chrome extension nor headless Chrome start a native drag); ask the user to try it. Icon dropdowns are popovers placed with anchor positioning, open with Enter, and apply arrow-key choices on close (the module callback rebuilds the table). Number inputs go through `readRational()` in `src/ui/number-input.ts` (rejects text, negatives and zero denominators with the browser's validation message). `align.ts` stays: Chrome has no CSS decimal alignment, and the exact decimals come from `Rational`. CSS: color schemes are `:root[data-color-scheme]` rules in `calc.css`, tabs use flexbox, unused and invalid rules are gone; screenshots of all tabs in both schemes are unchanged. Phase 6 is done.
-2. Later, from phase 5: quality per recipe, recycling loops for a target quality, reactor neighbour bonus.
-3. Phase 6a: done.
-4. Phase 7: README and changelog.
+1. Push `develop` when the user asks, then merge into `main` for a release.
+2. From phase 5: quality per recipe, recycling loops for a target quality, reactor neighbour bonus.
+
+Notes on phase 6: drag and drop in the Resources tab cannot be tested automatically (neither the Chrome extension nor headless Chrome start a native drag); ask the user to try it. Number inputs go through `readRational()` in `src/ui/number-input.ts`. `align.ts` stays because Chrome has no CSS decimal alignment.
 
 Working notes:
 
