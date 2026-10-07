@@ -53,8 +53,8 @@ function toggleDropdown(element: Element): void {
  * Appends a dropdown to each element of selector. Returns the selection of the dropdown content
  * divs, which take the inputs.
  */
-export function makeDropdown<Datum, PElement extends d3.BaseType, PDatum>(
-    selector: d3.Selection<HTMLElement, Datum, PElement, PDatum>,
+export function makeDropdown<GElement extends HTMLElement, Datum, PElement extends d3.BaseType, PDatum>(
+    selector: d3.Selection<GElement, Datum, PElement, PDatum>,
     onOpen?: DropdownCallback,
     onClose?: DropdownCallback,
 ): d3.Selection<HTMLDivElement, Datum, PElement, PDatum> {
@@ -88,13 +88,13 @@ let inputId = 0
  * @param checked - Returns whether an input is the selected one.
  * @param callback - Called with the datum when an input is selected.
  */
-export function addInputs<Datum, PElement extends d3.BaseType, PDatum>(
-    selector: d3.Selection<HTMLElement, Datum, PElement, PDatum>,
+export function addInputs<GElement extends HTMLElement, Datum, PElement extends d3.BaseType, PDatum>(
+    selector: d3.Selection<GElement, Datum, PElement, PDatum>,
     name: string | ((d: Datum) => string),
     checked: (d: Datum) => boolean,
     callback: (d: Datum) => void,
 ): d3.Selection<HTMLLabelElement, Datum, PElement, PDatum> {
-    const ids = new Map<HTMLElement, string>()
+    const ids = new Map<Element, string>()
     selector.each(function () {
         ids.set(this, `input-${inputId++}`)
     })
@@ -104,13 +104,13 @@ export function addInputs<Datum, PElement extends d3.BaseType, PDatum>(
             callback(d)
         })
         .attr("id", function () {
-            return ids.get(this.parentNode as HTMLElement) ?? ""
+            return this.parentElement === null ? "" : ids.get(this.parentElement) ?? ""
         })
         .attr("name", typeof name === "string" ? name : d => name(d))
         .attr("type", "radio")
         .property("checked", checked)
     return selector.append("label")
         .attr("for", function () {
-            return ids.get(this.parentNode as HTMLElement) ?? ""
+            return this.parentElement === null ? "" : ids.get(this.parentElement) ?? ""
         })
 }

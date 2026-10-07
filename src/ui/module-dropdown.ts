@@ -40,8 +40,8 @@ export interface ModuleCell {
  * Renders one module dropdown per cell into selector. data is a list of cells or a function
  * that returns the cells for the selector's datum.
  */
-export function moduleDropdown<Datum, PElement extends d3.BaseType, PDatum>(
-    selector: d3.Selection<HTMLElement, Datum, PElement, PDatum>,
+export function moduleDropdown<GElement extends HTMLElement, Datum, PElement extends d3.BaseType, PDatum>(
+    selector: d3.Selection<GElement, Datum, PElement, PDatum>,
     data: readonly ModuleCell[] | ((d: Datum) => readonly ModuleCell[]),
 ): void {
     const wrappers = selector.selectAll<HTMLSpanElement, ModuleCell>("span.module-wrapper")

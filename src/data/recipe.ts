@@ -72,6 +72,11 @@ export interface RecipeLike extends RecipeNode, IconSource {
     isDisable(): boolean
 }
 
+/** Returns whether node is a recipe. The solver's output nodes are the only RecipeNodes without a key. */
+export function isRecipeLike(node: RecipeNode): node is RecipeLike {
+    return "key" in node && "category" in node
+}
+
 /** Constructor options of Recipe. */
 export interface RecipeOptions {
     key: string

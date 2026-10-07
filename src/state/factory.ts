@@ -22,11 +22,11 @@ import type { ItemGroups } from "../data/group.ts"
 import type { Item } from "../data/item.ts"
 import { type Module, type ModuleDefaults, ModuleSpec } from "../data/module.ts"
 import type { Planet } from "../data/planet.ts"
-import { DISABLED_RECIPE_PREFIX, Recipe, type RecipeLike, type RecipeNode } from "../data/recipe.ts"
+import { DISABLED_RECIPE_PREFIX, Recipe, type RecipeLike, type RecipeNode, isRecipeLike } from "../data/recipe.ts"
 import { renderDebug } from "../ui/debug.ts"
-import { displayItems } from "../ui/display.js"
+import { displayItems } from "../ui/display.ts"
 import { currentTab } from "../ui/events.ts"
-import { BuildTarget } from "../ui/target.js"
+import { BuildTarget } from "../ui/target.ts"
 import { reapTooltips } from "../ui/tooltip.ts"
 import { renderTotals } from "../visualize/visualize.js"
 import { Formatter } from "./align.ts"
@@ -147,11 +147,6 @@ export interface PowerUsage {
 export interface NetDisable {
     disable: ReadonlySet<Recipe>
     enable: ReadonlySet<Recipe>
-}
-
-// The solver's output nodes are the only RecipeNodes without a key.
-function isRecipeLike(node: RecipeNode): node is RecipeLike {
-    return "key" in node && "category" in node
 }
 
 function required<T>(value: T | null, name: string): T {
