@@ -12,7 +12,6 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.*/
-import * as d3 from "d3"
 import { Rational, zero, one } from "../core/rational.ts"
 import { type Output, type SolverDebug, solve } from "../core/solve.ts"
 import type { Totals } from "../core/totals.ts"
@@ -25,136 +24,27 @@ import { type Module, type ModuleDefaults, ModuleSpec } from "../data/module.ts"
 import type { Planet } from "../data/planet.ts"
 import type { ProductivityResearch } from "../data/research.ts"
 import { Quality } from "../data/quality.ts"
-import { DISABLED_RECIPE_PREFIX, ELECTRICITY, ELECTRICITY_UNIT, HEAT, Ingredient, Recipe, type RecipeContext, type RecipeLike, type RecipeNode } from "../data/recipe.ts"
+import { DISABLED_RECIPE_PREFIX, ELECTRICITY, HEAT, type Ingredient, Recipe, type RecipeContext, type RecipeLike, type RecipeNode } from "../data/recipe.ts"
 import { renderDebug } from "../ui/debug.ts"
 import { displayItems } from "../ui/display.ts"
 import { currentTab } from "../ui/events.ts"
 import { renderPriorities } from "../ui/priority-view.ts"
-import { BuildTarget } from "../ui/target.ts"
+import type { BuildTarget } from "../ui/target.ts"
 import { reapTooltips } from "../ui/tooltip.ts"
 import { renderTotals } from "../visualize/visualize.ts"
 import { Formatter } from "./align.ts"
+import { type BuildingGroup, getBuildingGroups } from "./building-groups.ts"
+import { type PowerUsage, getEnergyIngredients, getPowerUsage } from "./energy.ts"
+import { FuelChoice } from "./fuel-choice.ts"
 import { formatSettings } from "./fragment.ts"
 import { PriorityList, type PriorityLevelMap } from "./priority.ts"
 import { encodeSettings } from "./url-codec.ts"
 
-const DEFAULT_ITEM_KEY = "advanced-circuit"
-
 export const DEFAULT_PLANET = "nauvis"
 export const DEFAULT_BELT = "transport-belt"
-export const DEFAULT_FUEL = "coal"
-const DEFAULT_BUILDINGS = new Set([
-    "assembling-machine-1",
-    "electric-furnace",
-    "electric-mining-drill",
-])
-
 const hundred = Rational.from_float(100)
 const NORMAL_QUALITY = new Quality("normal", "Normal", 0, 0, 0)
 const ten = Rational.from_float(10)
-
-/** Sorts buildings in place from slowest to fastest. */
-export function buildingSort(buildings: Building[]): void {
-    buildings.sort((a, b) => (a.less(b) ? -1 : b.less(a) ? 1 : 0))
-}
-
-/** The buildings that can craft a recipe. Recipes with the same buildings share a group and its selected building. */
-export class BuildingGroup {
-    /** The building keys joined with "+", in the order of the dataset. Identifies the group in the URL. */
-    readonly key: string
-    /** From slowest to fastest. */
-    readonly buildings: Building[]
-    /** The category that most recipes of the group list first. The game lists the main category first. */
-    readonly primaryCategory: string
-    /** The selected building. */
-    building: Building
-
-    constructor(buildings: readonly Building[], primaryCategory: string) {
-        this.key = buildings.map(b => b.key).join("+")
-        this.buildings = Array.from(buildings)
-        buildingSort(this.buildings)
-        this.primaryCategory = primaryCategory
-        this.building = this.getDefault()
-    }
-
-    /** Returns the default building among those with the primary category: one of DEFAULT_BUILDINGS, or the slowest. */
-    getDefault(): Building {
-        const primary = this.buildings.filter(b => b.categories.has(this.primaryCategory))
-        const building = primary.find(b => DEFAULT_BUILDINGS.has(b.key)) ?? primary[0] ?? this.buildings[0]
-        if (building === undefined) {
-            throw new Error("empty building group")
-        }
-        return building
-    }
-
-    /**
-     * Returns the building to use where only some buildings work: the selected one if it works,
-     * otherwise the next faster one that works, otherwise the fastest one that works, or null.
-     */
-    getBuilding(works: (building: Building) => boolean): Building | null {
-        let b: Building | null = null
-        for (const building of this.buildings) {
-            if (works(building)) {
-                b = building
-                if (building === this.building || this.building.less(building)) {
-                    return building
-                }
-            }
-        }
-        return b
-    }
-}
-
-// Groups the recipes by the set of buildings that can craft them. Recipes without a building have no group.
-function getBuildingGroups(buildings: readonly Building[], recipes: Iterable<Recipe>): [Map<string, BuildingGroup>, Map<Recipe, BuildingGroup>] {
-    const members = new Map<string, Building[]>()
-    const firstCategories = new Map<string, Map<string, number>>()
-    const recipeKeys = new Map<Recipe, string>()
-    for (const recipe of recipes) {
-        const [first] = recipe.categories
-        if (first === undefined) {
-            continue
-        }
-        const craftable = buildings.filter(b => b.canCraft(recipe))
-        if (craftable.length === 0) {
-            throw new Error(`no building for recipe ${recipe.key}`)
-        }
-        const key = craftable.map(b => b.key).join("+")
-        members.set(key, craftable)
-        recipeKeys.set(recipe, key)
-        const counts = firstCategories.get(key) ?? new Map<string, number>()
-        counts.set(first, (counts.get(first) ?? 0) + 1)
-        firstCategories.set(key, counts)
-    }
-
-    const groups = new Map<string, BuildingGroup>()
-    for (const [key, craftable] of members) {
-        let primary = ""
-        let max = 0
-        for (const [category, count] of firstCategories.get(key) ?? []) {
-            if (count > max) {
-                primary = category
-                max = count
-            }
-        }
-        groups.set(key, new BuildingGroup(craftable, primary))
-    }
-    const recipeGroups = new Map<Recipe, BuildingGroup>()
-    for (const [recipe, key] of recipeKeys) {
-        const group = groups.get(key)
-        if (group !== undefined) {
-            recipeGroups.set(recipe, group)
-        }
-    }
-    return [groups, recipeGroups]
-}
-
-/** Power use of a recipe: the fuel category of burner buildings, "electric", or null without building. */
-export interface PowerUsage {
-    fuel: string | null
-    /** W, or for burner buildings J/s of fuel. */
-    power: Rational
-}
 
 /** Recipes disabled and enabled relative to the planet selection, as stored in the URL. */
 export interface NetDisable {
@@ -184,10 +74,8 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
     recipeGroups: Map<Recipe, BuildingGroup> = new Map()
     buildingKeys: Map<string, Building> = new Map()
     belts: Map<string, Belt> = new Map()
-    /** All fuels by key, from lowest to highest fuel value. */
-    fuels: Map<string, Fuel> = new Map()
-    /** Selected fuel per fuel category. Categories without an entry burn their default fuel. */
-    readonly selectedFuels: Map<string, Fuel> = new Map()
+    /** The fuels and the fuel chosen per fuel category. */
+    readonly fuel: FuelChoice = new FuelChoice()
     itemGroups: ItemGroups = []
 
     buildTargets: BuildTarget[] = []
@@ -244,57 +132,12 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
         this.beltValue = belt
     }
 
-    /** Returns the fuels of a fuel category, from lowest to highest fuel value. */
-    fuelsOf(category: string): Fuel[] {
-        return Array.from(this.fuels.values()).filter(f => f.categories.has(category))
-    }
-
-    /** Returns the default fuel of category: DEFAULT_FUEL if it belongs to it, otherwise the one with the lowest fuel value. */
-    getDefaultFuel(category: string): Fuel {
-        const fuels = this.fuelsOf(category)
-        const fuel = fuels.find(f => f.key === DEFAULT_FUEL) ?? fuels[0]
-        if (fuel === undefined) {
-            throw new Error(`no fuel of category ${category}`)
-        }
-        return fuel
-    }
-
-    /** Returns the fuel that buildings of a fuel category burn. */
-    getFuel(category: string): Fuel {
-        return this.selectedFuels.get(category) ?? this.getDefaultFuel(category)
-    }
-
     /**
      * Returns the fuel or electricity the building of recipe uses per craft, or an empty list.
-     * Electricity includes module effects and the idle drain of the buildings in use. On planets that
-     * require heating, buildings also use heat.
+     * Required by RecipeContext.
      */
     getEnergyIngredients(recipe: Recipe): Ingredient[] {
-        const building = this.getBuilding(recipe)
-        const baseRate = this.getRecipeRate(recipe)
-        if (building === null || baseRate === null) {
-            return []
-        }
-        const heating = this.requiresHeating() && !building.heatingEnergy.isZero()
-            ? [new Ingredient(this.heat, building.heatingEnergy.div(baseRate).div(ELECTRICITY_UNIT))]
-            : []
-        if (building.power.isZero()) {
-            return heating
-        }
-
-        // craft/s and J/s give J/craft. Divided by J/item, that is items per craft.
-        if (building.fuel !== null) {
-            const fuel = this.getFuel(building.fuel)
-            return [new Ingredient(fuel.item, building.power.div(baseRate).div(fuel.value)), ...heating]
-        }
-        const powerEffect = this.getModuleSpec(recipe)?.powerEffect(this) ?? one
-        const watts = building.power.mul(powerEffect).add(building.drain())
-        return [new Ingredient(this.electricity, watts.div(baseRate).div(ELECTRICITY_UNIT)), ...heating]
-    }
-
-    /** Returns whether buildings need heat: every selected planet requires heating. */
-    requiresHeating(): boolean {
-        return this.selectedPlanets.size > 0 && Array.from(this.selectedPlanets).every(p => p.requiresHeating)
+        return getEnergyIngredients(this, recipe)
     }
 
     /** Returns the fuel, electricity and heat that the building of recipe uses. */
@@ -307,7 +150,7 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
         return required(this.items.get(HEAT) ?? null, "heat")
     }
 
-    /** The abstract item for electric energy, in joules. */
+    /** The abstract item for electric energy, in MJ. */
     get electricity(): Item {
         return required(this.items.get(ELECTRICITY) ?? null, "electricity")
     }
@@ -342,8 +185,7 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
 
         this.belts = belts
         this.beltValue = belts.get(DEFAULT_BELT) ?? null
-        this.fuels = fuels
-        this.selectedFuels.clear()
+        this.fuel.setFuels(fuels)
 
         this.miningProd = zero
         this.itemGroups = itemGroups
@@ -779,47 +621,14 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
         return building.getCount(this, recipe, rate)
     }
 
+    /** Returns the power use of recipe at rate crafts per second, including module effects and idle drain. */
+    getPowerUsage(recipe: RecipeNode, rate: Rational): PowerUsage {
+        return getPowerUsage(this, recipe, rate)
+    }
+
     /** Returns the number of belts needed for rate items per second. */
     getBeltCount(rate: Rational): Rational {
         return rate.div(this.belt.rate)
-    }
-
-    /** Returns the power use of recipe at rate crafts per second, including module effects and idle drain. */
-    getPowerUsage(recipe: RecipeNode, rate: Rational): PowerUsage {
-        const building = this.getBuilding(recipe)
-        if (building === null) {
-            return { fuel: null, power: zero }
-        }
-
-        const count = this.getCount(recipe, rate)
-        if (building.fuel !== null) {
-            return { fuel: building.fuel, power: building.power.mul(count) }
-        }
-
-        const powerEffect = this.getModuleSpec(recipe)?.powerEffect(this) ?? one
-        const power = building.power.mul(count).mul(powerEffect).add(building.drain().mul(count.ceil()))
-        return { fuel: "electric", power }
-    }
-
-    /** Adds a build target for itemKey, or for the default item. Returns the target. */
-    addTarget(itemKey: string = DEFAULT_ITEM_KEY): BuildTarget {
-        const item = this.items.get(itemKey)
-        if (item === undefined) {
-            throw new Error(`unknown item: ${itemKey}`)
-        }
-        const target = new BuildTarget(this.buildTargets.length, itemKey, item, this.itemGroups)
-        this.buildTargets.push(target)
-        d3.select("#targets").insert(() => target.element, "#plusButton")
-        return target
-    }
-
-    /** Removes a build target and its element. */
-    removeTarget(target: BuildTarget): void {
-        this.buildTargets.splice(target.index, 1)
-        for (const later of this.buildTargets.slice(target.index)) {
-            later.index--
-        }
-        d3.select(target.element).remove()
     }
 
     /** Toggles whether item is ignored, which means it is supplied from outside the factory. */

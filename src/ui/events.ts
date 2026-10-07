@@ -23,6 +23,7 @@ import { renderTotals } from "../visualize/visualize.ts"
 import { readRational } from "./number-input.ts"
 import { focusFirstResource } from "./priority-view.ts"
 import { setTitle } from "./settings.ts"
+import { addTarget } from "./target.ts"
 
 export const TAB_NAMES = ["totals", "graph", "resources", "settings", "faq", "about", "debug"] as const
 export type TabName = typeof TAB_NAMES[number]
@@ -48,7 +49,7 @@ function inputValue(event: Event): string {
 
 /** Adds a build target for the default item. */
 export function plusHandler(): void {
-    spec.addTarget()
+    addTarget()
     spec.updateSolution()
 }
 

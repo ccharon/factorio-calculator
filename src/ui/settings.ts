@@ -33,7 +33,8 @@ import type { Recipe, RecipeLike } from "../data/recipe.ts"
 import {
     DEFAULT_RATE, DEFAULT_RATE_PRECISION, DEFAULT_COUNT_PRECISION, DEFAULT_FORMAT, type DisplayFormat, isRateName, longRateNames, type RateName,
 } from "../state/align.ts"
-import { type BuildingGroup, DEFAULT_PLANET, DEFAULT_BELT, spec } from "../state/factory.ts"
+import type { BuildingGroup } from "../state/building-groups.ts"
+import { DEFAULT_PLANET, DEFAULT_BELT, spec } from "../state/factory.ts"
 import type { Settings } from "../state/url-codec.ts"
 import { type ColorScheme, colorSchemes } from "./color.ts"
 import {
@@ -43,6 +44,7 @@ import {
 import { type ModuleCell, type ModuleInput, moduleDropdown } from "./module-dropdown.ts"
 import { iconOf } from "./icons.ts"
 import { readRational } from "./number-input.ts"
+import { addTarget } from "./target.ts"
 import { warnUrl } from "./warnings.ts"
 
 const hundred = Rational.from_float(100)
@@ -99,7 +101,7 @@ function renderTargets(settings: Settings): void {
 
     const targets = splitList(settings.get("items"))
     if (targets.length === 0) {
-        spec.addTarget()
+        addTarget()
         return
     }
 
@@ -122,21 +124,21 @@ function renderTargets(settings: Settings): void {
             if (parseRational(value, "building count") === null) {
                 continue
             }
-            const target = spec.addTarget(itemKey)
+            const target = addTarget(itemKey)
             target.setBuildings(value, recipe)
             target.displayRecipes()
         } else if (type === "r") {
             if (parseRational(value, "rate") === null) {
                 continue
             }
-            spec.addTarget(itemKey).setRate(value)
+            addTarget(itemKey).setRate(value)
         } else {
             warn("unknown target type", targetString)
         }
     }
 
     if (spec.buildTargets.length === 0) {
-        spec.addTarget()
+        addTarget()
     }
 }
 
@@ -514,32 +516,32 @@ function renderBelts(settings: Settings): void {
 // fuel
 
 function renderFuel(settings: Settings): void {
-    spec.selectedFuels.clear()
+    spec.fuel.selected.clear()
     // Each entry is a fuel key. It selects the fuel for each of its categories.
     for (const key of splitList(settings.get("fuel"))) {
-        const fuel = spec.fuels.get(key)
+        const fuel = spec.fuel.fuels.get(key)
         if (fuel === undefined) {
             warn("unknown fuel", key)
             continue
         }
         for (const category of fuel.categories) {
-            spec.selectedFuels.set(category, fuel)
+            spec.fuel.selected.set(category, fuel)
         }
     }
 
     // One row per fuel category that a burner building uses and that offers a choice.
     const used = new Set(Array.from(spec.buildingKeys.values(), b => b.fuel).filter(c => c !== null))
-    const categories = Array.from(used).filter(c => spec.fuelsOf(c).length > 1).sort()
+    const categories = Array.from(used).filter(c => spec.fuel.fuelsOf(c).length > 1).sort()
     const div = d3.select("#fuel_selector")
     div.selectAll("*").remove()
     const rows = div.selectAll<HTMLDivElement, string>("div").data(categories).join("div").classed("radio-setting", true)
     radioSetting<HTMLDivElement, Fuel, string>(
         rows,
         category => `fuel_${category}`,
-        category => spec.fuelsOf(category),
-        (fuel, category) => fuel === spec.getFuel(category),
+        category => spec.fuel.fuelsOf(category),
+        (fuel, category) => fuel === spec.fuel.get(category),
         (fuel, category) => {
-            spec.selectedFuels.set(category, fuel)
+            spec.fuel.selected.set(category, fuel)
             spec.updateSolution()
         },
     )

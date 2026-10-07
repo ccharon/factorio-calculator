@@ -327,7 +327,7 @@ function fuelOf(d: DisplayRow): Fuel {
     if (category === null) {
         throw new Error("row without fuel")
     }
-    return spec.getFuel(category)
+    return spec.fuel.get(category)
 }
 
 function buildingOf(d: { readonly building: Building | null }): Building {

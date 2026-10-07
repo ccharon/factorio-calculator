@@ -99,8 +99,8 @@ export function formatSettings(excludeTitle = false, overrideTab?: string, targe
         add("belt", spec.belt.key)
     }
     const fuels = new Set<string>()
-    for (const [category, fuel] of spec.selectedFuels) {
-        if (fuel !== spec.getDefaultFuel(category)) {
+    for (const [category, fuel] of spec.fuel.selected) {
+        if (fuel !== spec.fuel.getDefault(category)) {
             fuels.add(fuel.key)
         }
     }

@@ -91,6 +91,8 @@ function searchTargets(event: KeyboardEvent): void {
     }
 }
 
+const DEFAULT_ITEM_KEY = "advanced-circuit"
+
 let targetCount = 0
 let recipeSelectorCount = 0
 
@@ -128,7 +130,7 @@ export class BuildTarget {
 
         const element = d3.create("li").classed("target", true)
         element.append("button").classed("targetButton ui", true).text("x").attr("title", "Remove this item.").on("click", () => {
-            spec.removeTarget(this)
+            removeTarget(this)
             spec.updateSolution()
         })
         this.element = element.node() as HTMLLIElement
@@ -317,4 +319,25 @@ export class BuildTarget {
         this.rateInput.value = rate
         this.rateChanged()
     }
+}
+
+/** Adds a build target for itemKey, or for the default item, to spec and to the page. Returns the target. */
+export function addTarget(itemKey: string = DEFAULT_ITEM_KEY): BuildTarget {
+    const item = spec.items.get(itemKey)
+    if (item === undefined) {
+        throw new Error(`unknown item: ${itemKey}`)
+    }
+    const target = new BuildTarget(spec.buildTargets.length, itemKey, item, spec.itemGroups)
+    spec.buildTargets.push(target)
+    d3.select("#targets").insert(() => target.element, "#plusButton")
+    return target
+}
+
+/** Removes a build target from spec and from the page. */
+export function removeTarget(target: BuildTarget): void {
+    spec.buildTargets.splice(target.index, 1)
+    for (const later of spec.buildTargets.slice(target.index)) {
+        later.index--
+    }
+    d3.select(target.element).remove()
 }

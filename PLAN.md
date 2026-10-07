@@ -173,7 +173,7 @@ Also: modernize CSS (custom properties already partly used by `color.js`), keybo
 1. Done: `sorted()` stays in `src/core/` (the data layer needs it; `localeCompare` would order game order strings differently).
 2. Done: `Matrix` lives in `src/core/simplex.ts`.
 3. Done: `src/state/priority.ts` is the model, `src/ui/priority-view.ts` renders it on every `spec.display()` with keyed joins. URL weights of listed recipes are applied (they were ignored).
-4. Split `src/state/factory.ts`: energy (fuel, electricity, heat) and building groups into modules of their own, the DOM parts of targets (`addTarget`, `removeTarget`) into `src/ui/`. `FactorySpecification` stays as the state that implements the context interfaces.
+4. Done: `src/state/building-groups.ts`, `fuel-choice.ts` (`spec.fuel`), `energy.ts` (`EnergyContext`; `spec.getEnergyIngredients` and `getPowerUsage` delegate). `addTarget` and `removeTarget` are functions in `src/ui/target.ts`.
 5. Keep `Rational`: exact fractions keep the simplex free of tolerances and the snapshot tests exact.
 
 ## Phase 7: Documentation
@@ -188,7 +188,7 @@ Next steps:
 
 1. Phase 6 (robustness and security), done: CSP meta tag in the build (Vite plugin in `vite.config.js`), ignored URL settings shown on the page (`src/ui/warnings.ts`), custom code replaced by standard means (stable `Array.sort` in `sorted()`, native base64, `d3.zoom` for the visualizer, popover and CSS anchor positioning for tooltips; `@floating-ui/dom` removed). Negative numbers in URL settings are rejected with a visible warning. Keyboard access: planet and recipe toggles are `<button>` with `aria-pressed`; priority list icons are focusable images (a `<button>` blocks dragging in Chrome), arrow keys select and move them. Drag and drop cannot be tested automatically (neither the Chrome extension nor headless Chrome start a native drag); ask the user to try it. Icon dropdowns are popovers placed with anchor positioning, open with Enter, and apply arrow-key choices on close (the module callback rebuilds the table). Number inputs go through `readRational()` in `src/ui/number-input.ts` (rejects text, negatives and zero denominators with the browser's validation message). `align.ts` stays: Chrome has no CSS decimal alignment, and the exact decimals come from `Rational`. CSS: color schemes are `:root[data-color-scheme]` rules in `calc.css`, tabs use flexbox, unused and invalid rules are gone; screenshots of all tabs in both schemes are unchanged. Phase 6 is done.
 2. Later, from phase 5: quality per recipe, recycling loops for a target quality, reactor neighbour bonus.
-3. Phase 6a: module structure (see its section).
+3. Phase 6a: done.
 4. Phase 7: README and changelog.
 
 Working notes:
