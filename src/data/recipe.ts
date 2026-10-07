@@ -31,10 +31,22 @@ export function requireItem(items: ReadonlyMap<string, Item>, key: string): Item
 export class Ingredient {
     readonly item: Item
     readonly amount: Rational
+    /** For products: the part of amount that productivity does not multiply. */
+    readonly ignoredByProductivity: Rational
 
-    constructor(item: Item, amount: Rational) {
+    constructor(item: Item, amount: Rational, ignoredByProductivity: Rational = zero) {
         this.item = item
         this.amount = amount
+        this.ignoredByProductivity = ignoredByProductivity
+    }
+
+    /** Returns the produced amount per craft with the productivity multiplier prodEffect, such as 1.5 for +50%. */
+    productAmount(prodEffect: Rational): Rational {
+        const affected = this.amount.sub(this.ignoredByProductivity)
+        if (!zero.less(affected)) {
+            return this.amount
+        }
+        return this.amount.add(affected.mul(prodEffect.sub(one)))
     }
 }
 
@@ -101,6 +113,8 @@ export interface RecipeOptions {
     ingredients: Ingredient[]
     products: Ingredient[]
     conditions?: SurfaceCondition[]
+    /** Cap of the productivity bonus, such as 3 for +300%. Null for no cap. */
+    maximumProductivity?: Rational | null
     /** Alt text of the icon. Defaults to the name of the first product. */
     iconName?: string
 }
@@ -116,6 +130,8 @@ export class Recipe implements RecipeLike {
     readonly ingredients: Ingredient[]
     readonly products: Ingredient[]
     readonly conditions: SurfaceCondition[]
+    /** Cap of the productivity bonus, such as 3 for +300%, or null for no cap. */
+    readonly maximumProductivity: Rational | null
     readonly icon_col: number
     readonly icon_row: number
     readonly icon: Icon
@@ -142,6 +158,7 @@ export class Recipe implements RecipeLike {
         }
 
         this.conditions = options.conditions ?? []
+        this.maximumProductivity = options.maximumProductivity ?? null
         this.icon_col = options.icon_col
         this.icon_row = options.icon_row
         this.icon = new Icon(this, options.iconName ?? this.products[0]?.item.name)
@@ -172,18 +189,10 @@ export class Recipe implements RecipeLike {
 
     /** Returns the amount of item produced per craft, including productivity. Throws if the recipe does not produce item. */
     gives(item: Item): Rational {
-        const prodEffect = spec.getProdEffect(this).sub(one)
+        const prodEffect = spec.getProdEffect(this)
         for (const ing of this.products) {
             if (ing.item === item) {
-                if (!prodEffect.isZero()) {
-                    // The productivity bonus applies to the net output only.
-                    const net = ing.amount.sub(this.uses(item))
-                    if (net.less(zero)) {
-                        return ing.amount
-                    }
-                    return ing.amount.add(net.mul(prodEffect))
-                }
-                return ing.amount
+                return ing.productAmount(prodEffect)
             }
         }
         throw new Error(`recipe ${this.key} does not give ${item.key}`)
@@ -320,13 +329,18 @@ export class DisabledRecipe implements RecipeLike {
 }
 
 function productIngredients(items: ReadonlyMap<string, Item>, results: readonly DatasetProduct[]): Ingredient[] {
-    return results.map(({ name, amount }) => new Ingredient(requireItem(items, name), Rational.from_float_approximate(amount)))
+    return results.map(({ name, amount, ignored_by_productivity: ignored }) => {
+        return new Ingredient(requireItem(items, name), Rational.from_float_approximate(amount), ignored ? Rational.from_float_approximate(ignored) : zero)
+    })
 }
 
 /** Converts the surface conditions of a dataset entry. */
 export function surfaceConditions(conditions: readonly SurfaceConditionData[] | undefined): SurfaceCondition[] {
     return (conditions ?? []).map(c => new SurfaceCondition(c))
 }
+
+// The game caps the productivity bonus of a recipe at +300% unless the recipe sets another cap.
+const DEFAULT_MAXIMUM_PRODUCTIVITY = 3
 
 // Creates a Recipe from a dataset entry. Returns null if an ingredient is not a known item.
 function makeRecipe(items: ReadonlyMap<string, Item>, d: DatasetRecipe): Recipe | null {
@@ -351,6 +365,7 @@ function makeRecipe(items: ReadonlyMap<string, Item>, d: DatasetRecipe): Recipe 
         ingredients,
         products: productIngredients(items, d.results),
         conditions: surfaceConditions(d.surface_conditions),
+        maximumProductivity: Rational.from_float_approximate(d.maximum_productivity ?? DEFAULT_MAXIMUM_PRODUCTIVITY),
     })
 }
 

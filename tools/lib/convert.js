@@ -62,7 +62,8 @@ export function normalizeProduct(p) {
         amount: roundFloat((base + extra) * probability),
     }
     if (p.ignored_by_productivity) {
-        out.ignored_by_productivity = Math.min(p.ignored_by_productivity, base)
+        // Expected value, like amount.
+        out.ignored_by_productivity = roundFloat(Math.min(p.ignored_by_productivity, base) * probability)
     }
     if (p.temperature !== undefined) {
         out.temperature = p.temperature

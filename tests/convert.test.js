@@ -15,6 +15,11 @@ test("normalizeProduct keeps productivity and fluid details", () => {
     assert.deepEqual(p, { type: "fluid", name: "heavy-oil", amount: 90, ignored_by_productivity: 25, temperature: 500 })
 })
 
+test("normalizeProduct applies the probability to the part ignored by productivity", () => {
+    const p = normalizeProduct({ type: "item", name: "pentapod-egg", amount: 2, probability: 0.5, ignored_by_productivity: 1 })
+    assert.deepEqual(p, { type: "item", name: "pentapod-egg", amount: 1, ignored_by_productivity: 0.5 })
+})
+
 // Smallest data.raw that exercises every section of convert().
 function minimalRaw() {
     return {

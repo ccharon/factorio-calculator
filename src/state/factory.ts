@@ -582,9 +582,14 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults {
         return this.initModuleSpec(recipe, this.getBuilding(recipe))
     }
 
-    /** Returns the productivity multiplier of recipe, such as 1.5 for +50%. */
+    /** Returns the productivity multiplier of recipe, such as 1.5 for +50%, limited by the recipe's productivity cap. */
     getProdEffect(recipe: RecipeNode): Rational {
-        return this.getModuleSpec(recipe)?.prodEffect(this) ?? one
+        const effect = this.getModuleSpec(recipe)?.prodEffect(this) ?? one
+        if (recipe instanceof Recipe && recipe.maximumProductivity !== null) {
+            const cap = one.add(recipe.maximumProductivity)
+            return cap.less(effect) ? cap : effect
+        }
+        return effect
     }
 
     /** Sets the default module. Module slots that held the old default get the new one, or the secondary default if the new one does not fit. */

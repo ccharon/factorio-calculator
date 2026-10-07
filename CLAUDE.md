@@ -93,7 +93,7 @@ Key facts:
 - `spec` is a module-level singleton, also exposed as `window.spec` for debugging.
 - Recipes in 2.1 have a `categories` list. Recipes that the same set of buildings can craft share a `BuildingGroup` (`src/state/factory.ts`). Its key is the building keys joined with `+`, and the `buildings` URL setting stores `<group key>:<building key>` per changed group. The default building comes from the category that most recipes of the group list first.
 - Buildings and recipes have surface conditions. A building works if it works on at least one selected planet. A planet disables recipes that no working building can craft.
-- Product amounts in the dataset are expected values with probabilities and `extra_count_fraction` applied. `ignored_by_productivity` marks the part that productivity does not multiply.
+- Product amounts in the dataset are expected values with probabilities and `extra_count_fraction` applied. `ignored_by_productivity` is the expected part that productivity does not multiply. `Ingredient.productAmount()` applies productivity, and `spec.getProdEffect()` applies the recipe's productivity cap.
 
 ## Conventions
 

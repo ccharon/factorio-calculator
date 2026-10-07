@@ -28,6 +28,7 @@ export interface DatasetIngredient {
 
 /** A product. amount is the expected amount per craft, with probabilities already applied. */
 export interface DatasetProduct extends DatasetIngredient {
+    /** Expected part of amount that productivity does not multiply. */
     ignored_by_productivity?: number
     temperature?: number
     percent_spoiled?: number

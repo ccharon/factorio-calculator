@@ -871,6 +871,166 @@
     ],
     "surplus": []
   },
+  "nauvis-kovarex-productivity": {
+    "fragment": "#items=uranium-235:r:60&planet=nauvis&modules=kovarex-enrichment-process:p3:p3",
+    "recipes": [
+      {
+        "key": "(output)",
+        "rate": "1",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "advanced-oil-processing",
+        "rate": "10000/26273",
+        "building": "oil-refinery",
+        "count": "50000/26273",
+        "fuel": "electric",
+        "power": "21735644000/26273"
+      },
+      {
+        "key": "crude-oil",
+        "rate": "1000000/26273",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "heavy-oil-cracking",
+        "rate": "6250/26273",
+        "building": "chemical-plant",
+        "count": "12500/26273",
+        "fuel": "electric",
+        "power": "2808911000/26273"
+      },
+      {
+        "key": "iron-ore",
+        "rate": "1000/2021",
+        "building": "electric-mining-drill",
+        "count": "2000/2021",
+        "fuel": "electric",
+        "power": "180000000/2021"
+      },
+      {
+        "key": "iron-plate",
+        "rate": "1000/2021",
+        "building": "electric-furnace",
+        "count": "1600/2021",
+        "fuel": "electric",
+        "power": "300126000/2021"
+      },
+      {
+        "key": "kovarex-enrichment-process",
+        "rate": "1655/2021",
+        "building": "centrifuge",
+        "count": "993000/14147",
+        "fuel": "electric",
+        "power": "392292185000/6063"
+      },
+      {
+        "key": "light-oil-cracking",
+        "rate": "21250/26273",
+        "building": "chemical-plant",
+        "count": "42500/26273",
+        "fuel": "electric",
+        "power": "9292822000/26273"
+      },
+      {
+        "key": "sulfur",
+        "rate": "2500/2021",
+        "building": "chemical-plant",
+        "count": "2500/2021",
+        "fuel": "electric",
+        "power": "553294000/2021"
+      },
+      {
+        "key": "sulfuric-acid",
+        "rate": "1000/2021",
+        "building": "chemical-plant",
+        "count": "1000/2021",
+        "fuel": "electric",
+        "power": "224147000/2021"
+      },
+      {
+        "key": "uranium-ore",
+        "rate": "50000/2021",
+        "building": "electric-mining-drill",
+        "count": "200000/2021",
+        "fuel": "electric",
+        "power": "18000000000/2021"
+      },
+      {
+        "key": "uranium-processing",
+        "rate": "5000/2021",
+        "building": "centrifuge",
+        "count": "60000/2021",
+        "fuel": "electric",
+        "power": "21707350000/2021"
+      },
+      {
+        "key": "water",
+        "rate": "3600000/26273",
+        "building": "offshore-pump",
+        "count": "3000/26273",
+        "fuel": "electric",
+        "power": "0"
+      }
+    ],
+    "items": [
+      {
+        "key": "crude-oil",
+        "rate": "1000000/26273"
+      },
+      {
+        "key": "heavy-oil",
+        "rate": "250000/26273"
+      },
+      {
+        "key": "iron-ore",
+        "rate": "1000/2021"
+      },
+      {
+        "key": "iron-plate",
+        "rate": "1000/2021"
+      },
+      {
+        "key": "light-oil",
+        "rate": "637500/26273"
+      },
+      {
+        "key": "petroleum-gas",
+        "rate": "75000/2021"
+      },
+      {
+        "key": "sulfur",
+        "rate": "5000/2021"
+      },
+      {
+        "key": "sulfuric-acid",
+        "rate": "50000/2021"
+      },
+      {
+        "key": "uranium-235",
+        "rate": "68221/2021"
+      },
+      {
+        "key": "uranium-238",
+        "rate": "8275/2021"
+      },
+      {
+        "key": "uranium-ore",
+        "rate": "50000/2021"
+      },
+      {
+        "key": "water",
+        "rate": "3600000/26273"
+      }
+    ],
+    "surplus": []
+  },
   "nauvis-ignore": {
     "fragment": "#items=advanced-circuit:r:60&planet=nauvis&ignore=electronic-circuit",
     "recipes": [

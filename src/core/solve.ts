@@ -295,22 +295,12 @@ export function solve(context: SolverContext, fullOutputs: readonly Output[]): S
     const tax = items.length + partial.targets.length
 
     recipeArray.forEach((recipe, i) => {
+        const prodEffect = context.getProdEffect(recipe)
         for (const ing of recipe.products) {
-            A.setIndex(i, column(ing.item), ing.amount)
+            A.setIndex(i, column(ing.item), ing.productAmount(prodEffect))
         }
         for (const ing of recipe.getIngredients()) {
             A.addIndex(i, column(ing.item), zero.sub(ing.amount))
-        }
-
-        const prodEffect = context.getProdEffect(recipe)
-        if (one.less(prodEffect)) {
-            for (const ing of recipe.products) {
-                const j = column(ing.item)
-                const n = A.index(i, j)
-                if (zero.less(n)) {
-                    A.setIndex(i, j, n.mul(prodEffect))
-                }
-            }
         }
 
         A.setIndex(i, tax, minusOne)
