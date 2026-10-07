@@ -21,7 +21,7 @@ import { ModuleSpec } from "../data/module.ts"
 import { PriorityList } from "./priority.js"
 import { Rational, zero, one } from "../core/rational.ts"
 import { DISABLED_RECIPE_PREFIX } from "../data/recipe.ts"
-import { solve } from "../core/solve.js"
+import { solve } from "../core/solve.ts"
 import { BuildTarget } from "../ui/target.js"
 import { reapTooltips } from "../ui/tooltip.ts"
 import { renderTotals } from "../visualize/visualize.js"
@@ -720,7 +720,11 @@ class FactorySpecification {
                 recipe: origRecipe,
             })
         }
-        let totals = solve(this, dedupedOutputs)
+        let {totals, debug} = solve(this, dedupedOutputs)
+        this.lastPartial = debug.partial
+        this.lastTableau = debug.tableau
+        this.lastMetadata = debug.metadata
+        this.lastSolution = debug.solution
         return totals
     }
     setHash() {

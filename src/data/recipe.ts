@@ -51,19 +51,24 @@ export class SurfaceCondition {
     }
 }
 
-/** What the solver and the UI need from any recipe, including DisabledRecipe. */
-export interface RecipeLike extends IconSource {
-    readonly key: string
+/** A node of the solution graph: a recipe, or the solver's output and surplus nodes. */
+export interface RecipeNode {
     readonly name: string
-    /** Crafting category that selects the building, or null for recipes without a building. */
-    readonly category: string | null
     readonly ingredients: readonly Ingredient[]
     readonly products: readonly Ingredient[]
-    readonly icon: Icon
     getIngredients(): Ingredient[]
     gives(item: Item): Rational
-    isResource(): boolean
+    /** Returns true for game recipes and false for the solver's output and surplus nodes. */
     isReal(): boolean
+}
+
+/** What the solver and the UI need from any recipe, including DisabledRecipe. */
+export interface RecipeLike extends RecipeNode, IconSource {
+    readonly key: string
+    /** Crafting category that selects the building, or null for recipes without a building. */
+    readonly category: string | null
+    readonly icon: Icon
+    isResource(): boolean
     isDisable(): boolean
 }
 
