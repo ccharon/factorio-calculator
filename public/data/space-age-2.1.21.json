@@ -4887,102 +4887,142 @@
   "fuel": [
     {
       "item_key": "wood",
-      "category": "chemical",
+      "categories": [
+        "chemical"
+      ],
       "value": 2000000
     },
     {
       "item_key": "coal",
-      "category": "chemical",
+      "categories": [
+        "chemical"
+      ],
       "value": 4000000
     },
     {
       "item_key": "solid-fuel",
-      "category": "chemical",
+      "categories": [
+        "chemical"
+      ],
       "value": 12000000
     },
     {
       "item_key": "rocket-fuel",
-      "category": "chemical",
+      "categories": [
+        "chemical"
+      ],
       "value": 100000000
     },
     {
       "item_key": "nuclear-fuel",
-      "category": "chemical",
+      "categories": [
+        "chemical"
+      ],
       "value": 1210000000
     },
     {
       "item_key": "uranium-fuel-cell",
-      "category": "chemical",
+      "categories": [
+        "nuclear"
+      ],
       "value": 8000000000
     },
     {
       "item_key": "carbon",
-      "category": "chemical",
+      "categories": [
+        "chemical"
+      ],
       "value": 2000000
     },
     {
       "item_key": "yumako-seed",
-      "category": "chemical",
+      "categories": [
+        "chemical"
+      ],
       "value": 4000000
     },
     {
       "item_key": "jellynut-seed",
-      "category": "chemical",
+      "categories": [
+        "chemical"
+      ],
       "value": 4000000
     },
     {
       "item_key": "nutrients",
-      "category": "chemical",
+      "categories": [
+        "nutrients"
+      ],
       "value": 2000000
     },
     {
       "item_key": "biter-egg",
-      "category": "chemical",
+      "categories": [
+        "chemical"
+      ],
       "value": 6000000
     },
     {
       "item_key": "pentapod-egg",
-      "category": "chemical",
+      "categories": [
+        "chemical"
+      ],
       "value": 5000000
     },
     {
       "item_key": "fusion-power-cell",
-      "category": "chemical",
+      "categories": [
+        "fusion"
+      ],
       "value": 40000000000
     },
     {
       "item_key": "spoilage",
-      "category": "chemical",
+      "categories": [
+        "chemical"
+      ],
       "value": 250000
     },
     {
       "item_key": "tree-seed",
-      "category": "chemical",
+      "categories": [
+        "chemical"
+      ],
       "value": 100000
     },
     {
       "item_key": "yumako",
-      "category": "chemical",
+      "categories": [
+        "chemical"
+      ],
       "value": 2000000
     },
     {
       "item_key": "jellynut",
-      "category": "chemical",
+      "categories": [
+        "chemical"
+      ],
       "value": 10000000
     },
     {
       "item_key": "yumako-mash",
-      "category": "chemical",
+      "categories": [
+        "chemical"
+      ],
       "value": 1000000
     },
     {
       "item_key": "jelly",
-      "category": "chemical",
+      "categories": [
+        "chemical"
+      ],
       "value": 1000000
     },
     {
       "item_key": "bioflux",
-      "category": "chemical",
+      "categories": [
+        "food"
+      ],
       "value": 6000000
     }
   ],

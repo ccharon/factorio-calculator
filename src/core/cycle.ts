@@ -18,13 +18,13 @@ import type { RecipeLike } from "../data/recipe.ts"
 
 /** What cycle detection needs from the factory state. */
 export interface CycleContext {
-    readonly fuel: { readonly item: Item }
-    getBuilding(recipe: RecipeLike): { readonly fuel: string | null } | null
+    /** Returns the fuel item that the building of recipe burns, or null. */
+    getFuelItem(recipe: RecipeLike): Item | null
 }
 
-// Recipes in the set whose building burns chemical fuel. They consume the selected fuel item.
-function getFuelConsumers(context: CycleContext, recipes: ReadonlySet<RecipeLike>): RecipeLike[] {
-    return Array.from(recipes).filter(recipe => context.getBuilding(recipe)?.fuel === "chemical")
+// Recipes in the set whose building burns item as fuel.
+function getFuelConsumers(context: CycleContext, recipes: ReadonlySet<RecipeLike>, item: Item): RecipeLike[] {
+    return Array.from(recipes).filter(recipe => context.getFuelItem(recipe) === item)
 }
 
 // Returns the recipes in the set that produce an ingredient of recipe, or with invert, that
@@ -35,10 +35,7 @@ function neighboringRecipes(context: CycleContext, recipes: ReadonlySet<RecipeLi
     for (const ing of itemSet) {
         let recipeSet: readonly RecipeLike[]
         if (invert) {
-            recipeSet = ing.item.uses
-            if (ing.item === context.fuel.item) {
-                recipeSet = recipeSet.concat(getFuelConsumers(context, recipes))
-            }
+            recipeSet = [...ing.item.uses, ...getFuelConsumers(context, recipes, ing.item)]
         } else {
             recipeSet = ing.item.recipes
         }

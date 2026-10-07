@@ -24,18 +24,18 @@ export class Fuel implements IconSource {
     readonly key: string
     readonly name: string
     readonly item: Item
-    readonly category: string
+    readonly categories: ReadonlySet<string>
     /** Energy per item in J. */
     readonly value: Rational
     readonly icon_col: number
     readonly icon_row: number
     readonly icon: Icon
 
-    constructor(item: Item, category: string, value: Rational) {
+    constructor(item: Item, categories: Iterable<string>, value: Rational) {
         this.key = item.key
         this.name = item.name
         this.item = item
-        this.category = category
+        this.categories = new Set(categories)
         this.value = value
         this.icon_col = item.icon_col
         this.icon_row = item.icon_row
@@ -59,10 +59,9 @@ export class Fuel implements IconSource {
     }
 }
 
-/** Creates the chemical fuels by key, from lowest to highest fuel value. */
+/** Creates all fuels by key, from lowest to highest fuel value. */
 export function getFuel(data: Dataset, items: ReadonlyMap<string, Item>): Map<string, Fuel> {
-    const chemical = data.fuel.filter(d => d.category === "chemical")
-    const fuels = chemical.map(d => new Fuel(requireItem(items, d.item_key), d.category, Rational.from_float_approximate(d.value)))
+    const fuels = data.fuel.map(d => new Fuel(requireItem(items, d.item_key), d.categories, Rational.from_float_approximate(d.value)))
     fuels.sort((a, b) => (a.value.less(b.value) ? -1 : b.value.less(a.value) ? 1 : 0))
     return new Map(fuels.map(f => [f.key, f]))
 }

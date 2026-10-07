@@ -23,7 +23,7 @@ import {
 } from "../ui/events.ts"
 import { DEFAULT_TITLE, DEFAULT_COLOR_SCHEME, colorScheme } from "../ui/settings.ts"
 import { DEFAULT_RATE, DEFAULT_RATE_PRECISION, DEFAULT_COUNT_PRECISION, DEFAULT_FORMAT } from "./align.ts"
-import { spec, DEFAULT_BELT, DEFAULT_FUEL } from "./factory.ts"
+import { spec, DEFAULT_BELT } from "./factory.ts"
 
 const hundred = Rational.from_float(100)
 
@@ -90,8 +90,14 @@ export function formatSettings(excludeTitle = false, overrideTab?: string, targe
     if (spec.belt.key !== DEFAULT_BELT) {
         add("belt", spec.belt.key)
     }
-    if (spec.fuel.key !== DEFAULT_FUEL) {
-        add("fuel", spec.fuel.key)
+    const fuels = new Set<string>()
+    for (const [category, fuel] of spec.selectedFuels) {
+        if (fuel !== spec.getDefaultFuel(category)) {
+            fuels.add(fuel.key)
+        }
+    }
+    if (fuels.size > 0) {
+        add("fuel", Array.from(fuels).join(","))
     }
 
     if (spec.defaultModule !== null) {

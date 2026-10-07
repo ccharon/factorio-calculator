@@ -180,7 +180,10 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults {
     recipeGroups: Map<Recipe, BuildingGroup> = new Map()
     buildingKeys: Map<string, Building> = new Map()
     belts: Map<string, Belt> = new Map()
+    /** All fuels by key, from lowest to highest fuel value. */
     fuels: Map<string, Fuel> = new Map()
+    /** Selected fuel per fuel category. Categories without an entry burn their default fuel. */
+    readonly selectedFuels: Map<string, Fuel> = new Map()
     itemGroups: ItemGroups = []
 
     buildTargets: BuildTarget[] = []
@@ -217,7 +220,6 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults {
     debug = false
 
     private beltValue: Belt | null = null
-    private fuelValue: Fuel | null = null
     private priorityValue: PriorityList | null = null
     // Counts hash updates, so that a slow compression cannot overwrite a newer hash.
     private hashVersion = 0
@@ -231,13 +233,30 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults {
         this.beltValue = belt
     }
 
-    /** The fuel burned by chemical burner buildings. */
-    get fuel(): Fuel {
-        return required(this.fuelValue, "fuel")
+    /** Returns the fuels of a fuel category, from lowest to highest fuel value. */
+    fuelsOf(category: string): Fuel[] {
+        return Array.from(this.fuels.values()).filter(f => f.categories.has(category))
     }
 
-    set fuel(fuel: Fuel) {
-        this.fuelValue = fuel
+    /** Returns the default fuel of category: DEFAULT_FUEL if it belongs to it, otherwise the one with the lowest fuel value. */
+    getDefaultFuel(category: string): Fuel {
+        const fuels = this.fuelsOf(category)
+        const fuel = fuels.find(f => f.key === DEFAULT_FUEL) ?? fuels[0]
+        if (fuel === undefined) {
+            throw new Error(`no fuel of category ${category}`)
+        }
+        return fuel
+    }
+
+    /** Returns the fuel that buildings of a fuel category burn. */
+    getFuel(category: string): Fuel {
+        return this.selectedFuels.get(category) ?? this.getDefaultFuel(category)
+    }
+
+    /** Returns the fuel item that the building of recipe burns, or null for buildings without fuel. */
+    getFuelItem(recipe: RecipeLike): Item | null {
+        const category = this.getBuilding(recipe)?.fuel ?? null
+        return category === null ? null : this.getFuel(category).item
     }
 
     /** Resource priority levels, most preferred first. */
@@ -270,7 +289,7 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults {
         this.belts = belts
         this.beltValue = belts.get(DEFAULT_BELT) ?? null
         this.fuels = fuels
-        this.fuelValue = fuels.get(DEFAULT_FUEL) ?? null
+        this.selectedFuels.clear()
 
         this.miningProd = zero
         this.itemGroups = itemGroups

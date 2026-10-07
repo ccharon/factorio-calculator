@@ -67,10 +67,10 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["item_key", "category", "value"],
+        "required": ["item_key", "categories", "value"],
         "properties": {
           "item_key": { "$ref": "#/$defs/key" },
-          "category": { "type": "string" },
+          "categories": { "type": "array", "minItems": 1, "items": { "type": "string" }, "description": "Fuel categories, such as chemical or nutrients." },
           "value": { "type": "number", "exclusiveMinimum": 0 }
         }
       }

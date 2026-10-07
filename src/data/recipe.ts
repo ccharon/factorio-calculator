@@ -167,9 +167,10 @@ export class Recipe implements RecipeLike {
     /** Returns the fuel a burner building burns per craft as an extra ingredient, or an empty list. */
     fuelIngredient(): Ingredient[] {
         const building = spec.getBuilding(this)
-        if (building === null || building.fuel !== "chemical") {
+        if (building === null || building.fuel === null) {
             return []
         }
+        const fuel = spec.getFuel(building.fuel)
 
         // craft/s and J/s give J/craft. Divided by J/item, that is items per craft.
         const baseRate = spec.getRecipeRate(this)
@@ -178,8 +179,7 @@ export class Recipe implements RecipeLike {
         }
         const basePower = spec.getPowerUsage(this, baseRate).power
         const perCraftEnergy = basePower.div(baseRate)
-        const fuelAmount = perCraftEnergy.div(spec.fuel.value)
-        return [new Ingredient(spec.fuel.item, fuelAmount)]
+        return [new Ingredient(fuel.item, perCraftEnergy.div(fuel.value))]
     }
 
     /** Returns the ingredients including fuel. */

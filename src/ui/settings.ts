@@ -21,6 +21,7 @@ import * as d3 from "d3"
 import { Rational, zero } from "../core/rational.ts"
 import { sorted } from "../core/sort.ts"
 import type { Building } from "../data/building.ts"
+import type { Fuel } from "../data/fuel.ts"
 import { getRecipeGroups } from "../data/groups.ts"
 import { type Module, moduleRows, shortModules } from "../data/module.ts"
 import type { Planet } from "../data/planet.ts"
@@ -29,7 +30,7 @@ import type { Recipe, RecipeLike } from "../data/recipe.ts"
 import {
     DEFAULT_RATE, DEFAULT_RATE_PRECISION, DEFAULT_COUNT_PRECISION, DEFAULT_FORMAT, type DisplayFormat, isRateName, longRateNames, type RateName,
 } from "../state/align.ts"
-import { type BuildingGroup, DEFAULT_PLANET, DEFAULT_BELT, DEFAULT_FUEL, spec } from "../state/factory.ts"
+import { type BuildingGroup, DEFAULT_PLANET, DEFAULT_BELT, spec } from "../state/factory.ts"
 import type { Settings } from "../state/url-codec.ts"
 import { type ColorScheme, colorSchemes } from "./color.ts"
 import {
@@ -463,27 +464,35 @@ function renderBelts(settings: Settings): void {
 // fuel
 
 function renderFuel(settings: Settings): void {
-    const requested = settings.get("fuel")
-    let fuel = spec.fuels.get(DEFAULT_FUEL)
-    if (requested !== undefined) {
-        const f = spec.fuels.get(requested)
-        if (f === undefined) {
-            warn("unknown fuel", requested)
-        } else {
-            fuel = f
+    spec.selectedFuels.clear()
+    // Each entry is a fuel key. It selects the fuel for each of its categories.
+    for (const key of splitList(settings.get("fuel"))) {
+        const fuel = spec.fuels.get(key)
+        if (fuel === undefined) {
+            warn("unknown fuel", key)
+            continue
+        }
+        for (const category of fuel.categories) {
+            spec.selectedFuels.set(category, fuel)
         }
     }
 
-    if (fuel !== undefined) {
-        spec.fuel = fuel
-    }
-
-    const form = d3.select<HTMLElement, unknown>("#fuel_selector")
-    form.selectAll("*").remove()
-    radioSetting(form, "fuel", () => Array.from(spec.fuels.values()), d => d === spec.fuel, d => {
-        spec.fuel = d
-        spec.updateSolution()
-    })
+    // One row per fuel category that a burner building uses and that offers a choice.
+    const used = new Set(Array.from(spec.buildingKeys.values(), b => b.fuel).filter(c => c !== null))
+    const categories = sorted(Array.from(used).filter(c => spec.fuelsOf(c).length > 1), c => c)
+    const div = d3.select("#fuel_selector")
+    div.selectAll("*").remove()
+    const rows = div.selectAll<HTMLDivElement, string>("div").data(categories).join("div").classed("radio-setting", true)
+    radioSetting<HTMLDivElement, Fuel, string>(
+        rows,
+        category => `fuel_${category}`,
+        category => spec.fuelsOf(category),
+        (fuel, category) => fuel === spec.getFuel(category),
+        (fuel, category) => {
+            spec.selectedFuels.set(category, fuel)
+            spec.updateSolution()
+        },
+    )
 }
 
 // visualizer

@@ -423,36 +423,20 @@
         "power": "1550000"
       },
       {
-        "key": "biter-egg",
-        "rate": "26860370000/14133377791",
-        "building": "captive-biter-spawner",
-        "count": "268603700000/14133377791",
-        "fuel": "food",
-        "power": "26860370000000000/14133377791"
-      },
-      {
-        "key": "burnt-spoilage",
-        "rate": "134301850000/2231585967",
-        "building": "biochamber",
-        "count": "134301850000000/1726503676469",
-        "fuel": "nutrients",
-        "power": "67150925000000000000/1726503676469"
-      },
-      {
-        "key": "coal-liquefaction",
-        "rate": "107350000/39150631",
+        "key": "advanced-oil-processing",
+        "rate": "1190000/6070311",
         "building": "oil-refinery",
-        "count": "67093750000/23451227969",
+        "count": "743750000/3636116289",
         "fuel": "electric",
-        "power": "264146498824698000/23451227969"
+        "power": "989371092682000/1212038763"
       },
       {
-        "key": "coal-synthesis",
-        "rate": "2686037000/117451893",
-        "building": "chemical-plant",
-        "count": "671509250000/70353683907",
+        "key": "coal",
+        "rate": "500/507",
+        "building": "electric-mining-drill",
+        "count": "125000/303693",
         "fuel": "electric",
-        "power": "440617926830830000/23451227969"
+        "power": "35020500000/101231"
       },
       {
         "key": "copper-cable",
@@ -479,6 +463,14 @@
         "power": "34288634000/2471"
       },
       {
+        "key": "crude-oil",
+        "rate": "119000000/6070311",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
         "key": "electronic-circuit",
         "rate": "20",
         "building": "assembling-machine-1",
@@ -488,11 +480,11 @@
       },
       {
         "key": "heavy-oil-cracking",
-        "rate": "17444375/3011587",
+        "rate": "74375/466947",
         "building": "chemical-plant",
-        "count": "4361093750/1803940613",
+        "count": "18593750/279701253",
         "fuel": "electric",
-        "power": "8590633038498000/1803940613"
+        "power": "12807668132000/93233751"
       },
       {
         "key": "iron-ore",
@@ -512,27 +504,11 @@
       },
       {
         "key": "light-oil-cracking",
-        "rate": "179006125/18069522",
+        "rate": "550375/933894",
         "building": "chemical-plant",
-        "count": "22375765625/5411821839",
+        "count": "68796875/279701253",
         "fuel": "electric",
-        "power": "14690533922767500/1803940613"
-      },
-      {
-        "key": "nutrients-from-biter-egg",
-        "rate": "134301850000/14133377791",
-        "building": "biochamber",
-        "count": "67150925000000/32803569852911",
-        "fuel": "nutrients",
-        "power": "33575462500000000000/32803569852911"
-      },
-      {
-        "key": "nutrients-spoilage",
-        "rate": "268603700000/743861989",
-        "building": null,
-        "count": "0",
-        "fuel": null,
-        "power": "0"
+        "power": "45626254194500/93233751"
       },
       {
         "key": "plastic-bar",
@@ -551,20 +527,12 @@
         "power": "21458195000/7413"
       },
       {
-        "key": "steam",
-        "rate": "268375000/117451893",
-        "building": "boiler",
-        "count": "268375000/117451893",
-        "fuel": "chemical",
-        "power": "161025000000000/39150631"
-      },
-      {
         "key": "sulfur",
-        "rate": "2095139875/234903786",
+        "rate": "125/1014",
         "building": "chemical-plant",
-        "count": "261892484375/140707367814",
+        "count": "15625/607386",
         "fuel": "electric",
-        "power": "85929970849409750/23451227969"
+        "power": "5815773250/101231"
       },
       {
         "key": "sulfuric-acid",
@@ -576,9 +544,9 @@
       },
       {
         "key": "water",
-        "rate": "38655576000/39150631",
+        "rate": "257191000/6070311",
         "building": "offshore-pump",
-        "count": "32212980/39150631",
+        "count": "1285955/36421866",
         "fuel": "electric",
         "power": "0"
       }
@@ -589,16 +557,8 @@
         "rate": "5/3"
       },
       {
-        "key": "biter-egg",
-        "rate": "134301850000/14133377791"
-      },
-      {
-        "key": "carbon",
-        "rate": "13430185000/117451893"
-      },
-      {
         "key": "coal",
-        "rate": "268603700/9034761"
+        "rate": "50/39"
       },
       {
         "key": "copper-cable",
@@ -613,12 +573,16 @@
         "rate": "100/3"
       },
       {
+        "key": "crude-oil",
+        "rate": "119000000/6070311"
+      },
+      {
         "key": "electronic-circuit",
         "rate": "20"
       },
       {
         "key": "heavy-oil",
-        "rate": "11754825000/39150631"
+        "rate": "2975000/466947"
       },
       {
         "key": "iron-ore",
@@ -630,15 +594,11 @@
       },
       {
         "key": "light-oil",
-        "rate": "895030625/3011587"
-      },
-      {
-        "key": "nutrients",
-        "rate": "268603700000/743861989"
+        "rate": "2751875/155649"
       },
       {
         "key": "petroleum-gas",
-        "rate": "2649129625/9034761"
+        "rate": "14875/507"
       },
       {
         "key": "plastic-bar",
@@ -649,16 +609,8 @@
         "rate": "1"
       },
       {
-        "key": "spoilage",
-        "rate": "268603700000/743861989"
-      },
-      {
-        "key": "steam",
-        "rate": "5367500000/39150631"
-      },
-      {
         "key": "sulfur",
-        "rate": "419027975/18069522"
+        "rate": "25/78"
       },
       {
         "key": "sulfuric-acid",
@@ -666,7 +618,7 @@
       },
       {
         "key": "water",
-        "rate": "38655576000/39150631"
+        "rate": "257191000/6070311"
       }
     ],
     "surplus": []
@@ -2474,23 +2426,23 @@
       },
       {
         "key": "bioflux",
-        "rate": "8/27",
+        "rate": "2696/8409",
         "building": "biochamber",
-        "count": "8/9",
+        "count": "2696/2803",
         "fuel": "nutrients",
-        "power": "4000000/9"
+        "power": "1348000000/2803"
       },
       {
         "key": "jellynut-processing",
-        "rate": "16/27",
+        "rate": "5392/8409",
         "building": "biochamber",
-        "count": "8/27",
+        "count": "2696/8409",
         "fuel": "nutrients",
-        "power": "4000000/27"
+        "power": "1348000000/8409"
       },
       {
         "key": "jellystem",
-        "rate": "8/675",
+        "rate": "2696/210225",
         "building": null,
         "count": "0",
         "fuel": null,
@@ -2498,11 +2450,11 @@
       },
       {
         "key": "nutrients-from-bioflux",
-        "rate": "2/9",
+        "rate": "2114/8409",
         "building": "biochamber",
-        "count": "2/9",
+        "count": "2114/8409",
         "fuel": "nutrients",
-        "power": "1000000/9"
+        "power": "1057000000/8409"
       },
       {
         "key": "pentapod-egg",
@@ -2522,15 +2474,15 @@
       },
       {
         "key": "yumako-processing",
-        "rate": "40/27",
+        "rate": "13480/8409",
         "building": "biochamber",
-        "count": "20/27",
+        "count": "6740/8409",
         "fuel": "nutrients",
-        "power": "10000000/27"
+        "power": "3370000000/8409"
       },
       {
         "key": "yumako-tree",
-        "rate": "4/135",
+        "rate": "1348/42045",
         "building": null,
         "count": "0",
         "fuel": null,
@@ -2544,23 +2496,23 @@
       },
       {
         "key": "bioflux",
-        "rate": "16/9"
+        "rate": "5392/2803"
       },
       {
         "key": "jelly",
-        "rate": "32/9"
+        "rate": "10784/2803"
       },
       {
         "key": "jellynut",
-        "rate": "16/27"
+        "rate": "5392/8409"
       },
       {
         "key": "jellynut-seed",
-        "rate": "4/225"
+        "rate": "1348/70075"
       },
       {
         "key": "nutrients",
-        "rate": "40/3"
+        "rate": "42280/2803"
       },
       {
         "key": "pentapod-egg",
@@ -2572,25 +2524,25 @@
       },
       {
         "key": "yumako",
-        "rate": "40/27"
+        "rate": "13480/8409"
       },
       {
         "key": "yumako-mash",
-        "rate": "40/9"
+        "rate": "13480/2803"
       },
       {
         "key": "yumako-seed",
-        "rate": "2/45"
+        "rate": "674/14015"
       }
     ],
     "surplus": [
       {
         "key": "jellynut-seed",
-        "rate": "4/675"
+        "rate": "1348/210225"
       },
       {
         "key": "yumako-seed",
-        "rate": "2/135"
+        "rate": "674/42045"
       }
     ]
   },
@@ -3358,7 +3310,7 @@
       },
       {
         "key": "D-biter-egg",
-        "rate": "2/75",
+        "rate": "4/119",
         "building": null,
         "count": "0",
         "fuel": null,
@@ -3406,11 +3358,11 @@
       },
       {
         "key": "nutrients-from-biter-egg",
-        "rate": "2/75",
+        "rate": "4/119",
         "building": "biochamber",
-        "count": "2/75",
+        "count": "4/119",
         "fuel": "nutrients",
-        "power": "40000/3"
+        "power": "2000000/119"
       },
       {
         "key": "nutrients-spoilage",
@@ -3440,7 +3392,7 @@
       },
       {
         "key": "biter-egg",
-        "rate": "2/75"
+        "rate": "4/119"
       },
       {
         "key": "carbon",
@@ -3464,7 +3416,7 @@
       },
       {
         "key": "nutrients",
-        "rate": "4/5"
+        "rate": "120/119"
       },
       {
         "key": "space-science-pack",

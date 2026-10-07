@@ -31,7 +31,7 @@ function minimalRaw() {
         item: {
             "iron-ore": { name: "iron-ore", type: "item", subgroup: "raw", stack_size: 50 },
             "iron-plate": { name: "iron-plate", type: "item", subgroup: "raw", stack_size: 100, order: "b" },
-            coal: { name: "coal", type: "item", subgroup: "raw", stack_size: 50, fuel_value: "4MJ" },
+            coal: { name: "coal", type: "item", subgroup: "raw", stack_size: 50, fuel_value: "4MJ", fuel_categories: ["chemical"] },
             seed: { name: "seed", type: "item", subgroup: "raw", stack_size: 10, plant_result: "bush", spoil_ticks: 60, spoil_result: "coal" },
             "parameter-0": { name: "parameter-0", type: "item", stack_size: 1, parameter: true },
         },
@@ -99,7 +99,7 @@ test("convert builds every dataset section", () => {
     assert.deepEqual(d.recipes.map(r => r.key), ["iron-plate"])
     assert.equal(d.recipes[0].localized_name.en, "Iron plate")
     assert.equal(d.recipes[0].order, "b", "order falls back to the main product")
-    assert.deepEqual(d.fuel, [{ item_key: "coal", category: "chemical", value: 4000000 }])
+    assert.deepEqual(d.fuel, [{ item_key: "coal", categories: ["chemical"], value: 4000000 }])
     assert.deepEqual(d.spoilage, [{ from_item: "seed", to_item: "coal", time: 60 }])
     assert.equal(d.fluids[0].heat_capacity, 2000)
     assert.equal(d.crafting_machines[0].energy_usage, 90000)

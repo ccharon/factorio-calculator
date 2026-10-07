@@ -127,7 +127,7 @@ Comes before the model changes, so phases 4 to 6 are written once, in the new st
 1. Done. Building groups are the sets of machines that can craft a recipe, filtered by the selected planets' surface conditions. Settings store the selected machine per group.
 2. Done. Productivity multiplies only the part of a product that `ignored_by_productivity` leaves, and recipe productivity is capped at `maximum_productivity` (default +300%). Mining productivity has no cap.
 3. Done. The dataset has `recipe_productivity` (technologies with `change-recipe-productivity` effects). Settings have one level input per technology, stored as `rprod=<key>:<level>,...`.
-4. Fuel per building fuel category (nutrients for biochamber, chemical for boilers and burners).
+4. Done. Fuels have the 2.1 `fuel_categories` list. Each burner building burns the selected fuel of its category (`spec.getFuel()`), and settings show one fuel row per category with a choice. `fuel=` holds a list of fuel keys.
 5. Rocket launch and cargo for Space Age.
 
 ## Phase 4a: Layering of `src/data/`
@@ -171,10 +171,10 @@ Rewrite README per the writing rules, update changelog, keep CLAUDE.md current.
 
 ## Handoff (state at the end of the last session)
 
-Branch `develop`. Phase 3 and phase 4 steps 1 to 3 are done. Last pushed commit: `9f83958`. Later commits are local only.
+Branch `develop`. Phase 3 and phase 4 steps 1 to 4 are done. Last pushed commit: `9f83958`. Later commits are local only.
 
 Next steps:
 
-1. Phase 4, step 4.
+1. Phase 4, step 5.
 
 Helper scripts (ignored by git) in `.port/`: `port.cjs` writes a TS file with the old license header and rewrites imports; `blank2.cjs` inserts empty lines before anchor lines.

@@ -152,7 +152,7 @@ export function convert(raw, localeFiles, version) {
             icon_ref: `item/${p.name}`,
         }))
         if (p.fuel_value !== undefined && parseEnergy(p.fuel_value, "J") > 0) {
-            fuel.push({ item_key: p.name, category: p.fuel_category ?? "chemical", value: parseEnergy(p.fuel_value, "J") })
+            fuel.push({ item_key: p.name, categories: asArray(p.fuel_categories ?? p.fuel_category ?? "chemical"), value: parseEnergy(p.fuel_value, "J") })
         }
         if (p.spoil_result && p.spoil_ticks) {
             spoilage.push({ from_item: p.name, to_item: p.spoil_result, time: p.spoil_ticks })

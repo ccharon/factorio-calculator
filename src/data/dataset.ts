@@ -71,7 +71,8 @@ export interface DatasetFluid {
 
 export interface DatasetFuel {
     item_key: string
-    category: string
+    /** Fuel categories, such as chemical or nutrients. */
+    categories: string[]
     value: number
 }
 

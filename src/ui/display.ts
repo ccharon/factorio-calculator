@@ -18,6 +18,7 @@ import * as d3 from "d3"
 import { Rational, zero, one } from "../core/rational.ts"
 import type { Totals } from "../core/totals.ts"
 import type { Building } from "../data/building.ts"
+import type { Fuel } from "../data/fuel.ts"
 import { getRecipeGroups, topoSort } from "../data/groups.ts"
 import type { Item } from "../data/item.ts"
 import { type Module, type ModuleSpec, moduleRows } from "../data/module.ts"
@@ -331,6 +332,14 @@ function recipeOf(d: DisplayRow): RecipeLike {
     return d.recipe
 }
 
+function fuelOf(d: DisplayRow): Fuel {
+    const category = buildingOf(d).fuel
+    if (category === null) {
+        throw new Error("row without fuel")
+    }
+    return spec.getFuel(category)
+}
+
 function buildingOf(d: { readonly building: Building | null }): Building {
     if (d.building === null) {
         throw new Error("row without building")
@@ -502,11 +511,11 @@ export function displayItems(context: FactorySpecification, totals: Totals | nul
 
     const powerOf = (d: DisplayRow): Rational => spec.getPowerUsage(recipeOf(d), rateOf(totals.rates, recipeOf(d))).power
     const fuelRow = buildingRow.filter(d => buildingOf(d).fuel !== null)
-    const fuelIcon = fuelRow.selectAll(".fuel-icon")
+    const fuelIcon = fuelRow.selectAll<HTMLTableCellElement, DisplayRow>(".fuel-icon")
     fuelIcon.selectAll("*").remove()
-    fuelIcon.append(() => spec.fuel.icon.make(32))
+    fuelIcon.append(d => fuelOf(d).icon.make(32))
     fuelIcon.append("span").text(" \u00d7 ")
-    fuelRow.selectAll<HTMLElement, DisplayRow>("tt.power").text(d => `${spec.format.alignRate(powerOf(d).div(spec.fuel.value))}/${spec.format.rateName}`)
+    fuelRow.selectAll<HTMLElement, DisplayRow>("tt.power").text(d => `${spec.format.alignRate(powerOf(d).div(fuelOf(d).value))}/${spec.format.rateName}`)
 
     const electricRow = buildingRow.filter(d => buildingOf(d).fuel === null)
     let totalPower = zero
