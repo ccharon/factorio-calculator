@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 import * as d3 from "d3"
 
-import { CirclePath, makeCurve } from "./circlepath.js"
+import { CirclePath, makeCurve } from "./circlepath.ts"
 import { spec } from "../state/factory.ts"
 import { colorList, iconSize, getColorMaps, renderNode, imageViewBox } from "./graph.js"
 import { spriteSheet } from "../ui/icon.ts"

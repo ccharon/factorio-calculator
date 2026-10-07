@@ -118,7 +118,8 @@ Comes before the model changes, so phases 4 to 6 are written once, in the new st
    | `pako.min.js` | Native `CompressionStream("deflate-raw")`. URL parsing becomes async. |
 
 5. Done. Tooling: Vitest replaces `node --test`. `tsc` in strict mode and Oxlint with type-aware rules run in `npm run check`. `tools/check-dom-sinks.js` replaces `eslint-plugin-no-unsanitized`. `npm start` runs the Vite dev server.
-6. Port order: `core` first with strict types and the existing unit tests, then `data`, `state`, `ui`, `visualize`. Each step keeps the snapshot tests green.
+6. In progress. Ported: `core`, `data`, `state`, `ui`, `main.ts`, `visualize/circlepath.ts`. Remaining JavaScript: `src/visualize/` `graph.js`, `visualize.js`, `sankey.js`, `boxline.js`, `d3-sankey/`. See "Handoff" below.
+   Port order: `core` first with strict types and the existing unit tests, then `data`, `state`, `ui`, `visualize`. Each step keeps the snapshot tests green.
 7. Done. Delete the root-level JS files, `calc.html`, `third_party/` and `d3-sankey/`. Update README and CLAUDE.md. The inline event handlers in `index.html` are replaced by `addEventListener` in `src/main.js`.
 
 ## Phase 4: Core model for 2.1
@@ -159,3 +160,19 @@ Also: modernize CSS (custom properties already partly used by `color.js`), keybo
 ## Phase 7: Documentation
 
 Rewrite README per the writing rules, update changelog, keep CLAUDE.md current.
+
+## Handoff (state at the end of the last session)
+
+Branch `develop`, everything committed. Last pushed commit: `74fe6b4`. Later commits are local only.
+
+Next steps:
+
+1. Port `src/visualize/` to TypeScript:
+   - `graph.ts`: move `GraphNode` and `GraphEdge` from `visualize.js` here, with typed layout fields (`x0`, `x1`, `y0`, `y1`, `width`, `sourceLinks`, `targetLinks`, `depth`, `height`, `layer`, `direction`, `curve`, `belts`, `points`, `label`, `elements`). Plus `colorList`, `getColorMaps`, `imageViewBox`, `renderNode` and the click and hover handlers.
+   - `sankey-layout.ts`: replace `d3-sankey/` with one function `layoutSankey(graph, options)`. Keep the algorithm exactly, including `minFAS` from `d3-sankey/cycle.js` and right alignment. Drop unused options. Keep the d3-sankey BSD-3 copyright notice (Mike Bostock).
+   - `sankey.ts`, `boxline.ts` (dagre types come with `@dagrejs/dagre`), `visualize.ts`.
+   - Check: `node tests/browser/vis-baseline.tmp.js <out.json>` and `diff tests/browser/vis-baseline.tmp.json <out.json>` must be identical. Delete both temporary files afterwards.
+2. Finish phase 3: Chrome check of all views, remove the JS-only relaxations from `.oxlintrc.json` (`src/**/*.js` override, d3-sankey override), set `allowJs: false`, update CLAUDE.md and README, commit, push `develop`, check CI.
+3. Then phase 4.
+
+Helper scripts (ignored by git) in `.port/`: `port.cjs` writes a TS file with the old license header and rewrites imports; `blank2.cjs` inserts empty lines before anchor lines.
