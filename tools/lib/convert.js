@@ -437,6 +437,8 @@ export function convert(raw, localeFiles, version, runtime) {
         extra: {
             clock: { name: "time", icon_ref: `file:${utility.clock.filename}` },
             slot_icon_module: { name: "no module", icon_ref: `file:${utility.empty_module_slot.filename}` },
+            electricity: { name: "Electricity", icon_ref: "virtual-signal/signal-lightning" },
+            heat: { name: "Heat", icon_ref: "virtual-signal/signal-thermometer-red" },
         },
     }
 

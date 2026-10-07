@@ -31349,9 +31349,19 @@
         "name": "no module",
         "icon_col": 17,
         "icon_row": 1
+      },
+      "electricity": {
+        "name": "Electricity",
+        "icon_col": 21,
+        "icon_row": 26
+      },
+      "heat": {
+        "name": "Heat",
+        "icon_col": 22,
+        "icon_row": 26
       }
     },
-    "hash": "ef10e58de370f529721685fc463623f1",
+    "hash": "17bbb738042de03434fd72f14fc2ae0a",
     "width": 896,
     "height": 864
   }

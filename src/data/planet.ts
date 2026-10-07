@@ -14,7 +14,7 @@ limitations under the License.*/
 import type { IconSource } from "./icon-source.ts"
 import type { Dataset } from "./dataset.ts"
 import type { Building } from "./building.ts"
-import type { Recipe } from "./recipe.ts"
+import { ELECTRICITY, type Recipe } from "./recipe.ts"
 
 /** A planet or space surface with its resources and surface properties. */
 export class Planet implements IconSource {
@@ -46,7 +46,8 @@ export class Planet implements IconSource {
      */
     allows(recipe: Recipe, buildings: readonly Building[]): boolean {
         if (recipe.isResource()) {
-            return this.resources.has(recipe)
+            // Electricity comes from outside the factory on every surface.
+            return this.resources.has(recipe) || recipe.key === ELECTRICITY
         }
         if (!recipe.conditions.every(c => c.holds(this.properties))) {
             return false

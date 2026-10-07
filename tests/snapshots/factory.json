@@ -67,6 +67,14 @@
         "power": "0"
       },
       {
+        "key": "electricity",
+        "rate": "2302033/4680000",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
         "key": "electronic-circuit",
         "rate": "1/6",
         "building": "assembling-machine-1",
@@ -147,6 +155,10 @@
       {
         "key": "crude-oil",
         "rate": "200/117"
+      },
+      {
+        "key": "electricity",
+        "rate": "2302033/4680000"
       },
       {
         "key": "electronic-circuit",
@@ -245,6 +257,14 @@
       {
         "key": "crude-oil",
         "rate": "1900/39",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "electricity",
+        "rate": "163836679/3900000",
         "building": null,
         "count": "0",
         "fuel": null,
@@ -355,6 +375,10 @@
       {
         "key": "crude-oil",
         "rate": "1900/39"
+      },
+      {
+        "key": "electricity",
+        "rate": "163836679/3900000"
       },
       {
         "key": "electronic-circuit",
@@ -471,6 +495,14 @@
         "power": "0"
       },
       {
+        "key": "electricity",
+        "rate": "302420984049/6693705200",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
         "key": "electronic-circuit",
         "rate": "20",
         "building": "assembling-machine-1",
@@ -577,6 +609,10 @@
         "rate": "119000000/6070311"
       },
       {
+        "key": "electricity",
+        "rate": "302420984049/6693705200"
+      },
+      {
         "key": "electronic-circuit",
         "rate": "20"
       },
@@ -635,6 +671,14 @@
         "power": "0"
       },
       {
+        "key": "electricity",
+        "rate": "439/74",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
         "key": "iron-ore",
         "rate": "25/3",
         "building": "electric-mining-drill",
@@ -652,6 +696,10 @@
       }
     ],
     "items": [
+      {
+        "key": "electricity",
+        "rate": "439/74"
+      },
       {
         "key": "iron-ore",
         "rate": "25/3"
@@ -709,6 +757,14 @@
       {
         "key": "crude-oil",
         "rate": "240/73",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "electricity",
+        "rate": "5124863/730000",
         "building": null,
         "count": "0",
         "fuel": null,
@@ -789,6 +845,10 @@
         "rate": "240/73"
       },
       {
+        "key": "electricity",
+        "rate": "5124863/730000"
+      },
+      {
         "key": "electronic-circuit",
         "rate": "10"
       },
@@ -845,6 +905,14 @@
       {
         "key": "crude-oil",
         "rate": "1000000/26273",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "electricity",
+        "rate": "526861/6110",
         "building": null,
         "count": "0",
         "fuel": null,
@@ -937,6 +1005,10 @@
         "rate": "1000000/26273"
       },
       {
+        "key": "electricity",
+        "rate": "526861/6110"
+      },
+      {
         "key": "heavy-oil",
         "rate": "250000/26273"
       },
@@ -1019,6 +1091,14 @@
         "power": "158750000/3"
       },
       {
+        "key": "electricity",
+        "rate": "82529/1500",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
         "key": "lava",
         "rate": "100",
         "building": "offshore-pump",
@@ -1039,6 +1119,10 @@
       {
         "key": "calcite",
         "rate": "1/5"
+      },
+      {
+        "key": "electricity",
+        "rate": "82529/1500"
       },
       {
         "key": "lava",
@@ -1126,6 +1210,14 @@
       {
         "key": "crude-oil",
         "rate": "19000/507",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "electricity",
+        "rate": "163836679/5070000",
         "building": null,
         "count": "0",
         "fuel": null,
@@ -1238,6 +1330,10 @@
         "rate": "19000/507"
       },
       {
+        "key": "electricity",
+        "rate": "163836679/5070000"
+      },
+      {
         "key": "electronic-circuit",
         "rate": "240/13"
       },
@@ -1346,6 +1442,14 @@
       {
         "key": "crude-oil",
         "rate": "273500/351",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "electricity",
+        "rate": "315515147/585000",
         "building": null,
         "count": "0",
         "fuel": null,
@@ -1506,6 +1610,10 @@
         "rate": "273500/351"
       },
       {
+        "key": "electricity",
+        "rate": "315515147/585000"
+      },
+      {
         "key": "electronic-circuit",
         "rate": "280"
       },
@@ -1652,6 +1760,14 @@
         "power": "0"
       },
       {
+        "key": "electricity",
+        "rate": "304897/97500",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
         "key": "heavy-oil-cracking",
         "rate": "5/39",
         "building": "chemical-plant",
@@ -1710,6 +1826,10 @@
         "rate": "800/39"
       },
       {
+        "key": "electricity",
+        "rate": "304897/97500"
+      },
+      {
         "key": "electronic-circuit",
         "rate": "2"
       },
@@ -1764,6 +1884,14 @@
         "power": "260442000/67"
       },
       {
+        "key": "electricity",
+        "rate": "32859/2680",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
         "key": "heavy-oil-cracking",
         "rate": "195/67",
         "building": "chemical-plant",
@@ -1810,6 +1938,10 @@
         "rate": "1580/67"
       },
       {
+        "key": "electricity",
+        "rate": "32859/2680"
+      },
+      {
         "key": "heavy-oil",
         "rate": "10800/67"
       },
@@ -1848,6 +1980,14 @@
         "power": "0"
       },
       {
+        "key": "electricity",
+        "rate": "9127/1000",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
         "key": "iron-gear-wheel",
         "rate": "10",
         "building": "assembling-machine-1",
@@ -1873,6 +2013,10 @@
       }
     ],
     "items": [
+      {
+        "key": "electricity",
+        "rate": "9127/1000"
+      },
       {
         "key": "iron-gear-wheel",
         "rate": "10"
@@ -1950,6 +2094,14 @@
       {
         "key": "crude-oil",
         "rate": "20500000/222963",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "electricity",
+        "rate": "139520257/3716050",
         "building": null,
         "count": "0",
         "fuel": null,
@@ -2102,6 +2254,10 @@
         "rate": "20500000/222963"
       },
       {
+        "key": "electricity",
+        "rate": "139520257/3716050"
+      },
+      {
         "key": "electronic-circuit",
         "rate": "72000/5717"
       },
@@ -2246,6 +2402,14 @@
       {
         "key": "crude-oil",
         "rate": "500/13",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
+        "key": "electricity",
+        "rate": "6650957/260000",
         "building": null,
         "count": "0",
         "fuel": null,
@@ -2406,6 +2570,10 @@
         "rate": "500/13"
       },
       {
+        "key": "electricity",
+        "rate": "6650957/260000"
+      },
+      {
         "key": "electronic-circuit",
         "rate": "4"
       },
@@ -2506,6 +2674,14 @@
         "count": "8",
         "fuel": "electric",
         "power": "1488000"
+      },
+      {
+        "key": "electricity",
+        "rate": "5551/2000",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
       }
     ],
     "items": [
@@ -2520,6 +2696,10 @@
       {
         "key": "copper-plate",
         "rate": "5"
+      },
+      {
+        "key": "electricity",
+        "rate": "5551/2000"
       }
     ],
     "surplus": []
@@ -2566,6 +2746,14 @@
         "count": "8",
         "fuel": "electric",
         "power": "720000"
+      },
+      {
+        "key": "electricity",
+        "rate": "5310907/202500",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
       },
       {
         "key": "lava",
@@ -2644,6 +2832,10 @@
       {
         "key": "coal",
         "rate": "4"
+      },
+      {
+        "key": "electricity",
+        "rate": "5310907/202500"
       },
       {
         "key": "lava",
@@ -2725,6 +2917,14 @@
         "power": "1348000000/2803"
       },
       {
+        "key": "electricity",
+        "rate": "73129/2522700",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
         "key": "jellynut-processing",
         "rate": "5392/8409",
         "building": "biochamber",
@@ -2789,6 +2989,10 @@
       {
         "key": "bioflux",
         "rate": "5392/2803"
+      },
+      {
+        "key": "electricity",
+        "rate": "73129/2522700"
       },
       {
         "key": "jelly",
@@ -2864,6 +3068,14 @@
         "count": "40/3",
         "fuel": "electric",
         "power": "1035000"
+      },
+      {
+        "key": "electricity",
+        "rate": "66319417/1620000",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
       },
       {
         "key": "electrolyte",
@@ -3002,6 +3214,10 @@
       {
         "key": "copper-plate",
         "rate": "32/27"
+      },
+      {
+        "key": "electricity",
+        "rate": "66319417/1620000"
       },
       {
         "key": "electrolyte",
@@ -3215,6 +3431,14 @@
         "power": "15500000"
       },
       {
+        "key": "electricity",
+        "rate": "6784696487/337500000",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
         "key": "fluorine-vent",
         "rate": "3",
         "building": null,
@@ -3323,6 +3547,10 @@
       {
         "key": "cryogenic-science-pack",
         "rate": "1"
+      },
+      {
+        "key": "electricity",
+        "rate": "6784696487/337500000"
       },
       {
         "key": "fluorine",
@@ -3456,6 +3684,14 @@
         "power": "0"
       },
       {
+        "key": "electricity",
+        "rate": "2111519/146250",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
         "key": "heavy-oil-cracking",
         "rate": "25/117",
         "building": "chemical-plant",
@@ -3524,6 +3760,10 @@
       {
         "key": "crude-oil",
         "rate": "4000/117"
+      },
+      {
+        "key": "electricity",
+        "rate": "2111519/146250"
       },
       {
         "key": "heavy-oil",
@@ -3617,6 +3857,14 @@
         "power": "350000"
       },
       {
+        "key": "electricity",
+        "rate": "15097837/16875000",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
         "key": "iron-ore-melting",
         "rate": "4/1125",
         "building": "foundry",
@@ -3677,6 +3925,10 @@
       {
         "key": "carbonic-asteroid-chunk",
         "rate": "1/50"
+      },
+      {
+        "key": "electricity",
+        "rate": "15097837/16875000"
       },
       {
         "key": "ice",
@@ -3761,6 +4013,14 @@
         "power": "32400"
       },
       {
+        "key": "electricity",
+        "rate": "9331/12500",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
+      },
+      {
         "key": "ice-melting",
         "rate": "2/3",
         "building": "chemical-plant",
@@ -3813,6 +4073,10 @@
       {
         "key": "carbonic-asteroid-chunk",
         "rate": "1/75"
+      },
+      {
+        "key": "electricity",
+        "rate": "9331/12500"
       },
       {
         "key": "ice",
@@ -4039,6 +4303,14 @@
         "count": "23948/253125",
         "fuel": "electric",
         "power": "25908400/81"
+      },
+      {
+        "key": "electricity",
+        "rate": "2761468925219/339187500000",
+        "building": null,
+        "count": "0",
+        "fuel": null,
+        "power": "0"
       },
       {
         "key": "electronic-circuit",
@@ -4313,6 +4585,10 @@
       {
         "key": "copper-plate",
         "rate": "1/45"
+      },
+      {
+        "key": "electricity",
+        "rate": "2761468925219/339187500000"
       },
       {
         "key": "electronic-circuit",

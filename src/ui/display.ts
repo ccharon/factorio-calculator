@@ -22,7 +22,7 @@ import type { Fuel } from "../data/fuel.ts"
 import { getRecipeGroups, topoSort } from "../data/groups.ts"
 import type { Item } from "../data/item.ts"
 import { type Module, type ModuleSpec, moduleRows } from "../data/module.ts"
-import { type RecipeLike, type RecipeNode, isRecipeLike } from "../data/recipe.ts"
+import { ELECTRICITY, ELECTRICITY_UNIT, type RecipeLike, type RecipeNode, isRecipeLike } from "../data/recipe.ts"
 import type { FactorySpecification } from "../state/factory.ts"
 import { spec } from "../state/factory.ts"
 import { formatSettings } from "../state/fragment.ts"
@@ -38,6 +38,11 @@ const hundred = Rational.from_float(100)
 function alignPower(x: Rational): string {
     const { power, suffix } = powerRepr(x)
     return `${spec.format.alignCount(power)} ${suffix}`
+}
+
+// Returns the rate of item for the table. Electricity shows as power.
+function alignItemRate(item: Item, rate: Rational): string {
+    return item.key === ELECTRICITY ? alignPower(rate.mul(ELECTRICITY_UNIT)) : spec.format.alignRate(rate)
 }
 
 function rateOf<K>(map: ReadonlyMap<K, Rational> | undefined, key: K): Rational {
@@ -386,7 +391,7 @@ function renderBreakdowns(itemRows: RowSelection, totalCols: number): void {
     icons.append(d => iconOf(d.recipe).make(32)).classed("item-icon", true)
     svgIcon(icons, "usage-arrow", [18, 16], "images/icons.svg#rightarrow")
     icons.append(d => iconOf(d.item).make(32)).classed("item-icon", true)
-    row.append("td").classed("right-align", true).append("tt").classed("item-rate pad-right", true).text(d => spec.format.alignRate(d.rate))
+    row.append("td").classed("right-align", true).append("tt").classed("item-rate pad-right", true).text(d => alignItemRate(d.item, d.rate))
 
     const beltRow = row.filter(d => d.item.phase === "solid")
     const beltCell = beltRow.append("td")
@@ -453,8 +458,8 @@ export function displayItems(context: FactorySpecification, totals: Totals | nul
     itemImage.classed("ignore", d => spec.ignore.has(itemOf(d))).on("click", (event: Event, d: DisplayRow) => toggleIgnoreHandler(event, { item: itemOf(d) }))
 
     const surplusOf = (d: DisplayRow): Rational => rateOf(totals.surplus, itemOf(d))
-    itemRow.selectAll<HTMLElement, DisplayRow>("tt.item-rate").text(d => spec.format.alignRate(rateOf(totals.items, itemOf(d)).sub(surplusOf(d))))
-    itemRow.selectAll<HTMLElement, DisplayRow>("tt.surplus-rate").text(d => spec.format.alignRate(surplusOf(d)))
+    itemRow.selectAll<HTMLElement, DisplayRow>("tt.item-rate").text(d => alignItemRate(itemOf(d), rateOf(totals.items, itemOf(d)).sub(surplusOf(d))))
+    itemRow.selectAll<HTMLElement, DisplayRow>("tt.surplus-rate").text(d => alignItemRate(itemOf(d), surplusOf(d)))
 
     const beltRow = itemRow.filter(d => itemOf(d).phase === "solid")
     const beltIcon = beltRow.selectAll<HTMLTableCellElement, DisplayRow>("td.belt-icon").classed("pad-right", false).attr("colspan", 1)

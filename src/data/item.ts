@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.*/
 import type { IconSource } from "./icon-source.ts"
 import type { Dataset } from "./dataset.ts"
-import { DisabledRecipe, type Recipe, type RecipeLike } from "./recipe.ts"
+import { DisabledRecipe, ELECTRICITY, type Recipe, type RecipeLike } from "./recipe.ts"
 
 /** Item state for the solver: a solid item, a fluid, or an abstract quantity such as reactor cycles. */
 export type Phase = "solid" | "fluid" | "abstract"
@@ -70,7 +70,7 @@ export class Item implements IconSource {
     }
 }
 
-/** Creates all items and fluids of the dataset by key, plus the abstract nuclear reactor cycle. */
+/** Creates all items and fluids of the dataset by key, plus the abstract items for electricity and the nuclear reactor cycle. */
 export function getItems(data: Dataset): Map<string, Item> {
     const items = new Map<string, Item>()
     for (const d of data.items) {
@@ -82,6 +82,12 @@ export function getItems(data: Dataset): Map<string, Item> {
     if (reactor === undefined) {
         throw new Error("dataset lacks the nuclear reactor")
     }
+    const electricity = data.sprites.extra["electricity"]
+    if (electricity === undefined) {
+        throw new Error("dataset lacks the electricity sprite")
+    }
+    items.set(ELECTRICITY, new Item(ELECTRICITY, electricity.name, electricity.icon_col, electricity.icon_row, "abstract", "production", "energy", "a[electricity]"))
+
     const cycleKey = "nuclear-reactor-cycle"
     items.set(cycleKey, new Item(
         cycleKey,

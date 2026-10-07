@@ -23,7 +23,7 @@ import type { Item } from "../data/item.ts"
 import { type Module, type ModuleDefaults, ModuleSpec } from "../data/module.ts"
 import type { Planet } from "../data/planet.ts"
 import type { ProductivityResearch } from "../data/research.ts"
-import { DISABLED_RECIPE_PREFIX, Ingredient, Recipe, type RecipeContext, type RecipeLike, type RecipeNode } from "../data/recipe.ts"
+import { DISABLED_RECIPE_PREFIX, ELECTRICITY, ELECTRICITY_UNIT, Ingredient, Recipe, type RecipeContext, type RecipeLike, type RecipeNode } from "../data/recipe.ts"
 import { renderDebug } from "../ui/debug.ts"
 import { displayItems } from "../ui/display.ts"
 import { currentTab } from "../ui/events.ts"
@@ -253,27 +253,39 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
         return this.selectedFuels.get(category) ?? this.getDefaultFuel(category)
     }
 
-    /** Returns the fuel the building of recipe burns per craft, or an empty list. */
-    getFuelIngredients(recipe: Recipe): Ingredient[] {
+    /**
+     * Returns the fuel or electricity the building of recipe uses per craft, or an empty list.
+     * Electricity includes module effects and the idle drain of the buildings in use.
+     */
+    getEnergyIngredients(recipe: Recipe): Ingredient[] {
         const building = this.getBuilding(recipe)
-        if (building === null || building.fuel === null) {
+        const baseRate = this.getRecipeRate(recipe)
+        if (building === null || baseRate === null || building.power.isZero()) {
             return []
         }
-        const fuel = this.getFuel(building.fuel)
 
         // craft/s and J/s give J/craft. Divided by J/item, that is items per craft.
-        const baseRate = this.getRecipeRate(recipe)
-        if (baseRate === null) {
-            return []
+        if (building.fuel !== null) {
+            const fuel = this.getFuel(building.fuel)
+            return [new Ingredient(fuel.item, building.power.div(baseRate).div(fuel.value))]
         }
-        const perCraftEnergy = this.getPowerUsage(recipe, baseRate).power.div(baseRate)
-        return [new Ingredient(fuel.item, perCraftEnergy.div(fuel.value))]
+        const powerEffect = this.getModuleSpec(recipe)?.powerEffect() ?? one
+        const watts = building.power.mul(powerEffect).add(building.drain())
+        return [new Ingredient(this.electricity, watts.div(baseRate).div(ELECTRICITY_UNIT))]
     }
 
-    /** Returns the fuel item that the building of recipe burns, or null for buildings without fuel. */
-    getFuelItem(recipe: RecipeLike): Item | null {
-        const category = this.getBuilding(recipe)?.fuel ?? null
-        return category === null ? null : this.getFuel(category).item
+    /** Returns the fuel item or electricity that the building of recipe uses, or null. */
+    getEnergyItem(recipe: RecipeLike): Item | null {
+        const building = this.getBuilding(recipe)
+        if (building === null || building.power.isZero()) {
+            return null
+        }
+        return building.fuel === null ? this.electricity : this.getFuel(building.fuel).item
+    }
+
+    /** The abstract item for electric energy, in joules. */
+    get electricity(): Item {
+        return required(this.items.get(ELECTRICITY) ?? null, "electricity")
     }
 
     /** Resource priority levels, most preferred first. */

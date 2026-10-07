@@ -144,7 +144,10 @@ Ordered by usefulness for planning:
 
 1. Done. The space platform surface has every asteroid chunk that spawns in the solar system as a resource without building (`resources.asteroid`; the collector rate depends on the asteroid density). Crushing, reprocessing and thruster fuel are ordinary recipes. Thruster consumption per performance level is not modelled; targets set fuel and oxidizer rates directly.
 2. Done. Plants have their growth time and the agricultural tower as building. A tower tends `plots` plants (48, from radius, grid size and collision box) and harvests each once per growth time. Spoilage recipes and the captive spawner (burning bioflux since phase 4.4) were already modelled. Spoilage during transport is not modelled.
-3. Aquilo and Vulcanus: heating tower, fusion power, foundry and melting recipes.
+3. Energy as pseudo items. Foundry and melting recipes already work.
+   1. Done. Electric buildings use the abstract item `electricity` (MJ, so a rate is in MW): working power with module effect plus idle drain, linear in the building count. Without generators it is a resource without priority, so it costs nothing and does not change the solution.
+   2. Generators as recipes that produce electricity: steam engine from boiler steam, solar panel by planet, nuclear reactor with heat exchanger and steam turbine (steam at 500°C as its own item), fusion reactor and generator.
+   3. Heat on planets whose entities need heating (Aquilo): buildings use `heating_energy`, heating towers and reactors supply it.
 4. Power generation: steam engines, turbines, heat exchangers, solar with per-planet `solar-power`.
 5. Quality: quality level for machines, modules and beacons as effect multipliers. Recycling loops for target quality as a later step.
 

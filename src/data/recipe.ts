@@ -72,8 +72,8 @@ export class SurfaceCondition {
 
 /** What recipes need from the factory state, because fuel and productivity depend on the settings. */
 export interface RecipeContext {
-    /** Returns the fuel the building of recipe burns per craft, or an empty list. */
-    getFuelIngredients(recipe: Recipe): Ingredient[]
+    /** Returns the fuel or electricity the building of recipe uses per craft, or an empty list. */
+    getEnergyIngredients(recipe: Recipe): Ingredient[]
     /** Returns the productivity multiplier of recipe, such as 1.5 for +50%. */
     getProdEffect(recipe: RecipeNode): Rational
 }
@@ -174,7 +174,7 @@ export class Recipe implements RecipeLike {
 
     /** Returns the ingredients including fuel. */
     getIngredients(context: RecipeContext): Ingredient[] {
-        return this.ingredients.concat(context.getFuelIngredients(this))
+        return this.ingredients.concat(context.getEnergyIngredients(this))
     }
 
     /** Returns the amount of item produced per craft, including productivity. Throws if the recipe does not produce item. */
@@ -220,6 +220,12 @@ export class Recipe implements RecipeLike {
 }
 
 export const DISABLED_RECIPE_PREFIX = "D-"
+
+/** Key of the abstract item for electric energy. One unit is one megajoule, so a rate in units per second is in MW. */
+export const ELECTRICITY = "electricity"
+
+/** Joules per unit of electricity. */
+export const ELECTRICITY_UNIT: Rational = Rational.from_float(1000000)
 
 /**
  * Pseudo-recipe that produces an item from nothing. The solver uses it for items whose recipes
@@ -318,7 +324,7 @@ const hundred = Rational.from_float(100)
 
 /** Pseudo-recipe for an item that no recipe produces. It supplies the item at a fixed priority. */
 class ResourceRecipe extends Recipe {
-    constructor(item: Item, priority: number, weight: Rational) {
+    constructor(item: Item, priority: number | undefined, weight: Rational | undefined) {
         super({
             key: item.key,
             name: item.name,
@@ -603,6 +609,10 @@ export function getRecipes(data: Dataset, items: Map<string, Item>): Map<string,
         const r = new SpoilageRecipe(item(spoil.from_item), item(spoil.to_item))
         recipes.set(r.key, r)
     }
+
+    // Electricity comes from outside the factory. It has no priority, so it costs nothing and does
+    // not change which recipes the solver picks.
+    recipes.set(ELECTRICITY, new ResourceRecipe(item(ELECTRICITY), undefined, undefined))
 
     // Items that nothing produces become resources. Items that nothing produces or uses are removed.
     for (const [itemKey, it] of Array.from(items)) {
