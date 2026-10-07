@@ -31,6 +31,8 @@ Node 20 or newer, dev only. Nothing from `node_modules` is shipped to the browse
 | `npm test` | Runs `tests/**/*.test.js` with `node --test`. |
 | `npm run check` | Lint and tests. Run before every commit. |
 | `npm run test:browser` | Loads the page in a separate headless Chrome (`/usr/bin/google-chrome-stable`, override with `CHROME`) via `puppeteer-core`, prints the factory table and fails on JS errors. Takes an optional URL fragment. |
+| `npm run snapshot:check` | Solves every scenario in `tests/snapshots/scenarios.js` in headless Chrome and compares the exact results with `tests/snapshots/factory.json`. Fails on any difference. |
+| `npm run snapshot:record` | Rewrites `tests/snapshots/factory.json`. Only run it when a result change is intended, and review the diff. |
 
 `tests/helpers/browser-globals.js` loads the `<script>` tag libraries (`bigInt`, `pako`) as globals. Modules that touch the DOM or `window` at import time cannot be tested in Node yet.
 
@@ -95,6 +97,7 @@ Key facts:
   - Add missing comments when you touch existing code. Code and comments must stay readable for a human reader.
 - Build DOM with d3 or `document.createElement` and `.text()`/`textContent`. Never use `innerHTML`, `.html()` or string-built markup with data values.
 - Commit messages: short imperative subject ending with a period, like the existing history.
+- Work on `develop`. `main` receives merges from `develop` for releases. Push only when asked.
 - Commit at every milestone (finished plan phase or step), after `npm run check` passes.
 - No AI attribution anywhere in git: no `Co-Authored-By` trailer, no "Generated with" line, no other hint in commits, tags, branches or PR texts.
 

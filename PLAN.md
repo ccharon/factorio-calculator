@@ -89,7 +89,7 @@ Done. `npm run build-data` generates `data/space-age-2.1.21.json` and the sprite
 
 Comes before the model changes, so phases 4 to 6 are written once, in the new structure. The migration must not change any result.
 
-1. Snapshot tests: record building counts, rates and power for about 15 URL scenarios across all planets with the current code. The recorded output is the expected result for the new build.
+1. Done. Snapshot tests: `tests/snapshots/factory.json` holds exact rates, building counts and power for 17 URL scenarios across all planets, recorded with the current code. The recorded output is the expected result for the new build.
 2. Branches and CI: rename `master` to `main`, create `develop`. `check.yml` runs lint, type check, tests and build on `develop` and pull requests. `deploy.yml` builds `main` and force-pushes `dist/` as the root of an orphan `dist` branch. Dependabot keeps npm packages current.
 3. Project layout:
 
