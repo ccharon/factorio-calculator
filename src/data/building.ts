@@ -249,6 +249,14 @@ class RocketSilo extends Building {
     }
 }
 
+/** A fusion reactor. It draws its full power input while it works and has no idle drain. */
+class FusionReactor extends Building {
+    /** Fusion reactors have no idle drain. */
+    override drain(): Rational {
+        return zero
+    }
+}
+
 /** An agricultural tower. It harvests each of its plots once per growth time of the plant. */
 class AgriculturalTower extends Building {
     /** Number of plants one tower tends. */
@@ -327,7 +335,7 @@ export function getBuildings(data: Dataset, items: ReadonlyMap<string, Item>): B
         buildings.push(new PseudoBuilding(powerOptions(d)))
     }
     for (const d of data.fusion_reactors) {
-        buildings.push(new Building({ ...powerOptions(d), power: Rational.from_float(d.power_input) }))
+        buildings.push(new FusionReactor({ ...powerOptions(d), power: Rational.from_float(d.power_input) }))
     }
     // Reactors other than the nuclear reactor, such as the heating tower, burn fuel into heat.
     for (const d of data.reactors.filter(r => r.key !== NUCLEAR_REACTOR)) {
