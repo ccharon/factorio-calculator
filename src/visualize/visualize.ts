@@ -1,27 +1,17 @@
-/*Copyright 2019-2021 Kirk McDonald
-Copyright 2026 Christian Charon
+// SPDX-FileCopyrightText: 2019-2021 Kirk McDonald
+// SPDX-FileCopyrightText: 2026 Christian Charon
+// SPDX-License-Identifier: Apache-2.0
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.*/
 // Builds the visualizer graph from a solution and renders it in the selected layout.
 import * as d3 from "d3"
-import type { Item } from "../data/item.ts"
+import { FLUID_SCALE, type Item } from "../data/item.ts"
 import { ELECTRICITY, isRecipeLike, type RecipeNode } from "../data/recipe.ts"
 import { zero } from "../core/rational.ts"
 import type { ItemLink, Totals } from "../core/totals.ts"
 import { spec } from "../state/factory.ts"
 import { visualizerType, visualizerRender, visualizerDirection, visualizerElectricity, installSVGEvents } from "../ui/events.ts"
 import { renderBoxGraph } from "./boxline.ts"
-import { GraphEdge, GraphNode, type Graph } from "./graph.ts"
+import { GraphEdge, GraphNode, type Graph, measureInGraphTab } from "./graph.ts"
 import { renderSankey } from "./sankey.ts"
 
 // Electricity flows into a building, unless it is a target of the factory.
@@ -83,11 +73,7 @@ function makeGraph(totals: Totals): Graph {
         if (hidden.has(from) || hidden.has(to) || (!visualizerElectricity && isElectricityUse(link))) {
             continue
         }
-        let value = rate.toFloat()
-        if (item.phase === "fluid") {
-            // Fluids operate on a different scale.
-            value /= 10
-        }
+        const value = item.phase === "fluid" ? rate.toFloat() / FLUID_SCALE : rate.toFloat()
         const beltCount = item.phase === "solid" ? rate.div(spec.belt.rate) : null
         const extra = from.products.length > 1
         links.push(new GraphEdge(nodeOf(from), nodeOf(to), value, item, rate, fuel, beltCount, extra))
@@ -113,13 +99,7 @@ function fitSVG(): void {
         return
     }
     tab.style("min-width", "max-content")
-    const style = tab.style("display")
-    tab.style("display", "block")
-    // Hide images so the sprite sheet doesn't throw off the bounding box.
-    svg.selectAll("image").style("display", "none")
-    const { x, y, width, height } = node.getBBox()
-    svg.selectAll("image").style("display", null)
-    tab.style("display", style)
+    const { x, y, width, height } = measureInGraphTab(svg, () => node.getBBox())
 
     svg.attr("viewBox", `${x} ${y} ${width} ${height}`)
         .attr("width", width)

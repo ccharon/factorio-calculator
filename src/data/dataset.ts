@@ -1,16 +1,5 @@
-/*Copyright 2026 Christian Charon
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.*/
+// SPDX-FileCopyrightText: 2026 Christian Charon
+// SPDX-License-Identifier: Apache-2.0
 
 // Types of the dataset JSON in public/data/. They mirror src/data/dataset.schema.json, which
 // tests/dataset.test.ts validates every dataset against. Energy is in J, power in W.
@@ -32,8 +21,10 @@ export interface NamedPrototype extends IconPosition {
     localized_name: LocalizedName
 }
 
+/** Whether an ingredient or product is an item or a fluid. */
 export type ItemType = "item" | "fluid"
 
+/** An ingredient of a recipe. */
 export interface DatasetIngredient {
     type: ItemType
     name: string
@@ -48,17 +39,20 @@ export interface DatasetProduct extends DatasetIngredient {
     percent_spoiled?: number
 }
 
+/** A range of a surface property, such as pressure. A missing bound is open. */
 export interface SurfaceConditionData {
     property: string
     min?: number
     max?: number
 }
 
+/** The kinds of module effects. */
 export type EffectName = "speed" | "productivity" | "consumption" | "pollution" | "quality"
 
 /** Module effect values, such as speed: 0.5 for +50%. */
 export type Effect = Partial<Record<EffectName, number>>
 
+/** How a machine is powered. Burner sources name their fuel categories. */
 export interface EnergySource {
     type: "electric" | "burner" | "heat" | "fluid" | "void"
     fuel_categories?: string[]
@@ -67,6 +61,7 @@ export interface EnergySource {
     emissions_per_minute?: Record<string, number>
 }
 
+/** An item or fluid with its place in the item groups. */
 export interface DatasetItem extends NamedPrototype {
     type: string
     group: string
@@ -77,6 +72,7 @@ export interface DatasetItem extends NamedPrototype {
     weight?: number
 }
 
+/** Heat properties of a fluid. Energy values are in J. */
 export interface DatasetFluid {
     item_key: string
     default_temperature: number
@@ -85,6 +81,7 @@ export interface DatasetFluid {
     fuel_value?: number
 }
 
+/** An item that burner machines can burn. value is in J per item. */
 export interface DatasetFuel {
     item_key: string
     /** Fuel categories, such as chemical or nutrients. */
@@ -92,12 +89,14 @@ export interface DatasetFuel {
     value: number
 }
 
+/** An item that spoils into another one. time is in ticks. */
 export interface DatasetSpoilage {
     from_item: string
     to_item: string
     time: number
 }
 
+/** A recipe of the game. */
 export interface DatasetRecipe extends NamedPrototype {
     categories: string[]
     energy_required: number
@@ -125,6 +124,7 @@ export interface DatasetMachine extends NamedPrototype {
     heating_energy?: number
 }
 
+/** An assembling machine or furnace. */
 export interface DatasetCraftingMachine extends DatasetMachine {
     crafting_categories: string[]
     crafting_speed: number
@@ -133,6 +133,7 @@ export interface DatasetCraftingMachine extends DatasetMachine {
     prod_bonus: number
 }
 
+/** A rocket silo, which crafts rocket parts. */
 export interface DatasetRocketSilo extends DatasetMachine {
     crafting_categories: string[]
     crafting_speed: number
@@ -141,6 +142,7 @@ export interface DatasetRocketSilo extends DatasetMachine {
     rocket_parts_required: number
 }
 
+/** A mining drill. */
 export interface DatasetMiningDrill extends DatasetMachine {
     mining_speed: number
     resource_categories: string[]
@@ -148,6 +150,7 @@ export interface DatasetMiningDrill extends DatasetMachine {
     takes_fluid: boolean
 }
 
+/** An offshore pump. */
 export interface DatasetOffshorePump extends NamedPrototype {
     /** Fluid units per tick. */
     pumping_speed: number
@@ -162,6 +165,7 @@ export interface DatasetGenerator extends NamedPrototype {
     effectivity: number
 }
 
+/** A solar panel. */
 export interface DatasetSolarPanel extends NamedPrototype {
     /** Peak output in W. */
     production: number
@@ -198,17 +202,20 @@ export interface DatasetFusionGenerator extends NamedPrototype {
     output_fluid: string
 }
 
+/** A boiler or heat exchanger that heats water into steam. */
 export interface DatasetBoiler extends NamedPrototype {
     energy_consumption: number
     energy_source: EnergySource
     target_temperature: number
 }
 
+/** A transport belt. */
 export interface DatasetBelt extends NamedPrototype {
     /** Tiles per tick. */
     speed: number
 }
 
+/** The beacon. */
 export interface DatasetBeacon {
     key: string
     energy_usage: number
@@ -220,6 +227,7 @@ export interface DatasetBeacon {
     profile: number[]
 }
 
+/** A module with its effects. */
 export interface DatasetModule {
     item_key: string
     category: string
@@ -240,12 +248,14 @@ export interface DatasetQuality extends NamedPrototype {
     chain_probability: number
 }
 
+/** An agricultural tower. */
 export interface DatasetAgriculturalTower extends DatasetMachine {
     radius?: number
     /** Number of plants one tower tends. */
     plots: number
 }
 
+/** Keys of the resources a planet offers, by kind. */
 export interface PlanetResources {
     resource: string[]
     offshore: string[]
@@ -254,6 +264,7 @@ export interface PlanetResources {
     asteroid: string[]
 }
 
+/** A planet or space surface. */
 export interface DatasetPlanet extends NamedPrototype {
     order: string
     /** Values that differ from the surface property defaults. */
@@ -265,6 +276,7 @@ export interface DatasetPlanet extends NamedPrototype {
     resources: PlanetResources
 }
 
+/** A resource that mining drills or pumpjacks extract. */
 export interface DatasetResource extends NamedPrototype {
     category: string
     mining_time: number
@@ -290,6 +302,7 @@ export interface DatasetRecipeProductivity extends NamedPrototype {
     effects: RecipeProductivityEffect[]
 }
 
+/** A plant that agricultural towers grow from a seed. */
 export interface DatasetPlant extends NamedPrototype {
     order: string
     seed: string
@@ -298,21 +311,25 @@ export interface DatasetPlant extends NamedPrototype {
     surface_conditions?: SurfaceConditionData[]
 }
 
+/** A surface property and its value on surfaces that do not set it. */
 export interface DatasetSurfaceProperty {
     name: string
     default_value: number
 }
 
+/** An item group and the sort order of its subgroups. */
 export interface ItemGroupData {
     order: string
     /** Subgroup name to sort order. */
     subgroups: Record<string, string>
 }
 
+/** A sprite of the sheet that belongs to no prototype, such as the clock. */
 export interface ExtraSprite extends IconPosition {
     name: string
 }
 
+/** The sprite sheet that holds all icons. */
 export interface SpriteSheetData {
     /** MD5 of public/images/sprite-sheet-<hash>.png. */
     hash: string

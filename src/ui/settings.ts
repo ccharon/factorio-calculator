@@ -1,17 +1,7 @@
-/*Copyright 2019-2021 Kirk McDonald
-Copyright 2026 Christian Charon
+// SPDX-FileCopyrightText: 2019-2021 Kirk McDonald
+// SPDX-FileCopyrightText: 2026 Christian Charon
+// SPDX-License-Identifier: Apache-2.0
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.*/
 // Applies URL settings to the calculator state and renders the Settings tab.
 //
 // Each setting has a render function that reads its value from the settings map, falls back to
@@ -19,11 +9,12 @@ limitations under the License.*/
 // Every setting must also be written in state/fragment.ts.
 
 import * as d3 from "d3"
-import { Rational, zero } from "../core/rational.ts"
+import { type Rational, zero, hundred } from "../core/rational.ts"
 import { sorted } from "../core/sort.ts"
 import type { Building } from "../data/building.ts"
 import type { IconSource } from "../data/icon-source.ts"
 import type { Fuel } from "../data/fuel.ts"
+import { NUCLEAR_REACTOR_CYCLE } from "../data/game.ts"
 import { getRecipeGroups } from "../data/groups.ts"
 import { type Module, moduleRows, shortModules } from "../data/module.ts"
 import type { Planet } from "../data/planet.ts"
@@ -31,56 +22,50 @@ import { QUALITY_KINDS, type Quality, type QualityKind } from "../data/quality.t
 import type { ProductivityResearch } from "../data/research.ts"
 import { ReactorRecipe, type Recipe, type RecipeLike } from "../data/recipe.ts"
 import {
-    DEFAULT_RATE, DEFAULT_RATE_PRECISION, DEFAULT_COUNT_PRECISION, DEFAULT_FORMAT, type DisplayFormat, isRateName, longRateNames, type RateName,
+    DEFAULT_RATE, DEFAULT_RATE_PRECISION, DEFAULT_COUNT_PRECISION, DEFAULT_FORMAT, type DisplayFormat, isRateName, longRateNames, MAX_PRECISION, type RateName,
 } from "../state/align.ts"
 import type { BuildingGroup } from "../state/building-groups.ts"
 import { reactorNeighbours } from "../state/energy.ts"
 import { DEFAULT_PLANET, DEFAULT_BELT, DEFAULT_REACTOR_BLOCK, spec } from "../state/factory.ts"
-import type { Settings } from "../state/url-codec.ts"
+import { BUILDING_TARGET, NO_MODULE, RATE_TARGET, type Settings } from "../state/url-codec.ts"
 import { type ColorScheme, colorSchemes } from "./color.ts"
 import {
     DEFAULT_TAB, clickTab, DEFAULT_VISUALIZER, visualizerType, setVisualizerType, DEFAULT_RENDER, visualizerRender, setVisualizerRender,
     visualizerDirection, getDefaultVisDirection, setVisualizerDirection, visualizerElectricity, setVisualizerElectricity,
 } from "./events.ts"
 import { type ModuleCell, type ModuleInput, moduleDropdown } from "./module-dropdown.ts"
+import { QUALITY_KIND_LABELS } from "./quality-dropdown.ts"
+import { ICON_SIZE } from "./icon.ts"
 import { iconOf } from "./icons.ts"
-import { readCount, readRational } from "./number-input.ts"
+import { readCount, readRational, toCount, toRational } from "./number-input.ts"
 import { addTarget } from "./target.ts"
 import { warnUrl } from "./warnings.ts"
 
-const hundred = Rational.from_float(100)
 const MAX_REACTOR_BLOCK = 100
-
-function warn(message: string, value: string): void {
-    warnUrl(message, value)
-}
 
 // Parses a non-negative rational from the URL. Invalid or negative values log a warning and return null.
 function parseRational(value: string, name: string): Rational | null {
-    let r: Rational
-    try {
-        r = Rational.from_string(value)
-    } catch {
-        warn(`invalid ${name}`, value)
+    const r = toRational(value)
+    if (r === null) {
+        warnUrl(`invalid ${name}`, value)
         return null
     }
     // Rates, counts, bonuses and weights are never negative.
     if (r.less(zero)) {
-        warn(`negative ${name}`, value)
+        warnUrl(`negative ${name}`, value)
         return null
     }
     return r
 }
 
-// Parses a non-negative whole number from the URL, or returns fallback.
 // Parses a whole number from 0 to max from the URL, or returns fallback.
 function parseCount(value: string | undefined, fallback: number, name: string, max: number): number {
     if (value === undefined) {
         return fallback
     }
-    const n = Number(value)
-    if (!Number.isInteger(n) || n < 0 || n > max) {
-        warn(`invalid ${name}`, value)
+    const n = toCount(value, max)
+    if (n === null) {
+        warnUrl(`invalid ${name}`, value)
         return fallback
     }
     return n
@@ -111,16 +96,16 @@ function renderTargets(settings: Settings): void {
     for (const targetString of targets) {
         const [itemKey = "", type, value = "", recipeKey] = targetString.split(":")
         if (spec.findItem(itemKey) === undefined) {
-            warn("unknown item", itemKey)
+            warnUrl("unknown item", itemKey)
             continue
         }
 
-        if (type === "f") {
+        if (type === BUILDING_TARGET) {
             let recipe: Recipe | null = null
             if (recipeKey !== undefined) {
                 recipe = spec.findRecipe(recipeKey) ?? null
                 if (recipe === null) {
-                    warn("unknown recipe", recipeKey)
+                    warnUrl("unknown recipe", recipeKey)
                     continue
                 }
             }
@@ -130,13 +115,13 @@ function renderTargets(settings: Settings): void {
             const target = addTarget(itemKey)
             target.setBuildings(value, recipe)
             target.displayRecipes()
-        } else if (type === "r") {
+        } else if (type === RATE_TARGET) {
             if (parseRational(value, "rate") === null) {
                 continue
             }
             addTarget(itemKey).setRate(value)
         } else {
-            warn("unknown target type", targetString)
+            warnUrl("unknown target type", targetString)
         }
     }
 
@@ -147,14 +132,14 @@ function renderTargets(settings: Settings): void {
 
 // modules
 
-// Returns the module for a full or short module key, null for "null", or undefined if unknown.
+// Returns the module for a full or short module key, null for NO_MODULE, or undefined if unknown.
 function getModule(moduleKey: string): Module | null | undefined {
-    if (moduleKey === "null") {
+    if (moduleKey === NO_MODULE) {
         return null
     }
     const module = spec.modules.get(moduleKey) ?? shortModules.get(moduleKey)
     if (module === undefined) {
-        warn("unknown module", moduleKey)
+        warnUrl("unknown module", moduleKey)
     }
     return module
 }
@@ -166,13 +151,13 @@ function renderModules(settings: Settings): void {
         const [recipeKey = "", ...moduleKeyList] = buildingModuleSettings.split(":")
         const recipe = spec.findRecipe(recipeKey)
         if (recipe === undefined) {
-            warn("unknown recipe", recipeKey)
+            warnUrl("unknown recipe", recipeKey)
             continue
         }
 
         const moduleSpec = spec.getModuleSpec(recipe)
         if (moduleSpec === undefined) {
-            warn("modules for recipe without module slots", recipeKey)
+            warnUrl("modules for recipe without module slots", recipeKey)
             continue
         }
 
@@ -184,7 +169,7 @@ function renderModules(settings: Settings): void {
         })
 
         if (beaconSettings !== undefined) {
-            const [key1 = "null", key2 = "null", countStr = "0"] = beaconSettings.split(":")
+            const [key1 = NO_MODULE, key2 = NO_MODULE, countStr = "0"] = beaconSettings.split(":")
             const count = parseRational(countStr, "beacon count")
             moduleSpec.setBeaconModule(getModule(key1) ?? null, 0)
             moduleSpec.setBeaconModule(getModule(key2) ?? null, 1)
@@ -203,7 +188,7 @@ function renderIgnore(settings: Settings): void {
     for (const itemKey of splitList(settings.get("ignore"))) {
         const item = spec.items.get(itemKey)
         if (item === undefined) {
-            warn("unknown item", itemKey)
+            warnUrl("unknown item", itemKey)
             continue
         }
         spec.ignore.add(item)
@@ -226,7 +211,7 @@ function renderTitle(settings: Settings): void {
         try {
             title = decodeURIComponent(encoded)
         } catch {
-            warn("invalid title", encoded)
+            warnUrl("invalid title", encoded)
         }
     }
     const input = document.getElementById("title_setting")
@@ -245,7 +230,7 @@ function renderRateOptions(settings: Settings): void {
         if (isRateName(requested)) {
             rateName = requested
         } else {
-            warn("unknown rate", requested)
+            warnUrl("unknown rate", requested)
         }
     }
 
@@ -267,9 +252,9 @@ function renderRateOptions(settings: Settings): void {
 // precisions
 
 function renderPrecisions(settings: Settings): void {
-    spec.format.ratePrecision = parseCount(settings.get("rp"), DEFAULT_RATE_PRECISION, "precision", 20)
+    spec.format.ratePrecision = parseCount(settings.get("rp"), DEFAULT_RATE_PRECISION, "precision", MAX_PRECISION)
     d3.select("#rprec").attr("value", spec.format.ratePrecision)
-    spec.format.countPrecision = parseCount(settings.get("cp"), DEFAULT_COUNT_PRECISION, "precision", 20)
+    spec.format.countPrecision = parseCount(settings.get("cp"), DEFAULT_COUNT_PRECISION, "precision", MAX_PRECISION)
     d3.select("#cprec").attr("value", spec.format.countPrecision)
 }
 
@@ -289,11 +274,11 @@ function renderValueFormat(settings: Settings): void {
     }
 }
 
-// mining productivity
+// nuclear reactor block
 
 // Shows the heat bonus of each reactor for the block length.
 function showReactorBonus(): void {
-    const bonus = spec.recipes.get("nuclear-reactor-cycle")
+    const bonus = spec.recipes.get(NUCLEAR_REACTOR_CYCLE)
     const neighbours = reactorNeighbours(spec.reactorBlock)
     const percent = bonus instanceof ReactorRecipe ? bonus.neighbourBonus.mul(neighbours).mul(hundred) : zero
     d3.select("#reactor_bonus").text(`(+${percent.toDecimal(1)}% heat)`)
@@ -326,11 +311,7 @@ function renderMiningProd(settings: Settings): void {
 
 // Returns the level for research from the URL value, or null if it is not a valid level.
 function parseLevel(research: ProductivityResearch, value: string): number | null {
-    const level = Number(value)
-    if (!Number.isInteger(level) || level < 0 || (research.maxLevel !== null && level > research.maxLevel)) {
-        return null
-    }
-    return level
+    return toCount(value, research.maxLevel ?? Number.POSITIVE_INFINITY)
 }
 
 function renderResearch(settings: Settings): void {
@@ -341,7 +322,7 @@ function renderResearch(settings: Settings): void {
         const research = spec.research.find(r => r.key === key)
         const level = research === undefined ? null : parseLevel(research, value)
         if (research === undefined || level === null) {
-            warn("invalid productivity research", entry)
+            warnUrl("invalid productivity research", entry)
             continue
         }
         spec.researchLevels.set(research, level)
@@ -350,7 +331,7 @@ function renderResearch(settings: Settings): void {
     const div = d3.select("#research_selector")
     div.selectAll("*").remove()
     const entries = div.selectAll<HTMLSpanElement, ProductivityResearch>("span").data(sorted(spec.research, r => r.order)).join("span").classed("research", true)
-    entries.append(d => iconOf(d).make(32))
+    entries.append(d => iconOf(d).make(ICON_SIZE))
     const input = entries.append("input").attr("type", "number").attr("min", 0).attr("step", 1).attr("max", d => d.maxLevel)
     input.property("value", d => spec.researchLevels.get(d) ?? 0).on("change", function (_event: Event, d: ProductivityResearch) {
         const level = parseLevel(d, this.value)
@@ -385,7 +366,7 @@ export let colorScheme: ColorScheme = defaultColorScheme()
 function setColorScheme(schemeKey: string): void {
     const scheme = findColorScheme(schemeKey)
     if (scheme === undefined) {
-        warn("unknown color scheme", schemeKey)
+        warnUrl("unknown color scheme", schemeKey)
         return
     }
     colorScheme = scheme
@@ -428,7 +409,7 @@ function radioSetting<G extends HTMLElement, T extends RadioChoice, D>(
             const span = d3.select(this)
             const input = span.append("input").attr("id", id).attr("type", "radio").attr("name", groupName).attr("value", choice.key)
             input.property("checked", checked(choice, d)).property("disabled", disabled(choice)).on("change", () => onchange(choice, d))
-            span.append("label").attr("for", id).append(() => iconOf(choice).make(32))
+            span.append("label").attr("for", id).append(() => iconOf(choice).make(ICON_SIZE))
         })
     })
 }
@@ -446,7 +427,7 @@ function renderBuildings(settings: Settings): void {
         const group = spec.buildings.get(groupKey)
         const building = group?.buildings.find(b => b.key === buildingKey)
         if (group === undefined || building === undefined) {
-            warn("unknown building", entry)
+            warnUrl("unknown building", entry)
             continue
         }
         group.building = building
@@ -474,25 +455,24 @@ function renderBuildingSelector(): void {
 
 // quality
 
-/** A global quality setting: its kind, URL key and label. */
+/** A global quality setting: its kind and URL key. */
 export interface QualitySetting {
     readonly kind: QualityKind
     readonly key: string
-    readonly label: string
 }
 
 /** The global quality settings in the order of QUALITY_KINDS. */
 export const QUALITY_SETTINGS: readonly QualitySetting[] = [
-    { kind: "machine", key: "qm", label: "Machines" },
-    { kind: "module", key: "qd", label: "Modules" },
-    { kind: "beacon", key: "qb", label: "Beacons" },
+    { kind: "machine", key: "qm" },
+    { kind: "module", key: "qd" },
+    { kind: "beacon", key: "qb" },
 ]
 
 // Returns the quality with key, or undefined with a warning. An empty key is no quality and no warning.
 function findQuality(key: string): Quality | undefined {
     const quality = spec.qualities.find(q => q.key === key)
     if (key !== "" && quality === undefined) {
-        warn("unknown quality", key)
+        warnUrl("unknown quality", key)
     }
     return quality
 }
@@ -510,7 +490,7 @@ function renderQuality(settings: Settings): void {
         const [key = "", ...qualityKeys] = entry.split(":")
         const recipe = spec.findRecipe(key)
         if (recipe === undefined) {
-            warn("unknown recipe", key)
+            warnUrl("unknown recipe", key)
             continue
         }
         QUALITY_KINDS.forEach((kind, i) => {
@@ -524,7 +504,7 @@ function renderQuality(settings: Settings): void {
     const div = d3.select("#quality_selector")
     div.selectAll("*").remove()
     const rows = div.selectAll<HTMLDivElement, QualitySetting>("div").data(QUALITY_SETTINGS).join("div").classed("radio-setting", true)
-    rows.append("b").classed("quality-label", true).text(d => d.label)
+    rows.append("b").classed("quality-label", true).text(d => QUALITY_KIND_LABELS.get(d.kind) ?? d.kind)
     radioSetting<HTMLDivElement, Quality, QualitySetting>(
         rows,
         d => `quality_${d.key}`,
@@ -545,7 +525,7 @@ function renderBelts(settings: Settings): void {
     if (requested !== undefined) {
         const b = spec.belts.get(requested)
         if (b === undefined) {
-            warn("unknown belt", requested)
+            warnUrl("unknown belt", requested)
         } else {
             belt = b
         }
@@ -571,7 +551,7 @@ function renderFuel(settings: Settings): void {
     for (const key of splitList(settings.get("fuel"))) {
         const fuel = spec.fuel.fuels.get(key)
         if (fuel === undefined) {
-            warn("unknown fuel", key)
+            warnUrl("unknown fuel", key)
             continue
         }
         for (const category of fuel.categories) {
@@ -618,7 +598,7 @@ class SettingCell implements ModuleCell {
     readonly inputRows: ModuleInput[][]
 
     /**
-     * @param name
+     * @param name - Radio group name, unique on the page.
      * @param filter - Which modules to offer.
      * @param get - Returns the current module of the setting.
      * @param set - Stores a chosen module.
@@ -671,7 +651,7 @@ function chooseDefaultBeacon(module: Module | null, index: 0 | 1): void {
 
 function renderDefaultBeacon(settings: Settings): void {
     const keys = settings.get("db")?.split(":") ?? []
-    const beaconModules: [Module | null, Module | null] = [getModule(keys[0] ?? "null") ?? null, getModule(keys[1] ?? "null") ?? null]
+    const beaconModules: [Module | null, Module | null] = [getModule(keys[0] ?? NO_MODULE) ?? null, getModule(keys[1] ?? NO_MODULE) ?? null]
     const countStr = settings.get("dbc")
     const defaultCount = (countStr === undefined ? null : parseRational(countStr, "beacon count")) ?? zero
 
@@ -752,7 +732,7 @@ function renderRecipes(settings: Settings): void {
         for (const key of planetKeys) {
             const planet = spec.planets.get(key)
             if (planet === undefined) {
-                warn("unknown planet", key)
+                warnUrl("unknown planet", key)
             } else {
                 spec.selectPlanet(planet)
             }
@@ -784,7 +764,7 @@ function renderRecipes(settings: Settings): void {
         const planetToggles = planetDiv.selectAll<HTMLButtonElement, Planet>("button").data(sorted(spec.planets.values(), p => p.order)).join("button")
         planetToggles.attr("type", "button").classed("toggle", true).on("click", clickPlanet)
         setPressed(planetToggles, d => spec.selectedPlanets.has(d))
-        planetToggles.append(d => iconOf(d).make(32))
+        planetToggles.append(d => iconOf(d).make(ICON_SIZE))
     }
 
     // Only recipes that compete with another recipe for a product get a toggle.
@@ -802,7 +782,7 @@ function renderRecipes(settings: Settings): void {
     const toggles = toggleRows.selectAll<HTMLButtonElement, Recipe>("button").data(d => d).join("button")
     toggles.attr("type", "button").classed("toggle recipe", true).on("click", clickRecipeToggle)
     setPressed(toggles, d => !spec.disable.has(d))
-    toggles.append(d => iconOf(d).make(32))
+    toggles.append(d => iconOf(d).make(ICON_SIZE))
 }
 
 // resource priority
@@ -820,12 +800,12 @@ function renderResourcePriorities(settings: Settings): void {
         for (const pair of tierStr.split(",")) {
             const [key = "", weightStr] = pair.split("=")
             if (weightStr === undefined) {
-                warn("invalid priority", pair)
+                warnUrl("invalid priority", pair)
                 return
             }
             const weight = parseRational(weightStr, "priority weight")
             if (!spec.isValidPriorityKey(key) || weight === null) {
-                warn("invalid priority key", key)
+                warnUrl("invalid priority key", key)
                 continue
             }
             tier.push([key, weight])

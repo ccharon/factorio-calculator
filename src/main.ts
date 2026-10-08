@@ -1,17 +1,7 @@
-/*Copyright 2019 Kirk McDonald
-Copyright 2026 Christian Charon
+// SPDX-FileCopyrightText: 2019 Kirk McDonald
+// SPDX-FileCopyrightText: 2026 Christian Charon
+// SPDX-License-Identifier: Apache-2.0
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.*/
 // Entry point: binds the static page controls, loads the dataset and renders the calculator
 // from the URL settings.
 
@@ -35,7 +25,7 @@ import { type Settings, decodeFragment } from "./state/url-codec.ts"
 import { warnUrl } from "./ui/warnings.ts"
 import {
     plusHandler, clickTab, clickVisualize, changeTitle, changeRatePrecision, changeCountPrecision, changeFormat, changeMprod, changeVisType,
-    changeVisRender, changeVisDir, changeVisElectricity, toggleDebug, resourceKeyHandler,
+    changeVisRender, changeVisDir, changeVisElectricity, toggleDebug, resourceKeyHandler, TAB_NAMES,
 } from "./ui/events.ts"
 import { getSprites } from "./ui/icon.ts"
 import { renderSettings } from "./ui/settings.ts"
@@ -103,7 +93,7 @@ function on(selector: string, type: string, handler: (event: Event) => void): vo
 // Binds the event handlers of the controls that index.html defines statically.
 function bindControls(): void {
     on("#plusButton button", "click", () => plusHandler())
-    for (const tab of ["totals", "resources", "settings", "faq", "about", "debug"]) {
+    for (const tab of TAB_NAMES.filter(name => name !== "graph")) {
         on(`#${tab}_button`, "click", () => clickTab(tab))
     }
     on("#graph_button", "click", () => clickVisualize())

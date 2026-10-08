@@ -1,17 +1,7 @@
-/*Copyright 2021 Kirk McDonald
-Copyright 2026 Christian Charon
+// SPDX-FileCopyrightText: 2021 Kirk McDonald
+// SPDX-FileCopyrightText: 2026 Christian Charon
+// SPDX-License-Identifier: Apache-2.0
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.*/
 // Link paths built from circular arcs. Arcs can be offset in parallel exactly, which the
 // visualizer uses to draw the individual belts of a link.
 
@@ -144,10 +134,11 @@ export class CirclePath {
 }
 
 const MIN_RADIUS = 10
+const MAX_DOUBLE_ARC_SLOPE = 0.75
 
 // Paths come in three kinds. Slopes are measured in the frame of the initial tangent vector.
 // 1) Straight line, for slope 0.
-// 2) Double arcs, for slopes in [-0.75, 0.75]: one arc from the start to the middle and one
+// 2) Double arcs, for slopes up to MAX_DOUBLE_ARC_SLOPE in either direction: one arc from the start to the middle and one
 //    from the middle to the end.
 // 3) Double arcs with an adjustment arc at each end, for steeper slopes. The adjustment lets the
 //    slope at the middle be twice the overall slope, similar to a cubic Bezier curve.
@@ -226,12 +217,6 @@ function doubleArcAdjustPath(tx: number, ty: number, x1: number, y1: number, x2:
 /**
  * Returns a smooth path from (x1, y1) to (x2, y2) that starts in direction (tx, ty).
  *
- * @param tx - direction
- * @param ty - direction
- * @param x1 - from
- * @param y1 - from
- * @param x2 - to
- * @param y2 - to
  * @param width - Stroke width, which sets the minimum radius of steep curves. Without a width, the
  *     radius is NaN and path() draws the adjustment arcs as straight lines.
  */
@@ -242,7 +227,7 @@ export function makeCurve(tx: number, ty: number, x1: number, y1: number, x2: nu
     }
 
     const slope = fy / fx
-    if (-0.75 <= slope && slope <= 0.75) {
+    if (-MAX_DOUBLE_ARC_SLOPE <= slope && slope <= MAX_DOUBLE_ARC_SLOPE) {
         return doubleArcPath(tx, ty, x1, y1, x2, y2)
     }
     return doubleArcAdjustPath(tx, ty, x1, y1, x2, y2, width)

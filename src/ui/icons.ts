@@ -1,20 +1,9 @@
-/*Copyright 2026 Christian Charon
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.*/
+// SPDX-FileCopyrightText: 2026 Christian Charon
+// SPDX-License-Identifier: Apache-2.0
 
 // Icons of game objects, with the tooltips that show their details.
 import * as d3 from "d3"
-import { Rational, zero, one } from "../core/rational.ts"
+import { type Rational, zero, one, hundred } from "../core/rational.ts"
 import { Belt } from "../data/belt.ts"
 import { Building, Miner, OffshorePump, PseudoBuilding } from "../data/building.ts"
 import { Fuel } from "../data/fuel.ts"
@@ -24,11 +13,10 @@ import { Module } from "../data/module.ts"
 import { Recipe } from "../data/recipe.ts"
 import { spec } from "../state/factory.ts"
 import { energyString, powerRepr } from "./energy.ts"
-import { Icon, getSprite } from "./icon.ts"
+import { ICON_SIZE, Icon, getSprite } from "./icon.ts"
 
 type Frame = d3.Selection<HTMLDivElement, undefined, null, undefined>
 
-const hundred = Rational.from_float(100)
 const icons = new WeakMap<IconSource, Icon>()
 
 /** Returns the icon of obj, with a tooltip for objects that have details to show. */
@@ -72,7 +60,7 @@ function renderTooltip(obj: IconSource): Node {
 function header(obj: IconSource, name: string = obj.name): Frame {
     const t = d3.create("div").classed("frame", true)
     const h = t.append("h3")
-    h.append(() => iconOf(obj).make(32, true))
+    h.append(() => iconOf(obj).make(ICON_SIZE, true))
     h.node()?.append(name)
     return t
 }
@@ -109,7 +97,6 @@ function percent(x: Rational): string {
 /**
  * Returns the tooltip of item. Items with a single recipe of the same name show the recipe.
  *
- * @param item
  * @param extra - Optional content appended below the header.
  */
 export function renderItemTooltip(item: Item, extra?: Node): HTMLDivElement {
@@ -145,16 +132,16 @@ function renderRecipeTooltip(recipe: Recipe, extra?: Node): HTMLDivElement {
         const product = productLine.append("span").selectAll("span").data(recipe.products).join("span")
         product.append("span").text(" ")
         const prodIcon = product.append("div").classed("product", true)
-        prodIcon.append(d => iconOf(d.item).make(32, true))
+        prodIcon.append(d => iconOf(d.item).make(ICON_SIZE, true))
         prodIcon.append("span").classed("count", true).text(d => d.amount.toDecimal())
     }
 
     const time = t.append("div")
-    time.append("div").classed("product", true).append(() => iconOf(getSprite("clock")).make(32, true))
+    time.append("div").classed("product", true).append(() => iconOf(getSprite("clock")).make(ICON_SIZE, true))
     time.append("span").text(" " + recipe.time.toDecimal())
 
     const ingredient = t.append("div").selectAll("div").data(recipe.ingredients).join("div")
-    ingredient.append("div").classed("product", true).append(d => iconOf(d.item).make(32, true))
+    ingredient.append("div").classed("product", true).append(d => iconOf(d.item).make(ICON_SIZE, true))
     ingredient.append("span").text(d => ` ${d.amount.toDecimal()} × ${d.item.name}`)
     return frameNode(t)
 }
@@ -166,7 +153,7 @@ function renderBuildingTooltip(building: Building): HTMLDivElement {
         return frameNode(t)
     }
     if (building instanceof OffshorePump) {
-        addLine(t, "Pumping speed: ", `${spec.format.rate(building.pumpingSpeed)}/${spec.format.rateName}`)
+        addLine(t, "Pumping speed: ", spec.format.rateWithUnit(building.pumpingSpeed))
         return frameNode(t)
     }
     addLine(t, "Energy consumption: ", formatPower(building.power))

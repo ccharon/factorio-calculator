@@ -1,21 +1,14 @@
-/*Copyright 2019-2021 Kirk McDonald
-Copyright 2026 Christian Charon
+// SPDX-FileCopyrightText: 2019-2021 Kirk McDonald
+// SPDX-FileCopyrightText: 2026 Christian Charon
+// SPDX-License-Identifier: Apache-2.0
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.*/
 import type { IconSource } from "./icon-source.ts"
 import type { Dataset } from "./dataset.ts"
 import type { Quality } from "./quality.ts"
 import { DisabledRecipe, ELECTRICITY, HEAT, type Recipe, type RecipeLike } from "./recipe.ts"
+
+/** Fluids come in amounts about ten times as large as items. Weights and link widths divide fluid rates by this. */
+export const FLUID_SCALE = 10
 
 /** Item state for the solver: a solid item, a fluid, or an abstract quantity such as reactor cycles. */
 export type Phase = "solid" | "fluid" | "abstract"
@@ -115,24 +108,15 @@ export function getItems(data: Dataset): Map<string, Item> {
         items.set(d.key, new Item(d.key, d.localized_name.en, d.icon_col, d.icon_row, phase, d.group, d.subgroup, d.order, d.weight ?? null))
     }
 
-    const reactor = items.get("nuclear-reactor")
-    if (reactor === undefined) {
-        throw new Error("dataset lacks the nuclear reactor")
+    // The abstract items take their icons from extra sprites of the same name and sort among the energy items.
+    const abstractOrders = [[ELECTRICITY, "a[electricity]"], [HEAT, "f[nuclear-energy]-d[heat]"]] as const
+    for (const [key, order] of abstractOrders) {
+        const sprite = data.sprites.extra[key]
+        if (sprite === undefined) {
+            throw new Error(`dataset lacks the ${key} sprite`)
+        }
+        items.set(key, new Item(key, sprite.name, sprite.icon_col, sprite.icon_row, "abstract", "production", "energy", order))
     }
-
-    const electricity = data.sprites.extra["electricity"]
-    if (electricity === undefined) {
-        throw new Error("dataset lacks the electricity sprite")
-    }
-
-    items.set(ELECTRICITY, new Item(ELECTRICITY, electricity.name, electricity.icon_col, electricity.icon_row, "abstract", "production", "energy", "a[electricity]"))
-
-    const heat = data.sprites.extra["heat"]
-    if (heat === undefined) {
-        throw new Error("dataset lacks the heat sprite")
-    }
-
-    items.set(HEAT, new Item(HEAT, heat.name, heat.icon_col, heat.icon_row, "abstract", "production", "energy", "f[nuclear-energy]-d[heat]"))
 
     return items
 }

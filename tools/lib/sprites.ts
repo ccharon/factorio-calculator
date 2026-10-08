@@ -1,16 +1,5 @@
-/*Copyright 2026 Christian Charon
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.*/
+// SPDX-FileCopyrightText: 2026 Christian Charon
+// SPDX-License-Identifier: Apache-2.0
 
 // Builds the icon sprite sheet from Factorio's --dump-icon-sprites output and replaces
 // the dataset's icon_ref placeholders with sheet positions.
@@ -19,9 +8,11 @@ import { createHash } from "node:crypto"
 import { join } from "node:path"
 import sharp from "sharp"
 import type { Dataset } from "../../src/data/dataset.ts"
-import type { ConvertedDataset } from "./convert.ts"
+import { SPRITE_SIZE } from "../../src/data/icon-source.ts"
+import { type ConvertedDataset, compareStrings } from "./convert.ts"
 
-export const ICON_SIZE: number = 32
+
+const TRANSPARENT = { r: 0, g: 0, b: 0, alpha: 0 }
 
 /**
  * Resolves an icon_ref to a PNG path.
@@ -44,7 +35,7 @@ export function resolveIconRef(ref: string, iconDir: string, gameDataDir: string
     return join(iconDir, `${ref}.png`)
 }
 
-// Loads one icon as raw RGBA pixels at ICON_SIZE. Mipmapped files are a horizontal strip
+// Loads one icon as raw RGBA pixels at SPRITE_SIZE. Mipmapped files are a horizontal strip
 // whose first square is the full-size image.
 async function loadIcon(path: string): Promise<Buffer> {
     const image = sharp(path)
@@ -52,7 +43,7 @@ async function loadIcon(path: string): Promise<Buffer> {
     if (width > height) {
         image.extract({ left: 0, top: 0, width: height, height })
     }
-    return image.resize(ICON_SIZE, ICON_SIZE, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } }).ensureAlpha().raw().toBuffer()
+    return image.resize(SPRITE_SIZE, SPRITE_SIZE, { fit: "contain", background: TRANSPARENT }).ensureAlpha().raw().toBuffer()
 }
 
 /** An object of the converted dataset that carries an icon_ref. Its fields are rewritten in place. */
@@ -102,7 +93,7 @@ export interface SpriteSheet {
  */
 export async function buildSpriteSheet(dataset: ConvertedDataset, iconDir: string, gameDataDir: string): Promise<SpriteSheet> {
     const holders = [...iconHolders(dataset)]
-    const refs = [...new Set(holders.map(h => h.icon_ref ?? ""))].sort((a, b) => (a < b ? -1 : a > b ? 1 : 0))
+    const refs = [...new Set(holders.map(h => h.icon_ref ?? ""))].sort(compareStrings)
 
     const cellByPixels = new Map<string, number>()
     const cellByRef = new Map<string, number>()
@@ -121,13 +112,13 @@ export async function buildSpriteSheet(dataset: ConvertedDataset, iconDir: strin
 
     const columns = Math.ceil(Math.sqrt(cells.length))
     const rows = Math.ceil(cells.length / columns)
-    const width = columns * ICON_SIZE
-    const height = rows * ICON_SIZE
-    const png = await sharp({ create: { width, height, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } }).composite(cells.map((pixels, i) => ({
+    const width = columns * SPRITE_SIZE
+    const height = rows * SPRITE_SIZE
+    const png = await sharp({ create: { width, height, channels: 4, background: TRANSPARENT } }).composite(cells.map((pixels, i) => ({
         input: pixels,
-        raw: { width: ICON_SIZE, height: ICON_SIZE, channels: 4 },
-        left: (i % columns) * ICON_SIZE,
-        top: Math.floor(i / columns) * ICON_SIZE,
+        raw: { width: SPRITE_SIZE, height: SPRITE_SIZE, channels: 4 },
+        left: (i % columns) * SPRITE_SIZE,
+        top: Math.floor(i / columns) * SPRITE_SIZE,
     }))).png({ compressionLevel: 9 }).toBuffer()
 
     const hash = createHash("md5").update(png).digest("hex")

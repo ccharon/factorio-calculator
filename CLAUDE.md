@@ -32,6 +32,7 @@ Node 25 or newer (the tests use `Uint8Array.toBase64`).
 | `npm run test:browser` | Loads the page in a separate headless Chrome (`/usr/bin/google-chrome-stable`, override with `CHROME`) via `puppeteer-core`, prints the factory table and fails on JS errors. Takes `--dist` and an optional URL fragment. |
 | `npm run snapshot:check` | Solves every scenario in `tests/snapshots/scenarios.ts` in headless Chrome and compares the exact results with `tests/snapshots/factory.json`. Fails on any difference. `--dist` tests the production build. |
 | `npm run snapshot:record` | Rewrites `tests/snapshots/factory.json`. Only run it when a result change is intended, and review the diff. |
+| `npm run ingame:check -- --factorio <dir>` | Builds the factories of the test modules in `tests/ingame/` in the local game, runs them headless in one game (about 3 minutes) and compares the measured products and energy with the calculator. Run it manually after changes to the calculations; it is not part of `npm run check` or CI. `--only <text>` runs the factories whose name contains text, `--keep` keeps the game directory. |
 
 Oxlint JS plugins are alpha and are not used.
 
@@ -41,6 +42,17 @@ Oxlint JS plugins are alpha and are not used.
 - After an intended result change: `npm run snapshot:record`, then compare the old and new `tests/snapshots/factory.json` per scenario before committing. `snapshot:check` names the differing entries.
 - Browser checks use JS queries; screenshots only when the layout changed. Keyboard tests run with puppeteer through `tests/browser/browser.ts`. Neither puppeteer nor the Chrome extension starts a native drag, so drag and drop needs a manual test by the user.
 - Stop the dev server with `pkill -u $(id -u) -f "node.*[v]ite"` in a Bash call of its own; the pattern also matches a calling shell whose command contains `node` and `vite`.
+
+## In-game tests
+
+`tests/ingame/check.ts` prepares the test modules in the calculator, runs all their factories in one headless game and compares.
+
+| Part | Files |
+|------|-------|
+| Framework | `framework/control.lua` (planet or lab surface, one force per factory with all recipes and qualities, warmup and window per factory, `ingame-results.json`), `framework/lib.lua` (power by buffer refill, energy interfaces as source, load and sink, heat interfaces, infinity pipes, fuel and ingredient supply, beacons at the corners, ore patches), `framework/test.ts` (`IngameTest`, comparisons), `framework/calculator.ts` (opens fragments in headless Chrome) |
+| Test modules | `machines` (single machines up to combined extremes), `steam`, `rocket`, `nuclear`, `solar`, `agriculture`, `fusion`, `chains` (whole solver results with pool logistics). Each has `test.ts` with an `IngameTest` and `build.lua`; add new ones to `ALL_TESTS` in `check.ts`. |
+
+Game facts the tests rely on: the API docs of the local install are in `doc-html/runtime-api.json`. `LuaEntity.fluidbox` does not exist in 2.1, and removing fluid by script gives wrong amounts. Solar panels and fusion generators have no `energy_generated_last_tick`. A crafting machine output holds one quality per product. Heating towers burn fuel without consumers. Fulgora lightning destroys entities unless they are indestructible.
 
 ## CI and deployment
 
@@ -85,14 +97,14 @@ The dataset format is defined in `src/data/dataset.schema.json`. `tests/dataset.
 |------|-------|
 | Entry point | `index.html`, `src/main.ts` |
 | Core math and solver, no DOM | `src/core/`: `rational.ts`, `simplex.ts` (with the `Matrix` tableau), `solve.ts` (with the `SolverContext` interface), `cycle.ts`, `totals.ts`, `sort.ts` |
-| Game data loading | `src/data/`: `dataset.ts` (types of the dataset JSON), `dataset.schema.json`, `item.ts`, `recipe.ts`, `building.ts`, `module.ts`, `belt.ts`, `fuel.ts`, `planet.ts`, `research.ts` (recipe productivity technologies), `cargo.ts` (items in orbit and launch recipes), `power.ts` (generator, solar and heat exchanger recipes), `quality.ts`, `icon-source.ts`, `group.ts`, `groups.ts` |
+| Game data loading | `src/data/`: `dataset.ts` (types of the dataset JSON), `dataset.schema.json`, `game.ts` (prototype names and fixed values of the game), `item.ts`, `recipe.ts`, `building.ts`, `module.ts`, `belt.ts`, `fuel.ts`, `planet.ts`, `research.ts` (recipe productivity technologies), `cargo.ts` (items in orbit and launch recipes), `power.ts` (generator, solar and heat exchanger recipes), `quality.ts`, `icon-source.ts`, `group.ts`, `groups.ts` |
 | State and URL settings | `src/state/`: `factory.ts` (`FactorySpecification`, global `spec`), `building-groups.ts`, `energy.ts` (fuel, electricity and heat per craft, power use), `fuel-choice.ts`, `fragment.ts` (writes the settings string), `url-codec.ts` (parses and compresses the URL fragment), `priority.ts` (resource priority levels, no DOM), `solver-thread.ts` (runs the simplex in a Web Worker and cancels outdated runs), `align.ts` (number formatting) |
 | UI | `src/ui/`: `display.ts`, `target.ts`, `settings.ts`, `priority-view.ts` (Resources tab), `dropdown.ts`, `module-dropdown.ts`, `tooltip.ts`, `events.ts`, `number-input.ts` (validated number fields), `quality-dropdown.ts` (quality column of the factory table), `warnings.ts` (ignored URL settings), `icon.ts`, `icons.ts` (`iconOf()` and the tooltips of game objects), `energy.ts`, `color.ts`, `debug.ts` |
 | Web Worker | `src/worker/simplex.ts`: runs `simplex()` on a tableau sent by `src/state/solver-thread.ts`. `solve()` is async; `spec.updateSolution()` shows only the solution of the latest call, and `spec.solved` settles when it is shown. |
 | Visualizer | `src/visualize/`: `visualize.ts` (builds the graph), `graph.ts` (graph types, colors, node rendering), `sankey.ts`, `sankey-layout.ts` (adapted d3-sankey layout, BSD-3), `boxline.ts` (dagre), `circlepath.ts` |
 | Styles | `src/styles/` |
 | Static files | `public/`: dataset, sprite sheet, SVG icons, favicon. Copied unchanged into `dist/`. |
-| Data generation | `tools/build-data.ts` (CLI), `tools/lib/factorio.ts` (runs the game), `tools/lib/convert.ts` (data.raw to dataset), `tools/lib/sprites.ts` (sprite sheet, uses `sharp`) |
+| Data generation | `tools/build-data.ts` (CLI), `tools/lib/factorio.ts` (runs the game headless, `HeadlessGame`), `tools/mod/calculator-dump/` (helper mod for runtime values), `tools/lib/convert.ts` (data.raw to dataset), `tools/lib/sprites.ts` (sprite sheet, uses `sharp`) |
 
 Key facts:
 
@@ -106,7 +118,7 @@ Key facts:
 
 ## Conventions
 
-- File headers: files with Kirk McDonald's (or Mike Bostock's) copyright keep it, with `Copyright 2026 Christian Charon` as the next line. Every other source file starts with `/*Copyright 2026 Christian Charon` and the Apache 2.0 notice, as in `src/data/power.ts`.
+- File headers: every source file starts with SPDX lines, as in `src/data/power.ts`: one `SPDX-FileCopyrightText` line per copyright holder, then `SPDX-License-Identifier: Apache-2.0`. Files with Kirk McDonald's copyright keep his line above `2026 Christian Charon`. `src/visualize/sankey-layout.ts` keeps Mike Bostock's line and is `BSD-3-Clause`. The license texts are in `LICENSES/`. `LICENSE` is a copy of `LICENSES/Apache-2.0.txt` for GitHub. CSS uses `/* */` and HTML `<!-- -->` for the same lines.
 - TypeScript and Vite, no UI framework. Every library comes from npm and is imported. No `<script>` tags for libraries, no inline scripts or event handler attributes in HTML.
 - TypeScript rules for all code:
   - No `any`, no non-null assertions (`!`), no `@ts-ignore`. Use `unknown` and narrow it, or write the type.

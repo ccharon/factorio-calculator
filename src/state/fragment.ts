@@ -1,21 +1,11 @@
-/*Copyright 2019-2021 Kirk McDonald
-Copyright 2026 Christian Charon
+// SPDX-FileCopyrightText: 2019-2021 Kirk McDonald
+// SPDX-FileCopyrightText: 2026 Christian Charon
+// SPDX-License-Identifier: Apache-2.0
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+// Serializes the calculator state into the settings string of the URL fragment. url-codec.ts
+// parses the string, and ui/settings.ts applies the settings.
 
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.*/
-// Serializes the calculator state into the settings string of the URL fragment. The parser
-// lives in url-codec.ts; the settings are applied in ui/settings.js.
-
-import { Rational } from "../core/rational.ts"
+import { type Rational, hundred } from "../core/rational.ts"
 import { sorted } from "../core/sort.ts"
 import type { Item } from "../data/item.ts"
 import type { Module } from "../data/module.ts"
@@ -25,12 +15,12 @@ import {
 import { QUALITY_KINDS } from "../data/quality.ts"
 import { DEFAULT_TITLE, DEFAULT_COLOR_SCHEME, QUALITY_SETTINGS, colorScheme } from "../ui/settings.ts"
 import { DEFAULT_RATE, DEFAULT_RATE_PRECISION, DEFAULT_COUNT_PRECISION, DEFAULT_FORMAT } from "./align.ts"
+import { BUILDING_TARGET, NO_MODULE, RATE_TARGET } from "./url-codec.ts"
 import { spec, DEFAULT_BELT, DEFAULT_REACTOR_BLOCK } from "./factory.ts"
 
-const hundred = Rational.from_float(100)
 
 function moduleKey(module: Module | null): string {
-    return module === null ? "null" : module.shortName()
+    return module === null ? NO_MODULE : module.shortName()
 }
 
 /**
@@ -145,13 +135,13 @@ export function formatSettings(excludeTitle = false, overrideTab?: string, targe
 
     let targetStrings: string[]
     if (targets) {
-        targetStrings = targets.map(([item, rate]) => `${item.key}:r:${rate.mul(format.rateFactor).toString()}`)
+        targetStrings = targets.map(([item, rate]) => `${item.key}:${RATE_TARGET}:${rate.mul(format.rateFactor).toString()}`)
     } else {
         targetStrings = spec.buildTargets.map(target => {
             if (!target.changedBuilding) {
-                return `${target.itemKey}:r:${target.rate.mul(format.rateFactor).toString()}`
+                return `${target.itemKey}:${RATE_TARGET}:${target.rate.mul(format.rateFactor).toString()}`
             }
-            let s = `${target.itemKey}:f:${target.buildingInput?.value ?? ""}`
+            let s = `${target.itemKey}:${BUILDING_TARGET}:${target.buildingInput?.value ?? ""}`
             if (target.recipe !== null && target.recipe !== target.defaultRecipe) {
                 s += `:${target.recipe.key}`
             }

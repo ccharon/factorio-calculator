@@ -1,28 +1,23 @@
-/*Copyright 2019-2021 Kirk McDonald
-Copyright 2026 Christian Charon
+// SPDX-FileCopyrightText: 2019-2021 Kirk McDonald
+// SPDX-FileCopyrightText: 2026 Christian Charon
+// SPDX-License-Identifier: Apache-2.0
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.*/
 import { Rational, zero, one } from "../core/rational.ts"
 import type { IconSource } from "./icon-source.ts"
-import type { Dataset, DatasetMachine, EffectName } from "./dataset.ts"
+import type { Dataset, DatasetMachine, EffectName, NamedPrototype } from "./dataset.ts"
+import { burnerFuelCategory } from "./fuel.ts"
+import { BOILER, DEFAULT_FUEL_CATEGORY, NUCLEAR_REACTOR, PUMPJACK, ROCKET_PART, TICKS_PER_SECOND } from "./game.ts"
 import { HEAT_EXCHANGE_CATEGORY, powerCategory } from "./power.ts"
 import type { Item } from "./item.ts"
 import type { ModuleSpec } from "./module.ts"
 import type { Quality, QualityContext } from "./quality.ts"
-import { AGRICULTURE_CATEGORY, MiningRecipe, type Recipe, type RecipeContext, type RecipeLike, type SurfaceCondition, requireItem, surfaceConditions } from "./recipe.ts"
+import {
+    AGRICULTURE_CATEGORY, BOILER_CATEGORY, MiningRecipe, NUCLEAR_CATEGORY, OFFSHORE_PUMPING_CATEGORY, type Recipe, type RecipeContext, type RecipeLike, type SurfaceCondition,
+    requireItem, surfaceConditions,
+} from "./recipe.ts"
 
-const thirty = Rational.from_float(30)
-const sixty = Rational.from_float(60)
+// Electric buildings draw this share of their working power while idle.
+const idleDrainShare = Rational.from_floats(1, 30)
 
 /** What buildings need from the factory state. FactorySpecification implements it. */
 export interface BuildingContext extends RecipeContext, QualityContext {
@@ -147,7 +142,7 @@ export class Building implements IconSource {
 
     /** Returns the idle drain of one electric building, which is 1/30 of its working power. */
     drain(): Rational {
-        return this.power.div(thirty)
+        return this.power.mul(idleDrainShare)
     }
 }
 
@@ -195,10 +190,7 @@ export class OffshorePump extends Building {
     readonly pumpingSpeed: Rational
 
     constructor(key: string, name: string, col: number, row: number, pumpingSpeed: Rational) {
-        super({
-            key, name, icon_col: col, icon_row: row, categories: ["offshore-pumping"],
-            speed: zero, prodBonus: zero, moduleSlots: 0, power: zero, fuel: null,
-        })
+        super({ ...fixedOptions({ key, name, icon_col: col, icon_row: row }, OFFSHORE_PUMPING_CATEGORY), speed: zero })
         this.pumpingSpeed = pumpingSpeed
     }
 
@@ -213,7 +205,9 @@ export class OffshorePump extends Building {
     }
 }
 
-const rocketLaunchDuration = Rational.from_floats(2434, 60)
+// Ticks the rocket silo pauses for each launch.
+const ROCKET_LAUNCH_TICKS = 2434
+const rocketLaunchDuration = Rational.from_floats(ROCKET_LAUNCH_TICKS, TICKS_PER_SECOND)
 
 /** Rocket parts per second and launches per second of one silo. */
 interface LaunchRate {
@@ -224,7 +218,7 @@ interface LaunchRate {
 // Returns rocket parts and launches per second of one silo. Both include the time the silo
 // pauses for each launch.
 function launchRate(context: BuildingContext): LaunchRate {
-    const partRecipe = context.recipes.get("rocket-part")
+    const partRecipe = context.recipes.get(ROCKET_PART)
     const partFactory = partRecipe ? context.getBuilding(partRecipe) : null
     const partItem = partRecipe?.products[0]?.item
     if (!partRecipe || !(partFactory instanceof RocketSilo) || !partItem) {
@@ -275,23 +269,24 @@ function qualitySpeeds(speeds: Record<string, number> | undefined): Map<string, 
     return new Map(Object.entries(speeds ?? {}).map(([q, s]) => [q, Rational.from_float_approximate(s)]))
 }
 
-function iconOptions(d: { key: string, localized_name: { en: string }, icon_col: number, icon_row: number }): Pick<BuildingOptions, "key" | "name" | "icon_col" | "icon_row"> {
+type IconOptions = Pick<BuildingOptions, "key" | "name" | "icon_col" | "icon_row">
+
+function iconOptions(d: NamedPrototype): IconOptions {
     return { key: d.key, name: d.localized_name.en, icon_col: d.icon_col, icon_row: d.icon_row }
 }
 
-function fuelCategory(d: DatasetMachine): string | null {
-    return d.energy_source?.type === "burner" ? d.energy_source.fuel_category ?? "chemical" : null
+// Options of a building with one category, crafting speed 1, no modules and no power of its own,
+// such as a generator. Callers override what differs.
+function fixedOptions(icon: IconOptions, category: string): BuildingOptions {
+    return { ...icon, categories: [category], speed: one, prodBonus: zero, moduleSlots: 0, power: zero, fuel: null }
 }
 
 function machineOptions(d: DatasetMachine): Pick<BuildingOptions, "key" | "name" | "icon_col" | "icon_row" | "moduleSlots" | "power" | "fuel" | "conditions" | "heatingEnergy" | "allowedEffects"> {
     return {
-        key: d.key,
-        name: d.localized_name.en,
-        icon_col: d.icon_col,
-        icon_row: d.icon_row,
+        ...iconOptions(d),
         moduleSlots: d.module_slots,
         power: Rational.from_float_approximate(d.energy_usage ?? 0),
-        fuel: fuelCategory(d),
+        fuel: burnerFuelCategory(d.energy_source),
         conditions: surfaceConditions(d.surface_conditions),
         heatingEnergy: Rational.from_float_approximate(d.heating_energy ?? 0),
         allowedEffects: d.allowed_effects === undefined ? undefined : new Set(d.allowed_effects),
@@ -301,21 +296,20 @@ function machineOptions(d: DatasetMachine): Pick<BuildingOptions, "key" | "name"
 /** Creates all buildings from the dataset, plus pseudo-buildings for the nuclear reactor and the boiler. */
 export function getBuildings(data: Dataset, items: ReadonlyMap<string, Item>): Building[] {
     const buildings: Building[] = []
-    const reactor = requireItem(items, "nuclear-reactor")
-    buildings.push(new PseudoBuilding({
-        key: "nuclear-reactor", name: reactor.name, icon_col: reactor.icon_col, icon_row: reactor.icon_row,
-        categories: ["nuclear"], speed: one, prodBonus: zero, moduleSlots: 0, power: zero, fuel: null,
-    }))
+    const itemOptions = (key: string): IconOptions => {
+        const item = requireItem(items, key)
+        return { key, name: item.name, icon_col: item.icon_col, icon_row: item.icon_row }
+    }
+    buildings.push(new PseudoBuilding(fixedOptions(itemOptions(NUCLEAR_REACTOR), NUCLEAR_CATEGORY)))
 
-    const boilerItem = requireItem(items, "boiler")
-    const boilerDef = data.boilers.find(d => d.key === "boiler")
+    const boilerDef = data.boilers.find(d => d.key === BOILER)
     if (boilerDef === undefined) {
         throw new Error("dataset lacks the boiler")
     }
     buildings.push(new PseudoBuilding({
-        key: "boiler", name: boilerItem.name, icon_col: boilerItem.icon_col, icon_row: boilerItem.icon_row,
-        categories: ["boiler"], speed: one, prodBonus: zero, moduleSlots: 0,
-        power: Rational.from_float(boilerDef.energy_consumption), fuel: "chemical",
+        ...fixedOptions(itemOptions(BOILER), BOILER_CATEGORY),
+        power: Rational.from_float(boilerDef.energy_consumption),
+        fuel: DEFAULT_FUEL_CATEGORY,
     }))
 
     for (const d of data.crafting_machines) {
@@ -328,31 +322,19 @@ export function getBuildings(data: Dataset, items: ReadonlyMap<string, Item>): B
         }))
     }
 
-    for (const d of data.generators) {
-        buildings.push(new PseudoBuilding({ ...iconOptions(d), categories: [powerCategory(d.key)], speed: one, prodBonus: zero, moduleSlots: 0, power: zero, fuel: null }))
-    }
-    for (const d of data.fusion_generators) {
-        buildings.push(new PseudoBuilding({ ...iconOptions(d), categories: [powerCategory(d.key)], speed: one, prodBonus: zero, moduleSlots: 0, power: zero, fuel: null }))
+    const powerOptions = (d: NamedPrototype): BuildingOptions => fixedOptions(iconOptions(d), powerCategory(d.key))
+    for (const d of [...data.generators, ...data.fusion_generators, ...data.solar_panels]) {
+        buildings.push(new PseudoBuilding(powerOptions(d)))
     }
     for (const d of data.fusion_reactors) {
-        buildings.push(new Building({
-            ...iconOptions(d), categories: [powerCategory(d.key)], speed: one, prodBonus: zero, moduleSlots: 0,
-            power: Rational.from_float(d.power_input), fuel: null,
-        }))
-    }
-    for (const d of data.solar_panels) {
-        buildings.push(new PseudoBuilding({ ...iconOptions(d), categories: [powerCategory(d.key)], speed: one, prodBonus: zero, moduleSlots: 0, power: zero, fuel: null }))
+        buildings.push(new Building({ ...powerOptions(d), power: Rational.from_float(d.power_input) }))
     }
     // Reactors other than the nuclear reactor, such as the heating tower, burn fuel into heat.
-    for (const d of data.reactors.filter(r => r.key !== "nuclear-reactor")) {
-        const fuel = d.energy_source.fuel_categories?.[0] ?? d.energy_source.fuel_category ?? null
-        buildings.push(new Building({
-            ...iconOptions(d), categories: [powerCategory(d.key)], speed: one, prodBonus: zero, moduleSlots: 0,
-            power: Rational.from_float(d.consumption), fuel,
-        }))
+    for (const d of data.reactors.filter(r => r.key !== NUCLEAR_REACTOR)) {
+        buildings.push(new Building({ ...powerOptions(d), power: Rational.from_float(d.consumption), fuel: burnerFuelCategory(d.energy_source) }))
     }
     for (const d of data.boilers.filter(b => b.energy_source.type === "heat")) {
-        buildings.push(new PseudoBuilding({ ...iconOptions(d), categories: [HEAT_EXCHANGE_CATEGORY], speed: one, prodBonus: zero, moduleSlots: 0, power: zero, fuel: null }))
+        buildings.push(new PseudoBuilding(fixedOptions(iconOptions(d), HEAT_EXCHANGE_CATEGORY)))
     }
 
     for (const d of data.agricultural_tower) {
@@ -372,13 +354,13 @@ export function getBuildings(data: Dataset, items: ReadonlyMap<string, Item>): B
 
     for (const d of data.offshore_pumps) {
         // The dataset gives units per tick.
-        const speed = Rational.from_float_approximate(d.pumping_speed).mul(sixty)
+        const speed = Rational.from_float_approximate(d.pumping_speed).mul(Rational.from_integer(TICKS_PER_SECOND))
         buildings.push(new OffshorePump(d.key, d.localized_name.en, d.icon_col, d.icon_row, speed))
     }
 
     for (const d of data.mining_drills) {
         // Fluid resources have no building.
-        if (d.key === "pumpjack") {
+        if (d.key === PUMPJACK) {
             continue
         }
         buildings.push(new Miner({ ...machineOptions(d), categories: d.resource_categories }, Rational.from_float_approximate(d.mining_speed)))

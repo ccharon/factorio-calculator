@@ -1,16 +1,5 @@
-/*Copyright 2026 Christian Charon
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.*/
+// SPDX-FileCopyrightText: 2026 Christian Charon
+// SPDX-License-Identifier: Apache-2.0
 
 // The quality dropdown of a factory table row: the quality of the recipe's machines, modules and
 // beacons.
@@ -22,7 +11,8 @@ import { spec } from "../state/factory.ts"
 import { addInputs, makeDropdown } from "./dropdown.ts"
 import { iconOf } from "./icons.ts"
 
-const KIND_LABELS: ReadonlyMap<QualityKind, string> = new Map([
+/** The labels of the quality kinds. */
+export const QUALITY_KIND_LABELS: ReadonlyMap<QualityKind, string> = new Map([
     ["machine", "Machines"],
     ["module", "Modules"],
     ["beacon", "Beacons"],
@@ -41,6 +31,9 @@ interface QualityChoice<Datum> {
     readonly d: Datum
     readonly quality: Quality
 }
+
+// The dropdown fits into a table row, so its quality icons are smaller than other icons.
+const QUALITY_CHOICE_SIZE = 16
 
 let groupCount = 0
 
@@ -63,16 +56,16 @@ export function qualityDropdown<GElement extends HTMLElement, Datum, PElement ex
         .data(d => kindsOf(d).map(kind => ({ recipe: recipeOf(d), kind, name: `quality-${groupCount++}` })))
         .join("div")
         .classed("quality-group", true)
-    groups.append("span").classed("quality-kind", true).text(group => KIND_LABELS.get(group.kind) ?? group.kind)
+    groups.append("span").classed("quality-kind", true).text(group => QUALITY_KIND_LABELS.get(group.kind) ?? group.kind)
 
-    appendQualityChoices(groups, 16, {
+    appendQualityChoices(groups, QUALITY_CHOICE_SIZE, {
         name: group => group.name,
         checked: (group, quality) => spec.getQuality(group.recipe, group.kind) === quality,
         choose: (group, quality) => {
             spec.setRecipeQuality(group.recipe, group.kind, quality)
             onChange()
         },
-        title: (group, quality) => `${KIND_LABELS.get(group.kind) ?? ""}: ${quality.name}`,
+        title: (group, quality) => `${QUALITY_KIND_LABELS.get(group.kind) ?? ""}: ${quality.name}`,
     })
 }
 

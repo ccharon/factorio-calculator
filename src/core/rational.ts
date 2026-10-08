@@ -1,17 +1,6 @@
-/*Copyright 2015-2021 Kirk McDonald
-Copyright 2026 Christian Charon
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.*/
+// SPDX-FileCopyrightText: 2015-2021 Kirk McDonald
+// SPDX-FileCopyrightText: 2026 Christian Charon
+// SPDX-License-Identifier: Apache-2.0
 
 // Parses an integer string. Accepts surrounding whitespace, a sign, and exponent notation
 // such as "1e3", which BigInt() rejects.
@@ -24,6 +13,13 @@ function parseInteger(s: string): bigint {
 }
 
 const MAX_SAFE = BigInt(Number.MAX_SAFE_INTEGER)
+
+// from_float_approximate() rounds game data to five decimal places.
+const APPROXIMATION_DENOMINATOR = 100000n
+
+function absBigInt(x: bigint): bigint {
+    return x < 0n ? -x : x
+}
 
 // Greatest common divisor of two non-negative integers. Small values use number arithmetic, which is
 // exact below 2^53 and much faster than BigInt.
@@ -73,7 +69,7 @@ export class Rational {
             p = -p
             q = -q
         }
-        const divisor = gcd(p < 0n ? -p : p, q)
+        const divisor = gcd(absBigInt(p), q)
         if (divisor > 1n) {
             p /= divisor
             q /= divisor
@@ -116,7 +112,6 @@ export class Rational {
 
         let decimalPart = ""
         let fraction = new Rational(x.p % x.q, x.q)
-        const ten = new Rational(10n, 1n)
         while (maxDigits > 0 && !fraction.equal(roundingFactor)) {
             fraction = fraction.mul(ten)
             roundingFactor = roundingFactor.mul(ten)
@@ -196,6 +191,11 @@ export class Rational {
         return this.p * other.q < this.q * other.p
     }
 
+    /** Returns -1, 0 or 1 if this value is less than, equal to or greater than other, as sort() expects. */
+    compare(other: Rational): number {
+        return this.less(other) ? -1 : other.less(this) ? 1 : 0
+    }
+
     /** Returns the absolute value. */
     abs(): Rational {
         if (this.less(zero)) {
@@ -228,7 +228,7 @@ export class Rational {
         if (t === 0n) {
             return zero
         }
-        const e = gcd(t < 0n ? -t : t, d)
+        const e = gcd(absBigInt(t), d)
         return new Rational(t / e, (this.q / d) * (q / e), true)
     }
 
@@ -244,8 +244,8 @@ export class Rational {
             return this
         }
         // Cross reduction keeps the result reduced without a gcd of the products.
-        const d1 = gcd(this.p < 0n ? -this.p : this.p, other.q)
-        const d2 = gcd(other.p < 0n ? -other.p : other.p, this.q)
+        const d1 = gcd(absBigInt(this.p), other.q)
+        const d2 = gcd(absBigInt(other.p), this.q)
         return new Rational((this.p / d1) * (other.p / d2), (this.q / d2) * (other.q / d1), true)
     }
 
@@ -346,7 +346,7 @@ export class Rational {
         if (Number.isInteger(x)) {
             return Rational.from_floats(x, 1)
         }
-        const r = new Rational(BigInt(Math.round(x * 100000)), 100000n)
+        const r = new Rational(BigInt(Math.round(x * Number(APPROXIMATION_DENOMINATOR))), APPROXIMATION_DENOMINATOR)
         const divmod = r.divmod(one)
         if (divmod.remainder.equal(approximateOneThird)) {
             return divmod.quotient.add(oneThird)
@@ -363,11 +363,22 @@ export class Rational {
 }
 
 // Five-digit decimal approximations of 1/3 and 2/3.
-const approximateOneThird = new Rational(33333n, 100000n)
-const approximateTwoThirds = new Rational(66667n, 100000n)
+const approximateOneThird = new Rational(33333n, APPROXIMATION_DENOMINATOR)
+const approximateTwoThirds = new Rational(66667n, APPROXIMATION_DENOMINATOR)
 
+/** The rational -1. */
 export const minusOne = new Rational(-1n, 1n)
+/** The rational 0. */
 export const zero = new Rational(0n, 1n)
+/** The rational 1. */
 export const one = new Rational(1n, 1n)
+/** The rational 1/3. */
 export const oneThird = new Rational(1n, 3n)
+/** The rational 2/3. */
 export const twoThirds = new Rational(2n, 3n)
+/** The rational 2. */
+export const two = new Rational(2n, 1n)
+/** The rational 10. */
+export const ten = new Rational(10n, 1n)
+/** The rational 100, the factor between a share and a percentage. */
+export const hundred = new Rational(100n, 1n)

@@ -1,17 +1,7 @@
-/*Copyright 2019-2021 Kirk McDonald
-Copyright 2026 Christian Charon
+// SPDX-FileCopyrightText: 2019-2021 Kirk McDonald
+// SPDX-FileCopyrightText: 2026 Christian Charon
+// SPDX-License-Identifier: Apache-2.0
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.*/
 // Building groups: the sets of buildings that can craft a recipe, each with its selected building.
 
 import type { Building } from "../data/building.ts"
@@ -22,6 +12,11 @@ const DEFAULT_BUILDINGS = new Set([
     "electric-furnace",
     "electric-mining-drill",
 ])
+
+// Key of the group of these buildings: their keys joined with "+".
+function groupKey(buildings: readonly Building[]): string {
+    return buildings.map(b => b.key).join("+")
+}
 
 /** Sorts buildings in place from slowest to fastest. */
 function buildingSort(buildings: Building[]): void {
@@ -40,7 +35,7 @@ export class BuildingGroup {
     building: Building
 
     constructor(buildings: readonly Building[], primaryCategory: string) {
-        this.key = buildings.map(b => b.key).join("+")
+        this.key = groupKey(buildings)
         this.buildings = Array.from(buildings)
         buildingSort(this.buildings)
         this.primaryCategory = primaryCategory
@@ -92,7 +87,7 @@ export function getBuildingGroups(buildings: readonly Building[], recipes: Itera
         if (craftable.length === 0) {
             throw new Error(`no building for recipe ${recipe.key}`)
         }
-        const key = craftable.map(b => b.key).join("+")
+        const key = groupKey(craftable)
         members.set(key, craftable)
         recipeKeys.set(recipe, key)
         const counts = firstCategories.get(key) ?? new Map<string, number>()

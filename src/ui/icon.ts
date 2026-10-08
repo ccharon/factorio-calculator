@@ -1,26 +1,21 @@
-/*Copyright 2021 Kirk McDonald
-Copyright 2026 Christian Charon
+// SPDX-FileCopyrightText: 2021 Kirk McDonald
+// SPDX-FileCopyrightText: 2026 Christian Charon
+// SPDX-License-Identifier: Apache-2.0
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.*/
 // Icons from the sprite sheet, rendered as <img> elements with a background offset.
 
 import type { SpriteSheetData } from "../data/dataset.ts"
-import type { IconSource } from "../data/icon-source.ts"
+import { type IconSource, SPRITE_SIZE } from "../data/icon-source.ts"
 import { Tooltip } from "./tooltip.ts"
 
-export const PX_WIDTH = 32
-export const PX_HEIGHT = 32
+/** Display size of icons in tables, dropdowns, tooltips and the visualizer, in pixels. */
+export const ICON_SIZE = SPRITE_SIZE
 
+/** Display size of small icons, such as the quality choices of a build target. */
+export const SMALL_ICON_SIZE = 24
+
+/** Size of the quality badge relative to the icon it marks. */
+export const QUALITY_BADGE_RATIO = 0.45
 
 /** The icon of one object in the sprite sheet. */
 export class Icon {
@@ -58,7 +53,7 @@ export class Icon {
         if (quality !== null) {
             icon = document.createElement("span")
             icon.classList.add("quality-icon")
-            const badge = spriteImage(quality, Math.round(size * 0.45))
+            const badge = spriteImage(quality, Math.round(size * QUALITY_BADGE_RATIO))
             badge.classList.add("quality-badge")
             badge.alt = quality.name
             icon.append(img, badge)
@@ -76,13 +71,13 @@ export class Icon {
 // Creates an <img> that shows the sprite of obj at size pixels.
 function spriteImage(obj: IconSource, size: number): HTMLImageElement {
     const sheet = spriteSheet()
-    const ratio = size / PX_WIDTH
+    const ratio = size / SPRITE_SIZE
     const img = makeEmptyIcon(size)
-    img.style.background = `url(images/sprite-sheet-${sheet.hash}.png)`
-    if (size !== PX_WIDTH) {
+    img.style.background = `url(${spriteSheetURL()})`
+    if (size !== SPRITE_SIZE) {
         img.style.backgroundSize = `${sheet.width * ratio}px ${sheet.height * ratio}px`
     }
-    img.style.backgroundPosition = `${-obj.icon_col * PX_WIDTH * ratio}px ${-obj.icon_row * PX_HEIGHT * ratio}px`
+    img.style.backgroundPosition = `${-obj.icon_col * SPRITE_SIZE * ratio}px ${-obj.icon_row * SPRITE_SIZE * ratio}px`
     return img
 }
 
@@ -127,6 +122,11 @@ export function spriteSheet(): SpriteSheetData {
         throw new Error("sprite sheet not loaded")
     }
     return sheet
+}
+
+/** Returns the URL of the sprite sheet of the loaded dataset. */
+export function spriteSheetURL(): string {
+    return `images/sprite-sheet-${spriteSheet().hash}.png`
 }
 
 /** Returns the extra sprite with this name. Throws if it does not exist. */

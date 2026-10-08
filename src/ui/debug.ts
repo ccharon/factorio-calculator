@@ -1,23 +1,14 @@
-/*Copyright 2021 Kirk McDonald
-Copyright 2026 Christian Charon
+// SPDX-FileCopyrightText: 2021 Kirk McDonald
+// SPDX-FileCopyrightText: 2026 Christian Charon
+// SPDX-License-Identifier: Apache-2.0
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.*/
 // Debug tab: shows the simplex tableau of the last solve before and after solving.
 
 import * as d3 from "d3"
 import type { Matrix } from "../core/simplex.ts"
 import type { TableauMetadata } from "../core/solve.ts"
 import { spec } from "../state/factory.ts"
+import { ICON_SIZE } from "./icon.ts"
 import { iconOf } from "./icons.ts"
 
 function renderMatrix(container: d3.Selection<HTMLElement, unknown, HTMLElement, unknown>, A: Matrix, m: TableauMetadata): void {
@@ -28,21 +19,21 @@ function renderMatrix(container: d3.Selection<HTMLElement, unknown, HTMLElement,
     for (const item of m.items) {
         const th = header.append("th")
         th.node()?.append("s")
-        th.append(() => iconOf(item).make(32)).classed("item-icon", true)
+        th.append(() => iconOf(item).make(ICON_SIZE)).classed("item-icon", true)
     }
 
     for (const t of m.targets) {
         const th = header.append("th")
-        th.append(() => iconOf(t.item).make(32))
+        th.append(() => iconOf(t.item).make(ICON_SIZE))
         th.node()?.append("\u21d0")
-        th.append(() => iconOf(t.recipe).make(32))
+        th.append(() => iconOf(t.recipe).make(ICON_SIZE))
     }
 
     header.append("th").text("tax")
     for (const recipe of m.recipes) {
-        header.append("th").append(() => iconOf(recipe).make(32)).classed("item-icon", true)
+        header.append("th").append(() => iconOf(recipe).make(ICON_SIZE)).classed("item-icon", true)
     }
-    header.append("th").text("answer")
+    header.append("th").text("result")
     header.append("th").text("C")
 
     for (let r = 0; r < A.rows; r++) {
@@ -50,9 +41,10 @@ function renderMatrix(container: d3.Selection<HTMLElement, unknown, HTMLElement,
         const label = row.append("td")
         const recipe = m.recipes[r]
         if (recipe !== undefined) {
-            label.append(() => iconOf(recipe).make(32)).classed("item-icon", true)
+            label.append(() => iconOf(recipe).make(ICON_SIZE)).classed("item-icon", true)
         } else {
-            label.text(r === A.rows - 2 ? "tax" : "answer")
+            // The tax row follows the recipe rows, and the result row comes last.
+            label.text(r === m.recipes.length ? "tax" : "result")
         }
         for (let c = 0; c < A.cols; c++) {
             row.append("td").classed("right-align", true).append("tt").text(A.index(r, c).toString())

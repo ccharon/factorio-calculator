@@ -1,31 +1,7 @@
-/*Copyright 2015, Mike Bostock
-Copyright 2026 Christian Charon
-All rights reserved.
+// SPDX-FileCopyrightText: 2015 Mike Bostock
+// SPDX-FileCopyrightText: 2026 Christian Charon
+// SPDX-License-Identifier: BSD-3-Clause
 
-Redistribution and use in source and binary forms, with or without modification,
-are permitted provided that the following conditions are met:
-
-* Redistributions of source code must retain the above copyright notice, this
-  list of conditions and the following disclaimer.
-
-* Redistributions in binary form must reproduce the above copyright notice,
-  this list of conditions and the following disclaimer in the documentation
-  and/or other materials provided with the distribution.
-
-* Neither the name of the author nor the names of contributors may be used to
-  endorse or promote products derived from this software without specific prior
-  written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
-ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 // Sankey layout, adapted from d3-sankey with right-aligned nodes, a fixed column distance and
 // reversed links for cycles. It writes the positions into the nodes and edges of the graph.
 import * as d3 from "d3"
@@ -172,49 +148,26 @@ function computeNodeValues({ nodes }: Graph): void {
     }
 }
 
-function computeNodeDepths({ nodes }: Graph): void {
+// Calls assign with the length of the longest path to each node: from the sources with
+// downstream, or from the sinks without. Backward links count in reverse, self links not at all.
+function computeDistances({ nodes }: Graph, downstream: boolean, assign: (node: GraphNode, distance: number) => void): void {
+    const outgoing = downstream ? "forward" : "backward"
+    const incoming = downstream ? "backward" : "forward"
     const n = nodes.length
     let current = new Set(nodes)
     let next = new Set<GraphNode>()
     let x = 0
     while (current.size) {
         for (const node of current) {
-            node.depth = x
+            assign(node, x)
             for (const { target, direction } of node.sourceLinks) {
-                if (direction === "forward") {
+                if (direction === outgoing) {
                     next.add(target)
                 }
             }
             for (const { source, direction } of node.targetLinks) {
-                if (direction === "backward") {
+                if (direction === incoming) {
                     next.add(source)
-                }
-            }
-        }
-        if (++x > n) {
-            throw new Error("circular link")
-        }
-        current = next
-        next = new Set()
-    }
-}
-
-function computeNodeHeights({ nodes }: Graph): void {
-    const n = nodes.length
-    let current = new Set(nodes)
-    let next = new Set<GraphNode>()
-    let x = 0
-    while (current.size) {
-        for (const node of current) {
-            node.height = x
-            for (const { source, direction } of node.targetLinks) {
-                if (direction === "forward") {
-                    next.add(source)
-                }
-            }
-            for (const { target, direction } of node.sourceLinks) {
-                if (direction === "backward") {
-                    next.add(target)
                 }
             }
         }
@@ -435,8 +388,12 @@ export function layoutSankey(graph: Graph, { nodeWidth: dx, nodePadding: py, max
     computeNodeLinks(graph)
     computeNodeValues(graph)
     minFAS(graph)
-    computeNodeDepths(graph)
-    computeNodeHeights(graph)
+    computeDistances(graph, true, (node, depth) => {
+        node.depth = depth
+    })
+    computeDistances(graph, false, (node, height) => {
+        node.height = height
+    })
     computeNodeBreadths(graph)
     computeLinkBreadths(graph)
     return graph

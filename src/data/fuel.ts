@@ -1,20 +1,11 @@
-/*Copyright 2015-2024 Kirk McDonald
-Copyright 2026 Christian Charon
+// SPDX-FileCopyrightText: 2015-2024 Kirk McDonald
+// SPDX-FileCopyrightText: 2026 Christian Charon
+// SPDX-License-Identifier: Apache-2.0
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.*/
 import { Rational } from "../core/rational.ts"
 import type { IconSource } from "./icon-source.ts"
-import type { Dataset } from "./dataset.ts"
+import type { Dataset, EnergySource } from "./dataset.ts"
+import { DEFAULT_FUEL_CATEGORY } from "./game.ts"
 import type { Item } from "./item.ts"
 import { requireItem } from "./recipe.ts"
 
@@ -40,9 +31,22 @@ export class Fuel implements IconSource {
     }
 }
 
+/** Returns the fuel category that a burner energy source burns, or null for other energy sources. */
+export function burnerFuelCategory(source: EnergySource | undefined): string | null {
+    if (source?.type !== "burner") {
+        return null
+    }
+    return source.fuel_categories?.[0] ?? source.fuel_category ?? DEFAULT_FUEL_CATEGORY
+}
+
+/** Returns the share of the fuel energy that an energy source turns into work or heat, such as 1 for 100%. */
+export function effectivityOf(source: EnergySource): Rational {
+    return Rational.from_float_approximate(source.effectivity ?? 1)
+}
+
 /** Creates all fuels by key, from lowest to highest fuel value. */
 export function getFuel(data: Dataset, items: ReadonlyMap<string, Item>): Map<string, Fuel> {
     const fuels = data.fuel.map(d => new Fuel(requireItem(items, d.item_key), d.categories, Rational.from_float_approximate(d.value)))
-    fuels.sort((a, b) => (a.value.less(b.value) ? -1 : b.value.less(a.value) ? 1 : 0))
+    fuels.sort((a, b) => a.value.compare(b.value))
     return new Map(fuels.map(f => [f.key, f]))
 }

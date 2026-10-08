@@ -1,16 +1,5 @@
-/*Copyright 2026 Christian Charon
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.*/
+// SPDX-FileCopyrightText: 2026 Christian Charon
+// SPDX-License-Identifier: Apache-2.0
 
 // The parts of Factorio's data.raw dump that the converter reads. Lua serializes empty tables as {},
 // so list fields can also be an empty object; convert.ts reads them through asArray().
@@ -29,16 +18,19 @@ export interface RawPrototype {
     readonly parameter?: boolean
 }
 
+/** An item subgroup. */
 export interface RawGroup extends RawPrototype {
     readonly group: string
 }
 
+/** A range of a surface property. */
 export interface RawSurfaceCondition {
     readonly property: string
     readonly min?: number
     readonly max?: number
 }
 
+/** The energy source of an entity. */
 export interface RawEnergySource {
     readonly type: "electric" | "burner" | "heat" | "fluid" | "void"
     readonly fuel_categories?: LuaList<string>
@@ -47,6 +39,7 @@ export interface RawEnergySource {
     readonly output_flow_limit?: string
 }
 
+/** An item of any item type. */
 export interface RawItem extends RawPrototype {
     readonly stack_size?: number
     readonly fuel_value?: string
@@ -61,6 +54,7 @@ export interface RawItem extends RawPrototype {
     readonly effect?: Readonly<Record<string, number>>
 }
 
+/** A fluid. */
 export interface RawFluid extends RawPrototype {
     readonly default_temperature?: number
     readonly max_temperature?: number
@@ -68,12 +62,14 @@ export interface RawFluid extends RawPrototype {
     readonly fuel_value?: string
 }
 
+/** A recipe ingredient. */
 export interface RawIngredient {
     readonly type?: "item" | "fluid"
     readonly name: string
     readonly amount: number
 }
 
+/** A recipe or mining product, possibly with a probability or an amount range. */
 export interface RawProduct {
     readonly type?: "item" | "fluid"
     readonly name: string
@@ -89,6 +85,7 @@ export interface RawProduct {
     readonly percent_spoiled?: number
 }
 
+/** A recipe. */
 export interface RawRecipe extends RawPrototype {
     readonly categories?: LuaList<string>
     readonly energy_required?: number
@@ -101,6 +98,7 @@ export interface RawRecipe extends RawPrototype {
     readonly surface_conditions?: LuaList<RawSurfaceCondition>
 }
 
+/** A fluid box. filter names the only fluid it takes. */
 export interface RawFluidBox {
     readonly filter?: string
 }
@@ -112,6 +110,7 @@ export interface RawTriggerEffect {
     readonly entity_name?: string
 }
 
+/** The mining properties of a resource or plant. */
 export interface RawMinable {
     readonly mining_time?: number
     readonly result?: string
@@ -166,22 +165,26 @@ export interface RawEntity extends RawPrototype {
     readonly dying_trigger_effect?: RawTriggerEffect | readonly RawTriggerEffect[]
 }
 
+/** A technology. */
 export interface RawTechnology extends RawPrototype {
     readonly effects?: LuaList<{ readonly type: string, readonly recipe?: string, readonly change?: number }>
     readonly max_level?: number | "infinite"
 }
 
+/** A quality level. */
 export interface RawQuality extends RawPrototype {
     readonly next?: string
     readonly next_probability?: number
     readonly chain_probability?: number
 }
 
+/** An asteroid or asteroid chunk that spawns at a space location. */
 export interface RawAsteroidSpawn {
     readonly type?: string
     readonly asteroid: string
 }
 
+/** A planet, space location, space connection or surface. */
 export interface RawSpaceLocation extends RawPrototype {
     readonly surface_properties?: Readonly<Record<string, number>>
     readonly entities_require_heating?: boolean
@@ -195,19 +198,23 @@ export interface RawSpaceLocation extends RawPrototype {
     }
 }
 
+/** A tile. fluid is the fluid an offshore pump gets from it. */
 export interface RawTile extends RawPrototype {
     readonly fluid?: string
 }
 
+/** A surface property. */
 export interface RawSurfaceProperty extends RawPrototype {
     readonly default_value: number
 }
 
+/** The utility sprites the calculator uses. */
 export interface RawUtilitySprites extends RawPrototype {
     readonly clock: { readonly filename: string }
     readonly empty_module_slot: { readonly filename: string }
 }
 
+/** The utility constants the calculator uses. */
 export interface RawUtilityConstants extends RawPrototype {
     readonly default_rocket_lift_weight: number
 }

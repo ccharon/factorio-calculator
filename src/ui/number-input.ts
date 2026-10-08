@@ -1,32 +1,31 @@
-/*Copyright 2026 Christian Charon
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.*/
+// SPDX-FileCopyrightText: 2026 Christian Charon
+// SPDX-License-Identifier: Apache-2.0
 
 // Reads numbers that the user types into input fields.
 
 import { Rational, zero } from "../core/rational.ts"
+
+/** Parses a decimal, fraction or mixed number. Returns null if text is no such number. */
+export function toRational(text: string): Rational | null {
+    try {
+        return Rational.from_string(text)
+    } catch {
+        return null
+    }
+}
+
+/** Parses a whole number from 0 to max. Returns null for anything else, including empty text. */
+export function toCount(text: string, max: number): number | null {
+    const value = text.trim() === "" ? Number.NaN : Number(text)
+    return Number.isInteger(value) && value >= 0 && value <= max ? value : null
+}
 
 /**
  * Reads a decimal, fraction or mixed number of zero or more from input. Returns null, marks the
  * input as invalid and shows the browser's validation message if the text is no such number.
  */
 export function readRational(input: HTMLInputElement): Rational | null {
-    let value: Rational | null
-    try {
-        value = Rational.from_string(input.value)
-    } catch {
-        value = null
-    }
+    let value = toRational(input.value)
     if (value?.less(zero)) {
         value = null
     }
@@ -41,9 +40,8 @@ export function readRational(input: HTMLInputElement): Rational | null {
  * the browser's validation message if the text is no such number.
  */
 export function readCount(input: HTMLInputElement, max: number): number | null {
-    const value = input.value.trim() === "" ? Number.NaN : Number(input.value)
-    const valid = Number.isInteger(value) && value >= 0 && value <= max
-    input.setCustomValidity(valid ? "" : `Enter a whole number from 0 to ${max}.`)
+    const value = toCount(input.value, max)
+    input.setCustomValidity(value === null ? `Enter a whole number from 0 to ${max}.` : "")
     input.reportValidity()
-    return valid ? value : null
+    return value
 }

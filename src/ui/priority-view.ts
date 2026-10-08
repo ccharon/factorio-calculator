@@ -1,17 +1,7 @@
-/*Copyright 2024 Kirk McDonald
-Copyright 2026 Christian Charon
+// SPDX-FileCopyrightText: 2024 Kirk McDonald
+// SPDX-FileCopyrightText: 2026 Christian Charon
+// SPDX-License-Identifier: Apache-2.0
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.*/
 // The Resources tab: shows the resource priority list and edits it by drag and drop or with the
 // arrow keys.
 
@@ -29,6 +19,8 @@ type Row =
     | { readonly kind: "level", readonly level: PriorityLevel }
 
 type DivSelection<T> = d3.Selection<HTMLDivElement, T, d3.BaseType, unknown>
+
+const RESOURCE_ICON_SIZE = 48
 
 // The resource being dragged, or null.
 let dragItem: Resource | null = null
@@ -108,7 +100,7 @@ function createResources(enter: d3.Selection<d3.EnterElement, Resource, HTMLDivE
     const div = enter.append("div").classed("resource", true)
     div.on("dragstart", function (event: DragEvent, resource: Resource) {
         // The icon is a transparent image with the sprite as background, so the browser's own drag image is empty.
-        event.dataTransfer?.setDragImage(this, 24, 24)
+        event.dataTransfer?.setDragImage(this, RESOURCE_ICON_SIZE / 2, RESOURCE_ICON_SIZE / 2)
         dragItem = resource
         // Chrome cancels the drag if the source loses its pointer events during dragstart.
         setTimeout(() => {
@@ -123,7 +115,7 @@ function createResources(enter: d3.Selection<d3.EnterElement, Resource, HTMLDivE
 
     // The icon takes the keyboard focus: left and right select another resource, up and down move this one.
     // It is no <button>, because Chrome does not drag an image inside a button.
-    const icon = div.append(resource => iconOf(resource.recipe).make(48))
+    const icon = div.append(resource => iconOf(resource.recipe).make(RESOURCE_ICON_SIZE))
     icon.attr("tabindex", 0).attr("role", "button").attr("aria-keyshortcuts", "ArrowLeft ArrowRight ArrowUp ArrowDown")
     icon.on("keydown", function (event: KeyboardEvent, resource: Resource) {
         if (event.key === "ArrowLeft" || event.key === "ArrowRight") {

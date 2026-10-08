@@ -1,23 +1,13 @@
-/*Copyright 2015-2024 Kirk McDonald
-Copyright 2026 Christian Charon
+// SPDX-FileCopyrightText: 2015-2024 Kirk McDonald
+// SPDX-FileCopyrightText: 2026 Christian Charon
+// SPDX-License-Identifier: Apache-2.0
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.*/
 // Dropdown for choosing a module, used for module slots, beacons and the default module settings.
 
 import type * as d3 from "d3"
 import type { Module } from "../data/module.ts"
 import { addInputs, makeDropdown } from "./dropdown.ts"
-import { getSprite } from "./icon.ts"
+import { ICON_SIZE, getSprite } from "./icon.ts"
 import { iconOf } from "./icons.ts"
 
 /** One choice in a module dropdown. */
@@ -53,22 +43,23 @@ export function moduleDropdown<GElement extends HTMLElement, Datum, PElement ext
         return s
     })
 
-    const dropdowns = wrappers.selectAll<HTMLDivElement, ModuleCell>("div.dropdown")
+    // select() passes the current cell on to a dropdown that already exists.
+    const dropdowns = wrappers.select<HTMLDivElement>("div.dropdown")
     const rows = dropdowns.selectAll<HTMLDivElement, readonly ModuleInput[]>("div.moduleRow").data(d => d.inputRows).join("div").classed("moduleRow", true)
     rows.selectAll<HTMLSpanElement, ModuleInput>("span.input").data(d => d).join(enter => {
         const s = enter.append("span").classed("input", true)
         const label = addInputs(s, d => d.cell.name, d => d.checked(), d => d.choose())
         label.append(function (d) {
             if (d.module === null) {
-                return iconOf(getSprite("slot_icon_module")).make(32)
+                return iconOf(getSprite("slot_icon_module")).make(ICON_SIZE)
             }
             // The tooltip goes next to the whole dropdown, not the icon.
             const dropdownNode = this.parentElement?.parentElement?.parentElement ?? undefined
-            return iconOf(d.module).make(32, false, dropdownNode)
+            return iconOf(d.module).make(ICON_SIZE, false, dropdownNode)
         })
         return s
     }, update => {
-        update.selectAll<HTMLInputElement, ModuleInput>("input").property("checked", d => d.checked())
+        update.select<HTMLInputElement>("input").property("checked", d => d.checked())
         return update
     })
 }

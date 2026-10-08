@@ -1,20 +1,12 @@
-/*Copyright 2019-2021 Kirk McDonald
-Copyright 2026 Christian Charon
+// SPDX-FileCopyrightText: 2019-2021 Kirk McDonald
+// SPDX-FileCopyrightText: 2026 Christian Charon
+// SPDX-License-Identifier: Apache-2.0
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.*/
-import { Rational, zero, one } from "../core/rational.ts"
+import { Rational, zero, one, hundred } from "../core/rational.ts"
 import type { IconSource } from "./icon-source.ts"
 import type { Dataset, DatasetProduct, DatasetRecipe, SurfaceConditionData } from "./dataset.ts"
+import { effectivityOf } from "./fuel.ts"
+import { BASIC_FLUID_CATEGORY, BOILER, NUCLEAR_REACTOR, NUCLEAR_REACTOR_CYCLE, STEAM, TICKS_PER_SECOND, URANIUM_FUEL_CELL, WATER } from "./game.ts"
 import type { Item } from "./item.ts"
 import type { Quality } from "./quality.ts"
 
@@ -305,6 +297,7 @@ export class Recipe implements RecipeLike {
     }
 }
 
+/** Key prefix of a DisabledRecipe, followed by the item key. */
 export const DISABLED_RECIPE_PREFIX = "D-"
 
 /** Key of the abstract item for electric energy. One unit is one megajoule, so a rate in units per second is in MW. */
@@ -312,6 +305,11 @@ export const ELECTRICITY = "electricity"
 
 /** Key of the abstract item for heat from reactors. One unit is one megajoule. */
 export const HEAT = "heat"
+
+/** Returns whether key names electricity or heat, which can come from outside the factory. */
+export function isEnergyKey(key: string): boolean {
+    return key === ELECTRICITY || key === HEAT
+}
 
 /** Joules per unit of electricity and heat. */
 export const ELECTRICITY_UNIT: Rational = Rational.from_float(1000000)
@@ -412,8 +410,6 @@ function makeRecipe(items: ReadonlyMap<string, Item>, d: DatasetRecipe): Recipe 
     })
 }
 
-const hundred = Rational.from_float(100)
-
 /**
  * The nuclear reactor burning one fuel cell. Each active neighbouring reactor adds neighbourBonus times
  * the heat. The bonus enters the solver like productivity on the heat product.
@@ -428,26 +424,48 @@ export class ReactorRecipe extends Recipe {
     }
 }
 
-/** Pseudo-recipe for an item that no recipe produces. It supplies the item at a fixed priority. */
+// Default priority levels of resources: pumped fluids are the cheapest, then mined, grown and
+// collected resources, then items that no recipe produces.
+const PUMPED_PRIORITY = 0
+const EXTRACTED_PRIORITY = 1
+const UNPRODUCED_PRIORITY = 2
+
+/** Default weight of a resource within its priority level. */
+export const DEFAULT_RESOURCE_WEIGHT: Rational = hundred
+
+// The dataset gives the fluid that mining needs per 10 mining cycles.
+const MINING_CYCLES_PER_FLUID_AMOUNT = 10
+
+/**
+ * Pseudo-recipe that supplies one unit of a resource from nothing, such as a pumped fluid, an
+ * asteroid chunk or an item that no recipe produces. Resources appear in the Resources tab.
+ */
 class ResourceRecipe extends Recipe {
-    constructor(item: Item, priority: number | undefined, weight: Rational | undefined) {
+    /**
+     * @param priority - Default priority level, or undefined for resources outside the priority list.
+     * @param options - Fields that differ from the product, such as the key of a fluid resource.
+     */
+    constructor(product: Item, priority: number | undefined, options: Partial<Pick<RecipeOptions, "key" | "name" | "order" | "icon_col" | "icon_row" | "categories">> = {}) {
         super({
-            key: item.key,
-            name: item.name,
-            order: item.order,
-            icon_col: item.icon_col,
-            icon_row: item.icon_row,
+            key: product.key,
+            name: product.name,
+            order: product.order,
+            icon_col: product.icon_col,
+            icon_row: product.icon_row,
             allowProductivity: false,
             categories: [],
             time: zero,
             ingredients: [],
-            products: [new Ingredient(item, one)],
+            products: [new Ingredient(product, one)],
+            ...options,
         })
-        this.defaultPriority = priority
-        this.defaultWeight = weight
+        if (priority !== undefined) {
+            this.defaultPriority = priority
+            this.defaultWeight = DEFAULT_RESOURCE_WEIGHT
+        }
     }
 
-    /** Items without a recipe appear in the Resources tab. */
+    /** Returns true. */
     override isResource(): boolean {
         return true
     }
@@ -476,6 +494,15 @@ class SpoilageRecipe extends Recipe {
 /** Crafting category of plant recipes, which agricultural towers tend. */
 export const AGRICULTURE_CATEGORY = "agriculture"
 
+/** Crafting category of the nuclear reactor cycle. */
+export const NUCLEAR_CATEGORY = "nuclear"
+
+/** Crafting category of the steam recipe of the boiler. */
+export const BOILER_CATEGORY = "boiler"
+
+/** Crafting category of pumping a fluid from a lake or ocean. */
+export const OFFSHORE_PUMPING_CATEGORY = "offshore-pumping"
+
 /**
  * Pseudo-recipe for growing a plant from its seed, tended by an agricultural tower. time is the
  * growth time. Plants without surface conditions count as resources.
@@ -484,8 +511,8 @@ class PlantRecipe extends Recipe {
     constructor(options: Omit<RecipeOptions, "allowProductivity" | "categories">) {
         super({ ...options, allowProductivity: false, categories: [AGRICULTURE_CATEGORY] })
         if (this.isResource()) {
-            this.defaultPriority = 1
-            this.defaultWeight = hundred
+            this.defaultPriority = EXTRACTED_PRIORITY
+            this.defaultWeight = DEFAULT_RESOURCE_WEIGHT
         }
     }
 
@@ -503,8 +530,8 @@ export class MiningRecipe extends Recipe {
     constructor(options: Omit<RecipeOptions, "allowProductivity" | "time">, miningTime: Rational) {
         super({ ...options, allowProductivity: true, allowQuality: true, time: zero })
         this.miningTime = miningTime
-        this.defaultPriority = 1
-        this.defaultWeight = hundred
+        this.defaultPriority = EXTRACTED_PRIORITY
+        this.defaultWeight = DEFAULT_RESOURCE_WEIGHT
     }
 
     /** Mined resources appear in the Resources tab. */
@@ -513,95 +540,12 @@ export class MiningRecipe extends Recipe {
     }
 }
 
-/**
- * Pseudo-recipe for a fluid resource such as crude oil. It has no building, so the calculator
- * shows no pumpjack count.
- */
-class PumpjackRecipe extends Recipe {
-    constructor(key: string, name: string, col: number, row: number, product: Item) {
-        super({
-            key,
-            name,
-            order: undefined,
-            icon_col: col,
-            icon_row: row,
-            allowProductivity: false,
-            categories: [],
-            time: zero,
-            ingredients: [],
-            products: [new Ingredient(product, one)],
-        })
-        this.defaultPriority = 1
-        this.defaultWeight = hundred
-    }
-
-    /** Fluid resources appear in the Resources tab. */
-    override isResource(): boolean {
-        return true
-    }
-}
-
-/**
- * Pseudo-recipe for asteroid chunks that asteroid collectors catch on a space platform. It has no
- * building, because the collection rate depends on the asteroid density along the route.
- */
-class AsteroidRecipe extends Recipe {
-    constructor(chunk: Item) {
-        super({
-            key: chunk.key,
-            name: chunk.name,
-            order: chunk.order,
-            icon_col: chunk.icon_col,
-            icon_row: chunk.icon_row,
-            allowProductivity: false,
-            categories: [],
-            time: zero,
-            ingredients: [],
-            products: [new Ingredient(chunk, one)],
-        })
-
-        this.defaultPriority = 1
-        this.defaultWeight = hundred
-    }
-
-    /** Asteroid chunks appear in the Resources tab. */
-    override isResource(): boolean {
-        return true
-    }
-}
-
-/** Pseudo-recipe for pumping a fluid from a lake or ocean. */
-class OffshorePumpRecipe extends Recipe {
-    constructor(product: Item) {
-        super({
-            key: product.key,
-            name: product.name,
-            order: product.order,
-            icon_col: product.icon_col,
-            icon_row: product.icon_row,
-            allowProductivity: false,
-            categories: ["offshore-pumping"],
-            time: zero,
-            ingredients: [],
-            products: [new Ingredient(product, one)],
-        })
-
-        this.defaultPriority = 0
-        this.defaultWeight = hundred
-    }
-
-    /** Pumped fluids appear in the Resources tab. */
-    override isResource(): boolean {
-        return true
-    }
-}
-
 // Returns water used and steam produced per second by one boiler.
 function getSteam(data: Dataset): [Rational, Rational] {
     const R = (x: number): Rational => Rational.from_float(x)
-    const boiler = data.boilers.find(d => d.key === "boiler")
-    const water = data.fluids.find(f => f.item_key === "water")
-    const steam = data.fluids.find(f => f.item_key === "steam")
+    const boiler = data.boilers.find(d => d.key === BOILER)
+    const water = data.fluids.find(f => f.item_key === WATER)
+    const steam = data.fluids.find(f => f.item_key === STEAM)
 
     if (!boiler || !water || !steam) {
         throw new Error("dataset lacks the boiler, water or steam")
@@ -627,45 +571,45 @@ export function getRecipes(data: Dataset, items: Map<string, Item>): Map<string,
     const recipes = new Map<string, Recipe>()
     const item = (key: string): Item => requireItem(items, key)
 
-    const reactor = item("nuclear-reactor")
-    const reactorDef = data.reactors.find(r => r.key === "nuclear-reactor")
-    const cellValue = data.fuel.find(f => f.item_key === "uranium-fuel-cell")?.value
+    const reactor = item(NUCLEAR_REACTOR)
+    const reactorDef = data.reactors.find(r => r.key === NUCLEAR_REACTOR)
+    const cellValue = data.fuel.find(f => f.item_key === URANIUM_FUEL_CELL)?.value
 
     if (reactorDef === undefined || cellValue === undefined) {
         throw new Error("dataset lacks the nuclear reactor or the uranium fuel cell")
     }
 
-    recipes.set("nuclear-reactor-cycle", new ReactorRecipe(Rational.from_float_approximate(reactorDef.neighbour_bonus), {
-        key: "nuclear-reactor-cycle",
+    recipes.set(NUCLEAR_REACTOR_CYCLE, new ReactorRecipe(Rational.from_float_approximate(reactorDef.neighbour_bonus), {
+        key: NUCLEAR_REACTOR_CYCLE,
         name: "Nuclear reactor cycle",
         order: reactor.order,
         icon_col: reactor.icon_col,
         icon_row: reactor.icon_row,
         allowProductivity: false,
-        categories: ["nuclear"],
+        categories: [NUCLEAR_CATEGORY],
         // One fuel cell lasts its fuel value at the reactor's heat output.
         time: Rational.from_float(cellValue).div(Rational.from_float(reactorDef.consumption)),
-        ingredients: [new Ingredient(item("uranium-fuel-cell"), one)],
+        ingredients: [new Ingredient(item(URANIUM_FUEL_CELL), one)],
         products: [
             // The neighbour bonus adds heat, not depleted cells.
             new Ingredient(item("depleted-uranium-fuel-cell"), one, one),
-            new Ingredient(item(HEAT), Rational.from_float(cellValue).mul(Rational.from_float_approximate(reactorDef.energy_source.effectivity ?? 1)).div(ELECTRICITY_UNIT)),
+            new Ingredient(item(HEAT), Rational.from_float(cellValue).mul(effectivityOf(reactorDef.energy_source)).div(ELECTRICITY_UNIT)),
         ],
     }))
 
-    const steam = item("steam")
+    const steam = item(STEAM)
     const [waterRate, steamRate] = getSteam(data)
 
-    recipes.set("steam", new Recipe({
-        key: "steam",
+    recipes.set(STEAM, new Recipe({
+        key: STEAM,
         name: "Steam",
         order: steam.order,
         icon_col: steam.icon_col,
         icon_row: steam.icon_row,
         allowProductivity: false,
-        categories: ["boiler"],
+        categories: [BOILER_CATEGORY],
         time: one,
-        ingredients: [new Ingredient(item("water"), waterRate)],
+        ingredients: [new Ingredient(item(WATER), waterRate)],
         products: [new Ingredient(steam, steamRate)],
     }))
 
@@ -677,19 +621,22 @@ export function getRecipes(data: Dataset, items: Map<string, Item>): Map<string,
     }
 
     for (const key of new Set(data.planets.flatMap(p => p.resources.asteroid))) {
-        recipes.set(key, new AsteroidRecipe(item(key)))
+        // Asteroid chunks have no building, because the collection rate depends on the asteroid density along the route.
+        recipes.set(key, new ResourceRecipe(item(key), EXTRACTED_PRIORITY))
     }
 
     for (const d of data.resources) {
         const first = d.results[0]
-        if (d.category === "basic-fluid" && first !== undefined) {
-            recipes.set(d.key, new PumpjackRecipe(d.key, d.localized_name.en, d.icon_col, d.icon_row, item(first.name)))
+        if (d.category === BASIC_FLUID_CATEGORY && first !== undefined) {
+            // Fluid resources such as crude oil have no building, so the calculator shows no pumpjack count.
+            const options = { key: d.key, name: d.localized_name.en, order: undefined, icon_col: d.icon_col, icon_row: d.icon_row }
+            recipes.set(d.key, new ResourceRecipe(item(first.name), EXTRACTED_PRIORITY, options))
             continue
         }
 
         const ingredients: Ingredient[] = []
         if (d.required_fluid !== undefined && d.fluid_amount !== undefined) {
-            ingredients.push(new Ingredient(item(d.required_fluid), Rational.from_float_approximate(d.fluid_amount / 10)))
+            ingredients.push(new Ingredient(item(d.required_fluid), Rational.from_float_approximate(d.fluid_amount / MINING_CYCLES_PER_FLUID_AMOUNT)))
         }
 
         recipes.set(d.key, new MiningRecipe({
@@ -709,7 +656,7 @@ export function getRecipes(data: Dataset, items: Map<string, Item>): Map<string,
         if (recipes.has(key)) {
             console.warn("duplicate recipe key:", key)
         }
-        recipes.set(key, new OffshorePumpRecipe(item(key)))
+        recipes.set(key, new ResourceRecipe(item(key), PUMPED_PRIORITY, { categories: [OFFSHORE_PUMPING_CATEGORY] }))
     }
 
     for (const plant of data.plants) {
@@ -723,7 +670,7 @@ export function getRecipes(data: Dataset, items: Map<string, Item>): Map<string,
             products: productIngredients(items, plant.results),
             conditions: surfaceConditions(plant.surface_conditions),
             // The dataset gives ticks.
-            time: Rational.from_floats(plant.growth_ticks, 60),
+            time: Rational.from_floats(plant.growth_ticks, TICKS_PER_SECOND),
         }))
     }
 
@@ -734,8 +681,8 @@ export function getRecipes(data: Dataset, items: Map<string, Item>): Map<string,
 
     // Electricity and heat come from outside the factory. They have no priority, so it costs nothing and does
     // not change which recipes the solver picks.
-    recipes.set(ELECTRICITY, new ResourceRecipe(item(ELECTRICITY), undefined, undefined))
-    recipes.set(HEAT, new ResourceRecipe(item(HEAT), undefined, undefined))
+    recipes.set(ELECTRICITY, new ResourceRecipe(item(ELECTRICITY), undefined))
+    recipes.set(HEAT, new ResourceRecipe(item(HEAT), undefined))
 
     return recipes
 }
@@ -749,7 +696,7 @@ export function addResources(items: Map<string, Item>, recipes: Map<string, Reci
         if (it.recipes.length === 0 && it.uses.length === 0) {
             items.delete(itemKey)
         } else if (it.recipes.length === 0) {
-            recipes.set(itemKey, new ResourceRecipe(it, 2, hundred))
+            recipes.set(itemKey, new ResourceRecipe(it, UNPRODUCED_PRIORITY))
         }
     }
 }

@@ -1,17 +1,7 @@
-/*Copyright 2019-2021 Kirk McDonald
-Copyright 2026 Christian Charon
+// SPDX-FileCopyrightText: 2019-2021 Kirk McDonald
+// SPDX-FileCopyrightText: 2026 Christian Charon
+// SPDX-License-Identifier: Apache-2.0
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.*/
 // The visualizer graph and the code shared by the Sankey and boxline layouts.
 import * as d3 from "d3"
 import type { Building } from "../data/building.ts"
@@ -20,7 +10,8 @@ import { isRecipeLike, Recipe, type RecipeLike, type RecipeNode, type Ingredient
 import type { Rational } from "../core/rational.ts"
 import { spec } from "../state/factory.ts"
 import type { IconSource } from "../data/icon-source.ts"
-import { PX_WIDTH, PX_HEIGHT, spriteSheet } from "../ui/icon.ts"
+import { SPRITE_SIZE } from "../data/icon-source.ts"
+import { ICON_SIZE, QUALITY_BADGE_RATIO, spriteSheet, spriteSheetURL } from "../ui/icon.ts"
 import type { CirclePath, Point } from "./circlepath.ts"
 
 const colorList: readonly string[] = [
@@ -36,8 +27,9 @@ const colorList: readonly string[] = [
     "#ff7f0e", // orange
 ]
 
-export const iconSize = 32
 const colonWidth = 12
+// Vertical distance of each colon dot from the middle of the node.
+const colonDotOffset = 4
 
 /** Direction of a link relative to the node order of the Sankey layout. */
 export type LinkDirection = "forward" | "backward" | "self"
@@ -175,7 +167,7 @@ export class GraphNode {
         if (this.rate === null) {
             return this.name
         } else if (this.count.isZero()) {
-            return ` × ${spec.format.rate(this.rate)}/${spec.format.rateName}`
+            return ` × ${spec.format.rateWithUnit(this.rate)}`
         } else {
             return ` × ${spec.format.count(this.count)}`
         }
@@ -189,43 +181,21 @@ export class GraphNode {
         return this.recipe
     }
 
-    // There are three types of nodes, each of which calculate their width
-    // differently:
-    //
-    // 1) Plain text nodes, used for the "output" and "surplus" nodes. These
-    //    are simply the width of the rendered text string, plus a margin on
-    //    either side.
-    //      [margin] [text] [margin]
-    // 2) Rate nodes, which represent the production of an item in lieu of a
-    //    building. These consist of:
-    //      [margin] [item icon] [text label] [margin]
-    // 3) Recipe nodes, which contain a recipe icon, a representation of a
-    //    colon (as two circles), a building icon, and a text label:
-    //      [margin] [recipe icon] [colon] [building icon] [text] [margin]
-    //
-    // The constant `iconSize` is the width and height, in SVG coordinate
-    // units, of all icons.
-    //
-    // The constant `colonWidth` is the distance, in SVG coordinate units,
-    // between the recipe and building icons; the colon symbol is then centered
-    // in this gap.
-    //
-    // `nodeMargin` is 2 for the Sankey visualization: 1 pixel for the rect
-    // border, and one pixel for separation from the border. It is 10 for the
-    // boxline visualization, which looks nicer.
-    //
-    // These calculations hold for both the Sankey and boxline visualizations,
-    // with the slight caveat that this is the exact width of each node in the
-    // boxline mode, while nodes are of a uniform width in the Sankey diagram,
-    // chosen from the maximum node width calculated here.
-    /** Returns the width of the node, measured with text, an SVG text element in the document. */
-    labelWidth(text: d3.Selection<SVGTextElement, unknown, HTMLElement, unknown>, nodeMargin: number): number {
+    /**
+     * Returns the width of the node, measured with text, an SVG text element in the document.
+     * Output and surplus nodes hold only text. Nodes without a building add an item icon, and
+     * recipe nodes add the recipe icon, a colon and the building icon. The Sankey layout gives all
+     * nodes the width of the widest one.
+     *
+     * @param nodeMargin - Space on each side between the border and the content.
+     */
+    labelWidth(text: TestText, nodeMargin: number): number {
         text.text(this.text())
         let nodeWidth = measureText(text) + nodeMargin * 2
         if (this.building !== null) {
-            nodeWidth += iconSize * 2 + colonWidth
+            nodeWidth += ICON_SIZE * 2 + colonWidth
         } else if (this.rate !== null) {
-            nodeWidth += iconSize
+            nodeWidth += ICON_SIZE
         }
         return nodeWidth
     }
@@ -253,8 +223,70 @@ export interface Graph {
     readonly links: GraphEdge[]
 }
 
+/** The svg#graph element of the visualizer tab. */
+export type GraphSVG = d3.Selection<SVGSVGElement, unknown, HTMLElement, unknown>
+
+/** An SVG text element for measuring text. */
+export type TestText = d3.Selection<SVGTextElement, unknown, HTMLElement, unknown>
+
+/** Returns the result of measure, called with a text element in a temporary SVG with the given classes. */
+export function withTestText<T>(classes: string, measure: (text: TestText) => T): T {
+    const testSVG = d3.select<HTMLElement, unknown>("body").append("svg").classed(classes, true)
+    try {
+        return measure(testSVG.append("text"))
+    } finally {
+        testSVG.remove()
+    }
+}
+
+/**
+ * Returns the result of measure, called while the graph tab is shown, because a hidden tab gives
+ * empty bounding boxes. The images are hidden meanwhile, so that their sprite sheet does not
+ * count into the bounding box of the diagram.
+ */
+export function measureInGraphTab<T>(svg: GraphSVG, measure: () => T): T {
+    const tab = d3.select<HTMLElement, unknown>("#graph_tab")
+    const display = tab.style("display")
+    tab.style("display", "block")
+    svg.selectAll("image").style("display", "none")
+    try {
+        return measure()
+    } finally {
+        svg.selectAll("image").style("display", null)
+        tab.style("display", display)
+    }
+}
+
+/** A rectangle in SVG coordinates. */
+export interface Box {
+    readonly x: number
+    readonly y: number
+    readonly width: number
+    readonly height: number
+}
+
+/** Covers each node with a transparent rect that takes the mouse events of the node and shows title(node) on hover. */
+export function renderOverlay(svg: GraphSVG, nodes: readonly GraphNode[], box: (node: GraphNode) => Box, title: (node: GraphNode) => string): void {
+    svg.append("g")
+        .classed("overlay", true)
+        .selectAll("rect")
+        .data(nodes)
+        .join("rect")
+        .attr("stroke", "none")
+        .attr("fill", "transparent")
+        .attr("x", d => box(d).x)
+        .attr("y", d => box(d).y)
+        .attr("width", d => box(d).width)
+        .attr("height", d => box(d).height)
+        .on("mouseover", graphMouseOverHandler)
+        .on("mouseleave", graphMouseLeaveHandler)
+        .on("click", graphClickHandler)
+        .append("title")
+        .text(title)
+}
+
 /** Returns the rendered width of an SVG text element. */
-export function measureText(text: d3.Selection<SVGTextElement, unknown, HTMLElement, unknown>): number {
+export function measureText(text: TestText): number {
     const node = text.node()
     if (node === null) {
         throw new Error("missing text element")
@@ -378,16 +410,12 @@ export function darkColorOf<K>(colors: ReadonlyMap<K, number>, key: K): string {
     return color.darker().toString()
 }
 
-/** Returns the SVG viewBox that shows the icon of obj in the sprite sheet. */
-export function imageViewBox(obj: IconSource): string {
-    const x1 = obj.icon_col * PX_WIDTH + 0.5
-    const y1 = obj.icon_row * PX_HEIGHT + 0.5
-    return `${x1} ${y1} ${PX_WIDTH - 1} ${PX_HEIGHT - 1}`
-}
-
-/** Returns the URL of the sprite sheet. */
-export function spriteSheetURL(): string {
-    return `images/sprite-sheet-${spriteSheet().hash}.png`
+// Returns the SVG viewBox that shows the icon of obj in the sprite sheet. It leaves out half a
+// pixel at each edge, so that neighbouring icons do not bleed in.
+function imageViewBox(obj: IconSource): string {
+    const x1 = obj.icon_col * SPRITE_SIZE + 0.5
+    const y1 = obj.icon_row * SPRITE_SIZE + 0.5
+    return `${x1} ${y1} ${SPRITE_SIZE - 1} ${SPRITE_SIZE - 1}`
 }
 
 function buildingOf(node: GraphNode): Building {
@@ -422,7 +450,7 @@ export function appendSpriteIcon<GElement extends d3.BaseType, Datum, PElement e
         .attr("width", size)
         .attr("height", size)
         .append<SVGImageElement>("image")
-        .attr("xlink:href", spriteSheetURL())
+        .attr("href", spriteSheetURL())
         .attr("width", spriteSheet().width)
         .attr("height", spriteSheet().height)
 }
@@ -433,7 +461,7 @@ export function appendSpriteIcon<GElement extends d3.BaseType, Datum, PElement e
  * @param nodeMargin - Space between the rect border and the icons and text.
  * @param justification - "left" places the label at the left edge, "center" in the middle.
  */
-export function renderNodes(svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, unknown>, nodes: readonly GraphNode[], nodeMargin: number,
+export function renderNodes(svg: GraphSVG, nodes: readonly GraphNode[], nodeMargin: number,
     justification: "left" | "center", recipeColors: ReadonlyMap<RecipeNode, number>, ignore: ReadonlySet<Item>): void {
     const rects = svg.append("g")
         .classed("nodes", true)
@@ -450,7 +478,6 @@ export function renderNodes(svg: d3.Selection<SVGSVGElement, unknown, HTMLElemen
         }
     })
 
-    // main rect
     rects.append("rect")
         .attr("x", d => d.x0)
         .attr("y", d => d.y0)
@@ -461,7 +488,7 @@ export function renderNodes(svg: d3.Selection<SVGSVGElement, unknown, HTMLElemen
         .each(function (d) {
             d.element = this
         })
-    // plain text node (output, surplus)
+    // Output and surplus nodes show only their name.
     rects.filter(d => d.rate === null)
         .append("text")
         .attr("x", d => (d.x0 + d.x1) / 2)
@@ -470,35 +497,28 @@ export function renderNodes(svg: d3.Selection<SVGSVGElement, unknown, HTMLElemen
         .attr("text-anchor", "middle")
         .text(d => d.text())
     const labeledNode = rects.filter(d => d.rate !== null)
-    // recipe icon
-    appendSpriteIcon(labeledNode, d => d.icon(), d => d.labelX + nodeMargin, d => (d.y0 + d.y1) / 2 - iconSize / 2, iconSize)
+    appendSpriteIcon(labeledNode, d => d.icon(), d => d.labelX + nodeMargin, d => (d.y0 + d.y1) / 2 - ICON_SIZE / 2, ICON_SIZE)
         .classed("ignore", d => isIgnored(d, ignore))
-    // quality badge of a recipe variant, in the lower left corner of the recipe icon
-    const badgeSize = Math.round(iconSize * 0.45)
+    // A recipe variant gets a quality badge in the lower left corner of the recipe icon.
+    const badgeSize = Math.round(ICON_SIZE * QUALITY_BADGE_RATIO)
     const qualityOf = (d: GraphNode): IconSource | null => {
         const recipe = d.icon()
         return recipe instanceof Recipe ? recipe.quality : null
     }
     const badged = labeledNode.filter(d => qualityOf(d) !== null)
-    appendSpriteIcon(badged, d => qualityOf(d) ?? d.icon(), d => d.labelX + nodeMargin, d => (d.y0 + d.y1) / 2 + iconSize / 2 - badgeSize, badgeSize)
-    // node text (building count, or plain rate if no building)
+    appendSpriteIcon(badged, d => qualityOf(d) ?? d.icon(), d => d.labelX + nodeMargin, d => (d.y0 + d.y1) / 2 + ICON_SIZE / 2 - badgeSize, badgeSize)
     labeledNode.append("text")
-        .attr("x", d => d.labelX + nodeMargin + iconSize + (d.building === null ? 0 : colonWidth + iconSize))
+        .attr("x", d => d.labelX + nodeMargin + ICON_SIZE + (d.building === null ? 0 : colonWidth + ICON_SIZE))
         .attr("y", d => (d.y0 + d.y1) / 2)
         .attr("dy", "0.35em")
         .text(d => d.text())
     const buildingNode = rects.filter(d => d.building !== null)
-    // colon
-    buildingNode.append("circle")
-        .classed("colon", true)
-        .attr("cx", d => d.labelX + nodeMargin + iconSize + colonWidth / 2)
-        .attr("cy", d => (d.y0 + d.y1) / 2 - 4)
-        .attr("r", 1)
-    buildingNode.append("circle")
-        .classed("colon", true)
-        .attr("cx", d => d.labelX + nodeMargin + iconSize + colonWidth / 2)
-        .attr("cy", d => (d.y0 + d.y1) / 2 + 4)
-        .attr("r", 1)
-    // building icon
-    appendSpriteIcon(buildingNode, buildingOf, d => d.labelX + iconSize + colonWidth + nodeMargin, d => (d.y0 + d.y1) / 2 - iconSize / 2, iconSize)
+    for (const dy of [-colonDotOffset, colonDotOffset]) {
+        buildingNode.append("circle")
+            .classed("colon", true)
+            .attr("cx", d => d.labelX + nodeMargin + ICON_SIZE + colonWidth / 2)
+            .attr("cy", d => (d.y0 + d.y1) / 2 + dy)
+            .attr("r", 1)
+    }
+    appendSpriteIcon(buildingNode, buildingOf, d => d.labelX + ICON_SIZE + colonWidth + nodeMargin, d => (d.y0 + d.y1) / 2 - ICON_SIZE / 2, ICON_SIZE)
 }

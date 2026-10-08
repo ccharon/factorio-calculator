@@ -18,8 +18,7 @@
   "ignorePatterns": [
     "dist/**",
     "public/**",
-    "node_modules/**",
-    ".port/**"
+    "node_modules/**"
   ],
   "rules": {
     "no-eval": "error",

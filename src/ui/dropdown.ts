@@ -1,17 +1,7 @@
-/*Copyright 2019-2021 Kirk McDonald
-Copyright 2026 Christian Charon
+// SPDX-FileCopyrightText: 2019-2021 Kirk McDonald
+// SPDX-FileCopyrightText: 2026 Christian Charon
+// SPDX-License-Identifier: Apache-2.0
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.*/
 // Icon dropdowns: a radio group with icon labels that shows only the selected one until clicked.
 // The open dropdown is a popover over its place in the page (see .dropdown in dropdown.css).
 
@@ -73,10 +63,12 @@ export function makeDropdown<GElement extends HTMLElement, Datum, PElement exten
             closeDropdown(this)
         }
     }).on("keydown", function (event: KeyboardEvent) {
-        if (event.target === this && (event.key === "Enter" || event.key === " ")) {
+        // Enter and space work like a click, as on a button.
+        const activates = event.key === "Enter" || event.key === " "
+        if (event.target === this && activates) {
             event.preventDefault()
             openDropdown(this)
-        } else if (event.target instanceof HTMLInputElement && event.target.type === "radio" && (event.key === "Enter" || event.key === " ")) {
+        } else if (event.target instanceof HTMLInputElement && event.target.type === "radio" && activates) {
             event.preventDefault()
             closeDropdown(this)
         }
