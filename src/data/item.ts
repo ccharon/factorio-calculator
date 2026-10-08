@@ -37,6 +37,9 @@ export class Item implements IconSource {
     /** Weight in grams, or null for fluids and abstract items. */
     readonly weight: number | null
 
+    /** Ticks until the item spoils, or null if it does not spoil. */
+    readonly spoilTicks: number | null
+
     /** The pseudo item for this item launched into orbit, or null if it cannot be launched. Set by addRocketCargo(). */
     orbit: Item | null = null
 
@@ -54,9 +57,10 @@ export class Item implements IconSource {
 
     /**
      * @param weight - Weight in grams, or null for fluids and abstract items.
+     * @param spoilTicks - Ticks until the item spoils, or null if it does not spoil.
      * @param base - For a variant: the normal item. The variant has its key and quality.
      */
-    constructor(key: string, name: string, col: number, row: number, phase: Phase, group: string, subgroup: string, order: string, weight: number | null = null, base: Item | null = null, quality: Quality | null = null) {
+    constructor(key: string, name: string, col: number, row: number, phase: Phase, group: string, subgroup: string, order: string, weight: number | null = null, spoilTicks: number | null = null, base: Item | null = null, quality: Quality | null = null) {
         this.key = key
         this.name = name
         this.phase = phase
@@ -67,6 +71,7 @@ export class Item implements IconSource {
         this.order = order
         this.disableRecipe = new DisabledRecipe(this)
         this.weight = weight
+        this.spoilTicks = spoilTicks
         this.base = base ?? this
         this.quality = quality
     }
@@ -78,7 +83,7 @@ export class Item implements IconSource {
 
     /** Creates and registers the variant of this normal item at quality. */
     addVariant(quality: Quality): Item {
-        const item = new Item(`${this.key}@${quality.key}`, this.name, this.icon_col, this.icon_row, this.phase, this.group, this.subgroup, this.order, this.weight, this, quality)
+        const item = new Item(`${this.key}@${quality.key}`, this.name, this.icon_col, this.icon_row, this.phase, this.group, this.subgroup, this.order, this.weight, this.spoilTicks, this, quality)
         this.variants.set(quality, item)
         return item
     }
@@ -105,7 +110,7 @@ export function getItems(data: Dataset): Map<string, Item> {
 
     for (const d of data.items) {
         const phase: Phase = d.type === "fluid" ? "fluid" : "solid"
-        items.set(d.key, new Item(d.key, d.localized_name.en, d.icon_col, d.icon_row, phase, d.group, d.subgroup, d.order, d.weight ?? null))
+        items.set(d.key, new Item(d.key, d.localized_name.en, d.icon_col, d.icon_row, phase, d.group, d.subgroup, d.order, d.weight ?? null, d.spoil_ticks ?? null))
     }
 
     // The abstract items take their icons from extra sprites of the same name and sort among the energy items.

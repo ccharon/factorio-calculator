@@ -41,6 +41,7 @@
           "order": { "type": "string" },
           "stack_size": { "type": "integer", "minimum": 1 },
           "weight": { "type": "number", "minimum": 0, "description": "Weight in grams, which limits rocket cargo." },
+          "spoil_ticks": { "type": "integer", "minimum": 1, "description": "Ticks until the item spoils. Absent for items that do not spoil." },
           "icon_col": { "$ref": "#/$defs/iconIndex" },
           "icon_row": { "$ref": "#/$defs/iconIndex" }
         }

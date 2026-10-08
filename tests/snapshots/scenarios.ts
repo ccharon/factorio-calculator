@@ -37,7 +37,7 @@ export const SCENARIOS: readonly (readonly [name: string, fragment: string])[] =
     ["aquilo", "#items=cryogenic-science-pack:r:60&planet=aquilo"],
     ["aquilo-fusion-power", "#items=cryogenic-science-pack:r:60&planet=aquilo&enable=fusion-generator-power"],
     ["aquilo-heating", "#items=cryogenic-science-pack:r:60&planet=aquilo&enable=heating-tower-heat"],
-    ["nauvis-vulcanus", "#items=low-density-structure:r:60&planet=nauvis,vulcanus"],
+    ["vulcanus-advanced-circuit", "#items=advanced-circuit:r:60&planet=vulcanus"],
     ["space-platform", "#items=space-science-pack:r:60&planet=space-platform"],
     ["space-platform-thrusters", "#items=thruster-fuel:r:6000,thruster-oxidizer:r:6000&planet=space-platform"],
     ["space-platform-promethium", "#items=promethium-science-pack:r:60&planet=space-platform"],

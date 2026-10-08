@@ -213,6 +213,7 @@ export function convert(raw: RawData, localeFiles: LocaleFiles, version: string,
             order: p.order ?? "",
             stack_size: p.stack_size,
             weight: runtime.item_weights[p.name],
+            spoil_ticks: p.spoil_ticks,
             icon_ref: `item/${p.name}`,
         }))
         const fuelValue = parseEnergy(p.fuel_value, "J") ?? 0

@@ -681,21 +681,11 @@ function renderDefaultBeacon(settings: Settings): void {
 
 // planets and recipe toggles
 
-// Click selects one planet. Shift-click adds or removes a planet.
-function clickPlanet(this: HTMLButtonElement, event: MouseEvent, d: Planet): void {
-    if (event.shiftKey) {
-        event.preventDefault()
-        const selected = spec.selectedPlanets.has(d)
-        if (selected) {
-            spec.unselectPlanet(d)
-        } else {
-            spec.selectPlanet(d)
-        }
-    } else {
-        spec.selectOnePlanet(d)
-    }
+// Puts the factory on the clicked planet.
+function clickPlanet(this: HTMLButtonElement, _event: MouseEvent, d: Planet): void {
+    spec.selectPlanet(d)
 
-    setPressed(d3.selectAll<HTMLButtonElement, Planet>("#planet_selector .toggle"), p => spec.selectedPlanets.has(p))
+    setPressed(d3.selectAll<HTMLButtonElement, Planet>("#planet_selector .toggle"), p => p === spec.planet)
     setPressed(d3.selectAll<HTMLButtonElement, Recipe>("#recipe_toggles .toggle"), r => !spec.disable.has(r))
     renderBuildingSelector()
     spec.updateSolution()
@@ -727,15 +717,13 @@ function renderRecipes(settings: Settings): void {
         planetRow.style("display", "none")
     }
     if (havePlanets) {
-        const planetSetting = settings.get("planet")
-        const planetKeys = planetSetting === undefined ? [DEFAULT_PLANET] : splitList(planetSetting)
-        for (const key of planetKeys) {
-            const planet = spec.planets.get(key)
-            if (planet === undefined) {
-                warnUrl("unknown planet", key)
-            } else {
-                spec.selectPlanet(planet)
-            }
+        const key = settings.get("planet") ?? DEFAULT_PLANET
+        const planet = spec.planets.get(key) ?? spec.planets.get(DEFAULT_PLANET)
+        if (!spec.planets.has(key)) {
+            warnUrl("unknown planet", key)
+        }
+        if (planet !== undefined) {
+            spec.selectPlanet(planet)
         }
     }
     // Which buildings work depends on the planets.
@@ -763,7 +751,7 @@ function renderRecipes(settings: Settings): void {
     if (havePlanets) {
         const planetToggles = planetDiv.selectAll<HTMLButtonElement, Planet>("button").data(sorted(spec.planets.values(), p => p.order)).join("button")
         planetToggles.attr("type", "button").classed("toggle", true).on("click", clickPlanet)
-        setPressed(planetToggles, d => spec.selectedPlanets.has(d))
+        setPressed(planetToggles, d => d === spec.planet)
         planetToggles.append(d => iconOf(d).make(ICON_SIZE))
     }
 

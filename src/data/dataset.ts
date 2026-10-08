@@ -70,6 +70,8 @@ export interface DatasetItem extends NamedPrototype {
     stack_size?: number
     /** Weight in grams, which limits rocket cargo. */
     weight?: number
+    /** Ticks until the item spoils. Absent for items that do not spoil. */
+    spoil_ticks?: number
 }
 
 /** Heat properties of a fluid. Energy values are in J. */

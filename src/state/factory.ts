@@ -101,8 +101,9 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
 
     readonly ignore: Set<Item> = new Set()
     readonly disable: Set<Recipe> = new Set()
-    readonly selectedPlanets: Set<Planet> = new Set()
-    /** Recipes the selected planets disable, or null before a planet is selected. */
+    /** The planet the factory stands on, or null before one is selected. */
+    planet: Planet | null = null
+    /** Recipes the planet disables, or null before a planet is selected. */
     planetaryBaseline: Set<Recipe> | null = null
 
     defaultPriority: PriorityLevelMap[] = []
@@ -290,25 +291,15 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
         this.redisplayTargets(items)
     }
 
-    // Disables exactly the recipes that all selected planets disable.
-    private syncPlanetDisable(): void {
-        let allDisable = new Set<Recipe>()
-        const planets = Array.from(this.selectedPlanets)
-
-        const first = planets[0]
-        if (first !== undefined) {
-            allDisable = new Set(first.disable)
-            for (const p of planets.slice(1)) {
-                allDisable = new Set(Array.from(p.disable).filter(r => allDisable.has(r)))
-            }
-        }
-
-        this.planetaryBaseline = allDisable
-        for (const r of Array.from(this.disable).filter(r => !allDisable.has(r))) {
+    // Disables exactly the recipes that the planet disables.
+    private syncPlanetDisable(planet: Planet): void {
+        const planetDisable = planet.disable
+        this.planetaryBaseline = new Set(planetDisable)
+        for (const r of Array.from(this.disable).filter(r => !planetDisable.has(r))) {
             this.setEnable(r)
         }
 
-        for (const r of allDisable) {
+        for (const r of planetDisable) {
             if (!this.disable.has(r)) {
                 this.setDisable(r)
             }
@@ -317,13 +308,9 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
         this.updateModuleBuildings()
     }
 
-    /** Returns whether only the default planet is selected. */
+    /** Returns whether the default planet is selected. */
     isDefaultPlanet(): boolean {
-        if (this.planets.size <= 1) {
-            return true
-        }
-        const selected = Array.from(this.selectedPlanets)
-        return selected.length === 1 && selected[0]?.key === DEFAULT_PLANET
+        return this.planets.size <= 1 || this.planet?.key === DEFAULT_PLANET
     }
 
     /** Returns the recipes disabled and enabled beyond what the planet selection implies. */
@@ -338,22 +325,10 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
         }
     }
 
-    /** Selects only planet. */
-    selectOnePlanet(planet: Planet): void {
-        this.selectedPlanets.clear()
-        this.selectPlanet(planet)
-    }
-
-    /** Adds planet to the selection. */
+    /** Puts the factory on planet. */
     selectPlanet(planet: Planet): void {
-        this.selectedPlanets.add(planet)
-        this.syncPlanetDisable()
-    }
-
-    /** Removes planet from the selection. */
-    unselectPlanet(planet: Planet): void {
-        this.selectedPlanets.delete(planet)
-        this.syncPlanetDisable()
+        this.planet = planet
+        this.syncPlanetDisable(planet)
     }
 
     /** Returns the default resource priorities: one map of recipe weights per level. */
@@ -521,9 +496,9 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
         return this.buildTargets.some(target => target.recipe === recipe && target.changedBuilding)
     }
 
-    /** Returns whether building works on at least one selected planet. Without a selection every building works. */
+    /** Returns whether building works on the planet. Without a planet every building works. */
     buildingWorks(building: Building): boolean {
-        return this.selectedPlanets.size === 0 || Array.from(this.selectedPlanets).some(p => building.worksOn(p.properties))
+        return this.planet === null || building.worksOn(this.planet.properties)
     }
 
     /** Returns the building that crafts recipe, or null for recipes without a building. */

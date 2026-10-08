@@ -16,7 +16,7 @@ import type { FuelChoice } from "./fuel-choice.ts"
 /** What the energy calculations need from the factory state. FactorySpecification implements it. */
 export interface EnergyContext extends QualityContext {
     readonly fuel: FuelChoice
-    readonly selectedPlanets: ReadonlySet<Planet>
+    readonly planet: Planet | null
     /** The abstract item for heat, in MJ. */
     readonly heat: Item
     /** The abstract item for electric energy, in MJ. */
@@ -57,7 +57,7 @@ export function getEnergyIngredients(context: EnergyContext, recipe: Recipe): In
     if (building === null || baseRate === null) {
         return []
     }
-    const heating = requiresHeating(context.selectedPlanets) && !building.heatingEnergy.isZero()
+    const heating = context.planet !== null && context.planet.requiresHeating && !building.heatingEnergy.isZero()
         ? [new Ingredient(context.heat, building.heatingEnergy.div(baseRate).div(ELECTRICITY_UNIT))]
         : []
     if (building.power.isZero()) {
@@ -72,11 +72,6 @@ export function getEnergyIngredients(context: EnergyContext, recipe: Recipe): In
     const powerEffect = context.getModuleSpec(recipe)?.powerEffect(context) ?? one
     const watts = building.workingPower(baseRate).mul(powerEffect).add(building.drain())
     return [new Ingredient(context.electricity, watts.div(baseRate).div(ELECTRICITY_UNIT)), ...heating]
-}
-
-/** Returns whether buildings need heat: every selected planet requires heating. */
-function requiresHeating(planets: ReadonlySet<Planet>): boolean {
-    return planets.size > 0 && Array.from(planets).every(p => p.requiresHeating)
 }
 
 /** Returns the power use of recipe at rate crafts per second, including module effects and idle drain. */

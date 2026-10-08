@@ -206,7 +206,7 @@
             <tr id="planet_setting_row" class="setting-row">
             <td class="setting-label top">Planets:</td>
             <td>
-                <div>(Click to select one planet, shift-click to select multiple.)</div>
+                <div>(Click to select the planet the factory stands on.)</div>
                 <div id="planet_selector"></div>
             </td>
             </tr>
@@ -232,7 +232,7 @@
         <p>
         Clicking on the icon a second time will restore its dependencies.
         <h3>How do I plan for several planets?</h3>
-        Click a planet in the settings to select only that planet. Shift-click adds or removes a planet. Recipes and buildings are available if they work on at least one selected planet.
+        Each calculation covers the factory on one planet. Resources the planet lacks come in as imports if they can travel: solid items that fit into a rocket and do not spoil within an hour. Recipes that need an ingredient the planet can neither make nor import are disabled. To plan an import, calculate it on the planet that makes it, with the item launched into orbit as target.
         <h3>Why is no power plant in the solution?</h3>
         Electricity and heat are free imports by default. Enable a generator, such as the steam engine or the solar panel of a planet, in the recipe toggles to include it. While one is enabled, the factory has to produce its own electricity.
         <h3>How do I plan for items of higher quality?</h3>

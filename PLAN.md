@@ -60,7 +60,8 @@ errors; the test setups are correct (discussed with the user on 2026-10-08). Nex
    crane_energy_usage = 100 kW; the game uses 29 to 63 kW on average, depending on crane activity (trees
    with long growth use least). First measure the power model in the game (towers with few plots, without
    seeds, per planting and harvest action), then model it in the calculator.
-4. Solver with D-lava (no in-game test fails, but snapshots are affected).
+4. DONE: ignored items from the URL now enter the priority list; the Aquilo lava imports went away with
+   the planet rules of point 5. Solver with D-lava (no in-game test fails, but snapshots are affected).
    With ignore=iron-ore on Nauvis the solver casts iron from D-lava in a foundry instead of using the
    ignored ore. The snapshots aquilo, aquilo-fusion-power, aquilo-heating and space-platform-promethium
    import lava through D-lava. Check whether the priority of ignored items and of DisabledRecipes is right.
@@ -68,9 +69,12 @@ errors; the test setups are correct (discussed with the user on 2026-10-08). Nex
 After each fix: npm run check, npm run snapshot:check (record only if the change is intended, compare
 the diff), and npm run ingame:check -- --factorio /home/christian/Spiele/factorio --only <test>.
 
-5. Planets: with several planets selected, the solver mixes them into one factory (for example iron from
+5. DONE: one planet per calculation, imports only for items that fit into a rocket and do not spoil
+   within an hour (space platform: any rocket cargo), recipes without reachable ingredients disabled.
+   Planets: with several planets selected, the solver mixes them into one factory (for example iron from
    Gleba bacteria for red circuits in Vulcanus foundries). Needs an assignment of recipes to planets and
    transport rules (spoiling items cannot leave Gleba). Reported by the user on 2026-10-08.
 
-Other open points: recycling loops in chain tests deadlock with waiting machines; the boiler water rate is
+Other open points: chain-uncommon-gears is flaky, the uncommon ore count is random and the flow
+tolerance is not statistical. recycling loops in chain tests deadlock with waiting machines; the boiler water rate is
 not measured; stage 3 (recycler with scrap on Fulgora, space platform) is not built yet.
