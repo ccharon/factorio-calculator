@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="referrer" content="no-referrer">
+    <title>Factorio Calculator</title>
+    <link rel="shortcut icon" href="favicon.png" type="image/png">
+  <script type="module" crossorigin src="./assets/index-8lplpYHJ.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-BpyJOpGf.css">
+</head>
+
+<!-- SPDX-FileCopyrightText: 2015-2024 Kirk McDonald -->
+<!-- SPDX-FileCopyrightText: 2026 Christian Charon -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<body>
+    <table><tr>
+    <td>
+    <ul id="targets">
+        <li id="plusButton">
+            <button class="targetButton ui" title="Add new item.">+</button>
+        </li>
+    </ul>
+    </td>
+
+    <td class="changecell">
+    <div class="changebox">
+    Data: Factorio <span id="data_version"></span> with Space Age.
+    <div id="url_warnings" class="url-warnings" hidden></div>
+    </div>
+    </td>
+    </tr></table>
+
+    <div class="tabs">
+        <button class="tab_button" id="totals_button">Factory</button>
+        <button class="tab_button" id="graph_button">Visualize</button>
+        <button class="tab_button" id="resources_button">Resources</button>
+        <button class="tab_button" id="settings_button">Settings</button>
+        <button class="tab_button" id="faq_button">FAQ</button>
+        <button class="tab_button" id="about_button">About</button>
+        <button class="tab_button" id="debug_button">Debug</button>
+    </div>
+
+    <div id="graph_tab" class="tab graph">
+        <div class="graph_setting">
+            <form id="graph_type">
+                <input id="sankey_type" type="radio" name="type" value="sankey" checked autocomplete="off">
+                <label for="sankey_type">
+                    <svg viewBox="0 0 64 64" width="64" height="64">
+                        <use href="images/icons.svg#sankey"></use>
+                    </svg>
+                </label>
+
+                <input id="boxline_type" type="radio" name="type" value="boxline" autocomplete="off">
+                <label for="boxline_type">
+                    <svg viewBox="0 0 64 64" width="64" height="64">
+                        <use href="images/icons.svg#boxline"></use>
+                    </svg>
+                </label>
+            </form>
+        </div>
+        <div class="graph_setting">
+            Render mode:<br>
+            <form id="graph_render">
+                <input id="zoom_render" type="radio" name="render" value="zoom" checked autocomplete="off">
+                <label for="zoom_render">Zoom &amp; pan</label>
+
+                <input id="fix_render" type="radio" name="render" value="fix" autocomplete="off">
+                <label for="fix_render">Fixed</label>
+            </form>
+        </div>
+        <div class="graph_setting">
+            Graph direction:<br>
+            <form id="graph_direction">
+                <input id="right_direction" type="radio" name="direction" value="right" autocomplete="off">
+                <label for="right_direction">Left to right</label>
+
+                <input id="down_direction" type="radio" name="direction" value="down" autocomplete="off">
+                <label for="down_direction">Top to bottom</label>
+            </form>
+        </div>
+        <div class="graph_setting">
+            Electricity:<br>
+            <label><input id="graph_electricity" type="checkbox" autocomplete="off"> Show</label>
+        </div>
+        <div id="graph_container">
+        <svg id="graph"><g /></svg>
+        </div>
+    </div>
+
+    <div id="totals_tab" class="tab">
+        <table id="totals">
+        <thead><tr></tr></thead>
+        <tfoot>
+            <tr class="power-row">
+                <td class="surplus"></td>
+                <td class="right-align power-label"><b>total power: </b></td>
+                <td class="right-align pad"><tt></tt></td>
+                <td></td>
+            </tr>
+        </tfoot>
+        </table>
+    </div>
+
+    <div id="settings_tab" class="tab">
+        <table id="settings">
+
+        <tr class="setting-section">
+        <td colspan="2"><span>Display</span><hr></td>
+        </tr>
+
+            <tr class="setting-row">
+            <td class="setting-label">Title:</td>
+            <td><input id="title_setting" type="text" size="30" placeholder="Factorio Calculator"></td>
+            </tr>
+
+            <tr class="setting-row">
+            <td class="setting-label top">Display rates as:</td>
+            <td><form id="display_rate"></form></td>
+            </tr>
+
+            <tr class="setting-row">
+            <td class="setting-label">Rate precision:</td>
+            <td><input id="rprec" class="prec" type="number" value="3" min="0"></td>
+            </tr>
+
+            <tr class="setting-row">
+            <td class="setting-label">Count precision:</td>
+            <td><input id="cprec" class="prec" type="number" value="1" min="0"></td>
+            </tr>
+
+            <tr class="setting-row">
+            <td class="setting-label top">Format values as:</td>
+            <td><form id="value_format">
+                <input id="decimal_format" type="radio" name="format" value="decimal" checked><label for="decimal_format">Decimals</label><br />
+                <input id="rational_format" type="radio" name="format" value="rational"><label for="rational_format">Rationals</label><br />
+            </form></td>
+            </tr>
+
+            <tr class="setting-row">
+            <td class="setting-label">Color scheme:</td>
+            <td><select id="color_scheme"></select></td>
+            </tr>
+
+        <tr class="setting-section">
+        <td colspan="2"><span>Factory</span><hr></td>
+        </tr>
+
+            <tr class="setting-row">
+            <td class="setting-label">Belt:</td>
+            <td><span id="belt_selector" class="radio-setting"></span></td>
+            </tr>
+
+            <tr class="setting-row">
+            <td class="setting-label">Preferred fuel:</td>
+            <td><span id="fuel_selector"></span></td>
+            </tr>
+
+            <tr class="setting-row">
+            <td class="setting-label">Default module:</td>
+            <td><span id="default_module"></span></td>
+            </tr>
+
+            <tr class="setting-row">
+            <td class="setting-label">Secondary default module:</td>
+            <td><span id="secondary_module"></span></td>
+            </tr>
+
+            <tr class="setting-row">
+            <td class="setting-label">Default beacon:</td>
+            <td><span id="default_beacon" class="beacon-container"></span>
+            &times;
+            <input id="default_beacon_count" type="text" size="3">
+            </td>
+            </tr>
+
+            <tr class="setting-row">
+            <td class="setting-label top-icon"><div><span>Buildings:</span></div></td>
+            <td><span id="building_selector"></span></td>
+            </tr>
+
+            <tr class="setting-row">
+            <td class="setting-label">Quality:</td>
+            <td><div id="quality_selector"></div></td>
+            </tr>
+
+            <tr class="setting-row">
+            <td class="setting-label">Mining productivity bonus:</td>
+            <td>+<input id="mprod" class="mprod" type="number" step="10" value="0" min="0">%</td>
+            </tr>
+
+            <tr class="setting-row">
+            <td class="setting-label">Nuclear reactor block:</td>
+            <td>2 × <input id="reactor_block" class="mprod" type="number" step="1" value="0" min="0" max="100" title="Reactors per row in a block of two rows. 0 is a single reactor."> <span id="reactor_bonus"></span></td>
+            </tr>
+
+            <tr class="setting-row">
+            <td class="setting-label top-icon"><div><span>Productivity research levels:</span></div></td>
+            <td><span id="research_selector"></span></td>
+            </tr>
+
+        <tr class="setting-section">
+        <td colspan="2"><span>Recipes</span><hr></td>
+        </tr>
+
+            <tr id="planet_setting_row" class="setting-row">
+            <td class="setting-label top">Planets:</td>
+            <td>
+                <div>(Click to select the planet the factory stands on.)</div>
+                <div id="planet_selector"></div>
+            </td>
+            </tr>
+
+            <tr class="setting-row">
+            <td class="setting-label top-icon"><div><span>Toggle recipes:</span></div></td>
+            <td><div id="recipe_toggles"></div></td>
+            </tr>
+
+        </table>
+    </div>
+
+    <div id="resources_tab" class="tab">
+        <p>Drag items to configure resource priority, or use the keyboard: left and right arrow keys select an item, up and down move it.<br />
+        Higher numbers = more valuable</p>
+        <div id="resource_settings"></div>
+    </div>
+
+    <div id="faq_tab" class="tab">
+    <div class="about-content">
+        <h3>What does clicking on an item's icon in the "Factory" tab do?</h3>
+        It omits the dependencies of that item from the solution. The intent behind this feature is to model the case of building a factory when you are shipping in one or more ingredients from elsewhere. For example, if you are making an advanced circuit factory and want to ship in electronic circuits, and want to see the remaining copper cable requirements on their own.
+        <p>
+        Clicking on the icon a second time will restore its dependencies.
+        <h3>How do I plan for several planets?</h3>
+        Each calculation covers the factory on one planet. Resources the planet lacks come in as imports if they can travel: solid items that fit into a rocket and do not spoil within an hour. Recipes that need an ingredient the planet can neither make nor import are disabled. To plan an import, calculate it on the planet that makes it, with the item launched into orbit as target.
+        <h3>Why is no power plant in the solution?</h3>
+        Electricity and heat are free imports by default. Enable a generator, such as the steam engine or the solar panel of a planet, in the recipe toggles to include it. While one is enabled, the factory has to produce its own electricity.
+        <h3>How do I plan for items of higher quality?</h3>
+        Choose the quality next to the target item, and put quality modules into the buildings, for example with the default module setting. Products of higher quality appear as separate rows with a quality badge. To recycle items for another chance at quality, enable their recycling recipes in the recipe toggles.
+        <h3>How do I change which resources the solver prefers?</h3>
+        In the "Resources" tab, drag a resource into another level. Resources at the top are used first. Within a level, a lower weight is preferred. With the keyboard, the left and right arrow keys select a resource and the up and down arrow keys move it.
+    </div>
+    </div>
+
+    <div id="about_tab" class="tab">
+    <div class = "about-content">
+        This calculator is copyright 2015-2024 Kirk McDonald, with changes copyright 2026 Christian Charon. It is licensed under the Apache License 2.0, and its source may be <a href="https://github.com/KirkMcDonald/kirkmcdonald.github.io" rel="noopener noreferrer">found on GitHub</a>.
+        <p>
+        This version covers Factorio 2.1 with the Space Age expansion only. Its source is <a href="https://github.com/ccharon/factorio-calculator" rel="noopener noreferrer">on GitHub</a>.
+        <p>
+        Features:
+        <ul><li>Multiple simultaneous outputs, with automatic handling of recipes that produce several products, such as oil processing.
+        <li>Modules and beacons.
+        <li>Planet selection, which limits recipes and resources to what is available there.
+        <li>Exact rational arithmetic, so results have no floating-point errors.
+        <li>Rates per second, minute or hour.
+        <li>Quality of machines, modules and beacons per recipe, and recipe productivity research with the productivity cap.
+        <li>Targets of higher quality, solved with quality modules and recycling loops.
+        <li>Space platforms with asteroid collection, crushing and thruster fuel, and rocket launches of every launchable item.
+        <li>Power and heat: steam engines, solar panels per planet, nuclear and fusion power, heating towers.
+        <li>Agricultural towers and burner buildings with a choice of fuel per fuel category.</ul>
+    </div>
+    </div>
+
+    <div id="debug_tab" class="tab">
+        <div id="debug_message"></div>
+
+        <label for="render_debug">Render debug tab:</label>
+        <input type="checkbox" id="render_debug"><br>
+        Last tableau:
+        <div id="debug_tableau"></div>
+        Last solution:
+        <div id="debug_solution"></div>
+    </div>
+
+    <div id="footer"><a href="https://github.com/ccharon/factorio-calculator" rel="noopener noreferrer">GitHub</a> | <a href="https://github.com/KirkMcDonald/kirkmcdonald.github.io" rel="noopener noreferrer">Original calculator by Kirk McDonald</a></div>
+
+    <div id="tooltip_container"></div>
+</body>
+</html>

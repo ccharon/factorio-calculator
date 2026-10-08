@@ -1,0 +1,74 @@
+<svg viewBox="0 0 128 116" width="128" height="116" xmlns="http://www.w3.org/2000/svg">
+    <!--<style type="text/css" media="screen">
+        <![CDATA[
+            svg {
+                color: black;
+            }
+            #gear {
+                transform: translate(24px, 0px);
+            }
+            #sankey {
+                transform: translate(0px, 32px);
+            }
+            #boxline {
+                transform: translate(64px, 32px);
+            }
+            #right {
+                transform: translate(0px, 100px);
+            }
+            #right:hover {
+                transform: translate(0px, 100px) rotate(90deg);
+                transition-duration: 0.5s;
+            }
+            #rightarrow {
+                transform: translate(16px, 100px);
+            }
+        ]]>
+    </style>-->
+    <path id="popout" fill="none" stroke="currentColor" stroke-width="2px" d="
+        M 13,5 L 1,5 L 1,23 L 19,23 L 19,10
+        M 10,14 L 23,1
+        M 17,1 L 23,1 L 23,7" />
+
+
+    <g id="sankey">
+        <g stroke="currentColor" stroke-width="1" fill="currentColor" fill-opacity="0.5">
+            <rect x="5" y="9" width="8" height="35" />
+            <rect x="28" y="5" width="8" height="20" />
+            <rect x="51" y="9" width="8" height="35" />
+        </g>
+        <g stroke="currentColor" stroke-opacity="0.3" fill="none">
+            <path stroke-width="20" d="M 13,19 C 20.5,19 20.5,15 28,15" />
+            <path stroke-width="20" d="M 36,15 C 43.5,15 43.5,19 51,19" />
+            <path stroke-width="15" d="M 13,36.5 L 51,36.5" />
+        </g>
+        <g stroke="none" fill="currentColor" text-anchor="middle">
+            <text x="32" y="54" dy="0.35em" style='font-size: 12px; font-family: "Courier New", monospace;'>SANKEY</text>
+        </g>
+    </g>
+
+    <g id="boxline">
+        <g stroke="currentColor" stroke-width="1" fill="none">
+            <path d="M 17.93103448275862,15 L 29.06896551724138,34" />
+            <path d="M 46.06896551724138,15 L 34.93103448275862,34" />
+        </g>
+        <g stroke="currentColor" stroke-width="1" fill="currentColor" fill-opacity="0.5">
+            <rect x="5" y="5" width="20" height="10" />
+            <rect x="39" y="5" width="20" height="10" />
+            <rect x="22" y="34" width="20" height="10" />
+        </g>
+        <g stroke="none" fill="currentColor" text-anchor="middle">
+            <text x="32" y="54" dy="0.35em" style='font-size: 12px; font-family: "Courier New", monospace;'>BOX&amp;LINE</text>
+        </g>
+    </g>
+
+    <g id="right" style="transform-origin: 8px 8px;">
+        <path stroke="currentColor" stroke-width="4" stroke-linecap="round"
+            fill="none" d="M 5,2 L 11,8 L 5,14" />
+    </g>
+
+    <g id="rightarrow">
+        <path stroke="currentColor" stroke-width="4" stroke-linecap="round"
+            fill="none" d="M 10,2 L 16,8 L 10,14 M 2,8 L 16,8" />
+    </g>
+</svg>
