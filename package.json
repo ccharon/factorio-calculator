@@ -16,7 +16,8 @@
     "build-data": "node tools/build-data.ts",
     "test:browser": "node tests/browser/smoke.ts",
     "snapshot:check": "node tests/browser/snapshot.ts check",
-    "snapshot:record": "node tests/browser/snapshot.ts record"
+    "snapshot:record": "node tests/browser/snapshot.ts record",
+    "ingame:check": "node tests/ingame/check.ts"
   },
   "devDependencies": {
     "@types/d3": "^7.4.3",

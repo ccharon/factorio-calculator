@@ -86,49 +86,81 @@ end)
 `,
 }
 
-function writeModList(modDir: string, extra: readonly string[]): void {
-    writeFileSync(join(modDir, "mod-list.json"), JSON.stringify({
-        mods: [...SPACE_AGE_MODS, ...extra].map(name => ({ name, enabled: true })),
-    }))
+/**
+ * A game installation set up to run headless. The game directory is only read: a separate config
+ * file points the write path into the work directory, and a separate mod directory enables only
+ * the Space Age mods and the mods added with addMod().
+ */
+export class HeadlessGame {
+    readonly exe: string
+    readonly config: string
+    readonly modDir: string
+    readonly writeDir: string
+    private readonly extraMods: string[] = []
+
+    /**
+     * @param factorioDir - Root of the installation.
+     * @param workDir - Empty directory for config, mods and output.
+     */
+    constructor(factorioDir: string, workDir: string) {
+        this.exe = findExecutable(factorioDir)
+        this.modDir = join(workDir, "mods")
+        this.writeDir = join(workDir, "write")
+        mkdirSync(this.modDir, { recursive: true })
+        mkdirSync(this.writeDir, { recursive: true })
+        this.config = join(workDir, "config.ini")
+        writeFileSync(this.config, `[path]\nread-data=${join(factorioDir, "data")}\nwrite-data=${this.writeDir}\n`)
+        this.writeModList()
+    }
+
+    /** The directory where scripts write files with helpers.write_file(). */
+    get scriptOutput(): string {
+        return join(this.writeDir, "script-output")
+    }
+
+    /** Writes a mod with the given files, by file name, and enables it. */
+    addMod(name: string, files: Readonly<Record<string, string>>): void {
+        mkdirSync(join(this.modDir, name), { recursive: true })
+        for (const [file, content] of Object.entries(files)) {
+            writeFileSync(join(this.modDir, name, file), content)
+        }
+        this.extraMods.push(name)
+        this.writeModList()
+    }
+
+    /** Runs the game with the given arguments. Its errors go to stderr. */
+    run(...args: string[]): void {
+        console.log(`factorio ${args.join(" ")}`)
+        execFileSync(this.exe, ["-c", this.config, "--mod-directory", this.modDir, ...args], { stdio: ["ignore", "ignore", "inherit"] })
+    }
+
+    private writeModList(): void {
+        writeFileSync(join(this.modDir, "mod-list.json"), JSON.stringify({
+            mods: [...SPACE_AGE_MODS, ...this.extraMods].map(name => ({ name, enabled: true })),
+        }))
+    }
 }
 
 /**
  * Runs the three dump commands into workDir/write/script-output, then creates a map with a helper
- * mod that writes runtime values to calculator-dump.json there. The game directory is only read:
- * a separate config file points the write path into workDir, and a separate mod directory
- * enables only the Space Age mods.
+ * mod that writes runtime values to calculator-dump.json there.
  *
  * @param factorioDir - Root of the installation.
  * @param workDir - Empty directory for config, mod list and output.
  * @returns The script-output directory.
  */
 export function dumpGameData(factorioDir: string, workDir: string): string {
-    const modDir = join(workDir, "mods")
-    const writeDir = join(workDir, "write")
-    mkdirSync(modDir, { recursive: true })
-    mkdirSync(writeDir, { recursive: true })
-
-    const config = join(workDir, "config.ini")
-    writeFileSync(config, `[path]\nread-data=${join(factorioDir, "data")}\nwrite-data=${writeDir}\n`)
-    writeModList(modDir, [])
-
-    const exe = findExecutable(factorioDir)
+    const game = new HeadlessGame(factorioDir, workDir)
     // The dump flags cannot be combined in one run.
     for (const flag of ["--dump-data", "--dump-icon-sprites", "--dump-prototype-locale"]) {
-        console.log(`factorio ${flag}`)
-        execFileSync(exe, ["-c", config, "--mod-directory", modDir, flag], { stdio: ["ignore", "ignore", "inherit"] })
+        game.run(flag)
     }
 
     // Runtime values exist only in a running game. Creating a map runs the helper mod's on_init.
-    console.log("factorio --create")
-    mkdirSync(join(modDir, DUMP_MOD), { recursive: true })
-    for (const [name, content] of Object.entries(DUMP_MOD_FILES)) {
-        writeFileSync(join(modDir, DUMP_MOD, name), content)
-    }
-    writeModList(modDir, [DUMP_MOD])
-    execFileSync(exe, ["-c", config, "--mod-directory", modDir, "--create", join(workDir, "dump.zip")], { stdio: ["ignore", "ignore", "inherit"] })
+    game.addMod(DUMP_MOD, DUMP_MOD_FILES)
+    game.run("--create", join(workDir, "dump.zip"))
 
-    return join(writeDir, "script-output")
+    return game.scriptOutput
 }
 
 /** The parsed output of dumpGameData(). */

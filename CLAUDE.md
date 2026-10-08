@@ -32,6 +32,7 @@ Node 25 or newer (the tests use `Uint8Array.toBase64`).
 | `npm run test:browser` | Loads the page in a separate headless Chrome (`/usr/bin/google-chrome-stable`, override with `CHROME`) via `puppeteer-core`, prints the factory table and fails on JS errors. Takes `--dist` and an optional URL fragment. |
 | `npm run snapshot:check` | Solves every scenario in `tests/snapshots/scenarios.ts` in headless Chrome and compares the exact results with `tests/snapshots/factory.json`. Fails on any difference. `--dist` tests the production build. |
 | `npm run snapshot:record` | Rewrites `tests/snapshots/factory.json`. Only run it when a result change is intended, and review the diff. |
+| `npm run ingame:check -- --factorio <dir>` | Builds the factories of `tests/ingame/factories.ts` in the local game with the helper mod `tests/ingame/mod/control.lua`, runs them headless and compares the measured products and fuel energy with the calculator. Run it manually after changes to the calculations; it is not part of `npm run check` or CI. `--keep` keeps the game directory. |
 
 Oxlint JS plugins are alpha and are not used.
 
