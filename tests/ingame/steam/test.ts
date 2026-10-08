@@ -4,7 +4,7 @@
 // Steam power: a boiler with steam engines. build.lua in this directory builds it.
 
 import { type Calculator } from "../framework/calculator.ts"
-import { type FactoryData, type FactoryResult, type IngameTest, type Measured, WINDOW_SECONDS, absolute, counter, relative } from "../framework/test.ts"
+import { type FactoryData, type FactoryResult, type IngameTest, type Measured, absolute, counter, relative } from "../framework/test.ts"
 
 /** A boiler that burns fuel and feeds a chain of steam engines, which run at full load. */
 interface SteamFactory extends FactoryData {
@@ -66,8 +66,8 @@ export const steam: IngameTest<SteamFactory> = {
         return {
             fragment,
             comparisons: [
-                relative("boiler fuel energy (J)", counter(measured, "fuel_energy"), expected.fuelPower * WINDOW_SECONDS, ENERGY_TOLERANCE),
-                relative("engine electric energy (J)", counter(measured, "electric_energy"), expected.electricPower * WINDOW_SECONDS, ENERGY_TOLERANCE),
+                relative("boiler fuel energy (J)", counter(measured, "fuel_energy"), expected.fuelPower * counter(measured, "seconds"), ENERGY_TOLERANCE),
+                relative("engine electric energy (J)", counter(measured, "electric_energy"), expected.electricPower * counter(measured, "seconds"), ENERGY_TOLERANCE),
                 absolute("steam engines", factory.engines, expected.engines, 0),
             ],
         }

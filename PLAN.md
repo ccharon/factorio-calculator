@@ -37,7 +37,20 @@ Stage 3, random results, quality, space:
 
 ## Handoff
 
-Stage 1 done: 14 factories in tests/ingame/machines and tests/ingame/steam, all match. Not measured: the
-water rate of the boiler (no counter for infinity pipes). Next: stage 2, one test module per factory type.
-Notes: tech.level = L + 1 means L levels researched. New forces need recipes enabled. Mining drills have
-no idle drain in the game either.
+Working on stage 2 (2026-10-08). User asked for extreme combined scenarios (quality, beacons, machine tiers,
+planets) and for chain tests built from solver results (module "chains": the solver solution for a target
+is built with script logistics, one pool per item, ceil(count) buildings, final recipe as integer building
+count; no fluid intermediates). Decisions made during implementation are to be presented to the user.
+
+Experiment findings (2.1.21):
+- Rocket silo: one launch every 150 s = 50 parts x 3 s; the launch pause does not lengthen the cycle. The
+  calculator adds 2434 ticks per launch. products_finished of a silo counts rockets, rocket_parts the current parts.
+- Heating tower burns fuel all the time, also without consumers. Heat use is measured with a heat-interface
+  whose temperature is reset every tick (specific heat 10 MJ/°C). Assembler 3 on Aquilo uses 100 kW heat.
+- Nuclear 2x2 block: 120 MW heat per reactor (reactor temperature reset every tick).
+- Agricultural tower: poles in the planting radius block cells; filling tower.energy every tick avoids poles.
+  48 plants on artificial-yumako-soil. Harvest about 7.75/s over 600 s instead of 8/s (long window needed).
+- Planet surfaces: game.planets[name].create_surface() with generate_with_lab_tiles; Vulcanus spawns a
+  demolisher, destroy all entities after generation. New forces need recipes enabled.
+- Fluids: infinity pipe at get_fluid_box_pipe_connections(i)[1].target_position, filter from get_fluid_filter(i).
+- Fusion: reactor 6x6, generator 3x5, generators chain plasma through their top output.

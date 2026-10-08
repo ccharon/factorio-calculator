@@ -99,7 +99,7 @@ export class HeadlessGame {
             execFileSync(this.exe, ["-c", this.config, "--mod-directory", this.modDir, ...args], { stdio: ["ignore", "pipe", "pipe"] })
         } catch (error) {
             const output = error instanceof Error && "stdout" in error ? String(error.stdout) : ""
-            throw new Error(`factorio ${args.join(" ")} failed:\n${output.split("\n").slice(-20).join("\n")}`, { cause: error })
+            throw new Error(`factorio ${args.join(" ")} failed:\n${output.split("\n").slice(-20).join("\n")}`)
         }
     }
 

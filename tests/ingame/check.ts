@@ -16,7 +16,7 @@ import { parseArgs } from "node:util"
 import { HeadlessGame } from "../../tools/lib/factorio.ts"
 import { startBrowser } from "../browser/browser.ts"
 import { Calculator } from "./framework/calculator.ts"
-import { type FactoryData, type IngameTest, type Measured, WARMUP_TICKS, WINDOW_TICKS } from "./framework/test.ts"
+import { type FactoryData, type IngameTest, type Measured, WARMUP_TICKS, WINDOW_TICKS, finishTick } from "./framework/test.ts"
 import { machines } from "./machines/test.ts"
 import { steam } from "./steam/test.ts"
 
@@ -49,7 +49,8 @@ function runGame(factorioDir: string, workDir: string): Record<string, Measured>
 
     const map = join(workDir, "ingame.zip")
     game.run("--create", map)
-    game.run("--benchmark", map, "--benchmark-ticks", String(WARMUP_TICKS + WINDOW_TICKS + 1))
+    const ticks = Math.max(...TESTS.flatMap(test => test.factories.map(finishTick)))
+    game.run("--benchmark", map, "--benchmark-ticks", String(ticks + 1))
     // The game writes this file, so it has the shape that control.lua gives it.
     return JSON.parse(readFileSync(join(game.scriptOutput, "ingame-results.json"), "utf8")) as Record<string, Measured>
 }

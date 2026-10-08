@@ -3,22 +3,30 @@
 
 // What an in-game test module provides, and the comparisons it reports.
 
-import { TICKS_PER_SECOND } from "../../../src/data/game.ts"
 import type { Calculator } from "./calculator.ts"
 
 /** Ticks before the measuring window, so that machines run at full speed and buffers are full. */
 export const WARMUP_TICKS = 600
 /** Length of the measuring window. */
 export const WINDOW_TICKS = 36000
-/** Length of the measuring window in seconds. */
-export const WINDOW_SECONDS: number = WINDOW_TICKS / TICKS_PER_SECOND
 
 /** The data of one factory, passed to the build.lua of its test module. Names are unique across all tests. */
 export interface FactoryData {
     readonly name: string
+    /** Planet whose surface the factory stands on. Without it, a lab surface with default properties. */
+    readonly planet?: string
+    /** Ticks before the measuring window. Defaults to WARMUP_TICKS. */
+    readonly warmup?: number
+    /** Length of the measuring window in ticks. Defaults to WINDOW_TICKS. */
+    readonly window?: number
 }
 
-/** The counters of one factory over the measuring window, by name. */
+/** Returns the tick at which the measuring window of factory ends. */
+export function finishTick(factory: FactoryData): number {
+    return (factory.warmup ?? WARMUP_TICKS) + (factory.window ?? WINDOW_TICKS)
+}
+
+/** The counters of one factory over the measuring window, by name, and the window length as seconds. */
 export type Measured = Readonly<Record<string, number>>
 
 /** One value measured in the game and computed by the calculator. */
