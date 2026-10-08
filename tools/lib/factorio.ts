@@ -5,7 +5,7 @@
 
 import { execFileSync } from "node:child_process"
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs"
-import { join } from "node:path"
+import { dirname, join } from "node:path"
 import type { LocaleFiles, RawData, RuntimeData } from "./raw.ts"
 
 // Mods that make up Space Age. The dump runs with exactly these enabled.
@@ -40,50 +40,13 @@ export function gameVersion(factorioDir: string): string {
     return info.version
 }
 
-// A mod whose control script writes values that the game computes at runtime, such as item weights.
+// A mod whose control script writes values that the game computes at runtime, such as item weights,
+// to DUMP_FILE.
 const DUMP_MOD: string = "calculator-dump"
 const DUMP_FILE: string = "calculator-dump.json"
 const DUMP_MOD_FILES: Readonly<Record<string, string>> = {
     "info.json": JSON.stringify({ name: DUMP_MOD, version: "1.0.0", title: "Calculator dump", author: "factorio-calculator", factorio_version: "2.1", dependencies: ["space-age"] }),
-    "control.lua": `script.on_init(function()
-    local weights = {}
-    for name, item in pairs(prototypes.item) do
-        weights[name] = item.weight
-    end
-    local daytime = {}
-    for name, planet in pairs(game.planets) do
-        local surface = planet.surface or planet.create_surface()
-        daytime[name] = { dusk = surface.dusk, evening = surface.evening, morning = surface.morning, dawn = surface.dawn }
-    end
-    local qualities = {}
-    local speeds = {}
-    local energy = {}
-    local modules = {}
-    for qname, quality in pairs(prototypes.quality) do
-        if not quality.hidden then
-            qualities[qname] = { level = quality.level, default_multiplier = quality.default_multiplier }
-        end
-    end
-    for name, entity in pairs(prototypes.get_entity_filtered({ { filter = "crafting-machine" } })) do
-        speeds[name] = {}
-        energy[name] = {}
-        for qname in pairs(qualities) do
-            speeds[name][qname] = entity.get_crafting_speed(qname)
-            energy[name][qname] = entity.get_max_energy_usage(qname)
-        end
-    end
-    for name, item in pairs(prototypes.get_item_filtered({ { filter = "type", type = "module" } })) do
-        modules[name] = {}
-        for qname in pairs(qualities) do
-            modules[name][qname] = item.get_module_effects(qname)
-        end
-    end
-    helpers.write_file("${DUMP_FILE}", helpers.table_to_json({
-        item_weights = weights, daytime = daytime, qualities = qualities,
-        crafting_speeds = speeds, max_energy_usage = energy, module_effects = modules,
-    }))
-end)
-`,
+    "control.lua": readFileSync(new URL("../mod/calculator-dump/control.lua", import.meta.url), "utf8"),
 }
 
 /**
@@ -118,20 +81,26 @@ export class HeadlessGame {
         return join(this.writeDir, "script-output")
     }
 
-    /** Writes a mod with the given files, by file name, and enables it. */
+    /** Writes a mod with the given files, by path within the mod, and enables it. */
     addMod(name: string, files: Readonly<Record<string, string>>): void {
-        mkdirSync(join(this.modDir, name), { recursive: true })
         for (const [file, content] of Object.entries(files)) {
-            writeFileSync(join(this.modDir, name, file), content)
+            const path = join(this.modDir, name, file)
+            mkdirSync(dirname(path), { recursive: true })
+            writeFileSync(path, content)
         }
         this.extraMods.push(name)
         this.writeModList()
     }
 
-    /** Runs the game with the given arguments. Its errors go to stderr. */
+    /** Runs the game with the given arguments. If it fails, throws with the end of its output, which holds the error. */
     run(...args: string[]): void {
         console.log(`factorio ${args.join(" ")}`)
-        execFileSync(this.exe, ["-c", this.config, "--mod-directory", this.modDir, ...args], { stdio: ["ignore", "ignore", "inherit"] })
+        try {
+            execFileSync(this.exe, ["-c", this.config, "--mod-directory", this.modDir, ...args], { stdio: ["ignore", "pipe", "pipe"] })
+        } catch (error) {
+            const output = error instanceof Error && "stdout" in error ? String(error.stdout) : ""
+            throw new Error(`factorio ${args.join(" ")} failed:\n${output.split("\n").slice(-20).join("\n")}`, { cause: error })
+        }
     }
 
     private writeModList(): void {

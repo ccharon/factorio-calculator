@@ -17,10 +17,10 @@ Stage 1, Nauvis, single buildings:
 2. [x] Assembler 3 with 4 productivity modules: products, not crafts.
 3. [x] Assembler 3 with 1, 2, 4 beacons of speed modules: beacon profile and distribution effectivity.
 4. [x] Stone furnace with coal: fuel per second.
-5. [ ] Electric mining drill with mining productivity research.
-6. [ ] Steel with high productivity research plus modules: +300% cap.
-7. [ ] Idle and working assembler on an electricity meter: drain 1/30, module power, 20% minimum.
-8. [ ] Boiler with steam engines: water and steam rates.
+5. [x] Electric mining drill with mining productivity research.
+6. [x] Steel with high productivity research plus modules: +300% cap.
+7. [x] Idle and working assembler on an electricity meter: drain 1/30, module power, 20% minimum.
+8. [x] Boiler with steam engines: water and steam rates.
 
 Stage 2, own derivations and exotic planets:
 - Rocket silo over several launches (2434 tick pause, parts per launch).
@@ -37,5 +37,7 @@ Stage 3, random results, quality, space:
 
 ## Handoff
 
-Stage 1 items 1 to 4 done: `npm run ingame:check` with 8 factories, all match. Open question to the user:
-one directory per test with its own Lua builder, for the stage 2 factories that need custom setups.
+Stage 1 done: 14 factories in tests/ingame/machines and tests/ingame/steam, all match. Not measured: the
+water rate of the boiler (no counter for infinity pipes). Next: stage 2, one test module per factory type.
+Notes: tech.level = L + 1 means L levels researched. New forces need recipes enabled. Mining drills have
+no idle drain in the game either.

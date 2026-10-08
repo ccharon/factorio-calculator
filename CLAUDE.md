@@ -32,7 +32,7 @@ Node 25 or newer (the tests use `Uint8Array.toBase64`).
 | `npm run test:browser` | Loads the page in a separate headless Chrome (`/usr/bin/google-chrome-stable`, override with `CHROME`) via `puppeteer-core`, prints the factory table and fails on JS errors. Takes `--dist` and an optional URL fragment. |
 | `npm run snapshot:check` | Solves every scenario in `tests/snapshots/scenarios.ts` in headless Chrome and compares the exact results with `tests/snapshots/factory.json`. Fails on any difference. `--dist` tests the production build. |
 | `npm run snapshot:record` | Rewrites `tests/snapshots/factory.json`. Only run it when a result change is intended, and review the diff. |
-| `npm run ingame:check -- --factorio <dir>` | Builds the factories of `tests/ingame/factories.ts` in the local game with the helper mod `tests/ingame/mod/control.lua`, runs them headless and compares the measured products and fuel energy with the calculator. Run it manually after changes to the calculations; it is not part of `npm run check` or CI. `--keep` keeps the game directory. |
+| `npm run ingame:check -- --factorio <dir>` | Builds the factories of the test modules in `tests/ingame/` in the local game, runs them headless in one game and compares the measured products and energy with the calculator. Run it manually after changes to the calculations; it is not part of `npm run check` or CI. `--keep` keeps the game directory. |
 
 Oxlint JS plugins are alpha and are not used.
 
@@ -42,6 +42,17 @@ Oxlint JS plugins are alpha and are not used.
 - After an intended result change: `npm run snapshot:record`, then compare the old and new `tests/snapshots/factory.json` per scenario before committing. `snapshot:check` names the differing entries.
 - Browser checks use JS queries; screenshots only when the layout changed. Keyboard tests run with puppeteer through `tests/browser/browser.ts`. Neither puppeteer nor the Chrome extension starts a native drag, so drag and drop needs a manual test by the user.
 - Stop the dev server with `pkill -u $(id -u) -f "node.*[v]ite"` in a Bash call of its own; the pattern also matches a calling shell whose command contains `node` and `vite`.
+
+## In-game tests
+
+`tests/ingame/check.ts` runs all test modules in one headless game and then computes the same factories in the calculator.
+
+| Part | Files |
+|------|-------|
+| Framework | `framework/control.lua` (lab surface, one force per factory, measuring window, `ingame-results.json`), `framework/lib.lua` (power source, fuel and ingredient supply), `framework/test.ts` (`IngameTest`, comparisons, window length), `framework/calculator.ts` (opens fragments in headless Chrome) |
+| Test module | `<name>/test.ts` exports an `IngameTest` with the factory data and the comparison, `<name>/build.lua` builds and counts its factories. Add the module to `TESTS` in `check.ts`. |
+
+The game API docs of the local install are in `doc-html/runtime-api.json`. In 2.1 `LuaEntity.fluidbox` does not exist, and removing fluid by script gives wrong amounts, so fluid tests use real pipes and machines.
 
 ## CI and deployment
 
@@ -93,7 +104,7 @@ The dataset format is defined in `src/data/dataset.schema.json`. `tests/dataset.
 | Visualizer | `src/visualize/`: `visualize.ts` (builds the graph), `graph.ts` (graph types, colors, node rendering), `sankey.ts`, `sankey-layout.ts` (adapted d3-sankey layout, BSD-3), `boxline.ts` (dagre), `circlepath.ts` |
 | Styles | `src/styles/` |
 | Static files | `public/`: dataset, sprite sheet, SVG icons, favicon. Copied unchanged into `dist/`. |
-| Data generation | `tools/build-data.ts` (CLI), `tools/lib/factorio.ts` (runs the game), `tools/lib/convert.ts` (data.raw to dataset), `tools/lib/sprites.ts` (sprite sheet, uses `sharp`) |
+| Data generation | `tools/build-data.ts` (CLI), `tools/lib/factorio.ts` (runs the game headless, `HeadlessGame`), `tools/mod/calculator-dump/` (helper mod for runtime values), `tools/lib/convert.ts` (data.raw to dataset), `tools/lib/sprites.ts` (sprite sheet, uses `sharp`) |
 
 Key facts:
 
