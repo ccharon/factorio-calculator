@@ -43,7 +43,8 @@ export function moduleDropdown<GElement extends HTMLElement, Datum, PElement ext
         return s
     })
 
-    const dropdowns = wrappers.selectAll<HTMLDivElement, ModuleCell>("div.dropdown")
+    // select() passes the current cell on to a dropdown that already exists.
+    const dropdowns = wrappers.select<HTMLDivElement>("div.dropdown")
     const rows = dropdowns.selectAll<HTMLDivElement, readonly ModuleInput[]>("div.moduleRow").data(d => d.inputRows).join("div").classed("moduleRow", true)
     rows.selectAll<HTMLSpanElement, ModuleInput>("span.input").data(d => d).join(enter => {
         const s = enter.append("span").classed("input", true)
@@ -58,7 +59,7 @@ export function moduleDropdown<GElement extends HTMLElement, Datum, PElement ext
         })
         return s
     }, update => {
-        update.selectAll<HTMLInputElement, ModuleInput>("input").property("checked", d => d.checked())
+        update.select<HTMLInputElement>("input").property("checked", d => d.checked())
         return update
     })
 }

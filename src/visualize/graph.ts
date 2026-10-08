@@ -450,7 +450,7 @@ export function appendSpriteIcon<GElement extends d3.BaseType, Datum, PElement e
         .attr("width", size)
         .attr("height", size)
         .append<SVGImageElement>("image")
-        .attr("xlink:href", spriteSheetURL())
+        .attr("href", spriteSheetURL())
         .attr("width", spriteSheet().width)
         .attr("height", spriteSheet().height)
 }
