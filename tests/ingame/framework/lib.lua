@@ -161,6 +161,19 @@ function lib.place_beacons(context, machine, beacons, module_quality)
     return placed
 end
 
+-- Resource amount of every ore tile, far more than a drill mines in a test.
+local ORE_AMOUNT = 1000000
+
+-- Covers the mining area of a drill at position with ore.
+function lib.ore_patch(context, drill, resource, position)
+    local radius = math.ceil(prototypes.entity[drill].mining_drill_radius) + 1
+    for dx = -radius, radius do
+        for dy = -radius, radius do
+            context.surface.create_entity { name = resource, position = { position[1] + dx + 0.5, position[2] + dy + 0.5 }, amount = ORE_AMOUNT }
+        end
+    end
+end
+
 -- Keeps FUEL_STOCK items of fuel in the fuel inventory of entity and counts the inserted items in state.
 function lib.supply_fuel(state, entity, fuel)
     local inventory = entity.get_fuel_inventory()

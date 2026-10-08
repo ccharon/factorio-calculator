@@ -9,20 +9,7 @@
 
 local lib = require("lib")
 
--- Resource amount of every ore tile, far more than a drill mines in a test.
-local ORE_AMOUNT = 1000000
-
 local machines = {}
-
--- Covers the mining area of drill with ore.
-local function ore_patch(context, drill, resource)
-    local radius = math.ceil(prototypes.entity[drill].mining_drill_radius) + 1
-    for dx = -radius, radius do
-        for dy = -radius, radius do
-            context.surface.create_entity { name = resource, position = { context.x + dx + 0.5, dy + 0.5 }, amount = ORE_AMOUNT }
-        end
-    end
-end
 
 -- Returns a free tile above or below the middle of machine. Tiles at the ends of its sides would
 -- also touch the beacons in the corners.
@@ -52,7 +39,7 @@ function machines.build(context, factory)
         force.mining_drill_productivity_bonus = factory.mining_productivity
     end
     if factory.resource then
-        ore_patch(context, factory.machine, factory.resource)
+        lib.ore_patch(context, factory.machine, factory.resource, { context.x, 0 })
     end
 
     local machine = surface.create_entity { name = factory.machine, position = { x, 0 }, force = force, quality = factory.machine_quality }

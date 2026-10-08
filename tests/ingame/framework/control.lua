@@ -9,7 +9,8 @@
 -- windows have ended, it writes the results to ingame-results.json.
 --
 -- A test module is a table with these functions:
---   build(context, factory)  builds factory from its data and returns its state
+--   build(context, factory)  builds factory from its data and returns its state. context has the
+--                            surface, the force, the x position and the start tick of the window.
 --   supply(state)            optional, called every SUPPLY_INTERVAL ticks
 --   tick(state)              optional, called every tick
 --   counters(state)          returns the cumulative counters by name
@@ -74,7 +75,7 @@ script.on_init(function()
                     force.unlock_quality(name)
                 end
             end
-            local context = { surface = surface, force = force, x = x }
+            local context = { surface = surface, force = force, x = x, start = data.warmup or config.warmup }
             local state = modules[test.module].build(context, data)
             -- Lightning on Fulgora and creatures must not destroy the factory.
             for _, entity in pairs(surface.find_entities_filtered { force = force }) do

@@ -37,26 +37,13 @@ Stage 3, random results, quality, space:
 
 ## Handoff
 
-Done and committed: machines with quality, fluids, heating, planets (40bb48d). Written, not yet committed: steam with
-heat exchanger, rocket, nuclear, solar, agriculture, fusion modules, --only option. 33+ of 40 match. Calculator
-findings so far: rocket silo launch pause (game: no pause for slow silos, about 27 s minimum cycle for fast ones),
-agricultural tower power (game uses power only while the crane works, 29 to 59 kW instead of 103 kW), fusion
-reactor drain (game 10 MW, calculator adds 1/30). In progress: chains module.
-
-Working on stage 2 (2026-10-08). User asked for extreme combined scenarios (quality, beacons, machine tiers,
-planets) and for chain tests built from solver results (module "chains": the solver solution for a target
-is built with script logistics, one pool per item, ceil(count) buildings, final recipe as integer building
-count; no fluid intermediates). Decisions made during implementation are to be presented to the user.
-
-Experiment findings (2.1.21):
-- Rocket silo: one launch every 150 s = 50 parts x 3 s; the launch pause does not lengthen the cycle. The
-  calculator adds 2434 ticks per launch. products_finished of a silo counts rockets, rocket_parts the current parts.
-- Heating tower burns fuel all the time, also without consumers. Heat use is measured with a heat-interface
-  whose temperature is reset every tick (specific heat 10 MJ/°C). Assembler 3 on Aquilo uses 100 kW heat.
-- Nuclear 2x2 block: 120 MW heat per reactor (reactor temperature reset every tick).
-- Agricultural tower: poles in the planting radius block cells; filling tower.energy every tick avoids poles.
-  48 plants on artificial-yumako-soil. Harvest about 7.75/s over 600 s instead of 8/s (long window needed).
-- Planet surfaces: game.planets[name].create_surface() with generate_with_lab_tiles; Vulcanus spawns a
-  demolisher, destroy all entities after generation. New forces need recipes enabled.
-- Fluids: infinity pipe at get_fluid_box_pipe_connections(i)[1].target_position, filter from get_fluid_filter(i).
-- Fusion: reactor 6x6, generator 3x5, generators chain plasma through their top output.
+Stage 2 and the chain tests are done (44 factories, 37 match). The 7 differences are calculator findings,
+presented to the user on 2026-10-08 together with the test decisions:
+- Rocket silo: the launch pause does not lengthen the cycle of a slow silo; a fast silo needs about 27 s per
+  rocket, not 40.6 s (src/data/building.ts launchRate).
+- Agricultural tower: uses power only while the crane works, 29 to 63 kW instead of 103 kW.
+- Fusion reactor: no idle drain in the game; the calculator adds 1/30 of its power.
+- Solver: with ignore=iron-ore on Nauvis it casts iron from D-lava; the snapshots of Aquilo and the space
+  platform also use D-lava.
+Open: recycling loops in chain tests deadlock with waiting machines; boiler water rate is not measured.
+Stage 3 items not done yet: recycler with scrap on Fulgora, space platform.

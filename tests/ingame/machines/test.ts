@@ -6,16 +6,7 @@
 // builds them.
 
 import { type Calculator } from "../framework/calculator.ts"
-import { type Comparison, type FactoryData, type FactoryResult, type IngameTest, type Measured, absolute, counter, relative } from "../framework/test.ts"
-
-/** Beacons around the machine of a factory. Their modules have the module quality of the factory. */
-interface Beacons {
-    /** Number of beacons, from 1 to 4. */
-    readonly count: number
-    /** The modules in each beacon. */
-    readonly modules: readonly string[]
-    readonly quality?: string
-}
+import { type Beacons, type Comparison, type FactoryData, type FactoryResult, type IngameTest, type Measured, absolute, counter, relative } from "../framework/test.ts"
 
 /** One machine that crafts one recipe without interruption, or a mining drill on an ore patch. */
 interface MachineFactory extends FactoryData {

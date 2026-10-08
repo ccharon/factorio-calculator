@@ -21,6 +21,15 @@ export interface FactoryData {
     readonly window?: number
 }
 
+/** Beacons around the machine of a factory. Their modules have the module quality of the factory. */
+export interface Beacons {
+    /** Number of beacons, from 1 to 4. */
+    readonly count: number
+    /** The modules in each beacon. */
+    readonly modules: readonly string[]
+    readonly quality?: string
+}
+
 /** Returns the tick at which the measuring window of factory ends. */
 export function finishTick(factory: FactoryData): number {
     return (factory.warmup ?? WARMUP_TICKS) + (factory.window ?? WINDOW_TICKS)
@@ -52,6 +61,8 @@ export interface IngameTest<F extends FactoryData> {
     /** Directory name of the module. */
     readonly module: string
     readonly factories: readonly F[]
+    /** Returns the factories to build, if they depend on the calculator, such as a solver result. Runs before the game. */
+    prepare?(calculator: Calculator): Promise<readonly F[]>
     /** Computes factory in the calculator and compares the result with the measured counters. */
     compare(factory: F, measured: Measured, calculator: Calculator): Promise<FactoryResult>
 }

@@ -32,7 +32,7 @@ Node 25 or newer (the tests use `Uint8Array.toBase64`).
 | `npm run test:browser` | Loads the page in a separate headless Chrome (`/usr/bin/google-chrome-stable`, override with `CHROME`) via `puppeteer-core`, prints the factory table and fails on JS errors. Takes `--dist` and an optional URL fragment. |
 | `npm run snapshot:check` | Solves every scenario in `tests/snapshots/scenarios.ts` in headless Chrome and compares the exact results with `tests/snapshots/factory.json`. Fails on any difference. `--dist` tests the production build. |
 | `npm run snapshot:record` | Rewrites `tests/snapshots/factory.json`. Only run it when a result change is intended, and review the diff. |
-| `npm run ingame:check -- --factorio <dir>` | Builds the factories of the test modules in `tests/ingame/` in the local game, runs them headless in one game and compares the measured products and energy with the calculator. Run it manually after changes to the calculations; it is not part of `npm run check` or CI. `--keep` keeps the game directory. |
+| `npm run ingame:check -- --factorio <dir>` | Builds the factories of the test modules in `tests/ingame/` in the local game, runs them headless in one game (about 3 minutes) and compares the measured products and energy with the calculator. Run it manually after changes to the calculations; it is not part of `npm run check` or CI. `--only <text>` runs the factories whose name contains text, `--keep` keeps the game directory. |
 
 Oxlint JS plugins are alpha and are not used.
 
@@ -45,14 +45,14 @@ Oxlint JS plugins are alpha and are not used.
 
 ## In-game tests
 
-`tests/ingame/check.ts` runs all test modules in one headless game and then computes the same factories in the calculator.
+`tests/ingame/check.ts` prepares the test modules in the calculator, runs all their factories in one headless game and compares.
 
 | Part | Files |
 |------|-------|
-| Framework | `framework/control.lua` (lab surface, one force per factory, measuring window, `ingame-results.json`), `framework/lib.lua` (power source, fuel and ingredient supply), `framework/test.ts` (`IngameTest`, comparisons, window length), `framework/calculator.ts` (opens fragments in headless Chrome) |
-| Test module | `<name>/test.ts` exports an `IngameTest` with the factory data and the comparison, `<name>/build.lua` builds and counts its factories. Add the module to `TESTS` in `check.ts`. |
+| Framework | `framework/control.lua` (planet or lab surface, one force per factory with all recipes and qualities, warmup and window per factory, `ingame-results.json`), `framework/lib.lua` (power by buffer refill, energy interfaces as source, load and sink, heat interfaces, infinity pipes, fuel and ingredient supply, beacons at the corners, ore patches), `framework/test.ts` (`IngameTest`, comparisons), `framework/calculator.ts` (opens fragments in headless Chrome) |
+| Test modules | `machines` (single machines up to combined extremes), `steam`, `rocket`, `nuclear`, `solar`, `agriculture`, `fusion`, `chains` (whole solver results with pool logistics). Each has `test.ts` with an `IngameTest` and `build.lua`; add new ones to `ALL_TESTS` in `check.ts`. |
 
-The game API docs of the local install are in `doc-html/runtime-api.json`. In 2.1 `LuaEntity.fluidbox` does not exist, and removing fluid by script gives wrong amounts, so fluid tests use real pipes and machines.
+Game facts the tests rely on: the API docs of the local install are in `doc-html/runtime-api.json`. `LuaEntity.fluidbox` does not exist in 2.1, and removing fluid by script gives wrong amounts. Solar panels and fusion generators have no `energy_generated_last_tick`. A crafting machine output holds one quality per product. Heating towers burn fuel without consumers. Fulgora lightning destroys entities unless they are indestructible.
 
 ## CI and deployment
 

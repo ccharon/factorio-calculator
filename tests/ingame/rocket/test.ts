@@ -5,14 +5,7 @@
 // build.lua in this directory builds them.
 
 import { type Calculator } from "../framework/calculator.ts"
-import { type FactoryData, type FactoryResult, type IngameTest, type Measured, absolute, counter } from "../framework/test.ts"
-
-/** Beacons around the silo. Their modules have the module quality of the factory. */
-interface Beacons {
-    readonly count: number
-    readonly modules: readonly string[]
-    readonly quality?: string
-}
+import { type Beacons, type FactoryData, type FactoryResult, type IngameTest, type Measured, absolute, counter } from "../framework/test.ts"
 
 /** A rocket silo with its modules, beacons and research. */
 interface RocketFactory extends FactoryData {
