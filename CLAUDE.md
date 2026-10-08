@@ -106,7 +106,7 @@ Key facts:
 
 ## Conventions
 
-- File headers: files with Kirk McDonald's (or Mike Bostock's) copyright keep it, with `Copyright 2026 Christian Charon` as the next line. Every other source file starts with `/*Copyright 2026 Christian Charon` and the Apache 2.0 notice, as in `src/data/power.ts`.
+- File headers: every source file starts with SPDX lines, as in `src/data/power.ts`: one `SPDX-FileCopyrightText` line per copyright holder, then `SPDX-License-Identifier: Apache-2.0`. Files with Kirk McDonald's copyright keep his line above `2026 Christian Charon`. `src/visualize/sankey-layout.ts` keeps Mike Bostock's line and is `BSD-3-Clause`, with the license text in `LICENSES/BSD-3-Clause.txt`. CSS uses `/* */` and HTML `<!-- -->` for the same lines.
 - TypeScript and Vite, no UI framework. Every library comes from npm and is imported. No `<script>` tags for libraries, no inline scripts or event handler attributes in HTML.
 - TypeScript rules for all code:
   - No `any`, no non-null assertions (`!`), no `@ts-ignore`. Use `unknown` and narrow it, or write the type.
