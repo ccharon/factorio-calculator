@@ -5,8 +5,9 @@
 // game, and compares what they produced with the calculator's results for the same settings.
 // Runs manually after changes to the calculations; it is not part of npm run check.
 //
-// Usage: node tests/ingame/check.ts --factorio <dir> [--keep]
+// Usage: node tests/ingame/check.ts --factorio <dir> [--only <text>] [--keep]
 //   --factorio  Factorio installation (or set FACTORIO_DIR).
+//   --only      Run only the factories whose name contains text.
 //   --keep      Keep the temporary game directory and print its path.
 
 import { mkdtempSync, readFileSync, rmSync } from "node:fs"
@@ -17,10 +18,15 @@ import { HeadlessGame } from "../../tools/lib/factorio.ts"
 import { startBrowser } from "../browser/browser.ts"
 import { Calculator } from "./framework/calculator.ts"
 import { type FactoryData, type IngameTest, type Measured, WARMUP_TICKS, WINDOW_TICKS, finishTick } from "./framework/test.ts"
+import { agriculture } from "./agriculture/test.ts"
+import { fusion } from "./fusion/test.ts"
 import { machines } from "./machines/test.ts"
+import { nuclear } from "./nuclear/test.ts"
+import { rocket } from "./rocket/test.ts"
+import { solar } from "./solar/test.ts"
 import { steam } from "./steam/test.ts"
 
-const TESTS: readonly IngameTest<FactoryData>[] = [machines, steam]
+const ALL_TESTS: readonly IngameTest<FactoryData>[] = [machines, steam, rocket, nuclear, solar, agriculture, fusion]
 
 const MOD = "calculator-ingame-test"
 
@@ -62,9 +68,14 @@ function format(value: number): string {
 const { values: args } = parseArgs({
     options: {
         factorio: { type: "string", default: process.env["FACTORIO_DIR"] },
+        only: { type: "string" },
         keep: { type: "boolean", default: false },
     },
 })
+const only = args.only
+const TESTS: readonly IngameTest<FactoryData>[] = ALL_TESTS
+    .map(test => ({ ...test, factories: test.factories.filter(factory => only === undefined || factory.name.includes(only)) }))
+    .filter(test => test.factories.length > 0)
 if (!args.factorio) {
     console.error("missing --factorio <dir> or FACTORIO_DIR")
     process.exit(2)

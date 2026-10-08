@@ -24,24 +24,6 @@ local function ore_patch(context, drill, resource)
     end
 end
 
--- Corners of a machine, as signs of the x and y offset.
-local CORNERS = { { -1, -1 }, { 1, -1 }, { -1, 1 }, { 1, 1 } }
-
--- Places beacons at the corners of machine, where they leave the fluid connections on its sides
--- free. Returns the beacons and their corners.
-local function place_beacons(context, machine, beacons, module_quality)
-    local offset = (machine.prototype.tile_width + prototypes.entity["beacon"].tile_width) / 2
-    local placed = {}
-    for i = 1, beacons.count do
-        local corner = CORNERS[i]
-        local position = { machine.position.x + corner[1] * offset, machine.position.y + corner[2] * offset }
-        local beacon = context.surface.create_entity { name = "beacon", position = position, force = context.force, quality = beacons.quality }
-        lib.insert_modules(beacon, beacons.modules, module_quality)
-        table.insert(placed, { entity = beacon, corner = corner })
-    end
-    return placed
-end
-
 -- Returns a free tile above or below the middle of machine. Tiles at the ends of its sides would
 -- also touch the beacons in the corners.
 local function machine_heat_tile(context, machine)
@@ -78,7 +60,7 @@ function machines.build(context, factory)
         machine.set_recipe(factory.recipe)
     end
     lib.insert_modules(machine, factory.modules, factory.module_quality)
-    local beacons = factory.beacons and place_beacons(context, machine, factory.beacons, factory.module_quality) or {}
+    local beacons = factory.beacons and lib.place_beacons(context, machine, factory.beacons, factory.module_quality) or {}
     local beacon_entities = {}
     for _, beacon in pairs(beacons) do
         table.insert(beacon_entities, beacon.entity)

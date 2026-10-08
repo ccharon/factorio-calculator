@@ -37,6 +37,12 @@ Stage 3, random results, quality, space:
 
 ## Handoff
 
+Done and committed: machines with quality, fluids, heating, planets (40bb48d). Written, not yet committed: steam with
+heat exchanger, rocket, nuclear, solar, agriculture, fusion modules, --only option. 33+ of 40 match. Calculator
+findings so far: rocket silo launch pause (game: no pause for slow silos, about 27 s minimum cycle for fast ones),
+agricultural tower power (game uses power only while the crane works, 29 to 59 kW instead of 103 kW), fusion
+reactor drain (game 10 MW, calculator adds 1/30). In progress: chains module.
+
 Working on stage 2 (2026-10-08). User asked for extreme combined scenarios (quality, beacons, machine tiers,
 planets) and for chain tests built from solver results (module "chains": the solver solution for a target
 is built with script logistics, one pool per item, ceil(count) buildings, final recipe as integer building

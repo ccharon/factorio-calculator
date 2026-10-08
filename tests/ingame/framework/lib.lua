@@ -59,6 +59,20 @@ function lib.power_load(context, position, per_tick)
     load.electric_buffer_size = per_tick
 end
 
+-- Creates an energy interface at position with an empty buffer that stores all energy of the
+-- electric network, for producers that do not report what they generate, such as solar panels.
+-- Its energy is the energy it received.
+function lib.power_sink(context, position)
+    local surface, force = context.surface, context.force
+    surface.create_entity { name = "substation", position = position, force = force }
+    local sink = surface.create_entity { name = "electric-energy-interface", position = { position[1], position[2] + 3 }, force = force }
+    sink.power_production = 0
+    sink.power_usage = 0
+    sink.electric_buffer_size = 2 * SOURCE_ENERGY
+    sink.energy = 0
+    return sink
+end
+
 -- Creates a heat interface at position that keeps HEAT_TEMPERATURE. lib.track_heat() counts the
 -- heat that neighbouring entities draw from it.
 function lib.heat_source(context, position)
@@ -98,6 +112,26 @@ function lib.connect_fluids(context, entity, ingredients, fallback)
     end
 end
 
+-- Creates entity name facing direction so that pipe connection index of its fluid box box lies on
+-- position, the target position of a connection of another entity. Both then share their fluid.
+function lib.place_connected(context, name, direction, box, index, position)
+    -- A probe at a free spot gives the offset of the connection from the entity position.
+    local probe = context.surface.create_entity { name = name, position = { context.x, 40 }, force = context.force, direction = direction }
+    local connection = probe.get_fluid_box_pipe_connections(box)[index]
+    local dx, dy = connection.position.x - probe.position.x, connection.position.y - probe.position.y
+    probe.destroy()
+    local entity = context.surface.create_entity { name = name, position = { position.x - dx, position.y - dy }, force = context.force, direction = direction }
+    if not entity then
+        error("cannot place " .. name .. " at " .. serpent.line(position))
+    end
+    return entity
+end
+
+-- Returns the target position of pipe connection index of fluid box box of entity.
+function lib.connection_target(entity, box, index)
+    return entity.get_fluid_box_pipe_connections(box)[index].target_position
+end
+
 -- Returns the fluid names among the ingredients of recipe.
 function lib.fluid_ingredients(recipe)
     local fluids = {}
@@ -107,6 +141,24 @@ function lib.fluid_ingredients(recipe)
         end
     end
     return fluids
+end
+
+-- Corners of a machine, as signs of the x and y offset.
+local CORNERS = { { -1, -1 }, { 1, -1 }, { -1, 1 }, { 1, 1 } }
+
+-- Places beacons at the corners of machine, where they leave the fluid connections on its sides
+-- free. Returns the beacons and their corners.
+function lib.place_beacons(context, machine, beacons, module_quality)
+    local offset = (machine.prototype.tile_width + prototypes.entity["beacon"].tile_width) / 2
+    local placed = {}
+    for i = 1, beacons.count do
+        local corner = CORNERS[i]
+        local position = { machine.position.x + corner[1] * offset, machine.position.y + corner[2] * offset }
+        local beacon = context.surface.create_entity { name = "beacon", position = position, force = context.force, quality = beacons.quality }
+        lib.insert_modules(beacon, beacons.modules, module_quality)
+        table.insert(placed, { entity = beacon, corner = corner })
+    end
+    return placed
 end
 
 -- Keeps FUEL_STOCK items of fuel in the fuel inventory of entity and counts the inserted items in state.
