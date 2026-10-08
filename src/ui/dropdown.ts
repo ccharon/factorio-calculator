@@ -63,10 +63,12 @@ export function makeDropdown<GElement extends HTMLElement, Datum, PElement exten
             closeDropdown(this)
         }
     }).on("keydown", function (event: KeyboardEvent) {
-        if (event.target === this && (event.key === "Enter" || event.key === " ")) {
+        // Enter and space work like a click, as on a button.
+        const activates = event.key === "Enter" || event.key === " "
+        if (event.target === this && activates) {
             event.preventDefault()
             openDropdown(this)
-        } else if (event.target instanceof HTMLInputElement && event.target.type === "radio" && (event.key === "Enter" || event.key === " ")) {
+        } else if (event.target instanceof HTMLInputElement && event.target.type === "radio" && activates) {
             event.preventDefault()
             closeDropdown(this)
         }

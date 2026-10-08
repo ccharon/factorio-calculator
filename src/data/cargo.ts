@@ -4,6 +4,7 @@
 // Rocket cargo: pseudo items for items launched into orbit, and the recipes that launch them.
 import { Rational, zero } from "../core/rational.ts"
 import type { Dataset } from "./dataset.ts"
+import { ROCKET_PART } from "./game.ts"
 import { Item } from "./item.ts"
 import { Ingredient, Recipe, requireItem } from "./recipe.ts"
 
@@ -40,7 +41,7 @@ export function addRocketCargo(data: Dataset, items: Map<string, Item>, recipes:
     if (silo === undefined) {
         throw new Error("dataset lacks the rocket silo")
     }
-    const rocketPart = requireItem(items, "rocket-part")
+    const rocketPart = requireItem(items, ROCKET_PART)
     const partsPerLaunch = Rational.from_float(silo.rocket_parts_required)
 
     for (const item of Array.from(items.values())) {

@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2026 Christian Charon
 // SPDX-License-Identifier: Apache-2.0
 
+// Tests of the check for DOM sinks in tools/check-dom-sinks.ts.
+
 import assert from "node:assert/strict"
 import { test } from "vitest"
 import { findSinks } from "../tools/check-dom-sinks.ts"

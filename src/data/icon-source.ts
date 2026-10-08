@@ -3,6 +3,9 @@
 
 // The data every game object needs for its icon in the sprite sheet.
 
+/** Width and height of one icon in the sprite sheet, in pixels. */
+export const SPRITE_SIZE = 32
+
 /** Anything that has an icon: an item, recipe, building, belt, planet and so on. */
 export interface IconSource {
     readonly name: string

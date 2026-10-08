@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2026 Christian Charon
 // SPDX-License-Identifier: Apache-2.0
 
+// Tests of the exact rationals in src/core/rational.ts.
+
 import assert from "node:assert/strict"
 import { test } from "vitest"
 import { Rational, zero, one, oneThird, twoThirds } from "../src/core/rational.ts"

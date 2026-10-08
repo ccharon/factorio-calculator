@@ -8,7 +8,7 @@
 import type { Item } from "../data/item.ts"
 import { Ingredient, type RecipeLike, type RecipeNode } from "../data/recipe.ts"
 import { type CycleContext, getCycleRecipes } from "./cycle.ts"
-import { Rational, minusOne, zero, one } from "./rational.ts"
+import { type Rational, minusOne, zero, one, two } from "./rational.ts"
 import { Matrix, type SimplexRunner, runSimplexHere } from "./simplex.ts"
 import { Totals, type TotalsContext } from "./totals.ts"
 
@@ -282,11 +282,14 @@ export async function solve(context: SolverContext, fullOutputs: readonly Output
     // Building-count targets for recipes in a cycle or with several products become pseudo-item
     // columns that copy the production of the real item.
 
-    const columns = items.length + partial.targets.length + recipeArray.length + 3
-    const rows = recipeArray.length + 2
-    const A = new Matrix(rows, columns)
-
-    const tax = items.length + partial.targets.length
+    const taxCol = items.length + partial.targets.length
+    // Column of recipe i in the block after the tax column. The solution holds its rate there.
+    const recipeCol = (i: number): number => taxCol + 1 + i
+    const resultCol = recipeCol(recipeArray.length)
+    const costCol = resultCol + 1
+    const taxRow = recipeArray.length
+    const resultRow = taxRow + 1
+    const A = new Matrix(resultRow + 1, costCol + 1)
 
     recipeArray.forEach((recipe, i) => {
         const prodEffect = context.getProdEffect(recipe)
@@ -297,22 +300,22 @@ export async function solve(context: SolverContext, fullOutputs: readonly Output
             A.addIndex(i, column(ing.item), zero.sub(ing.amount))
         }
 
-        A.setIndex(i, tax, minusOne)
-        A.setIndex(i, tax + i + 1, one)
+        A.setIndex(i, taxCol, minusOne)
+        A.setIndex(i, recipeCol(i), one)
     })
 
     partial.targets.forEach(({ recipe, item, rate }, i) => {
         const r = row(recipe)
         const col = items.length + i
         A.setIndex(r, col, A.index(r, column(item)))
-        A.setIndex(rows - 1, col, zero.sub(rate))
+        A.setIndex(resultRow, col, zero.sub(rate))
     })
 
-    A.setIndex(rows - 2, tax, one)
-    A.setIndex(rows - 1, columns - 2, one)
+    A.setIndex(taxRow, taxCol, one)
+    A.setIndex(resultRow, resultCol, one)
 
     for (const [item, rate] of partial.remaining) {
-        A.setIndex(rows - 1, column(item), zero.sub(rate))
+        A.setIndex(resultRow, column(item), zero.sub(rate))
     }
 
     // Cost function. Each priority level costs more than all lower levels together.
@@ -331,14 +334,13 @@ export async function solve(context: SolverContext, fullOutputs: readonly Output
         }
     }
 
-    const two = Rational.from_float(2)
     let costRatio = min === null ? two : max.div(min).mul(two)
     // The cost ratio must be greater than 1.
     if (costRatio.less(two)) {
         costRatio = two
     }
 
-    A.setIndex(rows - 2, columns - 1, one)
+    A.setIndex(taxRow, costCol, one)
     let P = costRatio
     for (const level of context.priority) {
         const entries = Array.from(level)
@@ -355,7 +357,7 @@ export async function solve(context: SolverContext, fullOutputs: readonly Output
             if (r !== undefined && minWeight !== null) {
                 const normalizedWeight = weight.div(minWeight)
                 N = N.add(normalizedWeight)
-                A.setIndex(r, columns - 1, P.mul(normalizedWeight))
+                A.setIndex(r, costCol, P.mul(normalizedWeight))
             }
         }
 
@@ -365,12 +367,12 @@ export async function solve(context: SolverContext, fullOutputs: readonly Output
     }
 
     for (const recipe of maxPriorityRecipes.values()) {
-        A.setIndex(row(recipe), columns - 1, P)
+        A.setIndex(row(recipe), costCol, P)
     }
     // A DisabledRecipe outside the priority list, such as one of an item variant, is the last resort too.
     recipeArray.forEach((recipe, i) => {
-        if (recipe.isDisable() && A.index(i, columns - 1).isZero()) {
-            A.setIndex(i, columns - 1, P)
+        if (recipe.isDisable() && A.index(i, costCol).isZero()) {
+            A.setIndex(i, costCol, P)
         }
     })
 
@@ -380,7 +382,7 @@ export async function solve(context: SolverContext, fullOutputs: readonly Output
     const solved = await runSimplex(A)
 
     recipeArray.forEach((recipe, i) => {
-        const rate = solved.index(solved.rows - 1, tax + i + 1)
+        const rate = solved.index(resultRow, recipeCol(i))
         if (zero.less(rate)) {
             solution.set(recipe, (solution.get(recipe) ?? zero).add(rate))
         }
@@ -390,7 +392,7 @@ export async function solve(context: SolverContext, fullOutputs: readonly Output
 
     const surplus = new Map<Item, Rational>()
     items.forEach((item, i) => {
-        const rate = solved.index(solved.rows - 1, i)
+        const rate = solved.index(resultRow, i)
         if (zero.less(rate)) {
             surplus.set(item, rate)
         }

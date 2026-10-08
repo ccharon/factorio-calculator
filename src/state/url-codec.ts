@@ -7,6 +7,15 @@
 /** Settings from the URL fragment, by name. Values are still URL-encoded where the writer encoded them. */
 export type Settings = Map<string, string>
 
+/** Target type of a rate target in the items setting, such as "coal:r:60". */
+export const RATE_TARGET = "r"
+
+/** Target type of a building count target in the items setting, such as "coal:f:2". */
+export const BUILDING_TARGET = "f"
+
+/** Module key of an empty module slot in the modules and default beacon settings. */
+export const NO_MODULE = "null"
+
 /** Largest decompressed settings string that is accepted, in bytes. */
 const MAX_SETTINGS_BYTES = 1 << 20
 

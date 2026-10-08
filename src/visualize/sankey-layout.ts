@@ -148,49 +148,26 @@ function computeNodeValues({ nodes }: Graph): void {
     }
 }
 
-function computeNodeDepths({ nodes }: Graph): void {
+// Calls assign with the length of the longest path to each node: from the sources with
+// downstream, or from the sinks without. Backward links count in reverse, self links not at all.
+function computeDistances({ nodes }: Graph, downstream: boolean, assign: (node: GraphNode, distance: number) => void): void {
+    const outgoing = downstream ? "forward" : "backward"
+    const incoming = downstream ? "backward" : "forward"
     const n = nodes.length
     let current = new Set(nodes)
     let next = new Set<GraphNode>()
     let x = 0
     while (current.size) {
         for (const node of current) {
-            node.depth = x
+            assign(node, x)
             for (const { target, direction } of node.sourceLinks) {
-                if (direction === "forward") {
+                if (direction === outgoing) {
                     next.add(target)
                 }
             }
             for (const { source, direction } of node.targetLinks) {
-                if (direction === "backward") {
+                if (direction === incoming) {
                     next.add(source)
-                }
-            }
-        }
-        if (++x > n) {
-            throw new Error("circular link")
-        }
-        current = next
-        next = new Set()
-    }
-}
-
-function computeNodeHeights({ nodes }: Graph): void {
-    const n = nodes.length
-    let current = new Set(nodes)
-    let next = new Set<GraphNode>()
-    let x = 0
-    while (current.size) {
-        for (const node of current) {
-            node.height = x
-            for (const { source, direction } of node.targetLinks) {
-                if (direction === "forward") {
-                    next.add(source)
-                }
-            }
-            for (const { target, direction } of node.sourceLinks) {
-                if (direction === "backward") {
-                    next.add(target)
                 }
             }
         }
@@ -411,8 +388,12 @@ export function layoutSankey(graph: Graph, { nodeWidth: dx, nodePadding: py, max
     computeNodeLinks(graph)
     computeNodeValues(graph)
     minFAS(graph)
-    computeNodeDepths(graph)
-    computeNodeHeights(graph)
+    computeDistances(graph, true, (node, depth) => {
+        node.depth = depth
+    })
+    computeDistances(graph, false, (node, height) => {
+        node.height = height
+    })
     computeNodeBreadths(graph)
     computeLinkBreadths(graph)
     return graph

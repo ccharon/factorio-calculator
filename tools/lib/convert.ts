@@ -9,8 +9,9 @@ import type {
     Dataset, DatasetAgriculturalTower, DatasetBeacon, DatasetBelt, DatasetBoiler, DatasetCraftingMachine, DatasetFluid, DatasetFuel, DatasetFusionGenerator,
     DatasetFusionReactor, DatasetGenerator, DatasetIngredient, DatasetItem, DatasetMachine, DatasetMiningDrill, DatasetModule, DatasetOffshorePump, DatasetPlanet,
     DatasetPlant, DatasetProduct, DatasetQuality, DatasetReactor, DatasetRecipe, DatasetRecipeProductivity, DatasetResource, DatasetRocketSilo, DatasetSolarPanel,
-    DatasetSpoilage, DatasetSurfaceProperty, EffectName, EnergySource, IconPosition, ItemGroupData, LocalizedName, SurfaceConditionData,
+    DatasetSpoilage, DatasetSurfaceProperty, EffectName, EnergySource, IconPosition, ItemGroupData, LocalizedName, NamedPrototype, SurfaceConditionData,
 } from "../../src/data/dataset.ts"
+import { DEFAULT_FUEL_CATEGORY, TICKS_PER_SECOND } from "../../src/data/game.ts"
 import type {
     LocaleFiles, LuaList, RawData, RawEnergySource, RawEntity, RawIngredient, RawItem, RawPrototype, RawProduct, RawSpaceLocation, RawTable, RawTriggerEffect, RuntimeData,
 } from "./raw.ts"
@@ -30,8 +31,8 @@ export type ConvertedDataset = {
     [K in Exclude<keyof Dataset, "sprites">]: Dataset[K] extends (infer U)[] ? WithIconRef<U>[] : WithIconRef<Dataset[K]>
 } & { sprites: { extra: Record<string, ExtraSpriteRef> } }
 
-// Sorts by UTF-16 code units, like Array.prototype.sort() without a compare function.
-function compareStrings(a: string, b: string): number {
+/** Compares by UTF-16 code units, like Array.prototype.sort() without a compare function. */
+export function compareStrings(a: string, b: string): number {
     return a < b ? -1 : a > b ? 1 : 0
 }
 
@@ -121,7 +122,7 @@ function normalizeEnergySource(es: RawEnergySource | undefined): EnergySource | 
     const out: EnergySource = { type: es.type }
     if (es.type === "burner") {
         const categories = asArray(es.fuel_categories)
-        out.fuel_categories = categories.length > 0 ? [...categories] : ["chemical"]
+        out.fuel_categories = categories.length > 0 ? [...categories] : [DEFAULT_FUEL_CATEGORY]
         out.fuel_category = out.fuel_categories[0]
         out.effectivity = es.effectivity ?? 1
     }
@@ -216,7 +217,7 @@ export function convert(raw: RawData, localeFiles: LocaleFiles, version: string,
         }))
         const fuelValue = parseEnergy(p.fuel_value, "J") ?? 0
         if (fuelValue > 0) {
-            fuel.push({ item_key: p.name, categories: [...asArray(p.fuel_categories ?? p.fuel_category ?? "chemical")], value: fuelValue })
+            fuel.push({ item_key: p.name, categories: [...asArray(p.fuel_categories ?? p.fuel_category ?? DEFAULT_FUEL_CATEGORY)], value: fuelValue })
         }
         if (p.spoil_result && p.spoil_ticks) {
             spoilage.push({ from_item: p.name, to_item: p.spoil_result, time: p.spoil_ticks })
@@ -282,16 +283,16 @@ export function convert(raw: RawData, localeFiles: LocaleFiles, version: string,
         }))
     }
 
+    const entityFields = (p: RawPrototype): WithIconRef<NamedPrototype> => ({ key: p.name, localized_name: locale.name("entity", p.name), icon_ref: `entity/${p.name}` })
+
     const machineFields = (p: RawEntity): WithIconRef<DatasetMachine> => compact<WithIconRef<DatasetMachine>>({
-        key: p.name,
-        localized_name: locale.name("entity", p.name),
+        ...entityFields(p),
         energy_usage: parseEnergy(p.energy_usage, "W"),
         energy_source: normalizeEnergySource(p.energy_source),
         module_slots: p.module_slots ?? 0,
         allowed_effects: p.allowed_effects === undefined ? undefined : [...asArray(p.allowed_effects)] as EffectName[],
         surface_conditions: surfaceConditions(p),
         heating_energy: parseEnergy(p.heating_energy, "W"),
-        icon_ref: `entity/${p.name}`,
     })
 
     const crafting_machines: WithIconRef<DatasetCraftingMachine>[] = []
@@ -327,73 +328,57 @@ export function convert(raw: RawData, localeFiles: LocaleFiles, version: string,
     }))
 
     const offshore_pumps = prototypes(raw["offshore-pump"]).map((p): WithIconRef<DatasetOffshorePump> => ({
-        key: p.name,
-        localized_name: locale.name("entity", p.name),
+        ...entityFields(p),
         pumping_speed: need(p.pumping_speed, p, "pumping_speed"),
-        icon_ref: `entity/${p.name}`,
     }))
 
     const boilers = prototypes(raw["boiler"]).map(p => compact<WithIconRef<DatasetBoiler>>({
-        key: p.name,
-        localized_name: locale.name("entity", p.name),
+        ...entityFields(p),
         energy_consumption: need(parseEnergy(p.energy_consumption, "W"), p, "energy_consumption"),
         energy_source: need(normalizeEnergySource(p.energy_source), p, "energy_source"),
         target_temperature: need(p.target_temperature, p, "target_temperature"),
-        icon_ref: `entity/${p.name}`,
     }))
 
     // Power generation: generators burn steam, solar panels and reactors.
     const generators = prototypes(raw["generator"]).filter(p => !isSkipped(p)).map((p): WithIconRef<DatasetGenerator> => ({
-        key: p.name,
-        localized_name: locale.name("entity", p.name),
+        ...entityFields(p),
         fluid: p.fluid_box?.filter ?? "steam",
-        fluid_usage: need(p.fluid_usage_per_tick, p, "fluid_usage_per_tick") * 60,
+        fluid_usage: need(p.fluid_usage_per_tick, p, "fluid_usage_per_tick") * TICKS_PER_SECOND,
         maximum_temperature: need(p.maximum_temperature, p, "maximum_temperature"),
         effectivity: p.effectivity ?? 1,
-        icon_ref: `entity/${p.name}`,
     }))
     const solar_panels = prototypes(raw["solar-panel"]).filter(p => !isSkipped(p)).map(p => compact<WithIconRef<DatasetSolarPanel>>({
-        key: p.name,
-        localized_name: locale.name("entity", p.name),
+        ...entityFields(p),
         production: need(parseEnergy(p.production, "W"), p, "production"),
         surface_conditions: surfaceConditions(p),
-        icon_ref: `entity/${p.name}`,
     }))
     const reactors = prototypes(raw["reactor"]).filter(p => !isSkipped(p)).map((p): WithIconRef<DatasetReactor> => ({
-        key: p.name,
-        localized_name: locale.name("entity", p.name),
+        ...entityFields(p),
         consumption: need(parseEnergy(p.consumption, "W"), p, "consumption"),
         neighbour_bonus: p.neighbour_bonus ?? 1,
         energy_source: need(normalizeEnergySource(p.energy_source), p, "energy_source"),
-        icon_ref: `entity/${p.name}`,
     }))
 
     // Fusion: the reactor turns a coolant into plasma, the generator turns plasma into electricity.
     const fusion_reactors = prototypes(raw["fusion-reactor"]).filter(p => !isSkipped(p)).map((p): WithIconRef<DatasetFusionReactor> => ({
-        key: p.name,
-        localized_name: locale.name("entity", p.name),
+        ...entityFields(p),
         power_input: need(parseEnergy(p.power_input, "W"), p, "power_input"),
-        fluid_usage: need(p.max_fluid_usage, p, "max_fluid_usage") * 60,
+        fluid_usage: need(p.max_fluid_usage, p, "max_fluid_usage") * TICKS_PER_SECOND,
         input_fluid: need(p.input_fluid_box?.filter, p, "input_fluid_box.filter"),
         output_fluid: need(p.output_fluid_box?.filter, p, "output_fluid_box.filter"),
         burner: need(normalizeEnergySource(p.burner), p, "burner"),
-        icon_ref: `entity/${p.name}`,
     }))
     const fusion_generators = prototypes(raw["fusion-generator"]).filter(p => !isSkipped(p)).map((p): WithIconRef<DatasetFusionGenerator> => ({
-        key: p.name,
-        localized_name: locale.name("entity", p.name),
+        ...entityFields(p),
         max_power_output: need(parseEnergy(p.energy_source?.output_flow_limit, "W"), p, "output_flow_limit"),
-        fluid_usage: need(p.max_fluid_usage, p, "max_fluid_usage") * 60,
+        fluid_usage: need(p.max_fluid_usage, p, "max_fluid_usage") * TICKS_PER_SECOND,
         input_fluid: need(p.input_fluid_box?.filter, p, "input_fluid_box.filter"),
         output_fluid: need(p.output_fluid_box?.filter, p, "output_fluid_box.filter"),
-        icon_ref: `entity/${p.name}`,
     }))
 
     const belts = prototypes(raw["transport-belt"]).map((p): WithIconRef<DatasetBelt> => ({
-        key: p.name,
-        localized_name: locale.name("entity", p.name),
+        ...entityFields(p),
         speed: need(p.speed, p, "speed"),
-        icon_ref: `entity/${p.name}`,
     }))
 
     const b = raw.beacon["beacon"]
@@ -464,7 +449,7 @@ export function convert(raw: RawData, localeFiles: LocaleFiles, version: string,
             icon_ref: `technology/${t.name}`,
         }))
     }
-    recipe_productivity.sort((a, b) => (a.key < b.key ? -1 : a.key > b.key ? 1 : 0))
+    recipe_productivity.sort((a, b) => compareStrings(a.key, b.key))
 
     // Asteroid chunks a space platform can collect: chunks that spawn anywhere, and chunks that
     // spawning asteroids break into when they are destroyed.
@@ -539,8 +524,7 @@ export function convert(raw: RawData, localeFiles: LocaleFiles, version: string,
         const m = need(r.minable, r, "minable")
         const results: DatasetProduct[] = m.results ? asArray(m.results).map(normalizeProduct) : [{ type: "item", name: need(m.result, r, "minable.result"), amount: m.count ?? 1 }]
         return compact<WithIconRef<DatasetResource>>({
-            key: r.name,
-            localized_name: locale.name("entity", r.name),
+            ...entityFields(r),
             category: r.category ?? "basic-solid",
             mining_time: need(m.mining_time, r, "minable.mining_time"),
             results,
@@ -548,7 +532,6 @@ export function convert(raw: RawData, localeFiles: LocaleFiles, version: string,
             fluid_amount: m.fluid_amount,
             infinite: r.infinite || undefined,
             order: r.order,
-            icon_ref: `entity/${r.name}`,
         })
     })
 
@@ -560,14 +543,12 @@ export function convert(raw: RawData, localeFiles: LocaleFiles, version: string,
     }
 
     const plants = prototypes(raw.plant).map(p => compact<WithIconRef<DatasetPlant>>({
-        key: p.name,
-        localized_name: locale.name("entity", p.name),
+        ...entityFields(p),
         order: p.order ?? "",
         seed: need(seeds.get(p.name), p, "seed"),
         growth_ticks: need(p.growth_ticks, p, "growth_ticks"),
         results: asArray(p.minable?.results).map(normalizeProduct),
         surface_conditions: surfaceConditions(p),
-        icon_ref: `entity/${p.name}`,
     }))
 
     const surface_properties = prototypes(raw["surface-property"]).map((s): DatasetSurfaceProperty => ({
@@ -589,7 +570,7 @@ export function convert(raw: RawData, localeFiles: LocaleFiles, version: string,
         },
     }
 
-    const byKey = (a: { key: string }, b: { key: string }): number => (a.key < b.key ? -1 : a.key > b.key ? 1 : 0)
+    const byKey = (a: { key: string }, b: { key: string }): number => compareStrings(a.key, b.key)
     return {
         version,
         groups,

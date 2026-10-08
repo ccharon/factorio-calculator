@@ -9,12 +9,14 @@ import type { Belt } from "../data/belt.ts"
 import type { Building, BuildingContext } from "../data/building.ts"
 import type { Fuel } from "../data/fuel.ts"
 import type { ItemGroups } from "../data/group.ts"
-import type { Item } from "../data/item.ts"
+import { FLUID_SCALE, type Item } from "../data/item.ts"
 import { type Module, type ModuleDefaults, ModuleSpec } from "../data/module.ts"
 import type { Planet } from "../data/planet.ts"
 import type { ProductivityResearch } from "../data/research.ts"
 import { QUALITY_KINDS, Quality, type QualityKind, qualityDistribution } from "../data/quality.ts"
-import { DISABLED_RECIPE_PREFIX, ELECTRICITY, HEAT, Ingredient, ReactorRecipe, Recipe, type RecipeContext, type RecipeLike, type RecipeNode } from "../data/recipe.ts"
+import {
+    DEFAULT_RESOURCE_WEIGHT, DISABLED_RECIPE_PREFIX, ELECTRICITY, HEAT, Ingredient, ReactorRecipe, Recipe, type RecipeContext, type RecipeLike, type RecipeNode, isEnergyKey,
+} from "../data/recipe.ts"
 import { renderDebug } from "../ui/debug.ts"
 import { displayItems, setSolving } from "../ui/display.ts"
 import { currentTab } from "../ui/events.ts"
@@ -31,13 +33,14 @@ import { PriorityList, type PriorityLevelMap } from "./priority.ts"
 import { SolveCancelled, runSimplexInWorker } from "./solver-thread.ts"
 import { encodeSettings } from "./url-codec.ts"
 
+/** Planet selected when the URL names none. */
 export const DEFAULT_PLANET = "nauvis"
+/** Belt used for belt counts when the URL names none. */
 export const DEFAULT_BELT = "transport-belt"
 /** A single reactor without neighbours. */
 export const DEFAULT_REACTOR_BLOCK = 0
-const hundred = Rational.from_float(100)
 const NORMAL_QUALITY = new Quality("normal", "Normal", 0, 0, 0)
-const ten = Rational.from_float(10)
+const fluidScale = Rational.from_integer(FLUID_SCALE)
 
 /** Recipes disabled and enabled relative to the planet selection, as stored in the URL. */
 export interface NetDisable {
@@ -210,14 +213,19 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
     // Puts the item's DisabledRecipe into the least preferred level, unless it is already listed
     // because the item is ignored.
     private addItemToMaxPriority(item: Item): void {
-        if (this.priority.getResource(item.disableRecipe) !== null) {
-            return
+        if (this.priority.getResource(item.disableRecipe) === null) {
+            this.addDisableRecipe(item, "last")
         }
-        let level = this.priority.getLastLevel()
+    }
+
+    // Adds the item's DisabledRecipe to the most or least preferred level. That level is a new one
+    // unless it already holds DisabledRecipes.
+    private addDisableRecipe(item: Item, end: "first" | "last"): void {
+        let level = end === "first" ? this.priority.getFirstLevel() : this.priority.getLastLevel()
         if (level === null || !Array.from(level).some(r => r.recipe.isDisable())) {
-            level = this.priority.addPriorityBefore(null)
+            level = this.priority.addPriorityBefore(end === "first" ? level : null)
         }
-        this.priority.addRecipe(item.disableRecipe, hundred, level)
+        this.priority.addRecipe(item.disableRecipe, DEFAULT_RESOURCE_WEIGHT, level)
     }
 
     // Shows the recipe choice again on targets whose item is among items.
@@ -363,8 +371,7 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
                 levels.push(new Map())
             }
 
-            // Fluids come in ten times larger amounts than items.
-            const weight = product.item.phase === "fluid" ? recipe.defaultWeight.div(ten) : recipe.defaultWeight
+            const weight = product.item.phase === "fluid" ? recipe.defaultWeight.div(fluidScale) : recipe.defaultWeight
             levels[pri]?.set(recipe, weight)
         }
         return levels
@@ -463,7 +470,7 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
     getRecipes(item: Item): RecipeLike[] {
         let recipes: RecipeLike[] = this.producersOf(item).filter(recipe => !this.disable.has(recipe.base))
         // Electricity and heat come from outside only while no source of them is enabled.
-        if ((item.key === ELECTRICITY || item.key === HEAT) && recipes.some(r => !r.isResource())) {
+        if (isEnergyKey(item.key) && recipes.some(r => !r.isResource())) {
             recipes = recipes.filter(r => !r.isResource())
         }
         if (this.isItemDisabled(item) || this.ignore.has(item)) {
@@ -729,11 +736,7 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
         } else {
             this.ignore.add(item)
             if (!this.isItemDisabled(item)) {
-                let level = this.priority.getFirstLevel()
-                if (level === null || !Array.from(level).some(r => r.recipe.isDisable())) {
-                    level = this.priority.addPriorityBefore(level)
-                }
-                this.priority.addRecipe(item.disableRecipe, hundred, level)
+                this.addDisableRecipe(item, "first")
                 updateTargets = true
             }
         }
@@ -748,8 +751,7 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
         }
     }
 
-    /** Solves for the current build targets. Targets with the same item and recipe are merged. */
-    // Solves for the build targets. The linear program runs in a Web Worker.
+    // Solves for the build targets in a Web Worker. Targets with the same item and recipe are merged.
     private solve(): Promise<SolveResult> {
         const outputs: Output[] = []
         for (const target of this.buildTargets) {
@@ -777,7 +779,6 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
         })
     }
 
-    /** Solves again and redisplays. Call this when a change affects recipe rates. */
     /**
      * Solves again and shows the solution when it is ready. A newer call cancels or discards an
      * older one, so only the solution of the latest settings is shown.

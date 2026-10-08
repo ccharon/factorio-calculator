@@ -8,14 +8,17 @@ import dagre, { type GraphLabel } from "@dagrejs/dagre"
 import type { Item } from "../data/item.ts"
 import { spec } from "../state/factory.ts"
 import type { Direction } from "../ui/events.ts"
+import { ICON_SIZE } from "../ui/icon.ts"
 import type { Point } from "./circlepath.ts"
 import {
-    appendSpriteIcon, colorOf, darkColorOf, iconSize, getColorMaps, measureText, renderNodes,
-    graphClickHandler, graphMouseOverHandler, graphMouseLeaveHandler,
+    appendSpriteIcon, colorOf, darkColorOf, getColorMaps, measureText, renderNodes, renderOverlay, withTestText,
     type EdgeLabel, type Graph, type GraphEdge, type GraphNode,
 } from "./graph.ts"
 
 const boxlineNodeMargin = 10
+// Space around the icon and text of an edge label, split between both sides.
+const labelPadding = 10
+const labelCornerRadius = 6
 
 /** Label of a dagre node. dagre sets x and y to its center. */
 interface NodeLabel {
@@ -62,21 +65,19 @@ export function renderBoxGraph({ nodes, links }: Graph, direction: Direction, ig
     const g = new dagre.graphlib.Graph<GraphLabel, NodeLabel, EdgeLabel>({ multigraph: true })
     g.setGraph({ rankdir: direction === "down" ? "TB" : "LR" })
 
-    const testSVG = d3.select("body").append("svg").classed("test", true)
-    const text = testSVG.append("text")
-    for (const node of nodes) {
-        g.setNode(node.name, { node, width: node.labelWidth(text, boxlineNodeMargin), height: 52 })
-    }
-    for (const [i, link] of links.entries()) {
-        link.index = i
-        const s = ` × ${spec.format.rate(link.rate)}/${spec.format.rateName}`
-        text.text(s)
-        const label: EdgeLabel = { link, labelpos: "c", width: 32 + 10 + measureText(text), height: 32 + 10, text: s }
-        link.label = label
-        g.setEdge(link.source.name, link.target.name, label, edgeName(link))
-    }
-    text.remove()
-    testSVG.remove()
+    withTestText("test", text => {
+        for (const node of nodes) {
+            g.setNode(node.name, { node, width: node.labelWidth(text, boxlineNodeMargin), height: ICON_SIZE + 2 * boxlineNodeMargin })
+        }
+        for (const [i, link] of links.entries()) {
+            link.index = i
+            const s = ` × ${spec.format.rateWithUnit(link.rate)}`
+            text.text(s)
+            const label: EdgeLabel = { link, labelpos: "c", width: ICON_SIZE + labelPadding + measureText(text), height: ICON_SIZE + labelPadding, text: s }
+            link.label = label
+            g.setEdge(link.source.name, link.target.name, label, edgeName(link))
+        }
+    })
 
     dagre.layout(g)
     for (const nodeName of g.nodes()) {
@@ -146,35 +147,20 @@ export function renderBoxGraph({ nodes, links }: Graph, direction: Direction, ig
         .attr("y", d => labelOf(d).y - labelOf(d).height / 2)
         .attr("width", d => labelOf(d).width)
         .attr("height", d => labelOf(d).height)
-        .attr("rx", 6)
-        .attr("ry", 6)
+        .attr("rx", labelCornerRadius)
+        .attr("ry", labelCornerRadius)
         .attr("fill", d => darkColorOf(itemColors, d.item))
         .attr("fill-opacity", 0)
         .attr("stroke", "none")
-    appendSpriteIcon(edgeLabels, d => d.item, d => labelOf(d).x - labelOf(d).width / 2 + 5, d => labelOf(d).y - iconSize / 2, iconSize)
+    appendSpriteIcon(edgeLabels, d => d.item, d => labelOf(d).x - labelOf(d).width / 2 + labelPadding / 2, d => labelOf(d).y - ICON_SIZE / 2, ICON_SIZE)
     edgeLabels.append("text")
-        .attr("x", d => labelOf(d).x - labelOf(d).width / 2 + 5 + iconSize)
+        .attr("x", d => labelOf(d).x - labelOf(d).width / 2 + labelPadding / 2 + ICON_SIZE)
         .attr("y", d => labelOf(d).y)
         .attr("dy", "0.35em")
         .text(d => labelOf(d).text)
 
     renderNodes(svg, nodes, boxlineNodeMargin, "left", recipeColors, ignore)
 
-    svg.append("g")
-        .classed("overlay", true)
-        .selectAll("rect")
-        .data(nodes)
-        .join("rect")
-        .attr("stroke", "none")
-        .attr("fill", "transparent")
-        .attr("x", d => d.x0)
-        .attr("y", d => d.y0)
-        .attr("width", d => d.x1 - d.x0)
-        .attr("height", d => d.y1 - d.y0)
-        .on("mouseover", graphMouseOverHandler)
-        .on("mouseout", graphMouseLeaveHandler)
-        .on("click", graphClickHandler)
-        .append("title")
-        .text(d => d.name)
+    renderOverlay(svg, nodes, d => ({ x: d.x0, y: d.y0, width: d.x1 - d.x0, height: d.y1 - d.y0 }), d => d.name)
     callback()
 }

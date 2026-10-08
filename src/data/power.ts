@@ -7,6 +7,8 @@ import { Rational, one } from "../core/rational.ts"
 import type { Dataset } from "./dataset.ts"
 import type { IconSource } from "./icon-source.ts"
 import { Item } from "./item.ts"
+import { burnerFuelCategory, effectivityOf } from "./fuel.ts"
+import { NUCLEAR_REACTOR, SOLAR_POWER_PROPERTY, STEAM, WATER } from "./game.ts"
 import { ELECTRICITY, ELECTRICITY_UNIT, HEAT, Ingredient, Recipe, requireItem } from "./recipe.ts"
 
 /** Crafting category of the heat exchanger recipe. */
@@ -67,8 +69,8 @@ function fluidEnergy(data: Dataset, key: string, temperature: number): Rational 
 export function addPowerRecipes(data: Dataset, items: Map<string, Item>, recipes: Map<string, Recipe>): void {
     const item = (key: string): Item => requireItem(items, key)
     const electricity = item(ELECTRICITY)
-    const steam = item("steam")
-    const water = item("water")
+    const steam = item(STEAM)
+    const water = item(WATER)
 
     // Steam by temperature: boilers make plain steam, heat exchangers make hot steam.
     const steamByTemperature = new Map<number, Item>()
@@ -83,7 +85,7 @@ export function addPowerRecipes(data: Dataset, items: Map<string, Item>, recipes
         steamByTemperature.set(boiler.target_temperature, hot)
 
         // Heat per unit of steam, and the time one exchanger needs for it.
-        const energy = fluidEnergy(data, "steam", boiler.target_temperature)
+        const energy = fluidEnergy(data, STEAM, boiler.target_temperature)
         const time = energy.div(Rational.from_float(boiler.energy_consumption))
         const icon = { name: boiler.localized_name.en, icon_col: boiler.icon_col, icon_row: boiler.icon_row }
         recipes.set(key, new Recipe({
@@ -97,10 +99,10 @@ export function addPowerRecipes(data: Dataset, items: Map<string, Item>, recipes
     for (const g of data.generators) {
         const temperature = Math.max(...Array.from(steamByTemperature.keys()).filter(t => t <= g.maximum_temperature))
         const fuel = steamByTemperature.get(temperature)
-        if (fuel === undefined || g.fluid !== "steam") {
+        if (fuel === undefined || g.fluid !== STEAM) {
             continue
         }
-        const energy = fluidEnergy(data, "steam", temperature).mul(Rational.from_float_approximate(g.effectivity))
+        const energy = fluidEnergy(data, STEAM, temperature).mul(Rational.from_float_approximate(g.effectivity))
         const key = `${g.key}-power`
         recipes.set(key, new GeneratorRecipe(
             key, g.localized_name.en, g, powerCategory(g.key), Rational.from_float_approximate(g.fluid_usage).reciprocate(),
@@ -108,9 +110,9 @@ export function addPowerRecipes(data: Dataset, items: Map<string, Item>, recipes
         ))
     }
 
-    for (const r of data.reactors.filter(d => d.key !== "nuclear-reactor")) {
+    for (const r of data.reactors.filter(d => d.key !== NUCLEAR_REACTOR)) {
         // The reactor turns its fuel consumption into heat at its effectivity.
-        const heat = Rational.from_float(r.consumption).mul(Rational.from_float_approximate(r.energy_source.effectivity ?? 1))
+        const heat = Rational.from_float(r.consumption).mul(effectivityOf(r.energy_source))
         const key = `${r.key}-heat`
         recipes.set(key, new Recipe({
             key, name: r.localized_name.en, order: undefined, icon_col: r.icon_col, icon_row: r.icon_row, allowProductivity: false,
@@ -130,13 +132,13 @@ export function addPowerRecipes(data: Dataset, items: Map<string, Item>, recipes
 
         // The reactor burns fuel for the energy of the plasma it makes, besides its electric power.
         for (const r of data.fusion_reactors.filter(d => d.output_fluid === g.input_fluid)) {
-            const category = r.burner.fuel_categories?.[0] ?? r.burner.fuel_category
-            const fuel = data.fuel.find(f => category !== undefined && f.categories.includes(category))
+            const category = burnerFuelCategory(r.burner)
+            const fuel = data.fuel.find(f => category !== null && f.categories.includes(category))
             if (fuel === undefined) {
                 throw new Error(`no fuel for ${r.key}`)
             }
             const flow = Rational.from_float_approximate(r.fluid_usage)
-            const fuelPerSecond = flow.mul(plasmaEnergy).div(Rational.from_float_approximate(r.burner.effectivity ?? 1)).div(Rational.from_float(fuel.value))
+            const fuelPerSecond = flow.mul(plasmaEnergy).div(effectivityOf(r.burner)).div(Rational.from_float(fuel.value))
             const reactorKey = `${r.key}-plasma`
             recipes.set(reactorKey, new Recipe({
                 key: reactorKey, name: r.localized_name.en, order: undefined, icon_col: r.icon_col, icon_row: r.icon_row, allowProductivity: false,
@@ -150,8 +152,8 @@ export function addPowerRecipes(data: Dataset, items: Map<string, Item>, recipes
     const defaults = new Map(data.surface_properties.map(p => [p.name, p.default_value]))
     for (const panel of data.solar_panels) {
         for (const planet of data.planets) {
-            const solarPower = planet.surface_properties["solar-power"] ?? defaults.get("solar-power") ?? 100
-            const watts = Rational.from_float_approximate(panel.production * solarPower / 100 * planet.solar_factor)
+            const solarPercent = planet.surface_properties[SOLAR_POWER_PROPERTY] ?? defaults.get(SOLAR_POWER_PROPERTY) ?? 100
+            const watts = Rational.from_float_approximate(panel.production * solarPercent / 100 * planet.solar_factor)
             const key = `${panel.key}-${planet.key}`
 
             recipes.set(key, new SolarRecipe(

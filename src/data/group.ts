@@ -2,6 +2,8 @@
 // SPDX-FileCopyrightText: 2026 Christian Charon
 // SPDX-License-Identifier: Apache-2.0
 
+// Item groups for the target dropdown, in the order of the game.
+
 import { sorted } from "../core/sort.ts"
 import type { Dataset } from "./dataset.ts"
 import type { Item } from "./item.ts"

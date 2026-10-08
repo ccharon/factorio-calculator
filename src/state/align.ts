@@ -12,9 +12,15 @@ export type RateName = "s" | "m" | "h"
 /** Displayed number format. */
 export type DisplayFormat = "decimal" | "rational"
 
+/** Default time unit of displayed rates. */
 export const DEFAULT_RATE: RateName = "m"
+/** Default number of fractional digits of rates. */
 export const DEFAULT_RATE_PRECISION = 3
+/** Default number of fractional digits of building counts. */
 export const DEFAULT_COUNT_PRECISION = 1
+/** Largest number of fractional digits of rates and building counts. */
+export const MAX_PRECISION = 20
+/** Default number format. */
 export const DEFAULT_FORMAT: DisplayFormat = "decimal"
 
 const displayRates: ReadonlyMap<RateName, Rational> = new Map([
@@ -23,6 +29,7 @@ const displayRates: ReadonlyMap<RateName, Rational> = new Map([
     ["h", Rational.from_float(3600)],
 ])
 
+/** The time units by rate name, as shown in labels. */
 export const longRateNames: ReadonlyMap<RateName, string> = new Map([
     ["s", "second"],
     ["m", "minute"],
@@ -39,18 +46,14 @@ export class Formatter {
     rateName: RateName = DEFAULT_RATE
 
     /** "second", "minute" or "hour". */
-    longRate = "minute"
+    longRate: string = longRateNames.get(DEFAULT_RATE) ?? ""
 
     /** Seconds per displayed time unit. */
-    rateFactor: Rational = one
+    rateFactor: Rational = displayRates.get(DEFAULT_RATE) ?? one
 
     displayFormat: DisplayFormat = DEFAULT_FORMAT
     ratePrecision: number = DEFAULT_RATE_PRECISION
     countPrecision: number = DEFAULT_COUNT_PRECISION
-
-    constructor() {
-        this.setDisplayRate(DEFAULT_RATE)
-    }
 
     /** Sets the time unit of displayed rates. */
     setDisplayRate(rate: RateName): void {
@@ -79,6 +82,11 @@ export class Formatter {
     rate(rate: Rational): string {
         const scaled = rate.mul(this.rateFactor)
         return this.displayFormat === "rational" ? scaled.toMixed() : scaled.toDecimal(this.ratePrecision)
+    }
+
+    /** Formats a rate given per second with its unit, such as "12/m". */
+    rateWithUnit(rate: Rational): string {
+        return `${this.rate(rate)}/${this.rateName}`
     }
 
     /** Formats and aligns a rate given per second. */

@@ -6,7 +6,7 @@ import type { IconSource } from "./icon-source.ts"
 import type { Dataset } from "./dataset.ts"
 import type { Building } from "./building.ts"
 import { GeneratorRecipe, SolarRecipe } from "./power.ts"
-import { ELECTRICITY, HEAT, type Recipe } from "./recipe.ts"
+import { HEAT, type Recipe, isEnergyKey } from "./recipe.ts"
 
 /** A planet or space surface with its resources and surface properties. */
 export class Planet implements IconSource {
@@ -46,8 +46,8 @@ export class Planet implements IconSource {
      */
     allows(recipe: Recipe, buildings: readonly Building[]): boolean {
         if (recipe.isResource()) {
-            // Electricity comes from outside the factory on every surface.
-            return this.resources.has(recipe) || recipe.key === ELECTRICITY || recipe.key === HEAT
+            // Electricity and heat come from outside the factory on every surface.
+            return this.resources.has(recipe) || isEnergyKey(recipe.key)
         }
 
         if (recipe instanceof SolarRecipe && recipe.planet !== this.key) {

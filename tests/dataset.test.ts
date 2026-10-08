@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2026 Christian Charon
 // SPDX-License-Identifier: Apache-2.0
 
+// Checks every dataset in public/data/ against the schema and checks its references.
+
 import assert from "node:assert/strict"
 import { existsSync, readFileSync, readdirSync } from "node:fs"
 import { test } from "vitest"

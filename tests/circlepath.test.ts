@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2026 Christian Charon
 // SPDX-License-Identifier: Apache-2.0
 
+// Tests of the link paths in src/visualize/circlepath.ts.
+
 import assert from "node:assert/strict"
 import { test } from "vitest"
 import { makeCurve } from "../src/visualize/circlepath.ts"

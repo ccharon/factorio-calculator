@@ -20,6 +20,7 @@ export class ColorScheme {
     }
 }
 
+/** The available color schemes. The first one is the default. */
 export const colorSchemes: readonly ColorScheme[] = [
     new ColorScheme("Default", "default"),
     new ColorScheme("Printer-friendly", "printer"),

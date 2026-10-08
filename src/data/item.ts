@@ -7,6 +7,9 @@ import type { Dataset } from "./dataset.ts"
 import type { Quality } from "./quality.ts"
 import { DisabledRecipe, ELECTRICITY, HEAT, type Recipe, type RecipeLike } from "./recipe.ts"
 
+/** Fluids come in amounts about ten times as large as items. Weights and link widths divide fluid rates by this. */
+export const FLUID_SCALE = 10
+
 /** Item state for the solver: a solid item, a fluid, or an abstract quantity such as reactor cycles. */
 export type Phase = "solid" | "fluid" | "abstract"
 
@@ -105,24 +108,15 @@ export function getItems(data: Dataset): Map<string, Item> {
         items.set(d.key, new Item(d.key, d.localized_name.en, d.icon_col, d.icon_row, phase, d.group, d.subgroup, d.order, d.weight ?? null))
     }
 
-    const reactor = items.get("nuclear-reactor")
-    if (reactor === undefined) {
-        throw new Error("dataset lacks the nuclear reactor")
+    // The abstract items take their icons from extra sprites of the same name and sort among the energy items.
+    const abstractOrders = [[ELECTRICITY, "a[electricity]"], [HEAT, "f[nuclear-energy]-d[heat]"]] as const
+    for (const [key, order] of abstractOrders) {
+        const sprite = data.sprites.extra[key]
+        if (sprite === undefined) {
+            throw new Error(`dataset lacks the ${key} sprite`)
+        }
+        items.set(key, new Item(key, sprite.name, sprite.icon_col, sprite.icon_row, "abstract", "production", "energy", order))
     }
-
-    const electricity = data.sprites.extra["electricity"]
-    if (electricity === undefined) {
-        throw new Error("dataset lacks the electricity sprite")
-    }
-
-    items.set(ELECTRICITY, new Item(ELECTRICITY, electricity.name, electricity.icon_col, electricity.icon_row, "abstract", "production", "energy", "a[electricity]"))
-
-    const heat = data.sprites.extra["heat"]
-    if (heat === undefined) {
-        throw new Error("dataset lacks the heat sprite")
-    }
-
-    items.set(HEAT, new Item(HEAT, heat.name, heat.icon_col, heat.icon_row, "abstract", "production", "energy", "f[nuclear-energy]-d[heat]"))
 
     return items
 }

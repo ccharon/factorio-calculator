@@ -5,17 +5,27 @@
 
 import { Rational, zero } from "../core/rational.ts"
 
+/** Parses a decimal, fraction or mixed number. Returns null if text is no such number. */
+export function toRational(text: string): Rational | null {
+    try {
+        return Rational.from_string(text)
+    } catch {
+        return null
+    }
+}
+
+/** Parses a whole number from 0 to max. Returns null for anything else, including empty text. */
+export function toCount(text: string, max: number): number | null {
+    const value = text.trim() === "" ? Number.NaN : Number(text)
+    return Number.isInteger(value) && value >= 0 && value <= max ? value : null
+}
+
 /**
  * Reads a decimal, fraction or mixed number of zero or more from input. Returns null, marks the
  * input as invalid and shows the browser's validation message if the text is no such number.
  */
 export function readRational(input: HTMLInputElement): Rational | null {
-    let value: Rational | null
-    try {
-        value = Rational.from_string(input.value)
-    } catch {
-        value = null
-    }
+    let value = toRational(input.value)
     if (value?.less(zero)) {
         value = null
     }
@@ -30,9 +40,8 @@ export function readRational(input: HTMLInputElement): Rational | null {
  * the browser's validation message if the text is no such number.
  */
 export function readCount(input: HTMLInputElement, max: number): number | null {
-    const value = input.value.trim() === "" ? Number.NaN : Number(input.value)
-    const valid = Number.isInteger(value) && value >= 0 && value <= max
-    input.setCustomValidity(valid ? "" : `Enter a whole number from 0 to ${max}.`)
+    const value = toCount(input.value, max)
+    input.setCustomValidity(value === null ? `Enter a whole number from 0 to ${max}.` : "")
     input.reportValidity()
-    return valid ? value : null
+    return value
 }

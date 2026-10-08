@@ -5,12 +5,14 @@
 import * as d3 from "d3"
 import { type Rational, zero, one } from "../core/rational.ts"
 import type { ItemGroups } from "../data/group.ts"
+import { ROCKET_SILO } from "../data/game.ts"
 import type { Item } from "../data/item.ts"
 import type { Recipe } from "../data/recipe.ts"
 import { spec } from "../state/factory.ts"
 import { addInputs, makeDropdown } from "./dropdown.ts"
 import { readRational } from "./number-input.ts"
 import { appendQualityChoices } from "./quality-dropdown.ts"
+import { ICON_SIZE, SMALL_ICON_SIZE } from "./icon.ts"
 import { iconOf } from "./icons.ts"
 
 const SELECTED_INPUT = "selected"
@@ -151,7 +153,7 @@ export class BuildTarget {
             spec.updateSolution()
         })
         const dropdownNode = dropdown.node() ?? undefined
-        itemLabel.append(d => iconOf(d).make(32, false, dropdownNode))
+        itemLabel.append(d => iconOf(d).make(ICON_SIZE, false, dropdownNode))
 
         this.qualitySelector = element.append("span").classed("target-quality", true)
         this.displayQuality()
@@ -163,9 +165,9 @@ export class BuildTarget {
             spec.updateSolution()
         })
         this.orbitInput = orbitInput.node() as HTMLInputElement
-        const rocket = spec.items.get("rocket-silo")
+        const rocket = spec.items.get(ROCKET_SILO)
         if (rocket !== undefined) {
-            orbitLabel.append(() => iconOf(rocket).make(24, true))
+            orbitLabel.append(() => iconOf(rocket).make(SMALL_ICON_SIZE, true))
         }
         this.updateOrbitInput()
         targetCount++
@@ -216,7 +218,7 @@ export class BuildTarget {
 
         const normal = spec.qualities[0]
         const name = `target-quality-${qualitySelectorCount++}`
-        appendQualityChoices(makeDropdown(this.qualitySelector), 24, {
+        appendQualityChoices(makeDropdown(this.qualitySelector), SMALL_ICON_SIZE, {
             name: () => name,
             checked: (_d, quality) => (this.item.quality ?? normal) === quality,
             choose: (_d, quality) => {
@@ -269,9 +271,9 @@ export class BuildTarget {
         })
 
         const dropdownNode = dropdown.node() ?? undefined
-        labels.append(d => iconOf(d).make(32, false, dropdownNode))
+        labels.append(d => iconOf(d).make(ICON_SIZE, false, dropdownNode))
         recipeSelectorCount++
-        this.recipeSelector.append("span").text(" \u00d7 ")
+        this.recipeSelector.append("span").text(" × ")
     }
 
     /** Returns the target rate in items per second and updates the computed input field. */

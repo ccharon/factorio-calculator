@@ -13,6 +13,11 @@ const DEFAULT_BUILDINGS = new Set([
     "electric-mining-drill",
 ])
 
+// Key of the group of these buildings: their keys joined with "+".
+function groupKey(buildings: readonly Building[]): string {
+    return buildings.map(b => b.key).join("+")
+}
+
 /** Sorts buildings in place from slowest to fastest. */
 function buildingSort(buildings: Building[]): void {
     buildings.sort((a, b) => (a.less(b) ? -1 : b.less(a) ? 1 : 0))
@@ -30,7 +35,7 @@ export class BuildingGroup {
     building: Building
 
     constructor(buildings: readonly Building[], primaryCategory: string) {
-        this.key = buildings.map(b => b.key).join("+")
+        this.key = groupKey(buildings)
         this.buildings = Array.from(buildings)
         buildingSort(this.buildings)
         this.primaryCategory = primaryCategory
@@ -82,7 +87,7 @@ export function getBuildingGroups(buildings: readonly Building[], recipes: Itera
         if (craftable.length === 0) {
             throw new Error(`no building for recipe ${recipe.key}`)
         }
-        const key = craftable.map(b => b.key).join("+")
+        const key = groupKey(craftable)
         members.set(key, craftable)
         recipeKeys.set(recipe, key)
         const counts = firstCategories.get(key) ?? new Map<string, number>()

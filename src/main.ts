@@ -25,7 +25,7 @@ import { type Settings, decodeFragment } from "./state/url-codec.ts"
 import { warnUrl } from "./ui/warnings.ts"
 import {
     plusHandler, clickTab, clickVisualize, changeTitle, changeRatePrecision, changeCountPrecision, changeFormat, changeMprod, changeVisType,
-    changeVisRender, changeVisDir, changeVisElectricity, toggleDebug, resourceKeyHandler,
+    changeVisRender, changeVisDir, changeVisElectricity, toggleDebug, resourceKeyHandler, TAB_NAMES,
 } from "./ui/events.ts"
 import { getSprites } from "./ui/icon.ts"
 import { renderSettings } from "./ui/settings.ts"
@@ -93,7 +93,7 @@ function on(selector: string, type: string, handler: (event: Event) => void): vo
 // Binds the event handlers of the controls that index.html defines statically.
 function bindControls(): void {
     on("#plusButton button", "click", () => plusHandler())
-    for (const tab of ["totals", "resources", "settings", "faq", "about", "debug"]) {
+    for (const tab of TAB_NAMES.filter(name => name !== "graph")) {
         on(`#${tab}_button`, "click", () => clickTab(tab))
     }
     on("#graph_button", "click", () => clickVisualize())

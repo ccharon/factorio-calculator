@@ -4,10 +4,11 @@
 
 import { Rational } from "../core/rational.ts"
 import type { Dataset } from "./dataset.ts"
+import { TICKS_PER_SECOND } from "./game.ts"
 import type { IconSource } from "./icon-source.ts"
 
-// Tiles per tick to items per second: 60 ticks, 2 lanes, and 4 items per lane and tile.
-const itemsPerSecondPerSpeed = Rational.from_float(480)
+// Tiles per tick to items per second: ticks per second, 2 lanes, and 4 items per lane and tile.
+const itemsPerSecondPerSpeed = Rational.from_integer(TICKS_PER_SECOND * 2 * 4)
 
 /** A transport belt with its throughput. */
 export class Belt implements IconSource {
@@ -36,6 +37,6 @@ export function getBelts(data: Dataset): Map<string, Belt> {
         d.icon_row,
         Rational.from_float_approximate(d.speed).mul(itemsPerSecondPerSpeed),
     ))
-    belts.sort((a, b) => (a.rate.less(b.rate) ? -1 : b.rate.less(a.rate) ? 1 : 0))
+    belts.sort((a, b) => a.rate.compare(b.rate))
     return new Map(belts.map(b => [b.key, b]))
 }

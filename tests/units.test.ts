@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2026 Christian Charon
 // SPDX-License-Identifier: Apache-2.0
 
+// Tests of the unit parsers in tools/lib/units.ts.
+
 import assert from "node:assert/strict"
 import { test } from "vitest"
 import { parseEnergy, roundFloat } from "../tools/lib/units.ts"

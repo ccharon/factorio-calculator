@@ -5,26 +5,35 @@
 // Event handlers of the page controls, and the tab and visualizer state.
 
 import * as d3 from "d3"
-import { Rational } from "../core/rational.ts"
+import { hundred } from "../core/rational.ts"
 import type { Item } from "../data/item.ts"
 import type { DisplayFormat } from "../state/align.ts"
 import { spec } from "../state/factory.ts"
+import { type GraphSVG, measureInGraphTab } from "../visualize/graph.ts"
 import { renderTotals } from "../visualize/visualize.ts"
 import { readRational } from "./number-input.ts"
 import { focusFirstResource } from "./priority-view.ts"
 import { setTitle } from "./settings.ts"
 import { addTarget } from "./target.ts"
 
+/** The tabs of the page. Each has a #<name>_tab element and a #<name>_button. */
 export const TAB_NAMES = ["totals", "graph", "resources", "settings", "faq", "about", "debug"] as const
+/** The name of a tab. */
 export type TabName = typeof TAB_NAMES[number]
 
+/** The layouts of the visualizer. */
 export const VISUALIZER_TYPES = ["sankey", "boxline"] as const
+/** A layout of the visualizer. */
 export type VisualizerType = typeof VISUALIZER_TYPES[number]
 
+/** The render modes of the visualizer: zoomable inside a frame, or at the natural size of the diagram. */
 export const RENDER_MODES = ["zoom", "fix"] as const
+/** A render mode of the visualizer. */
 export type RenderMode = typeof RENDER_MODES[number]
 
+/** The flow directions of the visualizer. */
 export const DIRECTIONS = ["right", "down"] as const
+/** A flow direction of the visualizer. */
 export type Direction = typeof DIRECTIONS[number]
 
 function oneOf<T extends string>(values: readonly T[], value: string): value is T {
@@ -47,6 +56,7 @@ export function plusHandler(): void {
 
 export const DEFAULT_TAB: TabName = "totals"
 
+/** The visible tab. */
 export let currentTab: TabName = DEFAULT_TAB
 
 /** Shows the named tab. Unknown names show the default tab. */
@@ -105,7 +115,7 @@ export function changeFormat(event: Event): void {
 export function changeMprod(event: Event): void {
     const percent = readRational(event.target as HTMLInputElement)
     if (percent !== null) {
-        spec.miningProd = percent.div(Rational.from_float(100))
+        spec.miningProd = percent.div(hundred)
         spec.updateSolution()
     }
 }
@@ -114,6 +124,7 @@ export function changeMprod(event: Event): void {
 
 export const DEFAULT_VISUALIZER: VisualizerType = "sankey"
 
+/** The selected visualizer layout. */
 export let visualizerType: VisualizerType = DEFAULT_VISUALIZER
 
 /** Sets the visualizer type. Unknown values select the default. */
@@ -129,8 +140,10 @@ export function changeVisType(event: Event): void {
     spec.display()
 }
 
+/** Render mode when the URL sets none. */
 export const DEFAULT_RENDER: RenderMode = "zoom"
 
+/** The selected render mode. */
 export let visualizerRender: RenderMode = DEFAULT_RENDER
 
 /** Sets the render mode. Unknown values select the default. */
@@ -149,6 +162,7 @@ export function getDefaultVisDirection(): Direction {
     return visualizerType === "sankey" ? "right" : "down"
 }
 
+/** The selected flow direction. */
 export let visualizerDirection: Direction = getDefaultVisDirection()
 
 /** Returns whether the direction is the default of the current visualizer type. */
@@ -188,20 +202,13 @@ const MIN_ZOOM = 10 / 12
 const ASPECT_RATIO = 16 / 9
 
 /** Adds zoom with the mouse wheel and panning by dragging to the visualizer SVG. The view starts at the top of the diagram. */
-export function installSVGEvents(svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, unknown>): void {
+export function installSVGEvents(svg: GraphSVG): void {
     const node = svg.node()
     if (node === null) {
         return
     }
 
-    // The graph tab must be visible to measure the bounding box.
-    const tab = d3.select<HTMLElement, unknown>("#graph_tab")
-    const style = tab.style("display")
-    tab.style("display", "block")
-    svg.selectAll("image").style("display", "none")
-    const box = node.getBBox()
-    svg.selectAll("image").style("display", null)
-    tab.style("display", style)
+    const box = measureInGraphTab(svg, () => node.getBBox())
 
     // Widen the viewport to the aspect ratio, centered on the diagram.
     let { x, y, width, height } = box

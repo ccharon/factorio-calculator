@@ -6,7 +6,7 @@
 // rates, belts, buildings, modules, beacons, power and a usage breakdown per item.
 
 import * as d3 from "d3"
-import { Rational, zero, one } from "../core/rational.ts"
+import { type Rational, zero, one, hundred } from "../core/rational.ts"
 import type { Totals } from "../core/totals.ts"
 import type { Building } from "../data/building.ts"
 import type { Fuel } from "../data/fuel.ts"
@@ -14,20 +14,20 @@ import { getRecipeGroups, topoSort } from "../data/groups.ts"
 import type { Item } from "../data/item.ts"
 import { type Module, type ModuleSpec, moduleRows } from "../data/module.ts"
 import type { QualityKind } from "../data/quality.ts"
-import { ELECTRICITY, ELECTRICITY_UNIT, HEAT, Recipe, type RecipeLike, type RecipeNode, isRecipeLike } from "../data/recipe.ts"
+import { PIPE } from "../data/game.ts"
+import { ELECTRICITY_UNIT, Recipe, type RecipeLike, type RecipeNode, isEnergyKey, isRecipeLike } from "../data/recipe.ts"
 import type { FactorySpecification } from "../state/factory.ts"
 import { spec } from "../state/factory.ts"
 import { formatSettings } from "../state/fragment.ts"
 import { powerRepr } from "./energy.ts"
 import { toggleIgnoreHandler } from "./events.ts"
 import type { IconSource } from "../data/icon-source.ts"
-import { Icon } from "./icon.ts"
+import { ICON_SIZE, Icon } from "./icon.ts"
 import { type ModuleCell, type ModuleInput as DropdownInput, moduleDropdown } from "./module-dropdown.ts"
 import { iconOf, renderItemTooltip } from "./icons.ts"
 import { readRational } from "./number-input.ts"
 import { qualityDropdown } from "./quality-dropdown.ts"
 
-const hundred = Rational.from_float(100)
 
 function alignPower(x: Rational): string {
     const { power, suffix } = powerRepr(x)
@@ -36,7 +36,7 @@ function alignPower(x: Rational): string {
 
 // Returns the rate of item for the table. Electricity and heat show as power.
 function alignItemRate(item: Item, rate: Rational): string {
-    return item.key === ELECTRICITY || item.key === HEAT ? alignPower(rate.mul(ELECTRICITY_UNIT)) : spec.format.alignRate(rate)
+    return isEnergyKey(item.key) ? alignPower(rate.mul(ELECTRICITY_UNIT)) : spec.format.alignRate(rate)
 }
 
 function rateOf<K>(map: ReadonlyMap<K, Rational> | undefined, key: K): Rational {
@@ -279,24 +279,24 @@ function toggleBreakdownHandler(event: Event): void {
 
 // Returns the icon of a table row item. Its tooltip adds a hint about ignoring the item.
 function itemRowIcon(item: Item, hint: string): HTMLElement {
-    return new Icon(item, () => renderItemTooltip(item, d3.create("span").text(hint).node() ?? undefined), item.quality).make(32)
+    return new Icon(item, () => renderItemTooltip(item, d3.create("span").text(hint).node() ?? undefined), item.quality).make(ICON_SIZE)
 }
 
 function pipeIcon(): HTMLElement {
-    const pipe = spec.items.get("pipe")
+    const pipe = spec.items.get(PIPE)
     if (pipe === undefined) {
         throw new Error("dataset lacks the pipe")
     }
-    return new Icon({ name: pipe.name, icon_col: pipe.icon_col, icon_row: pipe.icon_row }).make(32)
+    return new Icon({ name: pipe.name, icon_col: pipe.icon_col, icon_row: pipe.icon_row }).make(ICON_SIZE)
 }
 
-// Appends an SVG icon from images/icons.svg. size is width and height of the viewBox.
+// Appends the SVG icon with the given id from images/icons.svg. size is width and height of the viewBox.
 function svgIcon<P extends d3.BaseType, D, PP extends d3.BaseType, PD>(
-    parent: d3.Selection<P, D, PP, PD>, className: string, size: [number, number], href: string,
+    parent: d3.Selection<P, D, PP, PD>, className: string, size: [number, number], id: string,
 ): void {
     const [width, height] = size
     const svg = parent.append("svg").classed(className, true).attr("viewBox", `0 0 ${width} ${height}`).attr("width", width).attr("height", height)
-    svg.append("use").attr("href", href)
+    svg.append("use").attr("href", `images/icons.svg#${id}`)
 }
 
 // Accessors for rows that a filter has already restricted to non-null values.
@@ -348,7 +348,7 @@ type RowSelection = d3.Selection<HTMLTableRowElement, DisplayRow, HTMLTableSecti
 // Creates the cells of new table rows. Updates fill them in.
 function createRow(enter: d3.Selection<d3.EnterElement, DisplayRow, HTMLTableSectionElement, DisplayGroup>): RowSelection {
     const row = enter.append("tr").classed("display-row", true)
-    svgIcon(row.append("td").classed("item", true).on("click", toggleBreakdownHandler), "breakdown-arrow", [16, 16], "images/icons.svg#right")
+    svgIcon(row.append("td").classed("item", true).on("click", toggleBreakdownHandler), "breakdown-arrow", [16, 16], "right")
     row.append("td").classed("item item-icon", true)
     row.append("td").classed("item right-align", true).append("tt").classed("item-rate", true)
     row.append("td").classed("item surplus right-align", true).append("tt").classed("surplus-rate", true)
@@ -362,7 +362,7 @@ function createRow(enter: d3.Selection<d3.EnterElement, DisplayRow, HTMLTableSec
     const beaconCell = row.append("td").classed("pad building module beacon", true)
     beaconCell.append("span").classed("beacon-container", true)
     const beaconCountSpan = beaconCell.append("span").classed("beacon-count", true)
-    beaconCountSpan.append("span").text(" \u00d7 ")
+    beaconCountSpan.append("span").text(" × ")
     beaconCountSpan.append("input").attr("type", "text").attr("size", 3).on("change", (event: Event, d: DisplayRow) => {
         if (d.moduleSpec === null || d.recipe === null) {
             return
@@ -378,7 +378,7 @@ function createRow(enter: d3.Selection<d3.EnterElement, DisplayRow, HTMLTableSec
     row.append("td").classed("right-align building", true).append("tt").classed("power", true)
     const popout = row.append("td").classed("popout pad item", true).append("a")
     popout.attr("target", "_blank").attr("rel", "noopener").attr("title", "Open this item in separate window.")
-    svgIcon(popout, "popout", [24, 24], "images/icons.svg#popout")
+    svgIcon(popout, "popout", [24, 24], "popout")
     return row
 }
 
@@ -400,15 +400,15 @@ function renderBreakdowns(itemRows: RowSelection, totalCols: number): void {
     row.classed("breakdown-row", true).classed("breakdown-first-output", d => d.divider)
 
     const icons = row.append("td")
-    icons.append(d => iconOf(d.recipe).make(32)).classed("item-icon", true)
-    svgIcon(icons, "usage-arrow", [18, 16], "images/icons.svg#rightarrow")
-    icons.append(d => iconOf(d.item).make(32)).classed("item-icon", true)
+    icons.append(d => iconOf(d.recipe).make(ICON_SIZE)).classed("item-icon", true)
+    svgIcon(icons, "usage-arrow", [18, 16], "rightarrow")
+    icons.append(d => iconOf(d.item).make(ICON_SIZE)).classed("item-icon", true)
     row.append("td").classed("right-align", true).append("tt").classed("item-rate pad-right", true).text(d => alignItemRate(d.item, d.rate))
 
     const beltRow = row.filter(d => d.item.phase === "solid")
     const beltCell = beltRow.append("td")
-    beltCell.append(() => iconOf(spec.belt).make(32))
-    beltCell.append("span").text(" \u00d7")
+    beltCell.append(() => iconOf(spec.belt).make(ICON_SIZE))
+    beltCell.append("span").text(" ×")
     const beltCount = beltRow.append("td").classed("right-align", true).append("tt").classed("belt-count pad-right", true)
     beltCount.text(d => spec.format.alignCount(d.rate.div(spec.belt.rate)))
 
@@ -417,8 +417,8 @@ function renderBreakdowns(itemRows: RowSelection, totalCols: number): void {
     pipeRow.append("td")
 
     const buildingCell = row.append("td").filter(d => d.building !== null).classed("building", true)
-    buildingCell.append(d => iconOf(buildingOf(d)).make(32))
-    buildingCell.append("span").text(" \u00d7")
+    buildingCell.append(d => iconOf(buildingOf(d)).make(ICON_SIZE))
+    buildingCell.append("span").text(" ×")
     const count = row.append("td").filter(d => d.count !== null).classed("building pad-right", true).append("tt")
     count.text(d => d.count === null ? "" : spec.format.alignCount(d.count))
     row.append("td").filter(d => d.percent !== null).classed("right-align", true).append("tt").text(d => d.percent ?? "")
@@ -476,8 +476,8 @@ export function displayItems(context: FactorySpecification, totals: Totals | nul
     const beltRow = itemRow.filter(d => itemOf(d).phase === "solid")
     const beltIcon = beltRow.selectAll<HTMLTableCellElement, DisplayRow>("td.belt-icon").classed("pad-right", false).attr("colspan", 1)
     beltIcon.selectAll("*").remove()
-    beltIcon.append(() => iconOf(spec.belt).make(32))
-    beltIcon.append("span").text(" \u00d7")
+    beltIcon.append(() => iconOf(spec.belt).make(ICON_SIZE))
+    beltIcon.append("span").text(" ×")
     const beltCount = beltRow.selectAll("td.belt-count-cell").classed("hide", false).selectAll<HTMLElement, DisplayRow>("tt.belt-count")
     beltCount.text(d => spec.format.alignCount(spec.getBeltCount(rateOf(totals.items, itemOf(d)))))
 
@@ -491,10 +491,10 @@ export function displayItems(context: FactorySpecification, totals: Totals | nul
     const buildingCell = buildingRow.selectAll<HTMLTableCellElement, DisplayRow>("td.building-icon")
     buildingCell.selectAll("*").remove()
     const buildingExtra = buildingCell.filter(d => !d.single)
-    buildingExtra.append(d => iconOf(recipeOf(d)).make(32))
+    buildingExtra.append(d => iconOf(recipeOf(d)).make(ICON_SIZE))
     buildingExtra.append("span").text(":")
-    buildingCell.append(d => iconOf(buildingOf(d)).make(32))
-    buildingCell.append("span").text(" \u00d7")
+    buildingCell.append(d => iconOf(buildingOf(d)).make(ICON_SIZE))
+    buildingCell.append("span").text(" ×")
     const buildingCount = buildingRow.selectAll<HTMLElement, DisplayRow>("tt.building-count")
     buildingCount.text(d => spec.format.alignCount(spec.getCount(recipeOf(d), rateOf(totals.rates, recipeOf(d)))))
 
@@ -516,8 +516,8 @@ export function displayItems(context: FactorySpecification, totals: Totals | nul
     const fuelRow = buildingRow.filter(d => buildingOf(d).fuel !== null)
     const fuelIcon = fuelRow.selectAll<HTMLTableCellElement, DisplayRow>(".fuel-icon")
     fuelIcon.selectAll("*").remove()
-    fuelIcon.append(d => iconOf(fuelOf(d)).make(32))
-    fuelIcon.append("span").text(" \u00d7 ")
+    fuelIcon.append(d => iconOf(fuelOf(d)).make(ICON_SIZE))
+    fuelIcon.append("span").text(" × ")
     fuelRow.selectAll<HTMLElement, DisplayRow>("tt.power").text(d => `${spec.format.alignRate(powerOf(d).div(fuelOf(d).value))}/${spec.format.rateName}`)
 
     const electricRow = buildingRow.filter(d => buildingOf(d).fuel === null)
@@ -535,6 +535,7 @@ export function displayItems(context: FactorySpecification, totals: Totals | nul
     renderBreakdowns(row.filter(d => d.breakdown !== null), totalCols)
 
     const footerRow = table.select("tfoot tr")
+    // Besides the label, the footer has a cell under the surplus column, the total and a cell under the popout links.
     footerRow.select("td.power-label").attr("colspan", totalCols - 3)
     footerRow.select("tt").text(alignPower(totalPower))
     table.select("tfoot").raise()

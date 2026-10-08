@@ -20,6 +20,8 @@ type Row =
 
 type DivSelection<T> = d3.Selection<HTMLDivElement, T, d3.BaseType, unknown>
 
+const RESOURCE_ICON_SIZE = 48
+
 // The resource being dragged, or null.
 let dragItem: Resource | null = null
 
@@ -98,7 +100,7 @@ function createResources(enter: d3.Selection<d3.EnterElement, Resource, HTMLDivE
     const div = enter.append("div").classed("resource", true)
     div.on("dragstart", function (event: DragEvent, resource: Resource) {
         // The icon is a transparent image with the sprite as background, so the browser's own drag image is empty.
-        event.dataTransfer?.setDragImage(this, 24, 24)
+        event.dataTransfer?.setDragImage(this, RESOURCE_ICON_SIZE / 2, RESOURCE_ICON_SIZE / 2)
         dragItem = resource
         // Chrome cancels the drag if the source loses its pointer events during dragstart.
         setTimeout(() => {
@@ -113,7 +115,7 @@ function createResources(enter: d3.Selection<d3.EnterElement, Resource, HTMLDivE
 
     // The icon takes the keyboard focus: left and right select another resource, up and down move this one.
     // It is no <button>, because Chrome does not drag an image inside a button.
-    const icon = div.append(resource => iconOf(resource.recipe).make(48))
+    const icon = div.append(resource => iconOf(resource.recipe).make(RESOURCE_ICON_SIZE))
     icon.attr("tabindex", 0).attr("role", "button").attr("aria-keyshortcuts", "ArrowLeft ArrowRight ArrowUp ArrowDown")
     icon.on("keydown", function (event: KeyboardEvent, resource: Resource) {
         if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
