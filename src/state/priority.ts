@@ -90,6 +90,11 @@ export class PriorityList {
         this.removeEmptyLevels()
     }
 
+    /** Returns the recipe weights of every level, most preferred first. */
+    toArray(): PriorityLevelMap[] {
+        return this.levels.map(level => new Map(level.resources.map(r => [r.recipe, r.weight])))
+    }
+
     /** Returns whether the list has exactly these levels, recipes and weights. */
     equalArray(a: readonly PriorityLevelMap[]): boolean {
         return a.length === this.levels.length && a.every((m, i) => this.levels[i]?.equalMap(m) ?? false)

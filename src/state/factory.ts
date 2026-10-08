@@ -210,22 +210,22 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
         this.disable.clear()
     }
 
-    // Puts the item's DisabledRecipe into the least preferred level, unless it is already listed
-    // because the item is ignored.
-    private addItemToMaxPriority(item: Item): void {
-        if (this.priority.getResource(item.disableRecipe) === null) {
-            this.addDisableRecipe(item, "last")
+    // Puts the item's DisabledRecipe into the least preferred level of list, unless it is already
+    // listed because the item is ignored.
+    private addItemToMaxPriority(item: Item, list: PriorityList = this.priority): void {
+        if (list.getResource(item.disableRecipe) === null) {
+            this.addDisableRecipe(item, "last", list)
         }
     }
 
-    // Adds the item's DisabledRecipe to the most or least preferred level. That level is a new one
-    // unless it already holds DisabledRecipes.
-    private addDisableRecipe(item: Item, end: "first" | "last"): void {
-        let level = end === "first" ? this.priority.getFirstLevel() : this.priority.getLastLevel()
+    // Adds the item's DisabledRecipe to the most or least preferred level of list. That level is a new
+    // one unless it already holds DisabledRecipes.
+    private addDisableRecipe(item: Item, end: "first" | "last", list: PriorityList = this.priority): void {
+        let level = end === "first" ? list.getFirstLevel() : list.getLastLevel()
         if (level === null || !Array.from(level).some(r => r.recipe.isDisable())) {
-            level = this.priority.addPriorityBefore(end === "first" ? level : null)
+            level = list.addPriorityBefore(end === "first" ? level : null)
         }
-        this.priority.addRecipe(item.disableRecipe, DEFAULT_RESOURCE_WEIGHT, level)
+        list.addRecipe(item.disableRecipe, DEFAULT_RESOURCE_WEIGHT, level)
     }
 
     // Shows the recipe choice again on targets whose item is among items.
@@ -377,15 +377,29 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
         return levels
     }
 
-    /** Resets the resource priorities to the defaults. */
-    setDefaultPriority(): void {
-        this.priorityValue = PriorityList.fromArray(this.defaultPriority)
-        // An item may have no net producer at all. It needs its DisabledRecipe in the list.
+    /**
+     * Returns the default resource priorities for the enabled recipes and ignored items. An item
+     * without a net producer gets its DisabledRecipe in the least preferred level, an ignored item
+     * in the most preferred one, as toggleIgnore() does.
+     */
+    private getDefaultPriorityList(): PriorityList {
+        const list = PriorityList.fromArray(this.defaultPriority)
         for (const item of this.items.values()) {
             if (this.isItemDisabled(item)) {
-                this.addItemToMaxPriority(item)
+                this.addItemToMaxPriority(item, list)
             }
         }
+        for (const item of this.ignore) {
+            if (!this.isItemDisabled(item)) {
+                this.addDisableRecipe(item, "first", list)
+            }
+        }
+        return list
+    }
+
+    /** Resets the resource priorities to the defaults for the enabled recipes and ignored items. */
+    setDefaultPriority(): void {
+        this.priorityValue = this.getDefaultPriorityList()
     }
 
     /** Returns whether key names a recipe that can appear in the priority list. */
@@ -416,7 +430,7 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
 
     /** Returns whether the priorities equal the defaults. */
     isDefaultPriority(): boolean {
-        return this.priority.equalArray(this.defaultPriority)
+        return this.priority.equalArray(this.getDefaultPriorityList().toArray())
     }
 
     /**

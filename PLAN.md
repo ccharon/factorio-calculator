@@ -55,7 +55,7 @@ errors; the test setups are correct (discussed with the user on 2026-10-08). Nex
    light_blinking_speed, times_to_blink, rocket rising, rocket_quick_relaunch_start_offset) and on the silo
    quality (*_speed_modifier_per_quality_level). Steps: add the values to tools/lib/convert.ts and the
    schema, derive the formula, check it with silos of several qualities in tests/ingame/rocket.
-3. Agricultural tower power (tests: gleba-yumako, gleba-jellystem, nauvis-tree).
+3. DONE: harvest energy measured by tools/mod/calculator-dump/agriculture.lua. Agricultural tower power (tests: gleba-yumako, gleba-jellystem, nauvis-tree).
    The calculator assumes 100 kW plus drain all the time. The prototype has energy_usage = 100 kW and
    crane_energy_usage = 100 kW; the game uses 29 to 63 kW on average, depending on crane activity (trees
    with long growth use least). First measure the power model in the game (towers with few plots, without
