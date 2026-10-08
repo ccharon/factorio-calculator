@@ -44,3 +44,6 @@ export const ROCKET_SILO = "rocket-silo"
 
 /** The pipe, whose icon marks fluid rows in the factory table. */
 export const PIPE = "pipe"
+
+/** Key of the space platform surface, which receives rocket cargo from the planet below. */
+export const SPACE_PLATFORM = "space-platform"

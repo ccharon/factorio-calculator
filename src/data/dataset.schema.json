@@ -41,6 +41,7 @@
           "order": { "type": "string" },
           "stack_size": { "type": "integer", "minimum": 1 },
           "weight": { "type": "number", "minimum": 0, "description": "Weight in grams, which limits rocket cargo." },
+          "spoil_ticks": { "type": "integer", "minimum": 1, "description": "Ticks until the item spoils. Absent for items that do not spoil." },
           "icon_col": { "$ref": "#/$defs/iconIndex" },
           "icon_row": { "$ref": "#/$defs/iconIndex" }
         }
@@ -136,12 +137,30 @@
       "items": {
         "type": "object",
         "allOf": [{ "$ref": "#/$defs/machine" }],
-        "required": ["crafting_categories", "crafting_speed", "rocket_parts_required"],
+        "required": ["crafting_categories", "crafting_speed", "rocket_parts_required", "launch_by_quality"],
         "properties": {
           "crafting_categories": { "type": "array", "items": { "type": "string" } },
           "crafting_speed": { "type": "number", "exclusiveMinimum": 0 },
           "crafting_speed_by_quality": { "type": "object", "additionalProperties": { "type": "number", "exclusiveMinimum": 0 }, "description": "Crafting speed by quality key." },
-          "rocket_parts_required": { "type": "integer", "minimum": 1 }
+          "rocket_parts_required": { "type": "integer", "minimum": 1 },
+          "launch_by_quality": {
+            "type": "object",
+            "minProperties": 1,
+            "description": "Launch sequence in ticks by quality key, measured in the game.",
+            "additionalProperties": {
+              "type": "object",
+              "required": ["flight", "quick", "lights", "reopen", "doors", "full"],
+              "properties": {
+                "flight": { "type": "integer", "minimum": 1 },
+                "quick": { "type": "integer", "minimum": 1 },
+                "lights": { "type": "integer", "minimum": 1 },
+                "reopen": { "type": "array", "items": { "type": "array", "prefixItems": [{ "type": "integer" }, { "type": "integer" }], "minItems": 2, "maxItems": 2 } },
+                "doors": { "type": "integer", "minimum": 1 },
+                "full": { "type": "integer", "minimum": 1 }
+              },
+              "additionalProperties": false
+            }
+          }
         },
         "unevaluatedProperties": false
       }
@@ -330,8 +349,12 @@
       "items": {
         "type": "object",
         "allOf": [{ "$ref": "#/$defs/machine" }],
-        "required": ["plots"],
-        "properties": { "radius": { "type": "number", "minimum": 0 }, "plots": { "type": "integer", "minimum": 1, "description": "Number of plants one tower tends." } },
+        "required": ["plots", "harvest_energy"],
+        "properties": {
+          "radius": { "type": "number", "minimum": 0 },
+          "plots": { "type": "integer", "minimum": 1, "description": "Number of plants one tower tends." },
+          "harvest_energy": { "type": "number", "exclusiveMinimum": 0, "description": "Electric energy in J for one harvest and the replanting, measured in the game." }
+        },
         "unevaluatedProperties": false
       }
     },

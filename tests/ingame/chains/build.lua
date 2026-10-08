@@ -137,12 +137,14 @@ local function collect(state)
     end
 end
 
--- Takes target items at their rate and removes the items that no machine uses.
+-- Takes target items at their rate and removes the items that no machine uses. The allowance of a
+-- target holds at most a few rounds, so that a target that went short while the chain started does
+-- not take what the chain needs for itself, such as bioflux for the nutrients that fuel it.
 local function sink(state)
     for key, count in pairs(state.pool) do
         local target = state.targets[key]
         if target then
-            target.allowance = target.allowance + target.rate
+            target.allowance = math.min(target.allowance + target.rate, target.rate * POOL_ROUNDS)
             local taken = math.min(count, math.floor(target.allowance))
             target.allowance = target.allowance - taken
             state.pool[key] = count - taken

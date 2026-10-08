@@ -13,7 +13,7 @@ const ORBIT_SUFFIX = "-in-orbit"
 
 /**
  * Pseudo-recipe for one rocket launch with a full load of one item. It has no building: the rocket
- * silo counts as the building of the rocket parts, and their rate includes the launch pause.
+ * silo counts as the building of the rocket parts, and their rate includes the launch sequence.
  */
 class LaunchRecipe extends Recipe {
     constructor(item: Item, orbit: Item, perRocket: Rational, rocketPart: Item, partsPerLaunch: Rational) {

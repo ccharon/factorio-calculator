@@ -101,8 +101,9 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
 
     readonly ignore: Set<Item> = new Set()
     readonly disable: Set<Recipe> = new Set()
-    readonly selectedPlanets: Set<Planet> = new Set()
-    /** Recipes the selected planets disable, or null before a planet is selected. */
+    /** The planet the factory stands on, or null before one is selected. */
+    planet: Planet | null = null
+    /** Recipes the planet disables, or null before a planet is selected. */
     planetaryBaseline: Set<Recipe> | null = null
 
     defaultPriority: PriorityLevelMap[] = []
@@ -210,22 +211,22 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
         this.disable.clear()
     }
 
-    // Puts the item's DisabledRecipe into the least preferred level, unless it is already listed
-    // because the item is ignored.
-    private addItemToMaxPriority(item: Item): void {
-        if (this.priority.getResource(item.disableRecipe) === null) {
-            this.addDisableRecipe(item, "last")
+    // Puts the item's DisabledRecipe into the least preferred level of list, unless it is already
+    // listed because the item is ignored.
+    private addItemToMaxPriority(item: Item, list: PriorityList = this.priority): void {
+        if (list.getResource(item.disableRecipe) === null) {
+            this.addDisableRecipe(item, "last", list)
         }
     }
 
-    // Adds the item's DisabledRecipe to the most or least preferred level. That level is a new one
-    // unless it already holds DisabledRecipes.
-    private addDisableRecipe(item: Item, end: "first" | "last"): void {
-        let level = end === "first" ? this.priority.getFirstLevel() : this.priority.getLastLevel()
+    // Adds the item's DisabledRecipe to the most or least preferred level of list. That level is a new
+    // one unless it already holds DisabledRecipes.
+    private addDisableRecipe(item: Item, end: "first" | "last", list: PriorityList = this.priority): void {
+        let level = end === "first" ? list.getFirstLevel() : list.getLastLevel()
         if (level === null || !Array.from(level).some(r => r.recipe.isDisable())) {
-            level = this.priority.addPriorityBefore(end === "first" ? level : null)
+            level = list.addPriorityBefore(end === "first" ? level : null)
         }
-        this.priority.addRecipe(item.disableRecipe, DEFAULT_RESOURCE_WEIGHT, level)
+        list.addRecipe(item.disableRecipe, DEFAULT_RESOURCE_WEIGHT, level)
     }
 
     // Shows the recipe choice again on targets whose item is among items.
@@ -290,25 +291,15 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
         this.redisplayTargets(items)
     }
 
-    // Disables exactly the recipes that all selected planets disable.
-    private syncPlanetDisable(): void {
-        let allDisable = new Set<Recipe>()
-        const planets = Array.from(this.selectedPlanets)
-
-        const first = planets[0]
-        if (first !== undefined) {
-            allDisable = new Set(first.disable)
-            for (const p of planets.slice(1)) {
-                allDisable = new Set(Array.from(p.disable).filter(r => allDisable.has(r)))
-            }
-        }
-
-        this.planetaryBaseline = allDisable
-        for (const r of Array.from(this.disable).filter(r => !allDisable.has(r))) {
+    // Disables exactly the recipes that the planet disables.
+    private syncPlanetDisable(planet: Planet): void {
+        const planetDisable = planet.disable
+        this.planetaryBaseline = new Set(planetDisable)
+        for (const r of Array.from(this.disable).filter(r => !planetDisable.has(r))) {
             this.setEnable(r)
         }
 
-        for (const r of allDisable) {
+        for (const r of planetDisable) {
             if (!this.disable.has(r)) {
                 this.setDisable(r)
             }
@@ -317,13 +308,9 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
         this.updateModuleBuildings()
     }
 
-    /** Returns whether only the default planet is selected. */
+    /** Returns whether the default planet is selected. */
     isDefaultPlanet(): boolean {
-        if (this.planets.size <= 1) {
-            return true
-        }
-        const selected = Array.from(this.selectedPlanets)
-        return selected.length === 1 && selected[0]?.key === DEFAULT_PLANET
+        return this.planets.size <= 1 || this.planet?.key === DEFAULT_PLANET
     }
 
     /** Returns the recipes disabled and enabled beyond what the planet selection implies. */
@@ -338,22 +325,10 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
         }
     }
 
-    /** Selects only planet. */
-    selectOnePlanet(planet: Planet): void {
-        this.selectedPlanets.clear()
-        this.selectPlanet(planet)
-    }
-
-    /** Adds planet to the selection. */
+    /** Puts the factory on planet. */
     selectPlanet(planet: Planet): void {
-        this.selectedPlanets.add(planet)
-        this.syncPlanetDisable()
-    }
-
-    /** Removes planet from the selection. */
-    unselectPlanet(planet: Planet): void {
-        this.selectedPlanets.delete(planet)
-        this.syncPlanetDisable()
+        this.planet = planet
+        this.syncPlanetDisable(planet)
     }
 
     /** Returns the default resource priorities: one map of recipe weights per level. */
@@ -377,15 +352,29 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
         return levels
     }
 
-    /** Resets the resource priorities to the defaults. */
-    setDefaultPriority(): void {
-        this.priorityValue = PriorityList.fromArray(this.defaultPriority)
-        // An item may have no net producer at all. It needs its DisabledRecipe in the list.
+    /**
+     * Returns the default resource priorities for the enabled recipes and ignored items. An item
+     * without a net producer gets its DisabledRecipe in the least preferred level, an ignored item
+     * in the most preferred one, as toggleIgnore() does.
+     */
+    private getDefaultPriorityList(): PriorityList {
+        const list = PriorityList.fromArray(this.defaultPriority)
         for (const item of this.items.values()) {
             if (this.isItemDisabled(item)) {
-                this.addItemToMaxPriority(item)
+                this.addItemToMaxPriority(item, list)
             }
         }
+        for (const item of this.ignore) {
+            if (!this.isItemDisabled(item)) {
+                this.addDisableRecipe(item, "first", list)
+            }
+        }
+        return list
+    }
+
+    /** Resets the resource priorities to the defaults for the enabled recipes and ignored items. */
+    setDefaultPriority(): void {
+        this.priorityValue = this.getDefaultPriorityList()
     }
 
     /** Returns whether key names a recipe that can appear in the priority list. */
@@ -416,7 +405,7 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
 
     /** Returns whether the priorities equal the defaults. */
     isDefaultPriority(): boolean {
-        return this.priority.equalArray(this.defaultPriority)
+        return this.priority.equalArray(this.getDefaultPriorityList().toArray())
     }
 
     /**
@@ -507,9 +496,9 @@ export class FactorySpecification implements BuildingContext, ModuleDefaults, Re
         return this.buildTargets.some(target => target.recipe === recipe && target.changedBuilding)
     }
 
-    /** Returns whether building works on at least one selected planet. Without a selection every building works. */
+    /** Returns whether building works on the planet. Without a planet every building works. */
     buildingWorks(building: Building): boolean {
-        return this.selectedPlanets.size === 0 || Array.from(this.selectedPlanets).some(p => building.worksOn(p.properties))
+        return this.planet === null || building.worksOn(this.planet.properties)
     }
 
     /** Returns the building that crafts recipe, or null for recipes without a building. */

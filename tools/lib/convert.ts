@@ -213,6 +213,7 @@ export function convert(raw: RawData, localeFiles: LocaleFiles, version: string,
             order: p.order ?? "",
             stack_size: p.stack_size,
             weight: runtime.item_weights[p.name],
+            spoil_ticks: p.spoil_ticks,
             icon_ref: `item/${p.name}`,
         }))
         const fuelValue = parseEnergy(p.fuel_value, "J") ?? 0
@@ -317,6 +318,9 @@ export function convert(raw: RawData, localeFiles: LocaleFiles, version: string,
         crafting_speed: need(p.crafting_speed, p, "crafting_speed"),
         crafting_speed_by_quality: runtime.crafting_speeds?.[p.name],
         rocket_parts_required: need(p.rocket_parts_required, p, "rocket_parts_required"),
+        launch_by_quality: Object.fromEntries(Object.entries(need(runtime.rocket_launch?.[p.name], p, "launch_by_quality")).map(([quality, l]) => [
+            quality, { ...l, reopen: l.reopen.map(([first, last]): [number, number] => [first, last]) },
+        ])),
     }))
 
     const mining_drills = prototypes(raw["mining-drill"]).map(p => compact<WithIconRef<DatasetMiningDrill>>({
@@ -430,6 +434,8 @@ export function convert(raw: RawData, localeFiles: LocaleFiles, version: string,
             ...machineFields(p),
             radius: p.radius,
             plots: (own + 2 * radius) ** 2 - own ** 2,
+            // An average over random planting spots, so whole joules are exact enough.
+            harvest_energy: Math.round(need(runtime.agricultural_towers?.[p.name], p, "harvest_energy").harvest_energy),
         })
     })
 

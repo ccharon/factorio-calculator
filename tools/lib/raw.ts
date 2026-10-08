@@ -278,4 +278,18 @@ export interface RuntimeData {
     readonly crafting_speeds?: Readonly<Record<string, Readonly<Record<string, number>>>>
     readonly max_energy_usage?: Readonly<Record<string, Readonly<Record<string, number>>>>
     readonly module_effects?: Readonly<Record<string, Readonly<Record<string, RuntimeEffect>>>>
+    /** Measured launch sequence by rocket silo and quality. */
+    readonly rocket_launch?: Readonly<Record<string, Readonly<Record<string, RuntimeLaunch>>>>
+    /** Measured values by agricultural tower. */
+    readonly agricultural_towers?: Readonly<Record<string, { readonly harvest_energy: number }>>
+}
+
+/** Ticks of the launch sequence of a rocket silo, measured by tools/mod/calculator-dump/rocket.lua. */
+export interface RuntimeLaunch {
+    readonly flight: number
+    readonly quick: number
+    readonly lights: number
+    readonly reopen: readonly (readonly [number, number])[]
+    readonly doors: number
+    readonly full: number
 }

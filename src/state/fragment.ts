@@ -6,7 +6,6 @@
 // parses the string, and ui/settings.ts applies the settings.
 
 import { type Rational, hundred } from "../core/rational.ts"
-import { sorted } from "../core/sort.ts"
 import type { Item } from "../data/item.ts"
 import type { Module } from "../data/module.ts"
 import {
@@ -153,8 +152,8 @@ export function formatSettings(excludeTitle = false, overrideTab?: string, targe
     if (spec.ignore.size > 0) {
         add("ignore", Array.from(spec.ignore, item => item.key).join(","))
     }
-    if (!spec.isDefaultPlanet()) {
-        add("planet", sorted(spec.selectedPlanets, p => p.order).map(p => p.key).join(","))
+    if (!spec.isDefaultPlanet() && spec.planet !== null) {
+        add("planet", spec.planet.key)
     }
     const { disable, enable } = spec.getNetDisable()
     if (disable.size > 0) {

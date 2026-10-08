@@ -69,6 +69,8 @@ interface ChainFactory extends FactoryData {
     readonly solution?: Solution
     /** Why the solution cannot be built, such as a fluid between machines. */
     readonly error?: string
+    /** Energy tolerance instead of ENERGY_TOLERANCE. */
+    readonly energyTolerance?: number
 }
 
 // Pools and machine buffers hold items at both ends of the window, and random results such as
@@ -93,8 +95,10 @@ const SCENARIOS: readonly ChainFactory[] = [
         buildings: { "advanced-circuit": "assembling-machine-3", "electronic-circuit": "assembling-machine-3" },
     },
     {
-        // Bioflux on Gleba from yumako and jellynut that come from outside. The biochambers burn nutrients.
-        name: "chain-gleba-bioflux", planet: "gleba", warmup: 3600,
+        // Bioflux on Gleba from yumako and jellynut that come from outside. The biochambers burn
+        // nutrients made from bioflux. Mash and jelly spoil in the machine buffers, so the chain
+        // makes and burns about 3% more than the solution.
+        name: "chain-gleba-bioflux", planet: "gleba", warmup: 3600, energyTolerance: 0.05,
         fragment: "#items=bioflux:f:2&planet=gleba&ignore=yumako,jellynut",
     },
     {
@@ -252,11 +256,12 @@ export const chains: IngameTest<ChainFactory> = {
             ...solution.raw.map(r => flow(`raw ${r.key}`, measured, `consumed:${r.key}`, r.rate, seconds)),
             ...solution.surplus.map(s => flow(`surplus ${s.key}`, measured, `surplus:${s.key}`, s.rate, seconds)),
         ]
+        const energyTolerance = factory.energyTolerance ?? ENERGY_TOLERANCE
         if (solution.power > 0) {
-            comparisons.push(relative("electric energy (J)", counter(measured, "electric_energy"), solution.power * seconds, ENERGY_TOLERANCE))
+            comparisons.push(relative("electric energy (J)", counter(measured, "electric_energy"), solution.power * seconds, energyTolerance))
         }
         if (solution.fuelPower > 0) {
-            comparisons.push(relative("fuel energy (J)", counter(measured, "fuel_energy"), solution.fuelPower * seconds, ENERGY_TOLERANCE))
+            comparisons.push(relative("fuel energy (J)", counter(measured, "fuel_energy"), solution.fuelPower * seconds, energyTolerance))
         }
         return Promise.resolve({ fragment: factory.fragment, comparisons })
     },

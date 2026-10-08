@@ -5,6 +5,8 @@
 import type { IconSource } from "./icon-source.ts"
 import type { Dataset } from "./dataset.ts"
 import type { Building } from "./building.ts"
+import { SPACE_PLATFORM, TICKS_PER_SECOND } from "./game.ts"
+import type { Item } from "./item.ts"
 import { GeneratorRecipe, SolarRecipe } from "./power.ts"
 import { HEAT, type Recipe, isEnergyKey } from "./recipe.ts"
 
@@ -23,7 +25,10 @@ export class Planet implements IconSource {
     /** True if buildings freeze here without heat. */
     readonly requiresHeating: boolean
 
-    /** Recipes that are disabled while only this planet is selected. Generators are always among them until the user enables them. */
+    /**
+     * Recipes that are disabled on this planet: those that cannot run here or need an ingredient that
+     * can neither be made here nor imported. Generators are among them until the user enables them.
+     */
     readonly disable: Set<Recipe> = new Set()
 
     readonly icon_col: number
@@ -38,6 +43,18 @@ export class Planet implements IconSource {
         this.requiresHeating = requiresHeating
         this.icon_col = col
         this.icon_row = row
+    }
+
+    /**
+     * Returns whether item can come from elsewhere: a solid item that fits into a rocket. A space
+     * platform gets it straight from the planet below. A planet gets it from another planet, which
+     * takes too long for items that spoil within an hour.
+     */
+    imports(item: Item): boolean {
+        if (item.orbit === null) {
+            return false
+        }
+        return this.key === SPACE_PLATFORM || item.spoilTicks === null || item.spoilTicks >= MIN_TRAVEL_SPOIL_TICKS
     }
 
     /**
@@ -60,6 +77,33 @@ export class Planet implements IconSource {
 
         return recipe.categories.length === 0 || buildings.some(b => b.canCraft(recipe) && b.worksOn(this.properties))
     }
+}
+
+// Items that spoil sooner than this cannot travel between planets.
+const MIN_TRAVEL_SPOIL_TICKS = 60 * 60 * TICKS_PER_SECOND
+
+// Returns the recipes among allowed whose ingredients can all be made on planet or imported.
+// A recipe counts once its ingredients do, so chains are followed from the resources up. A recipe
+// that also produces an ingredient, such as egg breeding, needs it only once to start.
+function reachableRecipes(planet: Planet, allowed: readonly Recipe[]): Set<Recipe> {
+    const reachable = new Set<Recipe>()
+    const available = new Set<Item>()
+    let changed = true
+    while (changed) {
+        changed = false
+        for (const recipe of allowed) {
+            const obtainable = (item: Item): boolean => available.has(item) || planet.imports(item) || recipe.products.some(p => p.item === item)
+            if (reachable.has(recipe) || !recipe.ingredients.every(ing => obtainable(ing.item))) {
+                continue
+            }
+            reachable.add(recipe)
+            for (const { item } of recipe.products) {
+                available.add(item)
+            }
+            changed = true
+        }
+    }
+    return reachable
 }
 
 // Recycling recipes are disabled on every planet, except those reachable from these resources.
@@ -111,19 +155,18 @@ export function getPlanets(data: Dataset, recipes: ReadonlyMap<string, Recipe>, 
         }
 
         const planet = new Planet(d.key, d.localized_name.en, d.order, d.icon_col, d.icon_row, resources, properties, d.requires_heating)
-        for (const recipe of recipes.values()) {
-            if (!planet.allows(recipe, buildings) || isRecycling(recipe) || isEnergySource(recipe)) {
-                planet.disable.add(recipe)
-            }
-        }
-
         const allowedRecycling = new Set<Recipe>()
         for (const root of recyclingRoots) {
             traverseRecycling(root, allowedRecycling)
         }
 
-        for (const recipe of allowedRecycling) {
-            planet.disable.delete(recipe)
+        // Recycling that stays disabled cannot make ingredients for other recipes.
+        const candidates = Array.from(recipes.values()).filter(r => planet.allows(r, buildings) && (!isRecycling(r) || allowedRecycling.has(r)))
+        const reachable = reachableRecipes(planet, candidates)
+        for (const recipe of recipes.values()) {
+            if (!reachable.has(recipe) || isEnergySource(recipe)) {
+                planet.disable.add(recipe)
+            }
         }
 
         planets.set(planet.key, planet)

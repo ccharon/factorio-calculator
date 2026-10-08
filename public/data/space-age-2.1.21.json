@@ -252,6 +252,7 @@
       "order": "i",
       "stack_size": 200,
       "weight": 1000,
+      "spoil_ticks": 216000,
       "icon_col": 22,
       "icon_row": 2
     },
@@ -640,6 +641,7 @@
       "order": "a[organic-processing]-b[bioflux]",
       "stack_size": 100,
       "weight": 1000,
+      "spoil_ticks": 432000,
       "icon_col": 14,
       "icon_row": 3
     },
@@ -668,6 +670,7 @@
       "order": "c[eggs]-a[biter-egg]",
       "stack_size": 100,
       "weight": 2000,
+      "spoil_ticks": 108000,
       "icon_col": 16,
       "icon_row": 3
     },
@@ -836,6 +839,7 @@
       "order": "z[biter-nest]",
       "stack_size": 1,
       "weight": 1000000,
+      "spoil_ticks": 108000,
       "icon_col": 9,
       "icon_row": 0
     },
@@ -1116,6 +1120,7 @@
       "order": "b[agriculture]-d[bacteria]-c[copper-bacteria]",
       "stack_size": 50,
       "weight": 1000,
+      "spoil_ticks": 3600,
       "icon_col": 12,
       "icon_row": 4
     },
@@ -2374,6 +2379,7 @@
       "order": "b[agriculture]-d[bacteria]-a[iron-bacteria]",
       "stack_size": 50,
       "weight": 1000,
+      "spoil_ticks": 3600,
       "icon_col": 25,
       "icon_row": 6
     },
@@ -2458,6 +2464,7 @@
       "order": "a[organic-processing]-d[jelly]",
       "stack_size": 100,
       "weight": 500,
+      "spoil_ticks": 14400,
       "icon_col": 2,
       "icon_row": 7
     },
@@ -2472,6 +2479,7 @@
       "order": "b[agriculture]-b[jellynut]",
       "stack_size": 50,
       "weight": 1000,
+      "spoil_ticks": 216000,
       "icon_col": 3,
       "icon_row": 7
     },
@@ -3006,6 +3014,7 @@
       "order": "c[nutrients]-b[nutrients]",
       "stack_size": 100,
       "weight": 500,
+      "spoil_ticks": 18000,
       "icon_col": 7,
       "icon_row": 8
     },
@@ -3132,6 +3141,7 @@
       "order": "c[eggs]-b[pentapod-egg]",
       "stack_size": 20,
       "weight": 5000,
+      "spoil_ticks": 54000,
       "icon_col": 14,
       "icon_row": 8
     },
@@ -3690,6 +3700,7 @@
       "order": "h[raw-fish]",
       "stack_size": 100,
       "weight": 3333.3333282470703,
+      "spoil_ticks": 453000,
       "icon_col": 24,
       "icon_row": 9
     },
@@ -5066,6 +5077,7 @@
       "order": "b[agriculture]-a[yumako]",
       "stack_size": 50,
       "weight": 1000,
+      "spoil_ticks": 216000,
       "icon_col": 10,
       "icon_row": 12
     },
@@ -5080,6 +5092,7 @@
       "order": "a[organic-processing]-c[yumako-mash]",
       "stack_size": 100,
       "weight": 500,
+      "spoil_ticks": 10800,
       "icon_col": 11,
       "icon_row": 12
     },
@@ -31026,6 +31039,153 @@
         "legendary": 2.5
       },
       "rocket_parts_required": 50,
+      "launch_by_quality": {
+        "normal": {
+          "flight": 933,
+          "quick": 684,
+          "lights": 181,
+          "reopen": [
+            [
+              1,
+              1
+            ],
+            [
+              48,
+              53
+            ],
+            [
+              100,
+              104
+            ],
+            [
+              151,
+              155
+            ],
+            [
+              180,
+              180
+            ]
+          ],
+          "doors": 256,
+          "full": 890
+        },
+        "uncommon": {
+          "flight": 831,
+          "quick": 595,
+          "lights": 181,
+          "reopen": [
+            [
+              1,
+              1
+            ],
+            [
+              48,
+              53
+            ],
+            [
+              100,
+              104
+            ],
+            [
+              151,
+              155
+            ],
+            [
+              180,
+              180
+            ]
+          ],
+          "doors": 256,
+          "full": 835
+        },
+        "rare": {
+          "flight": 777,
+          "quick": 527,
+          "lights": 181,
+          "reopen": [
+            [
+              1,
+              1
+            ],
+            [
+              48,
+              53
+            ],
+            [
+              100,
+              104
+            ],
+            [
+              151,
+              155
+            ],
+            [
+              180,
+              180
+            ]
+          ],
+          "doors": 256,
+          "full": 793
+        },
+        "epic": {
+          "flight": 744,
+          "quick": 473,
+          "lights": 181,
+          "reopen": [
+            [
+              1,
+              1
+            ],
+            [
+              48,
+              53
+            ],
+            [
+              100,
+              104
+            ],
+            [
+              151,
+              155
+            ],
+            [
+              180,
+              180
+            ]
+          ],
+          "doors": 256,
+          "full": 759
+        },
+        "legendary": {
+          "flight": 705,
+          "quick": 392,
+          "lights": 181,
+          "reopen": [
+            [
+              1,
+              1
+            ],
+            [
+              48,
+              53
+            ],
+            [
+              100,
+              104
+            ],
+            [
+              151,
+              155
+            ],
+            [
+              180,
+              180
+            ]
+          ],
+          "doors": 256,
+          "full": 710
+        }
+      },
       "icon_col": 8,
       "icon_row": 1
     }
@@ -31890,6 +32050,7 @@
       "heating_energy": 100000,
       "radius": 3,
       "plots": 48,
+      "harvest_energy": 365681,
       "icon_col": 0,
       "icon_row": 0
     }
