@@ -140,6 +140,31 @@ export interface DatasetRocketSilo extends DatasetMachine {
     /** Crafting speed by quality key. */
     crafting_speed_by_quality?: Record<string, number>
     rocket_parts_required: number
+    /** Launch sequence by quality key, measured in the game. */
+    launch_by_quality: Record<string, DatasetLaunch>
+}
+
+/**
+ * Ticks of the launch sequence of a rocket silo. The silo crafts parts for the next rocket from the
+ * moment the current rocket appears until it has enough.
+ */
+export interface DatasetLaunch {
+    /** From the launch until the rocket has left and the next one can appear in the open silo. */
+    flight: number
+    /** From a rocket appearing in the open silo until its launch. */
+    quick: number
+    /** Lights blinking after the flight, before the doors close. */
+    lights: number
+    /**
+     * Ranges [first, last] of ticks into the blinking. Parts ready at tick k of a range let the next
+     * rocket appear at k + 1, parts ready before a range at its first tick + 1. Parts ready after the
+     * last range wait for closed doors.
+     */
+    reopen: [number, number][]
+    /** Doors closing. */
+    doors: number
+    /** From a rocket created in the closed silo until its launch. */
+    full: number
 }
 
 /** A mining drill. */

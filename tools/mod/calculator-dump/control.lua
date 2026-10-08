@@ -1,8 +1,11 @@
 -- SPDX-FileCopyrightText: 2026 Christian Charon
 -- SPDX-License-Identifier: Apache-2.0
 
--- Writes values that the game computes at runtime, such as item weights, to calculator-dump.json.
+-- Writes values that the game computes at runtime, such as item weights, to calculator-dump.json
+-- when the map is created. Running the map then measures rocket launches, see rocket.lua.
 -- tools/lib/factorio.ts installs this mod when it dumps the game data.
+
+local rocket = require("rocket")
 
 script.on_init(function()
     local weights = {}
@@ -41,4 +44,9 @@ script.on_init(function()
         item_weights = weights, daytime = daytime, qualities = qualities,
         crafting_speeds = speeds, max_energy_usage = energy, module_effects = modules,
     }))
+    rocket.init()
+end)
+
+script.on_event(defines.events.on_tick, function(event)
+    rocket.tick(event.tick)
 end)

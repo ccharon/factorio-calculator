@@ -317,6 +317,9 @@ export function convert(raw: RawData, localeFiles: LocaleFiles, version: string,
         crafting_speed: need(p.crafting_speed, p, "crafting_speed"),
         crafting_speed_by_quality: runtime.crafting_speeds?.[p.name],
         rocket_parts_required: need(p.rocket_parts_required, p, "rocket_parts_required"),
+        launch_by_quality: Object.fromEntries(Object.entries(need(runtime.rocket_launch?.[p.name], p, "launch_by_quality")).map(([quality, l]) => [
+            quality, { ...l, reopen: l.reopen.map(([first, last]): [number, number] => [first, last]) },
+        ])),
     }))
 
     const mining_drills = prototypes(raw["mining-drill"]).map(p => compact<WithIconRef<DatasetMiningDrill>>({

@@ -2,9 +2,9 @@
 // SPDX-FileCopyrightText: 2026 Christian Charon
 // SPDX-License-Identifier: Apache-2.0
 
-import { Rational, zero, one } from "../core/rational.ts"
+import { Rational, zero, one, two } from "../core/rational.ts"
 import type { IconSource } from "./icon-source.ts"
-import type { Dataset, DatasetMachine, EffectName, NamedPrototype } from "./dataset.ts"
+import type { Dataset, DatasetLaunch, DatasetMachine, EffectName, NamedPrototype } from "./dataset.ts"
 import { burnerFuelCategory } from "./fuel.ts"
 import { BOILER, DEFAULT_FUEL_CATEGORY, NUCLEAR_REACTOR, PUMPJACK, ROCKET_PART, TICKS_PER_SECOND } from "./game.ts"
 import { HEAT_EXCHANGE_CATEGORY, powerCategory } from "./power.ts"
@@ -205,19 +205,69 @@ export class OffshorePump extends Building {
     }
 }
 
-// Ticks the rocket silo pauses for each launch.
-const ROCKET_LAUNCH_TICKS = 2434
-const rocketLaunchDuration = Rational.from_floats(ROCKET_LAUNCH_TICKS, TICKS_PER_SECOND)
-
-/** Rocket parts per second and launches per second of one silo. */
-interface LaunchRate {
-    part: Rational
-    launch: Rational
+/** Ticks of the launch sequence of a rocket silo at one quality, as in DatasetLaunch. */
+interface LaunchTicks {
+    readonly flight: Rational
+    readonly quick: Rational
+    readonly lights: Rational
+    readonly reopen: readonly (readonly [Rational, Rational])[]
+    readonly doors: Rational
+    readonly full: Rational
 }
 
-// Returns rocket parts and launches per second of one silo. Both include the time the silo
-// pauses for each launch.
-function launchRate(context: BuildingContext): LaunchRate {
+function launchTicks(d: DatasetLaunch): LaunchTicks {
+    const ticks = (n: number): Rational => Rational.from_float(n)
+    return {
+        flight: ticks(d.flight), quick: ticks(d.quick), lights: ticks(d.lights), doors: ticks(d.doors), full: ticks(d.full),
+        reopen: d.reopen.map(([first, last]) => [ticks(first), ticks(last)] as const),
+    }
+}
+
+/** One launch: ticks since the previous launch, and ticks between the rocket appearing and its launch. */
+interface Launch {
+    readonly cycle: Rational
+    readonly appeared: Rational
+}
+
+// Returns the launch after one whose rocket appeared appeared ticks before it. The parts for the next
+// rocket take partTicks from that moment. Ready during the flight, the next rocket rises in the open
+// silo. Ready while the lights blink, it waits for the next reopen range. Otherwise the doors close
+// and the rocket is created when both doors and parts are done.
+function nextLaunch(t: LaunchTicks, partTicks: Rational, appeared: Rational): Launch {
+    const ready = partTicks.sub(appeared)
+    if (!t.flight.less(ready)) {
+        return { cycle: t.flight.add(t.quick), appeared: t.quick }
+    }
+
+    const blink = ready.sub(t.flight).ceil()
+    for (const [first, last] of t.reopen) {
+        if (!last.less(blink)) {
+            const opened = blink.less(first) ? first : blink
+            return { cycle: t.flight.add(opened).add(one).add(t.quick), appeared: t.quick }
+        }
+    }
+
+    const closed = t.flight.add(t.lights).add(t.doors)
+    const created = closed.less(ready) ? ready : closed
+    return { cycle: created.add(t.full), appeared: t.full }
+}
+
+// Returns the average ticks between two launches of a silo that needs partTicks for the parts of one
+// rocket. The launches settle into a repeating pattern of at most two different launches.
+function launchCycle(t: LaunchTicks, partTicks: Rational): Rational {
+    const afterFull = nextLaunch(t, partTicks, t.full)
+    if (afterFull.appeared.equal(t.full)) {
+        return afterFull.cycle
+    }
+    const afterQuick = nextLaunch(t, partTicks, t.quick)
+    if (afterQuick.appeared.equal(t.quick)) {
+        return afterQuick.cycle
+    }
+    return afterFull.cycle.add(afterQuick.cycle).div(two)
+}
+
+// Returns rocket parts per second of one silo, including the time the launches take.
+function launchRate(context: BuildingContext): Rational {
     const partRecipe = context.recipes.get(ROCKET_PART)
     const partFactory = partRecipe ? context.getBuilding(partRecipe) : null
     const partItem = partRecipe?.products[0]?.item
@@ -225,27 +275,36 @@ function launchRate(context: BuildingContext): LaunchRate {
         throw new Error("rocket parts need the rocket-part recipe and a rocket silo")
     }
 
-    const gives = partRecipe.gives(partItem, context)
-    // Rocket part rate of the silo without the launch pauses.
-    const rate = Building.prototype.getRecipeRate.call(partFactory, context, partRecipe)
-    const perLaunch = partFactory.partsRequired.div(gives)
-    const time = perLaunch.div(rate).add(rocketLaunchDuration)
+    const quality = context.getQuality(partRecipe, "machine")
+    const ticks = partFactory.launches.get(quality.key)
+    if (ticks === undefined) {
+        throw new Error(`${partFactory.key} has no launch times for quality ${quality.key}`)
+    }
 
-    return { part: perLaunch.div(time), launch: time.reciprocate() }
+    // Rocket part crafts per second of the silo without the launches.
+    const rate = Building.prototype.getRecipeRate.call(partFactory, context, partRecipe)
+    const perLaunch = partFactory.partsRequired.div(partRecipe.gives(partItem, context))
+    const partTicks = perLaunch.div(rate).mul(Rational.from_integer(TICKS_PER_SECOND))
+    const cycle = launchCycle(ticks, partTicks).div(Rational.from_integer(TICKS_PER_SECOND))
+
+    return perLaunch.div(cycle)
 }
 
-/** The rocket silo building rocket parts. Its rate includes the pause for each launch. */
+/** The rocket silo building rocket parts. Its rate includes the time the launches take. */
 class RocketSilo extends Building {
     readonly partsRequired: Rational
+    /** Launch sequence by quality key. */
+    readonly launches: ReadonlyMap<string, LaunchTicks>
 
-    constructor(options: BuildingOptions, partsRequired: Rational) {
+    constructor(options: BuildingOptions, partsRequired: Rational, launches: ReadonlyMap<string, LaunchTicks>) {
         super(options)
         this.partsRequired = partsRequired
+        this.launches = launches
     }
 
     /** Returns rocket parts per second. */
     override getRecipeRate(context: BuildingContext, _recipe: Recipe): Rational {
-        return launchRate(context).part
+        return launchRate(context)
     }
 }
 
@@ -357,7 +416,7 @@ export function getBuildings(data: Dataset, items: ReadonlyMap<string, Item>): B
             speedByQuality: qualitySpeeds(d.crafting_speed_by_quality),
             prodBonus: zero,
             fuel: null,
-        }, Rational.from_float(d.rocket_parts_required)))
+        }, Rational.from_float(d.rocket_parts_required), new Map(Object.entries(d.launch_by_quality).map(([q, l]) => [q, launchTicks(l)]))))
     }
 
     for (const d of data.offshore_pumps) {

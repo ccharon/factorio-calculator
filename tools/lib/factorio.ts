@@ -41,12 +41,16 @@ export function gameVersion(factorioDir: string): string {
 }
 
 // A mod whose control script writes values that the game computes at runtime, such as item weights,
-// to DUMP_FILE.
+// to DUMP_FILE when the map is created, and the measured rocket launches to ROCKET_FILE when the map runs.
 const DUMP_MOD: string = "calculator-dump"
 const DUMP_FILE: string = "calculator-dump.json"
+const ROCKET_FILE: string = "calculator-rocket.json"
+// Ticks the rocket measurement runs. It needs about two launches of the slowest silo.
+const ROCKET_TICKS: number = 6000
 const DUMP_MOD_FILES: Readonly<Record<string, string>> = {
     "info.json": JSON.stringify({ name: DUMP_MOD, version: "1.0.0", title: "Calculator dump", author: "factorio-calculator", factorio_version: "2.1", dependencies: ["space-age"] }),
     "control.lua": readFileSync(new URL("../mod/calculator-dump/control.lua", import.meta.url), "utf8"),
+    "rocket.lua": readFileSync(new URL("../mod/calculator-dump/rocket.lua", import.meta.url), "utf8"),
 }
 
 /**
@@ -111,8 +115,8 @@ export class HeadlessGame {
 }
 
 /**
- * Runs the three dump commands into workDir/write/script-output, then creates a map with a helper
- * mod that writes runtime values to calculator-dump.json there.
+ * Runs the three dump commands into workDir/write/script-output, then creates and runs a map with a
+ * helper mod that writes runtime values and rocket launch times there.
  *
  * @param factorioDir - Root of the installation.
  * @param workDir - Empty directory for config, mod list and output.
@@ -127,7 +131,12 @@ export function dumpGameData(factorioDir: string, workDir: string): string {
 
     // Runtime values exist only in a running game. Creating a map runs the helper mod's on_init.
     game.addMod(DUMP_MOD, DUMP_MOD_FILES)
-    game.run("--create", join(workDir, "dump.zip"))
+    const map = join(workDir, "dump.zip")
+    game.run("--create", map)
+    game.run("--benchmark", map, "--benchmark-ticks", String(ROCKET_TICKS))
+    if (!existsSync(join(game.scriptOutput, ROCKET_FILE))) {
+        throw new Error(`rocket launches not measured within ${ROCKET_TICKS} ticks`)
+    }
 
     return game.scriptOutput
 }
@@ -147,7 +156,10 @@ export interface GameDump {
 export function readDump(outputDir: string): GameDump {
     // The game writes these files, so they have the shapes in raw.ts. The dataset schema test checks the result.
     const raw = JSON.parse(readFileSync(join(outputDir, "data-raw-dump.json"), "utf8")) as RawData
-    const runtime = JSON.parse(readFileSync(join(outputDir, DUMP_FILE), "utf8")) as RuntimeData
+    const runtime = {
+        ...JSON.parse(readFileSync(join(outputDir, DUMP_FILE), "utf8")) as RuntimeData,
+        rocket_launch: JSON.parse(readFileSync(join(outputDir, ROCKET_FILE), "utf8")) as RuntimeData["rocket_launch"],
+    }
     const locale: Record<string, LocaleFiles[string]> = {}
     for (const file of readdirSync(outputDir)) {
         if (file.endsWith("-locale.json")) {

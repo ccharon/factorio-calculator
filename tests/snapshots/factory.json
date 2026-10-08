@@ -1449,7 +1449,7 @@
       },
       {
         "key": "electricity",
-        "rate": "315515147/585000",
+        "rate": "3783729509/7020000",
         "building": null,
         "count": "0",
         "fuel": null,
@@ -1539,9 +1539,9 @@
         "key": "rocket-part",
         "rate": "5/3",
         "building": "rocket-silo",
-        "count": "5717/900",
+        "count": "5",
         "fuel": "electric",
-        "power": "14817500/9"
+        "power": "3875000/3"
       },
       {
         "key": "solid-fuel-from-light-oil",
@@ -1611,7 +1611,7 @@
       },
       {
         "key": "electricity",
-        "rate": "315515147/585000"
+        "rate": "3783729509/7020000"
       },
       {
         "key": "electronic-circuit",
@@ -4563,55 +4563,55 @@
       },
       {
         "key": "advanced-circuit",
-        "rate": "6000/5717",
+        "rate": "4/3",
         "building": "assembling-machine-1",
-        "count": "72000/5717",
+        "count": "16",
         "fuel": "electric",
-        "power": "5585802500/5717"
+        "power": "1240000"
       },
       {
         "key": "advanced-oil-processing",
-        "rate": "205000/222963",
+        "rate": "410/351",
         "building": "oil-refinery",
-        "count": "1025000/222963",
+        "count": "2050/351",
         "fuel": "electric",
-        "power": "148702470000/74321"
+        "power": "296828000/117"
       },
       {
         "key": "coal",
-        "rate": "13500/5717",
+        "rate": "3",
         "building": "electric-mining-drill",
-        "count": "27000/5717",
+        "count": "6",
         "fuel": "electric",
-        "power": "2430000000/5717"
+        "power": "540000"
       },
       {
         "key": "copper-cable",
-        "rate": "120000/5717",
+        "rate": "80/3",
         "building": "assembling-machine-1",
-        "count": "120000/5717",
+        "count": "80/3",
         "fuel": "electric",
-        "power": "9300142500/5717"
+        "power": "2067500"
       },
       {
         "key": "copper-ore",
-        "rate": "180000/5717",
+        "rate": "40",
         "building": "electric-mining-drill",
-        "count": "360000/5717",
+        "count": "80",
         "fuel": "electric",
-        "power": "32400000000/5717"
+        "power": "7200000"
       },
       {
         "key": "copper-plate",
-        "rate": "180000/5717",
+        "rate": "40",
         "building": "electric-furnace",
-        "count": "288000/5717",
+        "count": "64",
         "fuel": "electric",
-        "power": "53589402000/5717"
+        "power": "11904000"
       },
       {
         "key": "crude-oil",
-        "rate": "20500000/222963",
+        "rate": "41000/351",
         "building": null,
         "count": "0",
         "fuel": null,
@@ -4619,7 +4619,7 @@
       },
       {
         "key": "electricity",
-        "rate": "139520257/3716050",
+        "rate": "834669287/17550000",
         "building": null,
         "count": "0",
         "fuel": null,
@@ -4627,79 +4627,79 @@
       },
       {
         "key": "electronic-circuit",
-        "rate": "72000/5717",
+        "rate": "16",
         "building": "assembling-machine-1",
-        "count": "72000/5717",
+        "count": "16",
         "fuel": "electric",
-        "power": "5585802500/5717"
+        "power": "1240000"
       },
       {
         "key": "heavy-oil-cracking",
-        "rate": "128125/222963",
+        "rate": "1025/1404",
         "building": "chemical-plant",
-        "count": "256250/222963",
+        "count": "1025/702",
         "fuel": "electric",
-        "power": "18977994000/74321"
+        "power": "37513000/117"
       },
       {
         "key": "iron-ore",
-        "rate": "102300/5717",
+        "rate": "341/15",
         "building": "electric-mining-drill",
-        "count": "204600/5717",
+        "count": "682/15",
         "fuel": "electric",
-        "power": "18414000000/5717"
+        "power": "4092000"
       },
       {
         "key": "iron-plate",
-        "rate": "102300/5717",
+        "rate": "341/15",
         "building": "electric-furnace",
-        "count": "163680/5717",
+        "count": "2728/75",
         "fuel": "electric",
-        "power": "30457158000/5717"
+        "power": "6769200"
       },
       {
         "key": "light-oil-cracking",
-        "rate": "6625/222963",
+        "rate": "53/1404",
         "building": "chemical-plant",
-        "count": "13250/222963",
+        "count": "53/702",
         "fuel": "electric",
-        "power": "1447747000/74321"
+        "power": "2674000/117"
       },
       {
         "key": "low-density-structure",
-        "rate": "3000/5717",
+        "rate": "2/3",
         "building": "assembling-machine-1",
-        "count": "90000/5717",
+        "count": "20",
         "fuel": "electric",
-        "power": "6978680000/5717"
+        "power": "1550000"
       },
       {
         "key": "plastic-bar",
-        "rate": "13500/5717",
+        "rate": "3",
         "building": "chemical-plant",
-        "count": "13500/5717",
+        "count": "3",
         "fuel": "electric",
-        "power": "2955057000/5717"
+        "power": "651000"
       },
       {
         "key": "processing-unit",
-        "rate": "3000/5717",
+        "rate": "2/3",
         "building": "assembling-machine-2",
-        "count": "40000/5717",
+        "count": "80/9",
         "fuel": "electric",
-        "power": "6200095000/5717"
+        "power": "4135000/3"
       },
       {
         "key": "rocket-fuel",
-        "rate": "3000/5717",
+        "rate": "2/3",
         "building": "assembling-machine-2",
-        "count": "60000/5717",
+        "count": "40/3",
         "fuel": "electric",
-        "power": "9314435000/5717"
+        "power": "2070000"
       },
       {
         "key": "rocket-part",
-        "rate": "3000/5717",
+        "rate": "2/3",
         "building": "rocket-silo",
         "count": "2",
         "fuel": "electric",
@@ -4707,41 +4707,41 @@
       },
       {
         "key": "solid-fuel-from-light-oil",
-        "rate": "30000/5717",
+        "rate": "20/3",
         "building": "chemical-plant",
-        "count": "30000/5717",
+        "count": "20/3",
         "fuel": "electric",
-        "power": "6540114000/5717"
+        "power": "1449000"
       },
       {
         "key": "steel-plate",
-        "rate": "6000/5717",
+        "rate": "4/3",
         "building": "electric-furnace",
-        "count": "48000/5717",
+        "count": "32/3",
         "fuel": "electric",
-        "power": "8948718000/5717"
+        "power": "1986000"
       },
       {
         "key": "sulfur",
-        "rate": "750/5717",
+        "rate": "1/6",
         "building": "chemical-plant",
-        "count": "750/5717",
+        "count": "1/6",
         "fuel": "electric",
-        "power": "197519000/5717"
+        "power": "42000"
       },
       {
         "key": "sulfuric-acid",
-        "rate": "300/5717",
+        "rate": "1/15",
         "building": "chemical-plant",
-        "count": "300/5717",
+        "count": "1/15",
         "fuel": "electric",
-        "power": "103019000/5717"
+        "power": "21000"
       },
       {
         "key": "water",
-        "rate": "16340000/222963",
+        "rate": "32680/351",
         "building": "offshore-pump",
-        "count": "40850/668889",
+        "count": "817/10530",
         "fuel": "electric",
         "power": "0"
       }
@@ -4749,95 +4749,95 @@
     "items": [
       {
         "key": "advanced-circuit",
-        "rate": "6000/5717"
+        "rate": "4/3"
       },
       {
         "key": "coal",
-        "rate": "13500/5717"
+        "rate": "3"
       },
       {
         "key": "copper-cable",
-        "rate": "240000/5717"
+        "rate": "160/3"
       },
       {
         "key": "copper-ore",
-        "rate": "180000/5717"
+        "rate": "40"
       },
       {
         "key": "copper-plate",
-        "rate": "180000/5717"
+        "rate": "40"
       },
       {
         "key": "crude-oil",
-        "rate": "20500000/222963"
+        "rate": "41000/351"
       },
       {
         "key": "electricity",
-        "rate": "139520257/3716050"
+        "rate": "834669287/17550000"
       },
       {
         "key": "electronic-circuit",
-        "rate": "72000/5717"
+        "rate": "16"
       },
       {
         "key": "heavy-oil",
-        "rate": "5125000/222963"
+        "rate": "10250/351"
       },
       {
         "key": "iron-ore",
-        "rate": "102300/5717"
+        "rate": "341/15"
       },
       {
         "key": "iron-plate",
-        "rate": "102300/5717"
+        "rate": "341/15"
       },
       {
         "key": "light-oil",
-        "rate": "4356250/74321"
+        "rate": "17425/234"
       },
       {
         "key": "low-density-structure",
-        "rate": "3000/5717"
+        "rate": "2/3"
       },
       {
         "key": "petroleum-gas",
-        "rate": "292500/5717"
+        "rate": "65"
       },
       {
         "key": "plastic-bar",
-        "rate": "27000/5717"
+        "rate": "6"
       },
       {
         "key": "processing-unit",
-        "rate": "3000/5717"
+        "rate": "2/3"
       },
       {
         "key": "rocket-fuel",
-        "rate": "3000/5717"
+        "rate": "2/3"
       },
       {
         "key": "rocket-part",
-        "rate": "3000/5717"
+        "rate": "2/3"
       },
       {
         "key": "solid-fuel",
-        "rate": "30000/5717"
+        "rate": "20/3"
       },
       {
         "key": "steel-plate",
-        "rate": "6000/5717"
+        "rate": "4/3"
       },
       {
         "key": "sulfur",
-        "rate": "1500/5717"
+        "rate": "1/3"
       },
       {
         "key": "sulfuric-acid",
-        "rate": "15000/5717"
+        "rate": "10/3"
       },
       {
         "key": "water",
-        "rate": "16340000/222963"
+        "rate": "32680/351"
       }
     ],
     "surplus": []

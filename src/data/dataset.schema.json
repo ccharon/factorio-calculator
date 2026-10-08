@@ -136,12 +136,30 @@
       "items": {
         "type": "object",
         "allOf": [{ "$ref": "#/$defs/machine" }],
-        "required": ["crafting_categories", "crafting_speed", "rocket_parts_required"],
+        "required": ["crafting_categories", "crafting_speed", "rocket_parts_required", "launch_by_quality"],
         "properties": {
           "crafting_categories": { "type": "array", "items": { "type": "string" } },
           "crafting_speed": { "type": "number", "exclusiveMinimum": 0 },
           "crafting_speed_by_quality": { "type": "object", "additionalProperties": { "type": "number", "exclusiveMinimum": 0 }, "description": "Crafting speed by quality key." },
-          "rocket_parts_required": { "type": "integer", "minimum": 1 }
+          "rocket_parts_required": { "type": "integer", "minimum": 1 },
+          "launch_by_quality": {
+            "type": "object",
+            "minProperties": 1,
+            "description": "Launch sequence in ticks by quality key, measured in the game.",
+            "additionalProperties": {
+              "type": "object",
+              "required": ["flight", "quick", "lights", "reopen", "doors", "full"],
+              "properties": {
+                "flight": { "type": "integer", "minimum": 1 },
+                "quick": { "type": "integer", "minimum": 1 },
+                "lights": { "type": "integer", "minimum": 1 },
+                "reopen": { "type": "array", "items": { "type": "array", "prefixItems": [{ "type": "integer" }, { "type": "integer" }], "minItems": 2, "maxItems": 2 } },
+                "doors": { "type": "integer", "minimum": 1 },
+                "full": { "type": "integer", "minimum": 1 }
+              },
+              "additionalProperties": false
+            }
+          }
         },
         "unevaluatedProperties": false
       }
