@@ -70,7 +70,7 @@ export function getEnergyIngredients(context: EnergyContext, recipe: Recipe): In
         return [new Ingredient(fuel.item, building.power.div(baseRate).div(fuel.value)), ...heating]
     }
     const powerEffect = context.getModuleSpec(recipe)?.powerEffect(context) ?? one
-    const watts = building.power.mul(powerEffect).add(building.drain())
+    const watts = building.workingPower(baseRate).mul(powerEffect).add(building.drain())
     return [new Ingredient(context.electricity, watts.div(baseRate).div(ELECTRICITY_UNIT)), ...heating]
 }
 
@@ -91,7 +91,9 @@ export function getPowerUsage(context: EnergyContext, recipe: RecipeNode, rate: 
         return { fuel: building.fuel, power: building.power.mul(count) }
     }
 
+    const baseRate = context.getRecipeRate(recipe)
+    const working = baseRate === null ? building.power : building.workingPower(baseRate)
     const powerEffect = context.getModuleSpec(recipe)?.powerEffect(context) ?? one
-    const power = building.power.mul(count).mul(powerEffect).add(building.drain().mul(count.ceil()))
+    const power = working.mul(count).mul(powerEffect).add(building.drain().mul(count.ceil()))
     return { fuel: "electric", power }
 }

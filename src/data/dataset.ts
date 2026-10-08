@@ -278,6 +278,8 @@ export interface DatasetAgriculturalTower extends DatasetMachine {
     radius?: number
     /** Number of plants one tower tends. */
     plots: number
+    /** Electric energy in J for one harvest and the replanting, measured in the game. The tower uses power only while its crane works. */
+    harvest_energy: number
 }
 
 /** Keys of the resources a planet offers, by kind. */

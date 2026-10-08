@@ -3654,7 +3654,7 @@
       },
       {
         "key": "electricity",
-        "rate": "2244295375/86409548928",
+        "rate": "211792561813/14401591488000",
         "building": null,
         "count": "0",
         "fuel": null,
@@ -3674,7 +3674,7 @@
         "building": "agricultural-tower",
         "count": "258559375/3600397872",
         "fuel": "electric",
-        "power": "2366078983750/225024867"
+        "power": "3782010032375/900099468"
       },
       {
         "key": "nutrients-from-bioflux",
@@ -3754,7 +3754,7 @@
         "building": "agricultural-tower",
         "count": "1292796875/7200795744",
         "fuel": "electric",
-        "power": "4790073124375/225024867"
+        "power": "18910050161875/1800198936"
       }
     ],
     "items": [
@@ -3780,7 +3780,7 @@
       },
       {
         "key": "electricity",
-        "rate": "2244295375/86409548928"
+        "rate": "211792561813/14401591488000"
       },
       {
         "key": "jelly",
@@ -5436,7 +5436,7 @@
       },
       {
         "key": "electricity",
-        "rate": "73129/2522700",
+        "rate": "862641479/52556250000",
         "building": null,
         "count": "0",
         "fuel": null,
@@ -5456,7 +5456,7 @@
         "building": "agricultural-tower",
         "count": "674/8409",
         "fuel": "electric",
-        "power": "31810000/2803"
+        "power": "985875976/210225"
       },
       {
         "key": "nutrients-from-bioflux",
@@ -5496,7 +5496,7 @@
         "building": "agricultural-tower",
         "count": "1685/8409",
         "fuel": "electric",
-        "power": "65510000/2803"
+        "power": "492937988/42045"
       }
     ],
     "items": [
@@ -5510,7 +5510,7 @@
       },
       {
         "key": "electricity",
-        "rate": "73129/2522700"
+        "rate": "862641479/52556250000"
       },
       {
         "key": "jelly",

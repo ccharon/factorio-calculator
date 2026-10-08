@@ -2,9 +2,11 @@
 -- SPDX-License-Identifier: Apache-2.0
 
 -- Writes values that the game computes at runtime, such as item weights, to calculator-dump.json
--- when the map is created. Running the map then measures rocket launches, see rocket.lua.
+-- when the map is created. Running the map then measures rocket launches and agricultural towers,
+-- see rocket.lua and agriculture.lua.
 -- tools/lib/factorio.ts installs this mod when it dumps the game data.
 
+local agriculture = require("agriculture")
 local rocket = require("rocket")
 
 script.on_init(function()
@@ -45,8 +47,12 @@ script.on_init(function()
         crafting_speeds = speeds, max_energy_usage = energy, module_effects = modules,
     }))
     rocket.init()
+    agriculture.init()
 end)
+
+script.on_event(defines.events.on_tower_mined_plant, agriculture.mined)
 
 script.on_event(defines.events.on_tick, function(event)
     rocket.tick(event.tick)
+    agriculture.tick(event.tick)
 end)

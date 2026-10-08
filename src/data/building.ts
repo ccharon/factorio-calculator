@@ -144,6 +144,11 @@ export class Building implements IconSource {
     drain(): Rational {
         return this.power.mul(idleDrainShare)
     }
+
+    /** Returns the power in W of one building that crafts crafts per second, before module effects. */
+    workingPower(_crafts: Rational): Rational {
+        return this.power
+    }
 }
 
 /** A building that exists only for the calculator, such as the boiler converting water. */
@@ -316,14 +321,30 @@ class FusionReactor extends Building {
     }
 }
 
-/** An agricultural tower. It harvests each of its plots once per growth time of the plant. */
+/**
+ * An agricultural tower. It harvests each of its plots once per growth time of the plant, and uses
+ * power only while its crane plants and harvests.
+ */
 class AgriculturalTower extends Building {
     /** Number of plants one tower tends. */
     readonly plots: Rational
+    /** Electric energy in J for one harvest and the replanting. */
+    readonly harvestEnergy: Rational
 
-    constructor(options: Omit<BuildingOptions, "speed" | "prodBonus" | "categories">, plots: number) {
+    constructor(options: Omit<BuildingOptions, "speed" | "prodBonus" | "categories">, plots: number, harvestEnergy: number) {
         super({ ...options, categories: [AGRICULTURE_CATEGORY], speed: one, prodBonus: zero })
         this.plots = Rational.from_float(plots)
+        this.harvestEnergy = Rational.from_float(harvestEnergy)
+    }
+
+    /** Agricultural towers have no idle drain. */
+    override drain(): Rational {
+        return zero
+    }
+
+    /** Returns the crane power for crafts harvests per second. */
+    override workingPower(crafts: Rational): Rational {
+        return this.harvestEnergy.mul(crafts)
     }
 
     /** Returns harvests per second of one tower. */
@@ -405,7 +426,7 @@ export function getBuildings(data: Dataset, items: ReadonlyMap<string, Item>): B
     }
 
     for (const d of data.agricultural_tower) {
-        buildings.push(new AgriculturalTower(machineOptions(d), d.plots))
+        buildings.push(new AgriculturalTower(machineOptions(d), d.plots, d.harvest_energy))
     }
 
     for (const d of data.rocket_silo) {

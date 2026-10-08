@@ -32037,6 +32037,7 @@
       "heating_energy": 100000,
       "radius": 3,
       "plots": 48,
+      "harvest_energy": 365681,
       "icon_col": 0,
       "icon_row": 0
     }

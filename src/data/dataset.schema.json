@@ -348,8 +348,12 @@
       "items": {
         "type": "object",
         "allOf": [{ "$ref": "#/$defs/machine" }],
-        "required": ["plots"],
-        "properties": { "radius": { "type": "number", "minimum": 0 }, "plots": { "type": "integer", "minimum": 1, "description": "Number of plants one tower tends." } },
+        "required": ["plots", "harvest_energy"],
+        "properties": {
+          "radius": { "type": "number", "minimum": 0 },
+          "plots": { "type": "integer", "minimum": 1, "description": "Number of plants one tower tends." },
+          "harvest_energy": { "type": "number", "exclusiveMinimum": 0, "description": "Electric energy in J for one harvest and the replanting, measured in the game." }
+        },
         "unevaluatedProperties": false
       }
     },

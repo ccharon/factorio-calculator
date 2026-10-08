@@ -433,6 +433,8 @@ export function convert(raw: RawData, localeFiles: LocaleFiles, version: string,
             ...machineFields(p),
             radius: p.radius,
             plots: (own + 2 * radius) ** 2 - own ** 2,
+            // An average over random planting spots, so whole joules are exact enough.
+            harvest_energy: Math.round(need(runtime.agricultural_towers?.[p.name], p, "harvest_energy").harvest_energy),
         })
     })
 
